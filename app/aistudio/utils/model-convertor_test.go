@@ -4,8 +4,8 @@ package utils
 // 	"testing"
 
 // 	"github.com/stretchr/testify/assert"
-// 	datamesh "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/datamesh"
-// 	pb "github.com/vapusdata-ecosystem/vapusdata/aistudio/api/v1"
+// 	datamesh "github.com/vapusdata-ecosystem/vapusai/core/pkgs/datamesh"
+// 	pb "github.com/vapusdata-ecosystem/vapusai/aistudio/api/v1"
 // )
 
 // func TestpbtoOb(t *testing.T) {

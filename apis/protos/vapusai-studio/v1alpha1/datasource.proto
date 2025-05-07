@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/organization.proto";
+import "protos/models/v1alpha1/enums.proto";
+
+package aistudio.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha1";
+
+/**
+ * @fileoverview This file defines the DatasourceService, which is responsible for managing organizations and data sources.
+ */
+
+/**
+ * @classdesc The DatasourceService provides methods for managing organizations and data sources.
+ * @interface
+ */
+service DatasourceService {
+    /**
+     * Manages a data source.
+     * @param {DataSourceManagerRequest} request - The request object containing the data source details.
+     * @returns {DataSourcesResponse} The response object containing the result of the data source management actions.
+     */
+    rpc Create(DataSourceManagerRequest) returns (models.v1alpha1.VapusCreateResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/datasources"
+            body: "*"
+        };
+    }
+
+    rpc Update(DataSourceManagerRequest) returns (DataSourceResponse) {
+        option (google.api.http) = {
+            put: "/api/v1alpha1/datasources"
+            body: "*"
+        };
+    }
+
+    /**
+     * Retrieves a data source.
+     * @param {DataSourceGetterRequest} request - The request object containing the data source ID.
+     * @returns {DataSourceResponse} The response object containing the retrieved data source.
+     */
+    rpc Get(DataSourceGetterRequest) returns (DataSourceResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/datasources/{data_source_id}"
+        };
+    }
+
+    rpc List(DataSourceGetterRequest) returns (DataSourceResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/datasources"
+        };
+    }
+
+    rpc Archive(DataSourceGetterRequest) returns (DataSourceResponse) {
+        option (google.api.http) = {
+            delete: "/api/v1alpha1/datasources/{data_source_id}"
+        };
+    }
+}
+
+message DataSourceManagerRequest {
+    // The request output containing the data source details
+    models.v1alpha1.DataSource spec = 1; // @gotags: yaml:"spec"
+    // The file format for governance output
+    models.v1alpha1.ContentFormats governance_output_format = 2; // @gotags: yaml:"governanceOutPutFormat"
+    // The file specification
+    // string file_spec = 4; // @gotags: yaml:"fileSpec"
+    // The file format
+    // models.v1alpha1.ContentFormats file_format = 5; // @gotags: yaml:"fileFormat"
+}
+
+
+message DataSourceGetterRequest {
+    // The data source ID to retrieve
+    string data_source_id = 1; // @gotags: yaml:"dataSourceId"
+    // The search parameter for data source retrieval
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"searchParam"
+}
+
+message DataSourceResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    message DataSourceOutput {
+        repeated models.v1alpha1.DataSource data_sources = 1; // @gotags: yaml:"dataSources"
+    }
+    DataSourceOutput output = 2; // @gotags: yaml:"output"
+}

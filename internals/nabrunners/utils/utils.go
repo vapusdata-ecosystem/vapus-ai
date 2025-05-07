@@ -7,7 +7,7 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func GetRedisOpts(redisOps *models.DataSourceSecrets, logger zerolog.Logger) asynq.RedisClientOpt {

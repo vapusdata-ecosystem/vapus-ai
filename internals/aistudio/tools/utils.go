@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func GenerateAIToolSchemaFromJson[T any](data T) map[string]any {

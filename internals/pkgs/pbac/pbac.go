@@ -1,8 +1,8 @@
 package pbac
 
 import (
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 type Roles struct {

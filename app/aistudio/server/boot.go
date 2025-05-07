@@ -6,14 +6,14 @@ import (
 	"errors"
 	"path/filepath"
 
-	dmstores "github.com/vapusdata-ecosystem/vapusdata/aistudio/datastoreops"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	services "github.com/vapusdata-ecosystem/vapusdata/aistudio/services"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	appdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	dmstores "github.com/vapusdata-ecosystem/vapusai/aistudio/datastoreops"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	services "github.com/vapusdata-ecosystem/vapusai/aistudio/services"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 func packagesInit() {

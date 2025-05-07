@@ -2,9 +2,9 @@ package pkgs
 
 import (
 	"github.com/rs/zerolog"
-	appdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 var SvcPackageManager *apppkgs.VapusSvcPackages

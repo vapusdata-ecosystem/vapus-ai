@@ -1,6 +1,6 @@
 package middlewares
 
-import "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
+import "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
 
 // Write all middleware init here
 

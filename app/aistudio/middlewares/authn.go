@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	rpcauth "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"

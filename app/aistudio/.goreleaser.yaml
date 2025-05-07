@@ -29,7 +29,7 @@ builds:
           - linux_amd64
     ldflags:
       - "{{ .Env.VAPUSDATA_LDFLAGS }}"
-      - "-X github.com/vapusdata-ecosystem/vapusdata/app/aistudio/version.Version={{ .Env.TAG }}"
+      - "-X github.com/vapusdata-ecosystem/vapusai/app/aistudio/version.Version={{ .Env.TAG }}"
       - "-X main.Version={{ .Env.TAG }}"
 
 dockers:

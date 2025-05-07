@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 func NewSvcInfoCmd() *cobra.Command {

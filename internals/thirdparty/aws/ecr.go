@@ -8,7 +8,7 @@ import (
 	ecr "github.com/aws/aws-sdk-go-v2/service/ecr"
 	ecrtype "github.com/aws/aws-sdk-go-v2/service/ecr/types"
 	"github.com/rs/zerolog"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 )
 
 type ECRManager struct {

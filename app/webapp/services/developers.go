@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 func (x *WebappService) SettingsResources(c echo.Context) error {

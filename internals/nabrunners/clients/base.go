@@ -3,9 +3,9 @@ package clients
 import (
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	runnerutils "github.com/vapusdata-ecosystem/vapusdata/core/nabrunners/utils"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	runnerutils "github.com/vapusdata-ecosystem/vapusai/core/nabrunners/utils"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 type NabRunnerClient struct {

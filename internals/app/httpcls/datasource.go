@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/url"
 
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

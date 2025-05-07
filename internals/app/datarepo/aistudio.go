@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func ListAIModelNodes(ctx context.Context, dmstroes *apppkgs.VapusStore, logger zerolog.Logger, condition string, ctxClaim map[string]string) ([]*models.AIModelNode, error) {

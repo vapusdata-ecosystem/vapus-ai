@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	pkghttp "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/http"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	pkghttp "github.com/vapusdata-ecosystem/vapusai/core/pkgs/http"
 )
 
 const (

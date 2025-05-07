@@ -8,7 +8,7 @@ import (
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	secretmanagerpb "cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"google.golang.org/api/iterator"
 	option "google.golang.org/api/option"
 )

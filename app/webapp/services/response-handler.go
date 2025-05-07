@@ -5,9 +5,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 )

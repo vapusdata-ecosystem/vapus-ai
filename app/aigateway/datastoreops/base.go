@@ -1,9 +1,9 @@
 package dmstores
 
 import (
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	aigwdmstore "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	aigwdmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
 )
 
 // GLobal var for DM store, it can accessed across the service

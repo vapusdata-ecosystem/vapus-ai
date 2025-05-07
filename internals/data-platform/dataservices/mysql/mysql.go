@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

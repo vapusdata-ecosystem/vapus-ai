@@ -9,11 +9,11 @@ import (
 	"github.com/rs/zerolog"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 type Authentication interface {

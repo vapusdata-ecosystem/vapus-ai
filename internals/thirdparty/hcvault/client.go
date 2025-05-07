@@ -7,7 +7,7 @@ import (
 
 	vaultApi "github.com/hashicorp/vault/api"
 	approle "github.com/hashicorp/vault/api/auth/approle"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 )
 
 type HCVault interface {

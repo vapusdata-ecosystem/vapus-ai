@@ -11,4 +11,5 @@ const (
 	USER_INVITED                  = "User invited successfully"
 	DATA_CATALOG_CREATED          = "Data catalog created successfully"
 	ACCESS_TOKEN_CREATED          = "Access token created successfully"
+	SEARCH_SUCCESS                = "Search successful"
 )

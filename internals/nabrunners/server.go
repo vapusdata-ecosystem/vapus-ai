@@ -5,10 +5,10 @@ import (
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	nabtypes "github.com/vapusdata-ecosystem/vapusdata/core/nabrunners/types"
-	runnerutils "github.com/vapusdata-ecosystem/vapusdata/core/nabrunners/utils"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	nabtypes "github.com/vapusdata-ecosystem/vapusai/core/nabrunners/types"
+	runnerutils "github.com/vapusdata-ecosystem/vapusai/core/nabrunners/utils"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 const (

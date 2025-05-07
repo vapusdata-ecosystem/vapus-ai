@@ -31,19 +31,18 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/rs/zerolog"
-	aipb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	dmstores "github.com/vapusdata-ecosystem/vapusdata/aigateway/datastoreops"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/middlewares"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aigateway/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/services"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	appdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	dmstores "github.com/vapusdata-ecosystem/vapusai/aigateway/datastoreops"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/middlewares"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aigateway/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/services"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 var debugLogFlag bool
@@ -329,31 +328,31 @@ func NewAIGateway() *fiber.App {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering UtilityService handler from endpoint")
 	}
 
-	err = aipb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIAgents handler from endpoint")
 	}
-	err = aipb.RegisterAgentServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAgentServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering Vapus Agents Service from endpoint")
 	}
-	err = aipb.RegisterAgentStudioHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAgentStudioHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering Vapus Agents Studio from endpoint")
 	}
-	err = aipb.RegisterAIStudioHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIStudioHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIStudio handler from endpoint")
 	}
-	err = aipb.RegisterAIModelsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIModelsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIModels handler from endpoint")
 	}
-	err = aipb.RegisterAIPromptsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIPromptsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIPrompts handler from endpoint")
 	}
-	err = aipb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
 	}

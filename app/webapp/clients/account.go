@@ -3,9 +3,9 @@ package clients
 import (
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
 
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 )
 
 func (s *GrpcClient) GetAccountInfo(eCtx echo.Context) (*pb.AccountResponse, error) {

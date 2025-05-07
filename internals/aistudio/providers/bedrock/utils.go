@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/bedrock"
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func (o *Bedrock) ListInferenceProfiles(ctx context.Context) (result []*models.AIModelBase, err error) {

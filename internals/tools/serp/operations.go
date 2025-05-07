@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	serp "github.com/serpapi/google-search-results-golang"
-	"github.com/vapusdata-ecosystem/vapusdata/core/options"
+	"github.com/vapusdata-ecosystem/vapusai/core/options"
 )
 
 func (s *SerpClient) newSerpCaller(opts *options.SearchInput) *serp.Search {

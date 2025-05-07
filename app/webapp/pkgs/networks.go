@@ -5,12 +5,12 @@ import (
 	"path/filepath"
 
 	"github.com/rs/zerolog"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	appcl "github.com/vapusdata-ecosystem/vapusdata/core/app/grpcclients"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
-	utils "github.com/vapusdata-ecosystem/vapusdata/webapp/utils"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
+	utils "github.com/vapusdata-ecosystem/vapusai/webapp/utils"
 )
 
 type VapusArtifactStorage struct {

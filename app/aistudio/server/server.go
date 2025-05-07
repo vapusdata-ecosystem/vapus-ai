@@ -7,12 +7,12 @@ import (
 
 	"github.com/rs/zerolog"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	dmcontrollers "github.com/vapusdata-ecosystem/vapusdata/aistudio/controllers"
-	dmstores "github.com/vapusdata-ecosystem/vapusdata/aistudio/datastoreops"
-	middlewares "github.com/vapusdata-ecosystem/vapusdata/aistudio/middlewares"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	pbtools "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dmcontrollers "github.com/vapusdata-ecosystem/vapusai/aistudio/controllers"
+	dmstores "github.com/vapusdata-ecosystem/vapusai/aistudio/datastoreops"
+	middlewares "github.com/vapusdata-ecosystem/vapusai/aistudio/middlewares"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	pbtools "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 
 	interceptors "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors"
 	rpcauth "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"

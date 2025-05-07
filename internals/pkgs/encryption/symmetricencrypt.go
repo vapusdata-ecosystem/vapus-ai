@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"io"
 
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	"golang.org/x/crypto/pbkdf2"
 )
 

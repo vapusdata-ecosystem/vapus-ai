@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 type BaseParams struct {

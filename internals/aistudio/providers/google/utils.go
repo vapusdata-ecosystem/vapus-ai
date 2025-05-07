@@ -12,10 +12,10 @@ import (
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/prompts"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 	"google.golang.org/api/iterator"
 )
 

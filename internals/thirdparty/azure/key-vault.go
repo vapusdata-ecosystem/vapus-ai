@@ -6,8 +6,8 @@ import (
 
 	azidentity "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	azsecrets "github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azsecrets"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type AzureKVManager interface {

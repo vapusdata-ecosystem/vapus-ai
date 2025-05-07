@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	cmd "github.com/vapusdata-ecosystem/vapusdata/cli/cmd"
+	cmd "github.com/vapusdata-ecosystem/vapusai/cli/cmd"
 )
 
 func main() {

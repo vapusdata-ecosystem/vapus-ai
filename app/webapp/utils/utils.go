@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/labstack/echo/v4"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"google.golang.org/grpc/metadata"
 )
 

@@ -6,9 +6,9 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog"
-	secretstore "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/secrets-stores"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	secretstore "github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/secrets-stores"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 	"gopkg.in/yaml.v2"
 )
 

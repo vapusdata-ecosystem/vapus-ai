@@ -4,7 +4,7 @@ import (
 	"context"
 
 	validator "github.com/go-playground/validator/v10"
-	appcl "github.com/vapusdata-ecosystem/vapusdata/core/app/grpcclients"
+	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
 )
 
 var DmValidator = validator.New()

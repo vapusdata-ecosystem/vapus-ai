@@ -14,7 +14,6 @@ import (
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	aipb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
 )
 
 type VapusHttpClient struct {
@@ -150,8 +149,8 @@ func appendIdToUrl(url string, id string) string {
 }
 
 type GenericParams interface {
-	*pb.AuthzGetterRequest | *pb.UserGetterRequest | *pb.OrganizationGetterRequest |
-		*pb.DataSourceGetterRequest |
+	*aipb.AuthzGetterRequest | *aipb.UserGetterRequest | *aipb.OrganizationGetterRequest |
+		*aipb.DataSourceGetterRequest |
 		*aipb.AIModelNodeGetterRequest | *aipb.PromptGetterRequest |
 		*aipb.GuardrailsGetterRequest | *aipb.AgentGetterRequest
 }

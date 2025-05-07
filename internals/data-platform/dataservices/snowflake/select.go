@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 // Select query chal raha hai...  with or without filter

@@ -7,7 +7,7 @@ import (
 	guuid "github.com/google/uuid"
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
 )
 
 // Non DB model

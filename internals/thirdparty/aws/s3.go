@@ -15,7 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/aws/smithy-go"
 	"github.com/rs/zerolog"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
 )
 
 type AwsS3BucketClient struct {

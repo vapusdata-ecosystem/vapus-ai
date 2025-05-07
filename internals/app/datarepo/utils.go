@@ -3,7 +3,7 @@ package datarepo
 import (
 	"fmt"
 
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func GetRequestLabel(user string, Organization string, dataProductId string) string {

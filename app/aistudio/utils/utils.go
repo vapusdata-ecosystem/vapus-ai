@@ -3,9 +3,11 @@ package utils
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 
 	guuid "github.com/google/uuid"
+	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 )
 
 func EsGenericResponseReader(body io.ReadCloser) (map[string]interface{}, error) {
@@ -40,4 +42,33 @@ func GetSecretName(resource, resourceId, attribute string) string {
 		return guuid.NewString() + "_" + attribute
 	}
 	return resourceId + "_" + attribute
+}
+
+func GetFilterParams(query *mpb.SearchParam, key string) string {
+	if query != nil {
+		for _, param := range query.GetFilters() {
+			if param.GetKey() == key {
+				if len(param.GetValue()) > 0 {
+					return param.GetValue()
+				}
+
+			}
+		}
+	}
+	return ""
+}
+
+func GetSqlWhereList[T any](vals []T) string {
+	result := ""
+	for i, val := range vals {
+		n := fmt.Sprintf("%v", val)
+		if n != "" {
+			if i == 0 {
+				result = fmt.Sprintf("%v'%v'", result, n)
+			} else {
+				result = fmt.Sprintf("%v,'%v'", result, n)
+			}
+		}
+	}
+	return result
 }

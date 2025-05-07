@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 // Middleware to check for cookie existence

@@ -1,6 +1,6 @@
 package plugins
 
-import "github.com/vapusdata-ecosystem/vapusdata/core/models"
+import "github.com/vapusdata-ecosystem/vapusai/core/models"
 
 type EmailOpts struct {
 	From             string

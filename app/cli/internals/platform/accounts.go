@@ -5,10 +5,10 @@ import (
 	"log"
 	"strings"
 
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	gwcl "github.com/vapusdata-ecosystem/vapusdata/core/app/httpcls"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	gwcl "github.com/vapusdata-ecosystem/vapusai/core/app/httpcls"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 func (x *VapusCtlClient) HandleAccountAct(ctx context.Context) error {

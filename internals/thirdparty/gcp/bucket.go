@@ -7,7 +7,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/rs/zerolog"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
 	"google.golang.org/api/iterator"
 	option "google.golang.org/api/option"
 )

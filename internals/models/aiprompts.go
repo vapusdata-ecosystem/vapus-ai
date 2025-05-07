@@ -5,8 +5,8 @@ import (
 
 	guuid "github.com/google/uuid"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	types "github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	types "github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type AIPrompt struct {

@@ -3,7 +3,7 @@ package apppkgs
 import (
 	"fmt"
 
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 func ListResourceWithGovernance(ctxClaim map[string]string) string {

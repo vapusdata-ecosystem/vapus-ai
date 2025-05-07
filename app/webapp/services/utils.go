@@ -6,11 +6,11 @@ import (
 	"sync"
 
 	"github.com/labstack/echo/v4"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
-	utils "github.com/vapusdata-ecosystem/vapusdata/webapp/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
+	utils "github.com/vapusdata-ecosystem/vapusai/webapp/utils"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"

@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 type PlatformInstanceClients struct {

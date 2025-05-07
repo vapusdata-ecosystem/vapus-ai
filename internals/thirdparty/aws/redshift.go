@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/redshiftdata"
 	"github.com/aws/aws-sdk-go-v2/service/redshiftdata/types"
 	"github.com/rs/zerolog"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 )
 
 type RedshiftStore struct {

@@ -2,7 +2,7 @@ package models
 
 import (
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type VapusRoles struct {

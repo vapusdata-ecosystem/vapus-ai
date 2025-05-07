@@ -10,8 +10,8 @@ import (
 	"text/template"
 
 	"github.com/bytedance/sonic"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

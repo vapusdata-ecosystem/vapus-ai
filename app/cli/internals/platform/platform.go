@@ -10,12 +10,12 @@ import (
 	"github.com/jedib0t/go-pretty/v6/list"
 	"github.com/jedib0t/go-pretty/v6/table"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	gwcl "github.com/vapusdata-ecosystem/vapusdata/core/app/httpcls"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	gwcl "github.com/vapusdata-ecosystem/vapusai/core/app/httpcls"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func (x *VapusCtlClient) RetrieveLoginURL() (*pb.LoginHandlerResponse, error) {

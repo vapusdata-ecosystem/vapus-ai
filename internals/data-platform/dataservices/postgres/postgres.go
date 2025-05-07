@@ -15,8 +15,8 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/extra/bundebug"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

@@ -7,9 +7,9 @@ import (
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	aipb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	pbtools "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	pbtools "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

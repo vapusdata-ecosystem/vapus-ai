@@ -8,12 +8,12 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	aimodels "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/providers"
-	aitool "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/tools"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	aimodels "github.com/vapusdata-ecosystem/vapusai/core/aistudio/providers"
+	aitool "github.com/vapusdata-ecosystem/vapusai/core/aistudio/tools"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 func crawlAIModels(ctx context.Context, modelNode *models.AIModelNode, logger zerolog.Logger) error {

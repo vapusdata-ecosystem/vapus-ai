@@ -5,9 +5,9 @@ import (
 	"log"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/filestores"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/filestores"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func (p *VapusPlugins) LoadFileStorePlugin(ctx context.Context, plugin *models.Plugin) error {

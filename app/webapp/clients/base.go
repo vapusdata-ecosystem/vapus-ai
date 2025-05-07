@@ -6,10 +6,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 
-	appcl "github.com/vapusdata-ecosystem/vapusdata/core/app/grpcclients"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/utils"
+	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/utils"
 )
 
 type GrpcClient struct {

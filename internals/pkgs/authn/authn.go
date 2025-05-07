@@ -6,7 +6,7 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 type Authenticator struct {

@@ -4,9 +4,9 @@ import (
 	"context"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	searchengine "github.com/vapusdata-ecosystem/vapusdata/core/operator/search"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	searchengine "github.com/vapusdata-ecosystem/vapusai/core/operator/search"
 )
 
 func (p *VapusPlugins) LoadSearchPlugin(ctx context.Context, plugin *models.Plugin) error {

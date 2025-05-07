@@ -5,7 +5,7 @@ import (
 
 	"database/sql"
 
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 func (m *RedshiftStore) SelectInApp(ctx context.Context, query *string, result interface{}) error {

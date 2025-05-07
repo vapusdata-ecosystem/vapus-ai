@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/databases"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 type DataStoreOptions struct {

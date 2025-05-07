@@ -7,10 +7,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 func (x *WebappService) AgentStudioHandler(c echo.Context) error {

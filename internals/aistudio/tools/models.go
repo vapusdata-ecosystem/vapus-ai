@@ -3,11 +3,11 @@ package tools
 import (
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	aiinteface "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/interface"
-	appdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	aidmstore "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio"
-	appcl "github.com/vapusdata-ecosystem/vapusdata/core/app/grpcclients"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
+	aiinteface "github.com/vapusdata-ecosystem/vapusai/core/aistudio/interface"
+	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
+	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
 )
 
 type ToolPropertiesType string

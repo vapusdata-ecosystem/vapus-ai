@@ -8,7 +8,7 @@ import (
 	ar "cloud.google.com/go/artifactregistry/apiv1"
 	arPb "cloud.google.com/go/artifactregistry/apiv1/artifactregistrypb"
 	"github.com/rs/zerolog"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/iterator"
 	option "google.golang.org/api/option"

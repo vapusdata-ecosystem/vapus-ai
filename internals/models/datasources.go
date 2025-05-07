@@ -7,10 +7,10 @@ import (
 
 	guuid "github.com/google/uuid"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"gopkg.in/yaml.v3"
 )
 

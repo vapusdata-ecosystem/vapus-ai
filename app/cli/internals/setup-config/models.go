@@ -1,9 +1,9 @@
 package setupconfig
 
 import (
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/authn"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/authn"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 type VapusInstallerConfig struct {

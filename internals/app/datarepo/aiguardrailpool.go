@@ -5,9 +5,9 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	gdrl "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/guardrails"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	gdrl "github.com/vapusdata-ecosystem/vapusai/core/aistudio/guardrails"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 var GuardrailPoolManager *GuardrailPool

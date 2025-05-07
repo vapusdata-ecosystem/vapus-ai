@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 var Logger = pkgs.DmLogger

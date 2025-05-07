@@ -7,10 +7,10 @@ import (
 	"github.com/rs/zerolog"
 
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/aistudio/services"
-	dmsvc "github.com/vapusdata-ecosystem/vapusdata/aistudio/services"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/aistudio/services"
+	dmsvc "github.com/vapusdata-ecosystem/vapusai/aistudio/services"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type AIStudio struct {

@@ -11,8 +11,8 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/drive/v3"
 	"google.golang.org/api/impersonate"

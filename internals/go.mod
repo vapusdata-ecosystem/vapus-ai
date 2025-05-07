@@ -1,4 +1,4 @@
-module github.com/vapusdata-ecosystem/vapusdata/core
+module github.com/vapusdata-ecosystem/vapusai/core
 
 go 1.24.1
 
@@ -13,7 +13,6 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.8.2
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azsecrets v1.3.1
 	github.com/ClickHouse/clickhouse-go/v2 v2.30.3
-	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/anthropics/anthropic-sdk-go v0.2.0-beta.3
 	github.com/apache/arrow/go/arrow v0.0.0-20211112161151-bc219186db40
 	github.com/apache/arrow/go/v18 v18.0.0-20241007013041-ab95a4d25142
@@ -71,7 +70,6 @@ require (
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.33.0
-	github.com/samber/lo v1.49.1
 	github.com/sashabaranov/go-openai v1.36.1
 	github.com/sendgrid/sendgrid-go v3.16.0+incompatible
 	github.com/serpapi/google-search-results-golang v0.0.0-20240325113416-ec93f510648e
@@ -88,7 +86,6 @@ require (
 	github.com/xuri/excelize/v2 v2.9.0
 	go.mongodb.org/mongo-driver v1.11.4
 	golang.org/x/crypto v0.37.0
-	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
 	golang.org/x/oauth2 v0.29.0
 	gonum.org/v1/plot v0.10.1
 	google.golang.org/api v0.231.0
@@ -378,6 +375,7 @@ require (
 	go.starlark.net v0.0.0-20230525235612-a134d8f9ddca // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.4.0 // indirect
+	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
 	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/net v0.39.0 // indirect

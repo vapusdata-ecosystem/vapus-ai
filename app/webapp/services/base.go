@@ -2,9 +2,9 @@ package services
 
 import (
 	"github.com/rs/zerolog"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/clients"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/clients"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 )
 
 type WebappService struct {

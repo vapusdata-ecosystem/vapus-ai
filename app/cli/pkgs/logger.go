@@ -2,7 +2,7 @@ package pkg
 
 import (
 	zerolog "github.com/rs/zerolog"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 var DmLogger zerolog.Logger

@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func (r *RedisStore) getPath(path string) string {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"reflect"
 
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 func (m *PostgresStore) RunDDL(ctx context.Context, query *string) error {

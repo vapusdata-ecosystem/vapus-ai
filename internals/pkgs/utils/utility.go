@@ -12,8 +12,8 @@ import (
 	"strings"
 
 	guuid "github.com/google/uuid"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"github.com/wI2L/jsondiff"
 	"google.golang.org/protobuf/types/known/structpb"
 )

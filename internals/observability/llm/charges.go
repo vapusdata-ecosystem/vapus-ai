@@ -10,9 +10,9 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	llm_price "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio/llmusages"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	metrics "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio/metrics"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 type PricingStore struct {
@@ -22,7 +22,7 @@ type PricingStore struct {
 }
 
 func NewLLMPricingStore(ctx context.Context, dmstore *apppkgs.VapusStore, obj *mpb.ModelObservability, logger zerolog.Logger) (*PricingStore, error) {
-	priceList, err := llm_price.LLMPriceList(ctx, dmstore, logger)
+	priceList, err := metrics.LLMPriceList(ctx, dmstore, logger)
 	if err != nil {
 		logger.Err(err).Ctx(ctx).Msg("error while fetching models pricing")
 		return nil, err
@@ -143,7 +143,7 @@ func ToUpdate(ctx context.Context, dmstore *apppkgs.VapusStore, serviceProvider 
 	for _, val := range modelUpdateInfo.ModelPrices {
 		fmt.Println("Model Name", val.ModelName)
 	}
-	err = llm_price.UpdatePriceList(ctx, dmstore, &modelUpdateInfo, logger)
+	err = metrics.UpdatePriceList(ctx, dmstore, &modelUpdateInfo, logger)
 	if err != nil {
 		logger.Err(err).Msg("error while getting the updating the model price list")
 		return err

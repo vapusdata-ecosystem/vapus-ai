@@ -5,16 +5,16 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/artifacts"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/blobs"
-	coderepos "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/coderepo"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/databases"
-	emailstore "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/emailstores"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/filestores"
-	secretstore "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/secrets-stores"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/artifacts"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/blobs"
+	coderepos "github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/coderepo"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
+	emailstore "github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/emailstores"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/filestores"
+	secretstore "github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/secrets-stores"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 )
 
 type DataSourceClient struct {

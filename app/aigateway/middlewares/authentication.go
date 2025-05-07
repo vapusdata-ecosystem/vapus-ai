@@ -7,9 +7,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	rpcauth "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/pkgs"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/pkgs"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 	"google.golang.org/grpc/metadata"
 )
 

@@ -3,9 +3,9 @@ package databases
 import (
 	"context"
 
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func (svc *DataStoreClient) InsertBulkDataSet(ctx context.Context, request *datasvcpkgs.InsertDataRequest) (*datasvcpkgs.InsertDataResponse, error) {

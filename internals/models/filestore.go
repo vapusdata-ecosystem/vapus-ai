@@ -1,6 +1,6 @@
 package models
 
-import dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+import dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 
 type FileStoreLog struct {
 	VapusBase  `bun:",embed" json:"base,omitempty" yaml:"base,omitempty" toml:"base,omitempty"`

@@ -5,11 +5,11 @@ import (
 	"os"
 
 	guuid "github.com/google/uuid"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	dmodels "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/authn"
-	encryptions "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	dmodels "github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/authn"
+	encryptions "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 func GetDataSourceParams(filename string) (*dmodels.DataSourceCredsParams, error) {

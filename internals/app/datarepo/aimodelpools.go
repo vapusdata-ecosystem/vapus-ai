@@ -6,11 +6,11 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	aimodels "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/providers"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	aimodels "github.com/vapusdata-ecosystem/vapusai/core/aistudio/providers"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 )
 
 type AIModelNodeConnectionPool struct {

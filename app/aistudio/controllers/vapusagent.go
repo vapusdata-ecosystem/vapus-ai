@@ -4,9 +4,9 @@ import (
 	"github.com/rs/zerolog"
 
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/aistudio/services"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/aistudio/services"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type VapusAgentServer struct {

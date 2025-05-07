@@ -6,12 +6,12 @@ import (
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/packages/param"
 	"github.com/rs/zerolog"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/prompts"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/providers/generic"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	httpCls "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/http"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/providers/generic"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	httpCls "github.com/vapusdata-ecosystem/vapusai/core/pkgs/http"
 )
 
 var (

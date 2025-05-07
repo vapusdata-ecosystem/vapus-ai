@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func (o GroqAI) CrawlModels(ctx context.Context) (result []*models.AIModelBase, err error) {

@@ -8,13 +8,13 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	apppdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	apppdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type PlatformSetup struct {

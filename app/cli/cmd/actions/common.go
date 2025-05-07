@@ -1,7 +1,7 @@
 package actions
 
 import (
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
 )
 
 var (

@@ -13,11 +13,11 @@ import (
 
 	//mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/prompts"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type AnthropicAIInterface interface {

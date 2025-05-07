@@ -3,7 +3,7 @@ package clients
 import (
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dpb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
+	dpb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
 )
 
 func (s *GrpcClient) GetCurrentOrganization(eCtx echo.Context) (*mpb.Organization, error) {

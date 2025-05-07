@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
 
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func (dsc *DataStoreClient) prepareSqlQuery(qopts *datasvcpkgs.QueryOpts, logger zerolog.Logger) (*string, error) {

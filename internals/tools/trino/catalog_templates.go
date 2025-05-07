@@ -1,6 +1,6 @@
 package trinocl
 
-import "github.com/vapusdata-ecosystem/vapusdata/core/types"
+import "github.com/vapusdata-ecosystem/vapusai/core/types"
 
 var TrinoCatalogContentMap = map[string]string{
 	types.StorageEngine_POSTGRES.String(): `connector.name=postgresql

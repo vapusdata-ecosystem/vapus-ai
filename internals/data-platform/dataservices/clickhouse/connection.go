@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"log"
 	"time"
-	"github.com/jackc/pgx/v5/pgxpool" 
+
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	// "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/ClickHouse/clickhouse-go/v2"
+
+	// "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 	"crypto/tls"
+
+	"github.com/ClickHouse/clickhouse-go/v2"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 var DSN_TEMPLATE = "host=%s user=%s password=%s dbname=%s port=%d %s"
@@ -32,16 +35,14 @@ type ClickhouseStore struct {
 }
 
 func NewClickhouseStore(opts *clickhouseOpts, l zerolog.Logger) (*ClickhouseStore, error) {
-	
-
 
 	conn := clickhouse.OpenDB(&clickhouse.Options{
-		Addr: []string{opts.URL}, 
+		Addr:     []string{opts.URL},
 		Protocol: clickhouse.Native,
-		TLS: &tls.Config{}, // enable secure TLS
+		TLS:      &tls.Config{}, // enable secure TLS
 		Auth: clickhouse.Auth{
-		Username: opts.creds.Username,
-		Password: opts.creds.Password,
+			Username: opts.creds.Username,
+			Password: opts.creds.Password,
 		},
 	})
 

@@ -37,7 +37,7 @@ builds:
       - arm64
     ldflags:
       - "{{ .Env.VAPUSDATA_LDFLAGS }}"
-      - "-X github.com/vapusdata-ecosystem/vapusdata/app/cli/version.Version={{ .Env.TAG }}"
+      - "-X github.com/vapusdata-ecosystem/vapusai/app/cli/version.Version={{ .Env.TAG }}"
       - "-X main.Version={{ .Env.TAG }}"
 archives:
   - format: tar.gz
@@ -63,7 +63,7 @@ release:
   make_latest: true
   # github:
   #   owner: vikrant@vapusdata.com
-  #   name: github.com/vapusdata-ecosystem/vapusdata
+  #   name: github.com/vapusdata-ecosystem/vapusai
 
 changelog:
   sort: desc

@@ -11,7 +11,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 	"github.com/rs/zerolog"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 type CraneClient struct {

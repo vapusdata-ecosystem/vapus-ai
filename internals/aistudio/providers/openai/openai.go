@@ -7,10 +7,10 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/prompts"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/providers/generic"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/providers/generic"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 var (

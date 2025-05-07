@@ -7,11 +7,11 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	tpgcp "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/gcp"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	tpgcp "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/gcp"
 )
 
 type EmailStore interface {

@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 func (ds *AIStudioDMStore) CreateAIStudioChat(ctx context.Context, obj *models.AIStudioChat, ctxClaim map[string]string) error {

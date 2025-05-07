@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 type GcpConfig struct {

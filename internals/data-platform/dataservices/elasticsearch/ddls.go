@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8/esapi"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 func (ds *ElasticSearchStore) CreateIndex(ctx context.Context, index string) error {

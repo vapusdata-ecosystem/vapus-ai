@@ -4,9 +4,9 @@ import (
 	"context"
 
 	oidc "github.com/coreos/go-oidc/v3/oidc"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	oauth2 "golang.org/x/oauth2"
 )
 

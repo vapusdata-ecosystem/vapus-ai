@@ -6,13 +6,13 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	setup "github.com/vapusdata-ecosystem/vapusdata/cli/internals/setup-config"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/authn"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	setup "github.com/vapusdata-ecosystem/vapusai/cli/internals/setup-config"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/authn"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 func NewInstallerSpecGenCmd() *cobra.Command {

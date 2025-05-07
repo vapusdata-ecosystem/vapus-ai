@@ -8,7 +8,7 @@ import (
 
 	redis "github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 )
 
 type RedisInterface struct{}

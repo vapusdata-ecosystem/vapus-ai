@@ -4,9 +4,9 @@ import (
 	"context"
 
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	aiinteface "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/interface"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	aiinteface "github.com/vapusdata-ecosystem/vapusai/core/aistudio/interface"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 func (v *AIStudioServices) ChatAgent(stream pb.AIStudio_BidiChatServer) error {

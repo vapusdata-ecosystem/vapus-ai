@@ -9,12 +9,12 @@ import (
 	"sync"
 
 	cobra "github.com/spf13/cobra"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	setup "github.com/vapusdata-ecosystem/vapusdata/cli/internals/setup-config"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/databases"
-	secretstore "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/secrets-stores"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	setup "github.com/vapusdata-ecosystem/vapusai/cli/internals/setup-config"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
+	secretstore "github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/secrets-stores"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 	"gopkg.in/yaml.v3"
 )
 

@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	toml "github.com/pelletier/go-toml/v2"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"gopkg.in/yaml.v3"
 )
 

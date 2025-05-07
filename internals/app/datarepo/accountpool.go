@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func BootAccountCache(dbStore *apppkgs.VapusStore, logger zerolog.Logger) map[string]*models.Account {

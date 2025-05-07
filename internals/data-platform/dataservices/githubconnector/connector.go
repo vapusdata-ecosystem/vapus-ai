@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/go-github/v55/github"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"golang.org/x/oauth2"
 )
 

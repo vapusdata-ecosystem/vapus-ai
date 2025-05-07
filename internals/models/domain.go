@@ -2,9 +2,9 @@ package models
 
 import (
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type Organization struct {

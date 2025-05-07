@@ -6,7 +6,7 @@ import (
 
 	"github.com/rs/zerolog"
 	aiutilitypb "github.com/vapusdata-ecosystem/apis/protos/vapus-aiutilities/v1alpha1"
-	pbtools "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
+	pbtools "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

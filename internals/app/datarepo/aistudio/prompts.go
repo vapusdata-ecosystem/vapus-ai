@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func (ds *AIStudioDMStore) ConfigureAIPrompts(ctx context.Context, obj *models.AIPrompt, ctxClaim map[string]string) error {

@@ -5,10 +5,9 @@ import (
 	"strings"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	aipb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -81,7 +80,7 @@ var AccountManagerRequest *pb.AccountManagerRequest = &pb.AccountManagerRequest{
 	},
 }
 
-var AinodeConfiguratorRequest *aipb.AIModelNodeManagerRequest = &aipb.AIModelNodeManagerRequest{
+var AinodeConfiguratorRequest *pb.AIModelNodeManagerRequest = &pb.AIModelNodeManagerRequest{
 	Spec: &mpb.AIModelNode{
 		Attributes: &mpb.AIModelNodeAttributes{
 			NetworkParams: &mpb.AIModelNodeNetworkParams{
@@ -91,7 +90,7 @@ var AinodeConfiguratorRequest *aipb.AIModelNodeManagerRequest = &aipb.AIModelNod
 	},
 }
 
-var AIAgentsManagerRequest *aipb.AgentManagerRequest = &aipb.AgentManagerRequest{
+var AIAgentsManagerRequest *pb.AgentManagerRequest = &pb.AgentManagerRequest{
 	Spec: &mpb.VapusAgent{
 		Attributes: &mpb.AgentAttributes{
 			Schedule: &mpb.VapusSchedule{
@@ -110,7 +109,7 @@ var AIAgentsManagerRequest *aipb.AgentManagerRequest = &aipb.AgentManagerRequest
 	},
 }
 
-var AiGuardrailManagerRequest *aipb.GuardrailsManagerRequest = &aipb.GuardrailsManagerRequest{
+var AiGuardrailManagerRequest *pb.GuardrailsManagerRequest = &pb.GuardrailsManagerRequest{
 	Spec: &mpb.AIGuardrails{
 		Contents:         &mpb.ContentGuardrailLevel{},
 		Topics:           []*mpb.TopicGuardrails{{}},
@@ -121,7 +120,7 @@ var AiGuardrailManagerRequest *aipb.GuardrailsManagerRequest = &aipb.GuardrailsM
 	},
 }
 
-var AiPromptManagerRequest *aipb.PromptManagerRequest = &aipb.PromptManagerRequest{
+var AiPromptManagerRequest *pb.PromptManagerRequest = &pb.PromptManagerRequest{
 	Spec: &mpb.AIPrompt{
 		Spec: &mpb.PromptSpec{
 			Sample: &mpb.Sample{},

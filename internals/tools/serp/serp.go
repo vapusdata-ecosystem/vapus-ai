@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 type Options func(*SerpClient)

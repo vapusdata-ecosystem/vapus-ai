@@ -3,8 +3,8 @@ package nabrunners
 import (
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	runnerutils "github.com/vapusdata-ecosystem/vapusdata/core/nabrunners/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	runnerutils "github.com/vapusdata-ecosystem/vapusai/core/nabrunners/utils"
 )
 
 type RunnerInspector struct {

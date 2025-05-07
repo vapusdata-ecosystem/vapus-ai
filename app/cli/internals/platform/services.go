@@ -8,7 +8,7 @@ import (
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 func (x *VapusCtlClient) ListResourceActions(resource string) {

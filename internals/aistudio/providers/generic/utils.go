@@ -8,8 +8,8 @@ import (
 	"github.com/openai/openai-go/packages/param"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func (o *OpenAI) CrawlModels(ctx context.Context) (result []*models.AIModelBase, err error) {

@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"context"
 
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 func (ds *ElasticSearchStore) Count(ctx context.Context, queryOpts *datasvcpkgs.QueryOpts) (int64, error) {

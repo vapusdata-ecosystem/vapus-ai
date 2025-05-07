@@ -4,12 +4,12 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/tools/serp"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/tools/serp"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type Search interface {

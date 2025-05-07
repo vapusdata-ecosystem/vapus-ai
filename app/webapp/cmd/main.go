@@ -8,11 +8,11 @@ import (
 	"os"
 
 	"github.com/rs/zerolog"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	middlewares "github.com/vapusdata-ecosystem/vapusdata/webapp/middlewares"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	router "github.com/vapusdata-ecosystem/vapusdata/webapp/router"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	middlewares "github.com/vapusdata-ecosystem/vapusai/webapp/middlewares"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	router "github.com/vapusdata-ecosystem/vapusai/webapp/router"
 	// "github.com/lucas-clemente/quic-go/http3"
 )
 

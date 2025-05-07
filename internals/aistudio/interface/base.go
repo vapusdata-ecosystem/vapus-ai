@@ -7,13 +7,13 @@ import (
 	"github.com/pgvector/pgvector-go"
 	"github.com/rs/zerolog"
 	aiutilitypb "github.com/vapusdata-ecosystem/apis/protos/vapus-aiutilities/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/prompts"
-	appdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	aidmstore "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio"
-	appcl "github.com/vapusdata-ecosystem/vapusdata/core/app/grpcclients"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
+	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
+	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type AIBaseInterface struct {

@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/databases"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func AddResourceArn(ctx context.Context,

@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	"google.golang.org/api/gmail/v1"
 	gapi "google.golang.org/api/googleapi"
 	"google.golang.org/api/option"

@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
 )
 
 // dmCtxCmd represents the dmCtx command

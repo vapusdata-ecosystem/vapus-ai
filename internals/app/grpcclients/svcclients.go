@@ -9,11 +9,10 @@ import (
 
 	"github.com/rs/zerolog"
 	atpb "github.com/vapusdata-ecosystem/apis/protos/vapus-aiutilities/v1alpha1"
-	aipb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	svcconfig "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	svcconfig "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type VapusSvcInternalClients struct {
@@ -23,12 +22,12 @@ type VapusSvcInternalClients struct {
 	UserConn              pb.UserManagementServiceClient
 	OrganizationConn      pb.OrganizationServiceClient
 	UtilityConn           pb.UtilityServiceClient
-	AIStudioConn          aipb.AIStudioClient
-	AgentServiceClient    aipb.AgentServiceClient
-	AgentStudioClient     aipb.AgentStudioClient
-	AIPromptClient        aipb.AIPromptsClient
-	AIModelClient         aipb.AIModelsClient
-	AIGurdrailsClient     aipb.AIGuardrailsClient
+	AIStudioConn          pb.AIStudioClient
+	AgentServiceClient    pb.AgentServiceClient
+	AgentStudioClient     pb.AgentStudioClient
+	AIPromptClient        pb.AIPromptsClient
+	AIModelClient         pb.AIModelsClient
+	AIGurdrailsClient     pb.AIGuardrailsClient
 	platformGrpcClient    *pbtools.GrpcClient
 	aiStudioGrpcClient    *pbtools.GrpcClient
 	PluginServiceClient   pb.PluginServiceClient
@@ -135,12 +134,12 @@ func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.
 		client.aiStudioGrpcClient = pbtools.NewGrpcClient(logger,
 			pbtools.ClientWithInsecure(true),
 			pbtools.ClientWithServiceAddress(client.AIStudioDns))
-		client.AIStudioConn = aipb.NewAIStudioClient(client.aiStudioGrpcClient.Connection)
-		client.AIPromptClient = aipb.NewAIPromptsClient(client.aiStudioGrpcClient.Connection)
-		client.AIModelClient = aipb.NewAIModelsClient(client.aiStudioGrpcClient.Connection)
-		client.AIGurdrailsClient = aipb.NewAIGuardrailsClient(client.aiStudioGrpcClient.Connection)
-		client.AgentServiceClient = aipb.NewAgentServiceClient(client.aiStudioGrpcClient.Connection)
-		client.AgentStudioClient = aipb.NewAgentStudioClient(client.aiStudioGrpcClient.Connection)
+		client.AIStudioConn = pb.NewAIStudioClient(client.aiStudioGrpcClient.Connection)
+		client.AIPromptClient = pb.NewAIPromptsClient(client.aiStudioGrpcClient.Connection)
+		client.AIModelClient = pb.NewAIModelsClient(client.aiStudioGrpcClient.Connection)
+		client.AIGurdrailsClient = pb.NewAIGuardrailsClient(client.aiStudioGrpcClient.Connection)
+		client.AgentServiceClient = pb.NewAgentServiceClient(client.aiStudioGrpcClient.Connection)
+		client.AgentStudioClient = pb.NewAgentStudioClient(client.aiStudioGrpcClient.Connection)
 	}
 	client.NetworkConfig = networkConfig
 
@@ -169,7 +168,7 @@ func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.
 	return client, nil
 }
 
-func SetupAIStudioClient(ctx context.Context, dns string, self string, logger zerolog.Logger) (aipb.AIStudioClient, error) {
+func SetupAIStudioClient(ctx context.Context, dns string, self string, logger zerolog.Logger) (pb.AIStudioClient, error) {
 	// dns = "localhost:9013"
 	telnet2, err := net.DialTimeout("tcp", dns, 1*time.Second)
 	if err != nil {
@@ -183,7 +182,7 @@ func SetupAIStudioClient(ctx context.Context, dns string, self string, logger ze
 	grpcClient := pbtools.NewGrpcClient(logger,
 		pbtools.ClientWithInsecure(true),
 		pbtools.ClientWithServiceAddress(dns))
-	return aipb.NewAIStudioClient(grpcClient.Connection), nil
+	return pb.NewAIStudioClient(grpcClient.Connection), nil
 }
 
 func (x *VapusSvcInternalClients) Close() {

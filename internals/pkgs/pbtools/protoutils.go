@@ -7,9 +7,9 @@ import (
 
 	"buf.build/go/protoyaml"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"

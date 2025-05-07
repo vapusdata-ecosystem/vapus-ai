@@ -14,7 +14,7 @@ import (
 	"sync"
 
 	toml "github.com/pelletier/go-toml/v2"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"gopkg.in/yaml.v3"
 )
 

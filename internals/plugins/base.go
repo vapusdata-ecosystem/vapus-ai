@@ -7,11 +7,11 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/filestores"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	"github.com/vapusdata-ecosystem/vapusdata/core/operator/emailer"
-	searchengine "github.com/vapusdata-ecosystem/vapusdata/core/operator/search"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/filestores"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/operator/emailer"
+	searchengine "github.com/vapusdata-ecosystem/vapusai/core/operator/search"
 )
 
 type PluginsBase struct {

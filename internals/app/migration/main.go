@@ -10,12 +10,12 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/uptrace/bun/migrate"
 	"github.com/urfave/cli/v2"
-	"github.com/vapusdata-ecosystem/vapusdata/core/app/migration/migrations"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/databases"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	llm_observability "github.com/vapusdata-ecosystem/vapusdata/core/observability/llm"
-	// test "github.com/vapusdata-ecosystem/vapusdata/examples/datamesh"
+	"github.com/vapusdata-ecosystem/vapusai/core/app/migration/migrations"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	llm_observability "github.com/vapusdata-ecosystem/vapusai/core/observability/llm"
+	// test "github.com/vapusdata-ecosystem/vapusai/examples/datamesh"
 )
 
 func LoadMigrate(ctx context.Context, sourceCreds *models.DataSourceCredsParams, logger zerolog.Logger) error {

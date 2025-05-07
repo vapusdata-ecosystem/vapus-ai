@@ -7,9 +7,9 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/databricks/databricks-sql-go/logger"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
 )
 
 func GetOrCreateBucket(ctx context.Context, dmstores *apppkgs.VapusStore, createIfNotExist bool, bucketName string) (string, error) {

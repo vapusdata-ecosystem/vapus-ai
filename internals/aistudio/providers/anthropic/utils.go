@@ -9,10 +9,10 @@ import (
 	"github.com/anthropics/anthropic-sdk-go"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 func (o *AnthropicAI) CrawlModels(ctx context.Context) (result []*models.AIModelBase, err error) {

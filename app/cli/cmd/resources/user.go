@@ -3,9 +3,9 @@ package resources
 import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 func NewUserCmd() *cobra.Command {

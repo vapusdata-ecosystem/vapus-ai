@@ -14,42 +14,9 @@ on:
 jobs:
   proto-linter:
     uses: vapusdata-ecosystem/vapusdata/.github/workflows/proto-lint.yaml@main
-  vapus-containers-svc-pipeline:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    uses: vapusdata-ecosystem/vapusdata/.github/workflows/vdc_workflows.yaml@main
-    with:
-      oci-registry: ${{ vars.VAPUS_BETA_GAR }}
-      tag: ${{ github.ref }}
-    secrets:
-      signing-key: ${{ secrets.COSIGN_KEY }}
-      signing-password: ${{ secrets.COSIGN_PASSWORD }}
-      oci-username: ${{ secrets.GAR_DEV_USERNAME }}
-      oci-password: ${{ secrets.VAPUS_BETA_GAR_PASS }}
-  nabhikserver-svc-pipeline:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    uses: vapusdata-ecosystem/vapusdata/.github/workflows/nabhikserver_workflows.yaml@main
-    with:
-      oci-registry: ${{ vars.VAPUS_BETA_GAR }}
-      tag: ${{ github.ref }}
-    secrets:
-      signing-key: ${{ secrets.COSIGN_KEY }}
-      signing-password: ${{ secrets.COSIGN_PASSWORD }}
-      oci-username: ${{ secrets.GAR_DEV_USERNAME }}
-      oci-password: ${{ secrets.VAPUS_BETA_GAR_PASS }}
   webapp-svc-pipeline:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     uses: vapusdata-ecosystem/vapusdata/.github/workflows/webapp_workflows.yaml@main
-    with:
-      oci-registry: ${{ vars.VAPUS_BETA_GAR }}
-      tag: ${{ github.ref }}
-    secrets:
-      signing-key: ${{ secrets.COSIGN_KEY }}
-      signing-password: ${{ secrets.COSIGN_PASSWORD }}
-      oci-username: ${{ secrets.GAR_DEV_USERNAME }}
-      oci-password: ${{ secrets.VAPUS_BETA_GAR_PASS }}
-  dataworker-svc-pipeline:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    uses: vapusdata-ecosystem/vapusdata/.github/workflows/dataworker_workflows.yaml@main
     with:
       oci-registry: ${{ vars.VAPUS_BETA_GAR }}
       tag: ${{ github.ref }}
@@ -69,31 +36,9 @@ jobs:
       signing-password: ${{ secrets.COSIGN_PASSWORD }}
       oci-username: ${{ secrets.GAR_DEV_USERNAME }}
       oci-password: ${{ secrets.VAPUS_BETA_GAR_PASS }}
-  nabrunners-svc-pipeline:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    uses: vapusdata-ecosystem/vapusdata/.github/workflows/nabrunners_svc_workflows.yaml@main
-    with:
-      oci-registry: ${{ vars.VAPUS_BETA_GAR }}
-      tag: ${{ github.ref }}
-    secrets:
-      signing-key: ${{ secrets.COSIGN_KEY }}
-      signing-password: ${{ secrets.COSIGN_PASSWORD }}
-      oci-username: ${{ secrets.GAR_DEV_USERNAME }}
-      oci-password: ${{ secrets.VAPUS_BETA_GAR_PASS }}
   aigateway-svc-pipeline:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     uses: vapusdata-ecosystem/vapusdata/.github/workflows/aigateway_svc_workflows.yaml@main
-    with:
-      oci-registry: ${{ vars.VAPUS_BETA_GAR }}
-      tag: ${{ github.ref }}
-    secrets:
-      signing-key: ${{ secrets.COSIGN_KEY }}
-      signing-password: ${{ secrets.COSIGN_PASSWORD }}
-      oci-username: ${{ secrets.GAR_DEV_USERNAME }}
-      oci-password: ${{ secrets.VAPUS_BETA_GAR_PASS }}
-  platform-svc-pipeline:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    uses: vapusdata-ecosystem/vapusdata/.github/workflows/platform_svc_workflows.yaml@main
     with:
       oci-registry: ${{ vars.VAPUS_BETA_GAR }}
       tag: ${{ github.ref }}
@@ -121,36 +66,10 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - proto-linter
-      - vapus-containers-svc-pipeline
-      - nabhikserver-svc-pipeline
       - webapp-svc-pipeline
-      - dataworker-svc-pipeline
-      - platform-svc-pipeline
-      # - vapusctl-svc-pipeline
       - aistudio-svc-pipeline
+      - aigateway-svc-pipeline
     steps:
-      - name: Download Dataworker OCI Tag
-        uses: actions/download-artifact@v4
-        with:
-          name: dataworker-tag-artifacts
-
-      - name: Download Dataworker OCI Digest
-        uses: actions/download-artifact@v4
-        with:
-          name: dataworker-digest-artifacts
-
-
-      - name: Download Dataproductserver OCI Tag
-        uses: actions/download-artifact@v4
-        with:
-          name: nabhikserver-tag-artifacts
-
-      - name: Download Dataproductserver OCI Digest
-        uses: actions/download-artifact@v4
-        with:
-          name: nabhikserver-digest-artifacts
-
-
       - name: Download Webapp OCI Tag
         uses: actions/download-artifact@v4
         with:
@@ -160,29 +79,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: webapp-digest-artifacts
-
-        
-      - name: Download Platform OCI Tag
-        uses: actions/download-artifact@v4
-        with:
-          name: platform-tag-artifacts
-
-      - name: Download Platform OCI Digest
-        uses: actions/download-artifact@v4
-        with:
-          name: platform-digest-artifacts
-
-
-      - name: Download Nabrunner OCI Tag
-        uses: actions/download-artifact@v4
-        with:
-          name: nabrunners-tag-artifacts
-
-      - name: Download Nabrunner OCI Digest
-        uses: actions/download-artifact@v4
-        with:
-          name: nabrunners-digest-artifacts
-
 
       - name: Download AIGateway OCI Tag
         uses: actions/download-artifact@v4
@@ -194,18 +90,6 @@ jobs:
         with:
           name: aigateway-digest-artifacts
 
-
-      - name: Download VDC OCI Tag
-        uses: actions/download-artifact@v4
-        with:
-          name: vdc-tag-artifacts
-
-      - name: Download VDC OCI Digest
-        uses: actions/download-artifact@v4
-        with:
-          name: vdc-digest-artifacts
-
-
       - name: Download AISTUDIO OCI Tag
         uses: actions/download-artifact@v4
         with:
@@ -215,53 +99,22 @@ jobs:
         with:
           name: aistudio-digest-artifacts
 
-
       - name: Read All artifacts
         id: read-oci-tags-digests
         run: |
           echo cat $(dataworker-digest.txt)
-          PLATFORMDIGEST=$(cat platform-digest.txt)
-          echo "PLATFORMDIGEST=$PLATFORMDIGEST" >> $GITHUB_OUTPUT
-          echo "PLATFORMDIGEST: $PLATFORMDIGEST"
-          PLATFORMTAG=$(cat platform-tag.txt)
-          echo "PLATFORMTAG=$PLATFORMTAG" >> $GITHUB_OUTPUT
-          echo "PLATFORMTAG: $PLATFORMTAG"
-          DATAWORKERDIGEST=$(cat dataworker-digest.txt)
-          echo "DATAWORKERDIGEST=$DATAWORKERDIGEST" >> $GITHUB_OUTPUT
-          echo "DATAWORKERDIGEST: $DATAWORKERDIGEST"
-          DATAWORKERTAG=$(cat dataworker-tag.txt)
-          echo "DATAWORKERTAG=$DATAWORKERTAG" >> $GITHUB_OUTPUT
-          echo "DATAWORKERTAG: $DATAWORKERTAG"
           AISTUDIOTAG=$(cat aistudio-tag.txt)
           echo "AISTUDIOTAG=$AISTUDIOTAG" >> $GITHUB_OUTPUT
           echo "AISTUDIOTAG: $AISTUDIOTAG"
           AISTUDIODIGEST=$(cat aistudio-digest.txt)
           echo "AISTUDIODIGEST=$AISTUDIODIGEST" >> $GITHUB_OUTPUT
           echo "AISTUDIODIGEST: $AISTUDIODIGEST"
-          NABHIKSERVERTAG=$(cat nabhikserver-tag.txt)
-          echo "NABHIKSERVERTAG=$NABHIKSERVERTAG" >> $GITHUB_OUTPUT
-          echo "NABHIKSERVERTAG: $NABHIKSERVERTAG"
-          NABHIKSERVERDIGEST=$(cat nabhikserver-digest.txt)
-          echo "NABHIKSERVERDIGEST=$NABHIKSERVERDIGEST" >> $GITHUB_OUTPUT
-          echo "NABHIKSERVERDIGEST: $NABHIKSERVERDIGEST"
-          VDCTAG=$(cat vdc-tag.txt)
-          echo "VDCTAG=$VDCTAG" >> $GITHUB_OUTPUT
-          echo "VDCTAG: $VDCTAG"
-          VDCDIGEST=$(cat vdc-digest.txt)
-          echo "VDCDIGEST=$VDCDIGEST" >> $GITHUB_OUTPUT
-          echo "VDCDIGEST: $VDCDIGEST"
           WEBAPPTAG=$(cat webapp-tag.txt)
           echo "WEBAPPTAG=$WEBAPPTAG" >> $GITHUB_OUTPUT
           echo "WEBAPPTAG: $WEBAPPTAG"
           WEBAPPDIGEST=$(cat webapp-digest.txt)
           echo "WEBAPPDIGEST=$WEBAPPDIGEST" >> $GITHUB_OUTPUT
           echo "WEBAPPDIGEST: $WEBAPPDIGEST"
-          NABRUNNERSTAG=$(cat nabrunners-tag.txt)
-          echo "NABRUNNERSTAG=$NABRUNNERSTAG" >> $GITHUB_OUTPUT
-          echo "NABRUNNERSTAG: $NABRUNNERSTAG"
-          NABRUNNERSDIGEST=$(cat nabrunners-digest.txt)
-          echo "NABRUNNERSDIGEST=$NABRUNNERSDIGEST" >> $GITHUB_OUTPUT
-          echo "NABRUNNERSDIGEST: $NABRUNNERSDIGEST"
           AIGATEWAYTAG=$(cat aigateway-tag.txt)
           echo "AIGATEWAYTAG=$AIGATEWAYTAG" >> $GITHUB_OUTPUT
           echo "AIGATEWAYTAG: $AIGATEWAYTAG"
@@ -270,40 +123,20 @@ jobs:
           echo "AIGATEWAYDIGEST: $AIGATEWAYDIGEST"
       - name: Debug Outputs
         run: |
-          echo "PLATFORMDIGEST: $PLATFORMDIGEST"
-          echo "PLATFORMTAG: $PLATFORMTAG"
-          echo "DATAWORKERDIGEST: $DATAWORKERDIGEST"
-          echo "DATAWORKERTAG: $DATAWORKERTAG"
           echo "AISTUDIOTAG: $AISTUDIOTAG"
           echo "AISTUDIODIGEST: $AISTUDIODIGEST"
-          echo "NABHIKSERVERTAG: $NABHIKSERVERTAG"
-          echo "NABHIKSERVERDIGEST: $NABHIKSERVERDIGEST"
-          echo "VDCTAG: $VDCTAG"
-          echo "VDCDIGEST: $VDCDIGEST"
           echo "WEBAPPTAG: $WEBAPPTAG"
           echo "WEBAPPDIGEST: $WEBAPPDIGEST"
-          echo "NABRUNNERSTAG: $NABRUNNERSTAG"
-          echo "NABRUNNERSDIGEST: $NABRUNNERSDIGEST"
           echo "AIGATEWAYTAG: $AIGATEWAYTAG"
           echo "AIGATEWAYDIGEST: $AIGATEWAYDIGEST"
           echo $GITHUB_OUTPUT
           echo "==========================================="
           echo "${{ steps.read-oci-tags-digests.outputs.PLATFORMDIGEST }}"
     outputs:
-      PLATFORMDIGEST: ${{ steps.read-oci-tags-digests.outputs.PLATFORMDIGEST }}
-      PLATFORMTAG: ${{ steps.read-oci-tags-digests.outputs.PLATFORMTAG }}
-      DATAWORKERDIGEST: ${{ steps.read-oci-tags-digests.outputs.DATAWORKERDIGEST }}
-      DATAWORKERTAG: ${{ steps.read-oci-tags-digests.outputs.DATAWORKERTAG }}
       AISTUDIOTAG : ${{ steps.read-oci-tags-digests.outputs.AISTUDIOTAG }}
       AISTUDIODIGEST : ${{ steps.read-oci-tags-digests.outputs.AISTUDIODIGEST }}
-      NABHIKSERVERTAG : ${{ steps.read-oci-tags-digests.outputs.NABHIKSERVERTAG }}
-      NABHIKSERVERDIGEST : ${{ steps.read-oci-tags-digests.outputs.NABHIKSERVERDIGEST }}
-      VDCTAG : ${{ steps.read-oci-tags-digests.outputs.VDCTAG }}
-      VDCDIGEST : ${{ steps.read-oci-tags-digests.outputs.VDCDIGEST }}
       WEBAPPTAG : ${{ steps.read-oci-tags-digests.outputs.WEBAPPTAG }}
       WEBAPPDIGEST : ${{ steps.read-oci-tags-digests.outputs.WEBAPPDIGEST }}
-      NABRUNNERSTAG : ${{ steps.read-oci-tags-digests.outputs.NABRUNNERSTAG }}
-      NABRUNNERSDIGEST : ${{ steps.read-oci-tags-digests.outputs.NABRUNNERSDIGEST }}
       AIGATEWAYTAG : ${{ steps.read-oci-tags-digests.outputs.AIGATEWAYTAG }}
       AIGATEWAYDIGEST : ${{ steps.read-oci-tags-digests.outputs.AIGATEWAYDIGEST }}
       
@@ -312,20 +145,10 @@ jobs:
     uses: vapusdata-ecosystem/vapusdata/.github/workflows/build_helmchart_workflows.yaml@main
     needs: aggregate-builds
     with:
-      dataworker-oci-digest: ${{ needs.aggregate-builds.outputs.DATAWORKERDIGEST }}
-      dataworker-oci-tag: ${{ needs.aggregate-builds.outputs.DATAWORKERTAG }}
-      platform-oci-digest: ${{ needs.aggregate-builds.outputs.PLATFORMDIGEST }}
-      platform-oci-tag: ${{ needs.aggregate-builds.outputs.PLATFORMTAG }}
-      vapus-containers-oci-digest: ${{ needs.aggregate-builds.outputs.VDCDIGEST }}
-      vapus-containers-oci-tag: ${{ needs.aggregate-builds.outputs.VDCTAG }}
       vapus-aistudio-tag: ${{ needs.aggregate-builds.outputs.AISTUDIOTAG }}
       vapus-aistudio-digest: ${{ needs.aggregate-builds.outputs.AISTUDIODIGEST }}
-      nabhikserver-tag: ${{ needs.aggregate-builds.outputs.NABHIKSERVERTAG }}
-      nabhikserver-digest: ${{ needs.aggregate-builds.outputs.NABHIKSERVERDIGEST }}
       webapp-tag: ${{ needs.aggregate-builds.outputs.WEBAPPTAG }}
       webapp-digest: ${{ needs.aggregate-builds.outputs.WEBAPPDIGEST }}
-      nabrunners-tag: ${{ needs.aggregate-builds.outputs.NABRUNNERSTAG }}
-      nabrunners-digest: ${{ needs.aggregate-builds.outputs.NABRUNNERSDIGEST }}
       aigateway-tag: ${{ needs.aggregate-builds.outputs.AIGATEWAYTAG }}
       aigateway-digest: ${{ needs.aggregate-builds.outputs.AIGATEWAYDIGEST }}
       upload-artifact: false

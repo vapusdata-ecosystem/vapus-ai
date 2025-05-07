@@ -6,8 +6,8 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	builder "github.com/vapusdata-ecosystem/vapusdata/core/tools/sqlops"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	builder "github.com/vapusdata-ecosystem/vapusai/core/tools/sqlops"
 )
 
 func (m *RedshiftStore) Insert(ctx context.Context, param *datasvcpkgs.InsertDataRequest, logger zerolog.Logger) error {

@@ -2,8 +2,8 @@ package pkgs
 
 import (
 	"github.com/rs/zerolog"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
 )
 
 var SvcPackageManager *apppkgs.VapusSvcPackages

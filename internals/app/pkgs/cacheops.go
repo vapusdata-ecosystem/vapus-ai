@@ -3,7 +3,7 @@ package apppkgs
 import (
 	"context"
 
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func CacheFilter(ctx context.Context, stores *VapusStore, action, key string, value ...string) (interface{}, error) {

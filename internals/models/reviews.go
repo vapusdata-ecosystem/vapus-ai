@@ -1,9 +1,9 @@
 package models
 
 import (
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	types "github.com/vapusdata-ecosystem/vapusdata/core/types"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	types "github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type UpDownVote struct {

@@ -1,7 +1,7 @@
 package pkgs
 
 import (
-	pbac "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbac"
+	pbac "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbac"
 )
 
 var PlatformRBACManager *pbac.PbacConfig

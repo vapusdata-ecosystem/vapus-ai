@@ -9,11 +9,11 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/uptrace/bun"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/connectors/databases"
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type DmStoreOpts func(*VapusStore)

@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 func (m *MysqlStore) prepareMysqlInsertStmt(Ctx context.Context, table string, dataset *map[string]any, bulk bool) *string {

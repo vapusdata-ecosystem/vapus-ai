@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	toml "github.com/pelletier/go-toml/v2"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"gopkg.in/yaml.v3"
 )
 

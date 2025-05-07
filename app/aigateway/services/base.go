@@ -3,8 +3,8 @@ package services
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/pkgs"
-	aidmstore "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/pkgs"
+	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 

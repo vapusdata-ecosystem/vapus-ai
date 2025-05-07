@@ -22,7 +22,7 @@ protogen: ## Generate protobuf
 
 build: ## Build the binary
 # CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -a -installsuffix -ldflags="-w -s" -o $(BINARY_FILE)
-	$(GOBUILD) -o $(BINARY_NAME) -ldflags="-X 'github.com/vapusdata-ecosystem/vapusdata/app/cli.version=$(VERSION)'" main.go
+	$(GOBUILD) -o $(BINARY_NAME) -ldflags="-X 'github.com/vapusdata-ecosystem/vapusai/app/cli.version=$(VERSION)'" main.go
 
 install:
 	$(GOCMD) install 

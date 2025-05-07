@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 func (x *WebappService) InsightsHandler(c echo.Context) error {

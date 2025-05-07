@@ -7,8 +7,8 @@ import (
 	table "github.com/jedib0t/go-pretty/v6/table"
 	text "github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 func NewExplainOps() *cobra.Command {

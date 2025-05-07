@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/labstack/echo/v4"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 )
 
 func LoggingMiddleware(next echo.HandlerFunc) echo.HandlerFunc {

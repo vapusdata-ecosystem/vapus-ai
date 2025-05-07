@@ -1,10 +1,10 @@
 package pkgs
 
 import (
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 var ServiceConfigManager *appconfigs.VapusAISvcConfig

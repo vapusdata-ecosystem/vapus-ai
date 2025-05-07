@@ -5,8 +5,8 @@ import (
 
 	"cloud.google.com/go/vertexai/genai"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 // var defaultModel = "gemini-1.5-flash-001"

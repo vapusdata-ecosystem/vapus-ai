@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	datasvcpkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	datasvcpkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 // func (m *PostgresStore) InsertInBulk(ctx context.Context, param *datasvcpkgs.InsertDataRequest, logger zerolog.Logger) (*datasvcpkgs.InsertDataResponse, error) {

@@ -3,8 +3,8 @@ package processes
 import (
 	guuid "github.com/google/uuid"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 // Non DB model

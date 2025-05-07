@@ -5,12 +5,12 @@ import (
 
 	validator "github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/authn"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	pbac "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbac"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/tools/k8s"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/authn"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	pbac "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbac"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/tools/k8s"
 	"k8s.io/client-go/kubernetes"
 )
 

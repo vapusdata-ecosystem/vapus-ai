@@ -1,9 +1,9 @@
 package pkgs
 
 import (
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	sqlops "github.com/vapusdata-ecosystem/vapusdata/core/tools/sqlops"
-	trinocl "github.com/vapusdata-ecosystem/vapusdata/core/tools/trino"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	sqlops "github.com/vapusdata-ecosystem/vapusai/core/tools/sqlops"
+	trinocl "github.com/vapusdata-ecosystem/vapusai/core/tools/trino"
 )
 
 var TrinoClient *trinocl.TrinoClient

@@ -11,9 +11,9 @@ import (
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
 
-	"github.com/vapusdata-ecosystem/vapusdata/cli/cmd/actions"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/cli/cmd/actions"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 var (

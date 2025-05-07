@@ -10,12 +10,12 @@ import (
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/models"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	"github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
 
 func (x *WebappService) ManageAIModelNodesHandler(c echo.Context) error {

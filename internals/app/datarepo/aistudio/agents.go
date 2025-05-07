@@ -6,9 +6,9 @@ import (
 
 	"github.com/rs/zerolog"
 
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 // CreateDataSource creates a new data source in the data Organization store

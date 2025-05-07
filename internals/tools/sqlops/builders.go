@@ -7,7 +7,7 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	Builder "github.com/huandu/go-sqlbuilder"
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type SqlBuilder struct {

@@ -32,7 +32,7 @@ builds:
           - linux_amd64
     ldflags:
       - "{{ .Env.VAPUSDATA_LDFLAGS }}"
-      - "-X github.com/vapusdata-ecosystem/vapusdata/app/webapp/version.Version={{ .Env.TAG }}"
+      - "-X github.com/vapusdata-ecosystem/vapusai/app/webapp/version.Version={{ .Env.TAG }}"
       - "-X main.Version={{ .Env.TAG }}"
     hooks:
       pre:

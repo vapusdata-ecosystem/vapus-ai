@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/rs/zerolog"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	pbtools "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	pbtools "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

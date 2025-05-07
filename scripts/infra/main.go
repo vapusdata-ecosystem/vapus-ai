@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	vapuspublish "github.com/vapusdata-ecosystem/vapusdata/scripts/goscripts/publish"
+	vapuspublish "github.com/vapusdata-ecosystem/vapusai/scripts/goscripts/publish"
 )
 
 var (

@@ -5,17 +5,17 @@ import (
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/aistudio/utils"
-	aidmstore "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	apppkgss "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	processes "github.com/vapusdata-ecosystem/vapusdata/core/process"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/aistudio/utils"
+	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	apppkgss "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	processes "github.com/vapusdata-ecosystem/vapusai/core/process"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type AIPromptIntAgent struct {

@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	appdrepo "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmlogger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 type AIStudioDMStore struct {

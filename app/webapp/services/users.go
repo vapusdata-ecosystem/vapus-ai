@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/utils"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/utils"
 )
 
 func (x *WebappService) AuthOrganizationHandler(c echo.Context) error {

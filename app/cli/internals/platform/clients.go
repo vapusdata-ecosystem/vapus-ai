@@ -10,9 +10,9 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
-	pb "github.com/vapusdata-ecosystem/apis/protos/vapusdata/v1alpha1"
-	appcl "github.com/vapusdata-ecosystem/vapusdata/core/app/grpcclients"
-	gwcl "github.com/vapusdata-ecosystem/vapusdata/core/app/httpcls"
+	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
+	gwcl "github.com/vapusdata-ecosystem/vapusai/core/app/httpcls"
 )
 
 var AgentGoals = map[string][]interface{}{

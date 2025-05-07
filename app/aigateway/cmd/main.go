@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aigateway/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/server"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aigateway/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/server"
 	// "github.com/lucas-clemente/quic-go/http3"
 )
 

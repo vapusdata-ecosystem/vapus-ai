@@ -6,14 +6,13 @@ import (
 	"log"
 
 	"github.com/rs/zerolog"
-	intmodels "github.com/vapusdata-ecosystem/vapusdata/core/models/internals"
-	aws_config "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/aws"
-	vapusmodel "github.com/vapusdata-ecosystem/vapusdata/scripts/goscripts/installer"
+	aws_config "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/aws"
+	vapusmodel "github.com/vapusdata-ecosystem/vapusai/scripts/goscripts/installer"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	// vapusmodel "github.com/vapusdata-ecosystem/vapusdata/infra/installer"
+	// vapusmodel "github.com/vapusdata-ecosystem/vapusai/infra/installer"
 )
 
 type AWSInstaller struct {
@@ -118,7 +117,7 @@ func (la *AWSInstaller) CreateBucket(ctx context.Context, params *vapusmodel.Set
 	var AwsS3Client aws_config.AwsS3BucketClient
 	AwsS3Client.S3Client = la.S3Client
 
-	err := AwsS3Client.CreateBucket(ctx, &intmodels.BlobOpsParams{
+	err := AwsS3Client.CreateBucket(ctx, &options.BlobOpsParams{
 		BucketName: params.BucketName,
 		Region:     params.Region,
 	})
@@ -132,7 +131,7 @@ func (la *AWSInstaller) CreateBucket(ctx context.Context, params *vapusmodel.Set
 func (la *AWSInstaller) DeleteBucket(ctx context.Context, bucketName string, logger zerolog.Logger) error {
 	var AwsS3Client aws_config.AwsS3BucketClient
 	AwsS3Client.S3Client = la.S3Client
-	err := AwsS3Client.DeleteBucket(ctx, &intmodels.BlobOpsParams{
+	err := AwsS3Client.DeleteBucket(ctx, &options.BlobOpsParams{
 		BucketName: bucketName,
 	})
 	if err != nil {

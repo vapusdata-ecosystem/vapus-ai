@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	gcp "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/gcp"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	gcp "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/gcp"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type FileStore interface {

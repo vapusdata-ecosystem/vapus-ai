@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/services"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/services"
 )
 
 func chatRouter(x fiber.Router) {

@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	server "github.com/vapusdata-ecosystem/vapusdata/aistudio/server"
+	server "github.com/vapusdata-ecosystem/vapusai/aistudio/server"
 )
 
 func main() {

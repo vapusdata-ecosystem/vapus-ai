@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/vapusdata-ecosystem/vapusdata/cli/cmd/resources"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/cli/cmd/resources"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
 )
 
 func NewCreateCmd() *cobra.Command {

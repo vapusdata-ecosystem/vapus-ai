@@ -6,10 +6,10 @@ import (
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/aistudio/services"
-	pbtools "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/pbtools"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/aistudio/services"
+	pbtools "github.com/vapusdata-ecosystem/vapusai/core/pkgs/pbtools"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type VapusAIGuardrails struct {

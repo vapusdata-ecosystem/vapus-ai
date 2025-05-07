@@ -7,15 +7,15 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	tpaws "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/aws"
-	tpazure "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/azure"
-	tpgcp "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/gcp"
-	tphcvault "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/hcvault"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	tpaws "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/aws"
+	tpazure "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/azure"
+	tpgcp "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/gcp"
+	tphcvault "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/hcvault"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 type SecretStore interface {

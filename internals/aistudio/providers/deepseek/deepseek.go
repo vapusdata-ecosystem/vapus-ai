@@ -5,11 +5,11 @@ import (
 	"log"
 
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/prompts"
-	"github.com/vapusdata-ecosystem/vapusdata/core/aistudio/providers/generic"
-	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	httpCls "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/http"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
+	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/providers/generic"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	httpCls "github.com/vapusdata-ecosystem/vapusai/core/pkgs/http"
 )
 
 type DeepseekInterface interface {

@@ -7,9 +7,9 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	pluginsstore "github.com/vapusdata-ecosystem/vapusdata/core/plugins"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	pluginsstore "github.com/vapusdata-ecosystem/vapusai/core/plugins"
 )
 
 func NewPluginPool(ctx context.Context, store *apppkgs.VapusStore, logger zerolog.Logger) (*pluginsstore.VapusPlugins, error) {

@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	plclient "github.com/vapusdata-ecosystem/vapusdata/cli/internals/platform"
-	setupconfig "github.com/vapusdata-ecosystem/vapusdata/cli/internals/setup-config"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
-	k8s "github.com/vapusdata-ecosystem/vapusdata/core/tools/k8s"
+	plclient "github.com/vapusdata-ecosystem/vapusai/cli/internals/platform"
+	setupconfig "github.com/vapusdata-ecosystem/vapusai/cli/internals/setup-config"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
+	k8s "github.com/vapusdata-ecosystem/vapusai/core/tools/k8s"
 )
 
 var devMode, upgradeVapus bool

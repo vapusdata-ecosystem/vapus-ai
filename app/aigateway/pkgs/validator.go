@@ -1,6 +1,6 @@
 package pkgs
 
-import dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+import dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 
 var RequestValidator *dmutils.DMValidator
 

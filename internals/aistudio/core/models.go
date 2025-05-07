@@ -9,7 +9,7 @@ import (
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 

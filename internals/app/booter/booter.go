@@ -5,10 +5,10 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
-	appconfigs "github.com/vapusdata-ecosystem/vapusdata/core/app/configs"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	datasvc "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices"
-	datasvcpkg "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	datasvc "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices"
+	datasvcpkg "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 func BootPlatform(ctx context.Context, conf *appconfigs.PlatformBootConfig, dbm *apppkgs.VapusStore, svcPkgs *apppkgs.VapusSvcPackages, svcPkgsParams *apppkgs.VapusSvcPackageParams, logger zerolog.Logger) error {

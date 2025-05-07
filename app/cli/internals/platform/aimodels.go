@@ -7,9 +7,9 @@ import (
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	aipb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	pkg "github.com/vapusdata-ecosystem/vapusdata/cli/pkgs"
-	gwcl "github.com/vapusdata-ecosystem/vapusdata/core/app/httpcls"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	pkg "github.com/vapusdata-ecosystem/vapusai/cli/pkgs"
+	gwcl "github.com/vapusdata-ecosystem/vapusai/core/app/httpcls"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 func (x *VapusCtlClient) HandleAIStudioAct(ctx context.Context) error {

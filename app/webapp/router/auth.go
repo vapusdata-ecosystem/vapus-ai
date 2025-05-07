@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/vapusdata-ecosystem/vapusdata/webapp/pkgs"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
-	services "github.com/vapusdata-ecosystem/vapusdata/webapp/services"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
+	services "github.com/vapusdata-ecosystem/vapusai/webapp/services"
 )
 
 func authnRouter(e *echo.Echo) {

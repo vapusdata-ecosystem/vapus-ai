@@ -7,12 +7,12 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	dmhttp "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/http"
-	awstp "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/aws"
-	gcptp "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/gcp"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmhttp "github.com/vapusdata-ecosystem/vapusai/core/pkgs/http"
+	awstp "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/aws"
+	gcptp "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/gcp"
 )
 
 type ArtifactStore interface {

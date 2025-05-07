@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/gofiber/fiber/v2"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
 )
 
 func SendAIGatewayError(c *fiber.Ctx, status int, errObj *aicore.AiGatewayError) error {

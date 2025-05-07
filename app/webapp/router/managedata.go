@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/labstack/echo/v4"
-	routes "github.com/vapusdata-ecosystem/vapusdata/webapp/routes"
-	services "github.com/vapusdata-ecosystem/vapusdata/webapp/services"
+	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
+	services "github.com/vapusdata-ecosystem/vapusai/webapp/services"
 )
 
 func domainRouter(e *echo.Group) {

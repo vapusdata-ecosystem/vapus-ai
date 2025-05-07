@@ -1,7 +1,7 @@
 package pkgs
 
 import (
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 type VapusArtifactStorage struct {

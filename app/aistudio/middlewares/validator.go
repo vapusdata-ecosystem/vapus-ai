@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
 	grpc "google.golang.org/grpc"
 )
 

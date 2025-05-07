@@ -10,9 +10,9 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool" // Add this line
 	"github.com/rs/zerolog"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

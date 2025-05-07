@@ -10,11 +10,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-	"github.com/vapusdata-ecosystem/vapusdata/aigateway/pkgs"
-	aicore "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/core"
-	aiinteface "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/interface"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/aigateway/pkgs"
+	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
+	aiinteface "github.com/vapusdata-ecosystem/vapusai/core/aistudio/interface"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 )
 
 func (x *AIGatewayServices) ChatCompletion(c *fiber.Ctx) error {

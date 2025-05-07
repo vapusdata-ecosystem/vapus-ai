@@ -7,13 +7,13 @@ import (
 
 	"github.com/opensearch-project/opensearch-go/v4"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
-	
+
 	"github.com/rs/zerolog"
 	// "github.com/aws/aws-sdk-go-v2/config"
 	// "github.com/opensearch-project/opensearch-go/v2"
 	// "github.com/aws/aws-sdk-go-v2/credentials"
 	// requestsigner "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
-	// aws_config "github.com/vapusdata-ecosystem/vapusdata/core/thirdparty/aws"
+	// aws_config "github.com/vapusdata-ecosystem/vapusai/core/thirdparty/aws"
 )
 
 type OpenSearchOpts struct {
@@ -27,7 +27,7 @@ type OpenSearchOpts struct {
 }
 
 type OpenSearchStore struct {
-	Opts *OpenSearchOpts
+	Opts   *OpenSearchOpts
 	logger zerolog.Logger
 	Client *opensearchapi.Client
 	// AwsConfig aws.Config
@@ -37,8 +37,6 @@ type OpenSearchStore struct {
 	// Response *http.Response
 	// AwsCred  aws.Credentials
 }
-
-
 
 func NewOpenSearchStore(opts *OpenSearchOpts, l zerolog.Logger) (*OpenSearchStore, error) {
 	client, err := opensearchapi.NewClient(
@@ -72,7 +70,6 @@ func (m *OpenSearchStore) Close() {
 	// m.Response.Body.Close()
 	// m.Client.Close()
 }
-
 
 // func NewOpenSearchStore(opts *OpenSearchOpts, l zerolog.Logger) (*OpenSearchStore, error) {
 
@@ -133,7 +130,6 @@ func (m *OpenSearchStore) Close() {
 // 		AwsCred:   creds,
 // 	}, nil
 // }
-
 
 // func getCredentialProvider(accessKey, secretAccessKey, token string) aws.CredentialsProviderFunc {
 // 	return func(ctx context.Context) (aws.Credentials, error) {

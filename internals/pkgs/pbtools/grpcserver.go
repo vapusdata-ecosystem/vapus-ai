@@ -17,7 +17,7 @@ import (
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	prometheus "github.com/prometheus/client_golang/prometheus"
-	"github.com/vapusdata-ecosystem/vapusdata/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/core/types"
 	grpc "google.golang.org/grpc"
 	credentials "google.golang.org/grpc/credentials"
 	grpc_insecure "google.golang.org/grpc/credentials/insecure"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	pkgs "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
+	pkgs "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
 )
 
 // RunDDL executes a DDL query on the Snowflake database

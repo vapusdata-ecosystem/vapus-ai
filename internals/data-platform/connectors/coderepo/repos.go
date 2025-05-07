@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	// velasticsearch "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/elasticsearch"
+	// velasticsearch "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/elasticsearch"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	githubsvc "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/githubconnector"
-	dputils "github.com/vapusdata-ecosystem/vapusdata/core/data-platform/utils"
-	"github.com/vapusdata-ecosystem/vapusdata/core/models"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-	logger "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/logger"
+	githubsvc "github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/githubconnector"
+	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
+	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	logger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 )
 
 type CodeRepoStore interface{}

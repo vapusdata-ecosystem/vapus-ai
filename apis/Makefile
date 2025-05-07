@@ -16,7 +16,6 @@ protogen:
 	protoc-go-inject-tag -input gen-go/protos/models/v1alpha1/organization.pb.go
 	protoc-go-inject-tag -input gen-go/protos/models/v1alpha1/users.pb.go
 	protoc-go-inject-tag -input gen-go/protos/models/v1alpha1/vapusdata.pb.go
-	protoc-go-inject-tag -input gen-go/protos/vapusdata/v1alpha1/*.pb.go
 	protoc-go-inject-tag -input gen-go/protos/models/v1alpha1/vapusai.pb.go
 	protoc-go-inject-tag -input gen-go/protos/vapusai-studio/v1alpha1/*.pb.go
 

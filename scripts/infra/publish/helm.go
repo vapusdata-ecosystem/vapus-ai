@@ -15,36 +15,23 @@ import (
 
 var (
 	logger zerolog.Logger
-	helmRegistry, platformSvcDigest, platformSvcTag,
+	helmRegistry,
 	vapusctlSvcDigest, vapusctlSvcTag,
-	dataworkerSvcDigest, dataworkerSvcTag,
 	webappDigest, webappTag,
 	aistudioDigest, aistudioTag,
 	aigatewayTag, aigatewayDigest,
-	nabrunnersDigest, nabrunnersTag,
-	nabhikserverSvcDigest, nabhikserverSvcTag,
-	vapusDcSvcDigest, vapusDcSvcTag, appVersion string
+	appVersion string
 	upload, bumpVersion, updateValues, registryLogout bool
 )
 
 func initFlags() {
 	flag.StringVar(&helmRegistry, "helm-registry", "", "URL of registry")
-	flag.StringVar(&platformSvcDigest, "platform-svc-digest", "", "Platform service digest")
-	flag.StringVar(&platformSvcTag, "platform-svc-tag", "", "Platform service tag")
 	flag.StringVar(&vapusctlSvcDigest, "vapusctl-svc-digest", "", "vapusctl service digest")
 	flag.StringVar(&vapusctlSvcTag, "vapusctl-svc-tag", "", "vapusctl service tag")
-	flag.StringVar(&dataworkerSvcDigest, "dataworker-svc-digest", "", "dataworker service digest")
-	flag.StringVar(&dataworkerSvcTag, "dataworker-svc-tag", "", "dataworker service tag")
 	flag.StringVar(&webappDigest, "webapp-svc-digest", "", "webapp service digest")
 	flag.StringVar(&webappTag, "webapp-svc-tag", "", "webapp service tag")
-	flag.StringVar(&vapusDcSvcDigest, "vapus-dc-svc-digest", "", "vapus-dc service digest")
-	flag.StringVar(&vapusDcSvcTag, "vapus-dc-svc-tag", "", "vapus-dc service tag")
-	flag.StringVar(&nabhikserverSvcDigest, "nabhikserver-svc-digest", "", "nabhikserver service digest")
-	flag.StringVar(&nabhikserverSvcTag, "nabhikserver-svc-tag", "", "nabhikserver service tag")
 	flag.StringVar(&aistudioDigest, "aistudio-svc-digest", "", "aistudio service digest")
 	flag.StringVar(&aistudioTag, "aistudio-svc-tag", "", "aistudio service tag")
-	flag.StringVar(&nabrunnersDigest, "nabrunners-svc-digest", "", "nabrunners service digest")
-	flag.StringVar(&nabrunnersTag, "nabrunners-svc-tag", "", "nabrunners service tag")
 	flag.StringVar(&aigatewayDigest, "aigateway-svc-digest", "", "aigateway service digest")
 	flag.StringVar(&aigatewayTag, "aigateway-svc-tag", "", "aigateway service tag")
 	flag.StringVar(&appVersion, "appVersion", "", "App version of the chart")
@@ -173,51 +160,17 @@ func updateVapusDataValues(chart *chart.Chart, file string) error {
 	}
 	values := result.AsMap()
 	log.Println("Values before are -----> ", values)
-	if pls, ok := values["platform"].(map[string]any); ok {
-		values["platform"] = updateSvcArtifacts(platformSvcTag, platformSvcDigest, pls)
-	}
 	if pls, ok := values["aistudio"].(map[string]any); ok {
 		values["aistudio"] = updateSvcArtifacts(aistudioTag, aistudioDigest, pls)
 	}
 	if pls, ok := values["webapp"].(map[string]any); ok {
 		values["webapp"] = updateSvcArtifacts(webappTag, webappDigest, pls)
 	}
-	if pls, ok := values["nabhikserver"].(map[string]any); ok {
-		values["nabhikserver"] = updateSvcArtifacts(nabhikserverSvcTag, nabhikserverSvcDigest, pls)
-	}
-	if pls, ok := values["nabrunners"].(map[string]any); ok {
-		values["nabrunners"] = updateSvcArtifacts(nabrunnersTag, nabrunnersDigest, pls)
-	}
 	if pls, ok := values["vapusaigateway"].(map[string]any); ok {
 		values["vapusaigateway"] = updateSvcArtifacts(aigatewayTag, aigatewayDigest, pls)
 	}
 	logger.Info().Msg("Svc Values are updated")
-	if vdas, ok := values[VAPUSDATA_ARTIFACTS].(map[string]any); ok {
 
-		logger.Info().Msg("Updating vapusdata artifacts")
-		if dataArtifacts, ok := vdas["dataworker"].(map[string]any); ok {
-			if dataworkerSvcDigest != "" {
-				dataArtifacts["digest"] = dataworkerSvcDigest
-			}
-			if dataworkerSvcTag != "" {
-				dataArtifacts["tag"] = dataworkerSvcTag
-			}
-			vdas["dataworker"] = dataArtifacts
-		}
-
-		if vdcArtifacts, ok := vdas["vdc"].(map[string]any); ok {
-			if nabhikserverSvcDigest != "" {
-				vdcArtifacts["digest"] = vapusDcSvcDigest
-			}
-			if nabhikserverSvcTag != "" {
-				vdcArtifacts["tag"] = vapusDcSvcTag
-			}
-			vdas["vdc"] = vdcArtifacts
-		}
-		values[VAPUSDATA_ARTIFACTS] = vdas
-	}
-
-	logger.Info().Msg("Vapusdata artifacts are updated")
 	bytes, err = yaml.Marshal(values)
 	if err != nil {
 		logger.Err(err).Msgf("Failed to marshal values: %v", err)

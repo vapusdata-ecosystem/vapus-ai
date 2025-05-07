@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	models "github.com/vapusdata-ecosystem/vapusdata/core/models"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	models "github.com/vapusdata-ecosystem/vapusai/core/models"
 )
 
 func SaveAIToolCallLog(ctx context.Context, dmstore *apppkgs.VapusStore, obj *models.AIToolCallLog, logger zerolog.Logger, ctxClaim map[string]string) error {

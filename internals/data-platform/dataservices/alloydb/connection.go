@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log"
 	"time"
-	"github.com/jackc/pgx/v5/pgxpool" 
+
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 	"github.com/uptrace/bun"
-	"github.com/vapusdata-ecosystem/vapusdata/core/data-platform/dataservices/pkgs"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/dataservices/pkgs"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -61,5 +62,5 @@ func getDsn(opts *AlloyDbOpts) string {
 	localTime := time.Now()
 	localTimeZone := localTime.Location().String()
 	log.Println("Local Time Zone ----->>>>>>>>>>>>>> ", localTimeZone)
-	return fmt.Sprintf(DSN_TEMPLATE, opts.URL, opts.Port,opts.Username, opts.Password, opts.Database)
+	return fmt.Sprintf(DSN_TEMPLATE, opts.URL, opts.Port, opts.Username, opts.Password, opts.Database)
 }

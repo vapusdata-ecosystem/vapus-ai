@@ -5,7 +5,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/slack-go/slack"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
 )
 
 type SlackMessageOpts struct {

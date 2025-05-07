@@ -5,9 +5,9 @@ import (
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	apppkgs "github.com/vapusdata-ecosystem/vapusdata/core/app/pkgs"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	filetools "github.com/vapusdata-ecosystem/vapusdata/core/tools/files"
+	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 )
 
 func GetMessageFileDataSet(ctx context.Context, file *mpb.FileData, bucket string, dmstores *apppkgs.BlobStore, logger zerolog.Logger) (*options.DataSetSummary, error) {

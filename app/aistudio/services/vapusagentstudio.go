@@ -8,17 +8,17 @@ package services
 
 // 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 // 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-// 	"github.com/vapusdata-ecosystem/vapusdata/aistudio/pkgs"
-// 	aitools "github.com/vapusdata-ecosystem/vapusdata/core/aistudio/tools"
-// 	aidmstore "github.com/vapusdata-ecosystem/vapusdata/core/app/datarepo/aistudio"
-// 	apperr "github.com/vapusdata-ecosystem/vapusdata/core/app/errors"
-// 	processes "github.com/vapusdata-ecosystem/vapusdata/core/process"
-// 	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-// 	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
-// 	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
-// 	"github.com/vapusdata-ecosystem/vapusdata/core/types"
-// 	crew "github.com/vapusdata-ecosystem/vapusdata/core/vapusagents/agentcrew"
-// 	crewmodels "github.com/vapusdata-ecosystem/vapusdata/core/vapusagents/models"
+// 	"github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
+// 	aitools "github.com/vapusdata-ecosystem/vapusai/core/aistudio/tools"
+// 	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
+// 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
+// 	processes "github.com/vapusdata-ecosystem/vapusai/core/process"
+// 	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+// 	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+// 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+// 	"github.com/vapusdata-ecosystem/vapusai/core/types"
+// 	crew "github.com/vapusdata-ecosystem/vapusai/core/vapusagents/agentcrew"
+// 	crewmodels "github.com/vapusdata-ecosystem/vapusai/core/vapusagents/models"
 // )
 
 // type VapusAgentStudioRequest struct {

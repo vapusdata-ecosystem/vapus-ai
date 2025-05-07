@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	options "github.com/vapusdata-ecosystem/vapusdata/core/options"
-	dmerrors "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/errors"
+	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
 
 	aws "github.com/aws/aws-sdk-go-v2/aws"
 	ses "github.com/aws/aws-sdk-go-v2/service/ses"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
-	encryption "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/encryption"
-	dmutils "github.com/vapusdata-ecosystem/vapusdata/core/pkgs/utils"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type VapusAgents struct {
