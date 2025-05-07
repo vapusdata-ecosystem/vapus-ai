@@ -26,8 +26,6 @@ type DatabricksStore struct {
 	DB     *sql.DB
 }
 
-// Ex:- token:dapi12345678901234567890123456789012@dbc-a1b2345c-d6e7.cloud.databricks.com:443/sql/1.0/endpoints/a1b234c5678901d2
-
 func NewConnectDatabricks(opts *DatabricksOpts, logger zerolog.Logger) (*DatabricksStore, error) {
 	dsn := getDsn(opts)
 	logger.Debug().Msgf("Connecting to Databricks with DSN: %s", dsn)
