@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/enums.proto";
+import "protos/models/v1alpha1/vapusaiagents.proto";
+import "google/api/annotations.proto"; // Iimport annotations
+
+package aistudio.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha1";
+
+service AgentStudio {
+    rpc Signal(AgentSignalRequest) returns (stream AgentStream) {
+       option (google.api.http) = {
+           post: "/api/v1alpha1/agentstudio/{vapus_agent_id}/signal"
+           body: "*"
+       };
+   }
+
+   rpc DownloadFiles(AgentDownloadFileRequest) returns (AgentDownloadFileResponse) {
+       option (google.api.http) = {
+           get: "/api/v1alpha1/agentstudio/{vapus_agent_id}/download"
+       };
+   }
+}
+
+service AgentService {
+   rpc Get(AgentGetterRequest) returns (AgentResponse) {
+       option (google.api.http) = {
+           get: "/api/v1alpha1/agents/{vapus_agent_id}"
+       };
+   }
+   rpc List(AgentGetterRequest) returns (AgentResponse) {
+       option (google.api.http) = {
+           get: "/api/v1alpha1/agents"
+       };
+   }
+
+   rpc Create(AgentManagerRequest) returns (models.v1alpha1.VapusCreateResponse) {
+       option (google.api.http) = {
+           post: "/api/v1alpha1/agents"
+           body: "*"
+       };
+   }
+
+   rpc Update(AgentManagerRequest) returns (AgentResponse) {
+       option (google.api.http) = {
+           put: "/api/v1alpha1/agents/{vapus_agent_id}"
+           body: "*"
+       };
+   }
+
+   rpc Archive(AgentGetterRequest) returns (AgentResponse) {
+       option (google.api.http) = {
+           delete: "/api/v1alpha1/agents/{vapus_agent_id}"
+       };
+   }
+
+    rpc ManageState(AgentStateRequest) returns (AgentResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/agents/{vapus_agent_id}/state"
+            body: "*"
+        };
+   }
+
+    rpc Validate(AgentSignalRequest) returns (stream AgentStream) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/agents/{vapus_agent_id}/validate"
+            body: "*"
+        };
+   }
+}
+
+message AgentGetterRequest {
+   string vapus_agent_id = 1; // @gotags: yaml:"vapusAgentId"
+   models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"searchParam"
+}
+
+message AgentDownloadFileRequest {
+   string vapus_agent_id = 1; // @gotags: yaml:"vapusAgentId"
+   string file_name = 2; // @gotags: yaml:"fileName"
+}
+
+message AgentTypeParams {
+   models.v1alpha1.VapusSchedule schedule = 1; // @gotags: yaml:"schedule"
+   string trigger_event = 2; // @gotags: yaml:"triggerEvent"
+}
+
+message AgentManagerRequest {
+   models.v1alpha1.VapusAgent spec = 1; // @gotags: yaml:"spec"
+   string vapus_agent_id = 2; // @gotags: yaml:"vapusAgentId"
+   models.v1alpha1.VersionBumpType upgrade_type = 3; // @gotags: yaml:"upgradeType"
+}
+
+message AgentSignalRequest {
+   string input = 1; // @gotags: yaml:"input"
+   string vapus_agent_id = 2; // @gotags: yaml:"vapusAgentId"
+   string version = 3; // @gotags: yaml:"version"
+   repeated models.v1alpha1.FileData files = 4; // @gotags: yaml:"files"
+}
+
+message AgentStateRequest {
+   string input = 1; // @gotags: yaml:"input"
+   string vapus_agent_id = 2; // @gotags: yaml:"vapusAgentId"
+   string version = 3; // @gotags: yaml:"version"
+   models.v1alpha1.ResourceLcActions action = 4; // @gotags: yaml:"version"
+}
+
+message AgentResponse {
+   repeated models.v1alpha1.VapusAgent output = 1; // @gotags: yaml:"output"
+   models.v1alpha1.DMResponse dm_resp = 2; // @gotags: yaml:"dmResp"
+}
+
+message AgentDownloadFileResponse {
+   repeated models.v1alpha1.FileData output = 1; // @gotags: yaml:"output"
+}
+
+message AgentStream {
+   int64 status_code = 1; // @gotags: yaml:"statusCode"
+   models.v1alpha1.NabhikTaskStreamChunk output = 2; // @gotags: yaml:"output"
+}

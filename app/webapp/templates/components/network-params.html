@@ -1,0 +1,76 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        <label class="form-labels" for="net_address">Address</label>
+        <input id="net_address" name="address" type="text" placeholder="Enter address"
+            class="form-input-field " />
+    </div>
+    <div>
+        <label class="form-labels" for="net_port">Port</label>
+        <input id="net_port" name="port" type="number" placeholder="Enter port" value="0"
+            class="form-input-field " />
+    </div>
+    <div id="network-params-databases">
+        <label class="form-labels">Databases (comma separated)</label>
+        <input type="text" name="databases" placeholder="Enter databases/indexes/datastores (comma separated)"
+            class="form-input-field " />
+    </div>
+
+    <div id="network-params-database-prefix">
+        <label class="form-labels">Database Prefixes (comma separated)</label>
+        <input type="text" name="databasePrefixes" placeholder="Prefix1,Prefix2"
+            class="form-input-field ">
+    </div>
+
+    <div>
+        <label class="form-labels">Version</label>
+        <input type="text" name="version" placeholder="Enter version"
+            class="form-input-field ">
+    </div>
+</div>
+
+{{ template "generic-credentials.html" . }}
+
+<script>
+    function GetNetworkParams() {
+        var dbs = document.getElementsByName('netParams.databases').value;
+        var dbPrefixes = document.getElementsByName('netParams.databasePrefixes').value;
+        if (dbs == null || dbs == "") {
+            dbs = "";
+        }
+        if (dbPrefixes == null || dbPrefixes == "") {
+            dbPrefixes = "";
+        }
+        dbs = dbs.trim();
+        dbPrefixes = dbPrefixes.trim();
+        if (dbs == "") {
+            dbs = [];
+        } else {
+            dbs = dbs.split(',');
+        }
+        if (dbPrefixes == "") {
+            dbPrefixes = [];
+        } else {
+            dbPrefixes = dbPrefixes.split(',');
+        }
+        var port = parseInt(document.getElementById('net_port').value);
+        if (isNaN(port)) {
+            port = 0;
+        }
+        var netParams = {
+            address: document.getElementById('net_address').value,
+            port: port,
+            databases: dbs,
+            databasePrefixes: dbPrefixes,
+            version: document.getElementsByName('netParams.version').value,
+            dsCreds: []
+        }
+        var creds = GetGenericCredentialsData();
+        isDbSecret = document.getElementById('isAlreadyInSecretBs').checked;
+        if (isDbSecret) {
+            creds.isAlreadyInSecretBs = true;
+        }
+        netParams.dsCreds.push(creds);
+        return netParams;
+    }
+
+</script>

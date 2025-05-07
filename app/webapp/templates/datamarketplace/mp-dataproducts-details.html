@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  <script src="/static/js/datamarketplace.js"></script>
+  <script>
+    // JavaScript function to toggle expand/collapse rows
+    function toggleRow(rowId) {
+      const expandedRow = document.getElementById(rowId);
+      expandedRow.classList.toggle("hidden");
+    }
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle("hidden");
+    }
+  </script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+    <div id="loading-overlay"
+      class="absolute inset-0 z-10 flex items-center justify-center  bg-zinc-600/90  hidden">
+      <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+    </div>
+   <div class="flex-grow p-2 w-full">
+        <div class="flex justify-between mb-2 items-center bg-[#1b1b1b]  border border-zinc-500  rounded-lg shadow-md p-2">
+          <h2 class="text-xl text-gray-100 font-semibold mb-4">{{ .Response.DataProduct.Name }}</h2>
+          <div class="relative inline-block text-left">
+            <div>
+              <button id="openModalBtn" onclick="openModal(`{{ .Response.DataProduct.DataProductId }}`)"
+                class="px-4 py-2 bg-orange-700  text-white rounded-lg hover:bg-pink-900"> Request Access</button>
+            </div>
+            <!-- Modal Overlay -->
+            <div id="{{ .Response.DataProduct.DataProductId }}"
+              class="fixed inset-0 bg-zinc-600/90  flex items-center justify-center hidden">
+              <!-- Modal Content -->
+              <div class="bg-zinc-800 text-gray-100 rounded-lg shadow-lg w-4/5 h-[70%]">
+                <div class="px-3 py-3">
+                  <h3 class="text-lg font-semibold">{{ .Response.DataProduct.Name }} - Access Request</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                  <!-- Textarea -->
+                  <textarea id="commentMessage"
+                  class="w-full px-3 py-2 bg-zinc-700 rounded-lg focus:ring focus:ring-orange-700"
+                    placeholder="Type your message..."></textarea>
+                </div>
+                <div class="px-3 py-3 flex justify-end space-x-3">
+                  <!-- Buttons -->
+                  <button id="submitBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="requestAccess(`{{ .RequestAccessAPI }}`,
+                        `{{ .Response.DataProduct.DataProductId }}`,
+                        `{{ .GlobalContext.AccessTokenKey }}`,`commentMessage`)">
+                    Submit
+                  </button>
+                  <button id="cancelBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                    onclick="closeModal(`{{ .Response.DataProduct.DataProductId }}`)">
+                    Cancel
+                  </button>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Tabs -->
+        <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
+          <div class="flex border-b border-zinc-500">
+          <button onclick="showTab('overview')"
+            class="tab-button px-4 py-2 focus:outline-none">Overview</button>
+          <button onclick="showTab('schemas')"
+            class="tab-button px-4 py-2 focus:outline-none">Schemas</button>
+          <button onclick="showTab('ioports')"
+            class="tab-button px-4 py-2 focus:outline-none">I/O Ports</button>
+          <button onclick="showTab('compliances')"
+            class="tab-button px-4 py-2 focus:outline-none">Compliances</button>
+          <button onclick="showTab('governance')"
+            class="tab-button px-4 py-2 focus:outline-none">Governance</button>
+          <button onclick="showTab('lineages')"
+            class="tab-button px-4 py-2 focus:outline-none">Lineage Attributes</button>
+          <button onclick="showTab('accessPolicies')"
+            class="tab-button px-4 py-2 focus:outline-none">Access Policies</button>
+        </div>
+
+        <!-- Tab Content -->
+        {{ template "dataproduct-details-common.html" . }}
+        </div>
+
+
+    </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('overview');
+    });
+    function openModal(id) {
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
+  </script>
+
+</body>
+
+</html>

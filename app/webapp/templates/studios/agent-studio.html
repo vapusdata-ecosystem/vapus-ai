@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  <script src="/static/js/agent-studio.js"></script>
+  {{ template "manage-platform-imports.html" . }}
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+  <style src="/static/css/customelems.css"></style>
+  <script>
+    // JavaScript function to toggle expand/collapse rows
+    function toggleRow(rowId) {
+      const expandedRow = document.getElementById(rowId);
+      expandedRow.classList.toggle("hidden");
+    }
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle("hidden");
+    }
+  </script>
+
+  <style>
+    /* Main Content Area Styling */
+    .main-container {
+      height: 100vh;
+      padding: 4px;
+      background: radial-gradient(circle, rgb(0, 0, 0) -25%, transparent 10%) 0 0, radial-gradient(circle, rgb(0, 0, 0) -25%, transparent 10%) 10px 10px;
+      background-size: 20px 20px;
+    }
+
+    /* Container for the blocks */
+    .blocks-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      /* Stack blocks vertically */
+      max-height: 75vh;
+      /* Limit the height to 75% of the viewport */
+      overflow-y: auto;
+      /* Scroll vertically if needed */
+      /* gap: 10px; */
+      align-items: flex-start;
+      /* Center horizontally */
+    }
+
+    /* Box Styling */
+    .box {
+      /* Fixed height */
+      position: relative;
+      text-align: center;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+      margin-bottom: 2px;
+    }
+
+    .link {
+      height: 20px;
+      width: 60px;
+      border-left-width: 5px;
+      border-right-width: 5px;
+      border-color: black;
+    }
+
+    /* .box::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px solid !important;
+      border-color: rgb(20, 202, 105); 
+     } */
+
+    /* Highlighted box styling */
+    .highlighted {
+      opacity: 1;
+      color: rgb(2, 20, 71);
+      border: 3px solid rgb(241, 236, 94);
+    }
+
+    /* .box:nth-child(odd) {
+      border-color: rgb(20, 202, 105); 
+    }
+
+    .box:nth-child(even) {
+      border-color: rgb(7, 77, 40); 
+    } */
+  </style>
+</head>
+
+<body class="bg-gray-200 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="flex-grow flex overflow-y-auto scrollbar ">
+    <!-- Sidebar -->
+    {{ template "main-sidebar.html" . }}
+
+    <div class="flex bg-white shadow-md rounded-lg p-2 w-5/6 mt-2">
+    <!-- Chat and Editor Section -->
+    <div class="flex-grow bg-white shadow-md rounded-lg p-2 flex flex-col w-4/5">
+      <div class="main-container rounded-lg border border-gray-200 bg-white">
+        <div class="blocks-container" id="agentRunCanvas">
+          <!-- Initially empty, blocks will be added here dynamically -->
+        </div>
+      </div>
+
+    </div>
+    <div class="flex-grow w-1/5 bg-white shadow-md rounded-lg p-2 text-sm  overflow-y-auto scrollbar ">
+      {{ range $val := .Response.AIAgents }}
+      <div hidden id="{{ $val.AgentId }}-steps"> {{ protoToJSON $val.Steps }} </div>
+      {{ end}}
+      <div hidden id="stepsEnums"> {{ toJSON $.StepsEnum }} </div>
+      <div class="grid grid-cols-1 gap-4">
+        <!-- Left Column -->
+        <div>
+          <div class="mb-4 dropdown">
+            <label for="aiAgent" class="block text-gray-700 font-medium mb-1">Agents</label>
+            <div class="vapus-dropdown-toggle agent-dropdown-toggle rounded-lg bg-black text-white">Select Agent</div>
+            <div class="vapus-dropdown-menu agent-dropdown-menu rounded-lg">
+              <!-- Parent Items -->
+              {{ range $id, $val := .Response.AIAgents }}
+              <div class="vapus-dropdown-item text-sm child rounded-lg m-2"
+              data-value="{{ $val.AgentId }}" data-displayName="{{ $val.Name }}">{{ $val.Name }}</div>
+              {{ end }}
+            </div>
+          </div>
+          <input type="text" id="aiAgent" hidden value="">
+        </div>
+
+        <!-- Right Column -->
+        <div>
+          <div class="mb-2 dropdown">
+            <label for="dataproduct" class="block text-gray-700 text-sm font-medium mb-1">Data Products</label>
+            <div class="vapus-dropdown-toggle dp-dropdown-toggle rounded-lg bg-black text-white">Select Data Product</div>
+            <div class="vapus-dropdown-menu dp-dropdown-menu rounded-lg">
+              <!-- Parent Items -->
+              {{ range $id, $val := .Response.DataProducts }}
+              <div class="vapus-dropdown-item text-sm child rounded-lg m-2"
+              data-value="{{ $val.DataProductId }}" data-displayName="{{ $val.Name }}">{{ $val.Name }}</div>
+              {{ end }}
+            </div>
+          </div>
+          <input type="text" id="dataproduct" hidden value="">
+        </div>
+      </div>
+      <div class="mt-2 flex w-full items-center space-x-2">
+        <!-- Text Input -->
+        <textarea id="textInput" onkeydown="EnterInput(event)"
+          class="w-full p-3 border border-gray-300 rounded-lg  focus:outline-none focus:ring focus:ring-orange-700"
+          placeholder="Provide your input here. In case you want to provide strict input, please add the steps manually by clicking on 'Add steps manually' button."
+          style="height: 250px;"></textarea>
+      </div>
+      <div class="mt-2 flex w-full justify-center space-x-2">
+        <!-- Send Button -->
+        <button id="addContextButton"
+        class="bg-black text-white w-1/2 text-sm px-2 py-2 hover:bg-gray-800 rounded-lg hover:bg-red-500"
+        onclick="openAgentContextPopup()">
+        Add Context
+      </button>
+        <button class="w-1/2 px-2 py-2 text-sm bg-orange-700  text-white rounded-lg hover:bg-red-500" onclick="invokeAgent()">
+          Invoke 
+        </button>
+      </div>
+    </div>
+    </div>
+  </div>
+  {{ template "agent-context-popup.html" . }}
+</body>
+<script>
+  function invokeAgent() {
+    inputArea = document.getElementById("textInput");
+    inputArea.disabled = true;
+    // document.getElementById("agentRunCanvas").innerHTML = "";
+    const textInput = inputArea.value;
+    const aiAgent = document.getElementById("aiAgent").value;
+    
+    if (aiAgent === "") {
+      showAlert(AlertError, "Agents", "Please select agent to proceed.");
+      return;
+    }
+    // const aiModelNode = document.getElementById("aiModelNode").value;
+    // let aiModel = "";
+    // if (aiModelNode === "") {
+    //   aiModel = ""
+    // } else {
+    //   aiModel = document.getElementById("model-val-" + aiModelNode).value;
+    // }
+    // console.log(aiModel);
+    // console.log("model-val-" + aiModelNode);
+    let database = "";
+    let dataproduct = document.getElementById("dataproduct").value;
+    // if (dataproduct === "") {
+    //   database = "";
+    // } else {
+    //   database = document.getElementById("dataproduct-dbs-" + dataproduct).value;
+    // }
+    // inputArea.value = "";
+
+    api = `{{ .Response.ActionParams.API }}`
+    streamAPI = `{{ .Response.ActionParams.StreamAPI }}`
+    const stepsContext = AgentStepsContext;
+    agentAction(
+      api,
+      streamAPI,
+      `{{ .GlobalContext.AccessTokenKey }}`,
+      "agentRunCanvas", aiAgent, textInput, dataproduct,stepsContext)
+    inputArea.disabled = false;
+  }
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   agentselectors = new Choices('#agentIds', {
+  //           removeItemButton: true, // Adds a remove button to selected items
+  //           placeholderValue: "Select agents",
+  //           searchPlaceholderValue: "Search...",
+  //           shouldSortItems: true, // Sorts dropdown items alphabetically
+  //           noChoicesText: '',
+  //           classNames:{
+  //               placeholder: 'choices__placeholders'
+  //           },
+  //           maxItemText: (maxItemCount) => {
+  //               return `Only ${maxItemCount} values can be added`;
+  //           },
+  //       });
+  // });
+  setupDropdown({
+    dropdownToggleSelector:'.dp-dropdown-toggle',
+    dropdownMenuSelector:'.dp-dropdown-menu',
+    inputFieldSelector:'#dataproduct' ,// Optional, for updating a hidden input or text field
+    parentClass : 'parent',
+    childClass : 'child',
+    displayAttribute: 'data-displayName', // Default transform for display text
+    valueTransform:(value) => value,
+  }) 
+
+  setupDropdown({
+    dropdownToggleSelector:'.agent-dropdown-toggle',
+    dropdownMenuSelector:'.agent-dropdown-menu',
+    inputFieldSelector:'#aiAgent' ,// Optional, for updating a hidden input or text field
+    parentClass : 'parent',
+    childClass : 'child',
+    displayAttribute: 'data-displayName', // Default transform for display text,
+    valueTransform:(value) => value,
+  }) 
+
+  function fetchAttributeFromDiv(divId, attribute) {
+    const div = document.getElementById(divId);
+    if (div) {
+      return div.getAttribute(attribute);
+    }
+    return null;
+  }
+
+</script>
+
+</html>

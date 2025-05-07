@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+   <div class="flex-grow p-2 w-full">
+      <section id="tables" class="space-y-6">
+        <div class="flex justify-between mb-2 items-center p-2">
+          {{ template "create-new-resource-href.html" . }}
+        </div>
+        <div class="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
+          <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="modelNodesDataTable">
+            <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            </thead>
+            <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-sm">
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    <div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+  </div>
+  <script>
+    function openModal(id) {
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      var headers = ["Name", "Service Provider", "Node Id", "Owner", "Status", "View Details"];
+      var dataTableArray = [];
+      {{ range $id, $val := .Response.AIModelNodes }}
+      dataTableArray.push({"Name": "{{ $val.Name }}", "Service Provider": "{{ $val.Attributes.ServiceProvider }}", "Node Id": "{{ $val.ModelNodeId }}", "Owner": "{{ $val.ResourceBase.Organization }}", "Status": "{{ $val.ResourceBase.Status }}", "View Details": `<a href="{{ $.Response.BackListingLink }}/{{ $val.ModelNodeId }}" target="_blank" title="Open in new tab">{{ template "view-details-svg.html" . }}</a>`});
+      {{ end }}
+      renderDatatable("modelNodesDataTable", dataTableArray,headers, null);
+      // console.log("respSchema", respSchema);
+      //   setTimeout(() => {
+      //     addTablePagination({
+      //   tableId: "modelNodesDataTable",
+      //   rowsPerPage: 10,
+      //   prevPageBtn: document.getElementById("prevPage"),
+      //   nextPageBtn: document.getElementById("nextPage"),
+      //   currentPageSizeSpan: document.getElementById("currentPageSize"),
+      //   totalElementsSpan: document.getElementById("totalElements"),
+      //   });
+      //   }, 100);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.webapp.fullname }}
+  labels:
+    {{- include "vapusdata.webapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.webapp.replicaCount }}
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "vapusdata.webapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "vapusdata.webapp.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ .Values.genServiceAccount.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.webapp.service.http.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{.Values.vapusdata.registry }}{{ .Values.webapp.artifacts.image }}@{{ .Values.webapp.artifacts.digest }}
+          imagePullPolicy: {{ .Values.webapp.artifacts.pullPolicy }}
+          ports:
+            - name: {{ .Values.webapp.service.http.name }}
+              containerPort: {{ .Values.webapp.service.http.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ .Values.vapusdata.globalSecrets.certs.tlsSecret }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.webapp.volumePaths.certMount.path }}
+              readOnly: true
+            - name: {{ .Values.webapp.volumePaths.serviceConfig.name }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.webapp.volumePaths.serviceConfig.path }}
+              readOnly: true
+            - name: {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.nabhikserver.volumePaths.networkConfig.path }}
+              readOnly: true
+          env:
+            - name: MOUNT_PATH
+              value: {{ .Values.app.podMountPath }}
+          resources:
+            {{- toYaml .Values.webapp.resources | nindent 12 }}
+          readinessProbe:
+            httpGet: 
+              path: /healthz
+              port: {{ .Values.webapp.service.http.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 300
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet: 
+              path: /healthz
+              port: {{ .Values.webapp.service.http.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 300
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 5
+      volumes:
+        - name: {{ .Values.webapp.volumePaths.serviceConfig.name }}
+          configMap:
+            name: {{ .Values.webapp.volumePaths.serviceConfig.name }}
+        - name:  {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+          configMap:
+            name:  {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+        - name: {{ .Values.vapusdata.globalSecrets.certs.tlsSecret }}
+          projected:
+            sources:
+              - secret:
+                  name: {{ .Values.vapusdata.globalSecrets.certs.tlsSecret }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

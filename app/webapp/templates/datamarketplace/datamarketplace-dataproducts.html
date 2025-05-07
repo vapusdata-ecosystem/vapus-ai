@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    <script src="/static/js/datamarketplace.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+       <div class="flex-grow p-2 w-full">
+            {{ template "section-header-search.html" . }}
+            <section id="grids" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {{ template "dataproduct-listing-card.html" . }}
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+            const buttons = sidebar.getElementsByTagName('button');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuitems = document.getElementById('menuitems');
+            const buttons = menuitems.getElementsByTagName('a');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+        document.getElementById('searchInput').addEventListener('input', function () {
+            var filter = this.value.toLowerCase();
+            var items = document.querySelectorAll('.dataproductItem');
+
+            items.forEach(function (item) {
+                if (item.textContent.toLowerCase().includes(filter)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

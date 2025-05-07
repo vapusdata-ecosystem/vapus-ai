@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.platform.volumePaths.serviceConfig.name }}
+  labels:
+    {{- include "vapusdata.platform.labels" . | nindent 4 }}
+data:
+  platform-service-config.yaml: |-
+    vapusBESecretStorage: 
+      filePath: "{{ .Values.platform.volumePaths.secretsMount.path }}/{{ .Values.vapusdata.globalSecrets.backend.secretStoreFileName }}"
+    vapusBEDbStorage: 
+      secret:  {{ .Values.secrets.backendDataStore.secret }}
+    vapusBECacheStorage: 
+      secret:  {{ .Values.secrets.backendCacheStore.secret }}
+    vapusFileStorage: 
+      secret:  {{ .Values.secrets.fileStore.secret }}
+    localFSPaths:
+      domainFiles: local-storage/domains
+      dataSourceFiles: local-storage/datasource 
+    JWTAuthnSecrets: 
+      secret: {{ .Values.secrets.JWTAuthnSecrets.secret }}
+    authnSecrets: 
+      secret: {{ .Values.secrets.authnSecrets.secret }}
+    serverCerts:
+      mtls: False
+      caCertFile: {{ .Values.platform.volumePaths.certMount.path }}/ca-cert.pem
+      serverCertFile: {{ .Values.platform.volumePaths.certMount.path }}/tls.crt
+      serverKeyFile: {{ .Values.platform.volumePaths.certMount.path }}/tls.key
+      clientCertFile: {{ .Values.platform.volumePaths.certMount.path }}/client-cert.pem
+      clientKeyFile: {{ .Values.platform.volumePaths.certMount.path }}/client-key.pem
+    pbacConfig:
+      filePath: {{ .Values.vapusdata.globalConfigs.policyConfig.fileName }}
+    authnMethod: oidc
+    baseOs:
+      - artifactType: vdc
+        url: {{ .Values.vapusDataArtifacts.vdc.image }}
+        digest: {{ .Values.vapusDataArtifacts.vdc.digest }}
+        domainMounts: 
+          - "/mnt/vapusdata"
+      - artifactType: dataworkers
+        url: {{ .Values.vapusDataArtifacts.dataworker.image }}
+        digest: {{ .Values.vapusDataArtifacts.dataworker.digest }}
+        domainMounts: 
+          - "/mnt/vapusdata"
+    artifactStore:
+      secret: {{ .Values.secrets.artifactStore.secret }}
+    networkConfigFile: {{ .Values.platform.volumePaths.networkConfig.path }}/{{ .Values.vapusdata.globalConfigs.networkConfig.fileName }}
+    platformBaseAccount:
+      {{- with .Values.accountBootstrap.platformOwners }}
+      platformOwners:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      platformAccount: 
+        name: {{ .Values.accountBootstrap.platformAccount.name }}
+        creator: {{ .Values.accountBootstrap.platformAccount.creator }}
+      platformAccountDomain:
+        name: {{ .Values.accountBootstrap.platformAccountDomain.name }}
+      datamarketplace:
+        name: {{ .Values.accountBootstrap.datamarketplace.name }}
+        creator: {{ .Values.accountBootstrap.datamarketplace.creator }}
+    trinoSpecs:
+      appSelector: {{ .Values.trino.fullnameOverride }}
+      namespace: {{ .Values.app.namespace }}
+      trinoCordDeployment: {{ .Values.trino.coordinatorNameOverride }}
+      trinoWorkerDeployment: {{ .Values.trino.workerNameOverride }}
+      trinoCordSvc: {{ .Values.trino.fullnameOverride }}
+      trinoWorkerSvc: {{ .Values.trino.fullnameOverride }}-worker
+      trinoCordDeploymentContainer: trino-coordinator
+      trinoWorkerDeploymentContainer: trino-worker
+      trnioWorkerPort: {{ .Values.trino.service.port }}
+      trinoCordPort: {{ .Values.trino.service.port }}
+      trinoCordSvcPort: {{ .Values.trino.service.port }}
+      trinoWorkerSvcPort: {{ .Values.trino.service.port }}
+      trinoAppName: {{ .Values.trino.fullnameOverride }}
+      trinoCatalog: {{ .Values.trino.fullnameOverride }}-catalog

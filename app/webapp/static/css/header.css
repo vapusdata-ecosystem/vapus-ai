@@ -1,0 +1,13 @@
+.hidden {
+    display: none;
+}
+.selected-domain {
+    background-color:  rgb(0, 25, 95);
+    color: #fff;
+    font-weight: bold;
+}
+.selected-domain:hover {
+    background-color:  rgb(0, 25, 95);
+    color: #fff;
+    font-weight: bold;
+}

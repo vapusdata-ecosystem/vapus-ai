@@ -1,0 +1,68 @@
+domain: "domain-vikrant-first-main-domain-7c54a13a-12fe-4633-9f59-a082e03a7982"
+dataWorkerType: ETL
+dataWorkerId: ""
+etl:
+    name: "temp-vapus-1"
+    extracter:
+        - name: "classicmodels-extract"
+          dataSource: "datasource-first-worker-data-source-8bf7e2e9-d763-4aa5-a648-879d976e6f9b"
+          label: "classicmodels-extract-1"
+          inputFromLabel: ""
+          dataRule:
+            dataBase: "classicmodels"
+            rawQuery:
+                dataTable: ["customers","orderdetails","orders","products","productlines"]
+                rawQuery: "select * from orderDetails where quantityOrdered > 20;"
+                textQuery: ""
+            customQueryParam:
+                queryCondition: ""
+                fields: []
+                distinctFields: ""
+                orderBy: []
+                limit: 0
+                batchSize: 0
+                dataTables: []
+    loader:
+        - name: "classicmodels-loader"
+          dataSource: "datasource-first-worker-data-source-8bf7e2e9-d763-4aa5-a648-879d976e6f9b"
+          domain: "domain-vikrant-first-main-domain-7c54a13a-12fe-4633-9f59-a082e03a7982"
+          labels:
+            - "classicmodels-extract-1"
+          dataRule:
+            dataBase: "classicmodels"
+            dataTables:
+              "classicmodels-extract-1": "orderDetailsLoaderstemp"
+            createTables: true
+            generateSchemaByPlatform: false
+            batchSize: 50
+            batchWait: 1
+            schemaQueries:
+              - "CREATE TABLE 'orderDetailsLoaderstemp' (
+                  'id' int NOT NULL AUTO_INCREMENT,
+                  'orderNumber' int NOT NULL,
+                  'productCode' varchar(15) NOT NULL,
+                  'quantityOrdered' int NOT NULL,
+                  'priceEach' double NOT NULL,
+                  'total_purchase_value' double NOT NULL,
+                  'orderLineNumber' smallint NOT NULL,
+                  PRIMARY KEY ('id')
+                );"
+    transformers:
+        steps:
+            - column:
+                add:
+                    - name: "total_purchase_value"
+                      value: ""
+                      position: ""
+                      condition: "quantityOrdered * priceEach"
+                      entities: ""
+                      dataTable: "orderDetailsLoaderstemp"
+                      label: "classicmodels-extract-1"
+              stepId: "np-uid"
+        globals:
+            classified:
+                - entities:
+                  - "productCode"
+                  action: "REDACT"
+    label: "temp vikrant vapus"
+el: null

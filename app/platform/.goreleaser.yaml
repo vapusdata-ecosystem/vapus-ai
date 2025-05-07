@@ -1,0 +1,53 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+# Define the pipeline for building and releasing your Go application
+version: 2
+project_name: vapus-control-plane
+env:
+  - CGO_ENABLED=0
+  - VAPUSDATA_VERSION={{ .Version }}
+  - VAPUSDATA_LDFLAGS=-s -w
+report_sizes: true
+before:
+  hooks:
+    - go mod tidy
+    - go mod vendor
+dist: dist-bin
+builds:
+  - binary: vapusdata_platform
+    id: vapusdata-platform-plane
+    main: ./cmd
+    no_unique_dist_dir: true
+    targets:
+          - linux_amd64
+    ldflags:
+      - "{{ .Env.VAPUSDATA_LDFLAGS }}"
+      - "-X github.com/vapusdata-ecosystem/vapusdata/app/platform/version.Version={{ .Env.TAG }}"
+      - "-X main.Version={{ .Env.TAG }}"
+
+dockers:
+  - dockerfile: Dockerfile
+    ids:
+      - vapusdata-platform-plane
+    image_templates:
+      - "{{ .Env.CONTAINER_REGISTRY }}{{ .Env.OCI_IMAGE }}:{{ .Env.TAG }}"
+      - "{{ .Env.CONTAINER_REGISTRY }}{{ .Env.OCI_IMAGE }}:latest"
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Env.TAG }}_checksum.txt"
+sboms:
+  - id: binary-sbom
+    artifacts: binary
+  
+  
+release:
+  make_latest: true
+  # extra_files:
+  #   - glob: ../../../.github/workflows/cosign.pub

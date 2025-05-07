@@ -1,0 +1,56 @@
+{{ range $id, $val := .Response.DataProducts }}
+<div class="relative p-4 bg-[#1b1b1b] rounded-lg text-xs shadow-lg dataproductItem  border border-zinc-600">
+    <a href="{{ $.Response.BackListingLink }}/{{ $val.DataProductId }}" target="_blank"
+        class="absolute top-2 right-2 text-blue-500 hover:underline">
+        {{ template "view-details-svg.html" . }}
+    </a>
+    <h3 class="text-md font-semibold text-gray-100 mb-3">{{ $val.Name }}</h3>
+    <div class="grid grid-cols-1 gap-2 text-xs text-gray-100">
+        <div class="flex items-center justify-left">
+            <span class="font-semibold pr-2">Id:</span>
+            <span class="flex items-center text-xs break-words" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ $val.DataProductId }}`)">
+                {{ $val.DataProductId }}
+            </span>
+        </div>
+        <div class="flex items-center justify-left">
+            <span class="font-semibold pr-2">Owners:</span>
+            <span class="flex items-center">
+                {{ range $index, $obj := $val.ProductOwners }}
+                <span class="px-3 py-1 text-xs font-medium rounded-full text-purple-800 bg-purple-100">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </span>
+        </div>
+        <div class="flex items-center justify-left">
+            <span class="font-semibold pr-2">Catalog:</span>
+            <span class="flex items-center">
+                <span class="px-3 py-1 text-xs font-medium rounded-full text-gray-700 bg-gray-200">
+                    {{ slugToTitle $val.Catalog }}
+                </span>
+            </span>
+        </div>
+        <div class="flex items-center justify-left">
+            <span class="font-semibold pr-2">Published On:</span>
+            <span class="flex text-xs items-center">{{ epochConverter $val.PublishedOn }}</span>
+            {{ if $.GlobalContext.Manager }}
+            <span class="font-semibold pl-2 pr-2">Status:</span>
+            <span class="flex items-right px-3 py-1 text-xs font-medium 
+                {{ if inSlice $val.ResourceBase.Status `DELETED` `FAILED_ARCHIVE` `FAILED_PUBLISH` `FAILED_CONFIGURATION` `FAILED_UNPUBLISH` }}
+                    text-red-800 bg-red-100
+                {{ else }}
+                    text-green-800 bg-green-100
+                {{ end }}
+                rounded-full">
+                {{ $val.ResourceBase.Status }}
+            </span>
+            {{ end }}
+        </div>
+    </div>
+</div>
+{{ else }}
+<div class="text-center text-gray-500 m-20 text-4xl w-full">
+    <p>No data products available.</p>
+</div>
+{{ end }}

@@ -1,0 +1,291 @@
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/enums.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+enum AIResponseFormat {
+    TEXT = 0;
+    JSON_SCHEMA = 1;
+    JSON_OBJECT = 2;
+}
+
+enum AIModelNodeHosting {
+    INVALID_MODEL_HOSTING = 0;
+    LOCAL_AIHOST = 1;
+    OPEN_SOURCE_AIHOST = 2;
+    MANAGED_AIHOST = 3;
+}
+
+enum AIModelType {
+    INVALID_AIMODEL_TYPE = 0;
+    LLM = 1;
+    SLM = 2;
+    EMBEDDING = 3;
+    GUARDRAIL = 4;
+    VISION = 5;
+}
+
+enum AIGuardrailScanMode {
+    BIDIRECTIONAL = 0;
+    INPUT = 1;
+    OUTPUT = 2;
+}
+
+enum EmbeddingType {
+    FLOAT_32 = 0;
+    FLOAT_64 = 1;
+}
+
+enum AIInterfaceChatStatus {
+    CHAT_STARTED = 0;
+    CHAT_ENDED = 1;
+    CHAT_INPROGRESS = 2;
+}
+
+
+message AIModelLocalParams {
+	string embedding_model_node = 1; // @gotags: yaml:"embeddingModelNode"
+	string embedding_model = 2; // @gotags: yaml:"embeddingModel"
+	string generative_model_node = 3; // @gotags: yaml:"generativeModelNode"
+	string generative_model = 4; // @gotags: yaml:"generativeModel"
+}
+
+message AIModelBase {
+    string model_name = 1; // @gotags: yaml:"modelName"
+    string model_id = 2; // @gotags: yaml:"modelId"
+    AIModelType model_type = 3; // @gotags: yaml:"modelType"
+    string owned_by = 4; // @gotags: yaml:"ownedBy"
+    int32 input_token_limit = 5; // @gotags: yaml:"inputTokenLimit"
+    int32 output_token_limit = 6; // @gotags: yaml:"outputTokenLimit" 
+    repeated AIModelType model_nature = 7; // @gotags: yaml:"modelNature"
+    string model_arn = 8; // @gotags: yaml:"modelArn"
+}
+
+message AIModelNodeNetworkParams {
+    string url = 1; // @gotags: yaml:"url"
+    string api_version = 2; // @gotags: yaml:"apiVersion"
+    string local_path = 3; // @gotags: yaml:"localPath"
+    GenericCredentialObj credentials = 4; // @gotags: yaml:"credentials"
+    string secret_name = 5; // @gotags: yaml:"secretName"
+    bool is_already_in_secret_bs = 6; // @gotags: yaml:"isAlreadyInSecretBS"
+}
+
+message AIModelNodeAttributes {
+    repeated AIModelBase generative_models = 1; // @gotags: yaml:"generativeModels"
+    repeated AIModelBase embedding_models = 2; // @gotags: yaml:"embeddingModels"
+    bool discover_models = 3; // @gotags: yaml:"discoverModels"
+    AIModelNodeNetworkParams network_params = 4; // @gotags: yaml:"networkParams"
+    ResourceScope scope = 5; // @gotags: yaml:"scope"
+    repeated string approved_organizations = 6; // @gotags: yaml:"approvedOrganizations"
+    AIModelNodeHosting hosting = 7; // @gotags: yaml:"hosting"
+    ServiceProvider service_provider = 8; // @gotags: yaml:"serviceProvider"
+
+}
+
+message AIModelNode {
+    string model_node_id = 1; // @gotags: yaml:"modelNodeId"
+    string name = 2; // @gotags: yaml:"name"
+    AIModelNodeAttributes attributes = 3; // @gotags: yaml:"attributes"
+    repeated string node_owners = 4; // @gotags: yaml:"nodeOwners"
+    SecurityGuardrails security_guardrails = 5; // @gotags: yaml:"securityGuardrails"
+    VapusBase resource_base = 6; // @gotags: yaml:"resourceBase"
+}
+
+message ModelNodeObservability {
+    float totalCost = 1;
+    string modelNodeId = 2;
+    int64 totalRequests = 3;
+    string modelProvider = 4;
+    float averageTokenPerRequest = 5;
+    float averageCostPerRequest = 6;
+    repeated ModelObservability modelObservability = 7;
+    string nodeName = 8;
+}
+
+message ModelObservability {
+    string modelNodeId = 1;
+    string modelName = 2;
+    string modelProvider = 3;
+    int32 inputTokens = 4;
+    int32 outputTokens = 5;
+    int32 inputCachedTokens = 6;
+    int32 outputCachedTokens = 7;
+    int32 inputAudioTokens = 8;
+    int32 outputAudioTokens = 9;
+    float cost = 10;
+    int32 request = 11;
+    float averageTokenPerRequest = 12;
+    float averageCostPerRequest = 13;
+}
+
+message SecurityGuardrails {
+    repeated string guardrails = 1;  // @gotags: yaml:"guardrails"
+} 
+
+message Embeddings {
+    EmbeddingType type = 1; // @gotags: yaml:"type"
+    int64 dimension = 2; // @gotags: yaml:"dimension"
+    repeated float embeddings32 = 3; // @gotags: yaml:"embeddings32"
+    repeated double embeddings64 = 4; // @gotags: yaml:"embeddings64"
+}
+
+message ToolPrompts {
+    FunctionCall schema = 1; // @gotags: yaml:"schema,omitempty"
+    bool auto_generate = 2; // @gotags: yaml:"autoGenerate,omitempty"
+    string raw_json_params = 3; // @gotags: yaml:"rawJsonParams,omitempty"
+    string type = 4; // @gotags: yaml:"type,omitempty"
+}
+
+message AIPrompt {
+    string prompt_id = 1; // @gotags: yaml:"promptId"
+    string name = 2; // @gotags: yaml:"name"
+    repeated string prompt_types = 3; // @gotags: yaml:"promptTypes"
+    repeated string preferred_models = 4; // @gotags: yaml:"preferredModels"
+    bool editable = 5; // @gotags: yaml:"editable"
+    ResourceScope prompt_scope = 6; // @gotags: yaml:"promptScope"
+    PromptSpec spec = 7; // @gotags: yaml:"spec"
+    bool is_json_prompt = 8; // @gotags: yaml:"isJsonPrompt"
+    string template = 9; // @gotags: yaml:"template"
+    string prompt_owner = 10; // @gotags: yaml:"promptOwner"
+    repeated string labels = 11; // @gotags: yaml:"labels"
+    string user_template = 12; // @gotags: yaml:"userTemplate"
+    VapusBase resource_base = 13; // @gotags: yaml:"resourceBase"
+}
+
+message PromptSpec {
+    string system_message = 1; // @gotags: yaml:"systemMessage"
+    string user_message = 2; // @gotags: yaml:"userMessage"
+    repeated ToolPrompts tools = 3; // @gotags: yaml:"tools"
+    string input_tag = 4; // @gotags: yaml:"inputTag"
+    string output_tag = 5; // @gotags: yaml:"outputTag"
+    string context_tag = 6; // @gotags: yaml:"contextTag"
+    Sample sample = 7; // @gotags: yaml:"sample"
+    StructuredResponseFormat response_format = 8; // @gotags: yaml:"responseFormat"
+    repeated string variables = 9; // @gotags: yaml:"variables"
+}
+
+message PromptLeaderBoard {
+    string prompt_id = 1; // @gotags: yaml:"promptId"
+    int64 up_votes = 2; // @gotags: yaml:"upVotes"
+    int64 down_votes = 3; // @gotags: yaml:"downVotes"
+    repeated string up_ai_models = 4; // @gotags: yaml:"upAiModels"
+    repeated string down_ai_models = 5; // @gotags: yaml:"downAiModels"
+}
+
+message PromptVotingRecord {
+    bool up_vote = 1; // @gotags: yaml:"upVote"
+    repeated string up_ai_models = 2; // @gotags: yaml:"upAiModels"
+    repeated string down_ai_models = 3; // @gotags: yaml:"downAiModels"
+    int64 voted_on = 4; // @gotags: yaml:"votedOn"
+    string voted_by = 5; // @gotags: yaml:"votedBy"
+    string organization = 6; // @gotags: yaml:"organization"
+    string prompt_id = 7; // @gotags: yaml:"promptId"
+    string comment = 8; // @gotags: yaml:"comment"
+}
+
+message Sample {
+    string input_text = 1; // @gotags: yaml:"inputText"
+    string response = 2; // @gotags: yaml:"response"
+}
+
+message PromptTag {
+    string start = 1; // @gotags: yaml:"start"
+    string end = 2; // @gotags: yaml:"end"
+}
+
+message AIGuardrails {
+    string display_name = 1; // @gotags: yaml:"displayName"
+    string name = 2; // @gotags: yaml:"name"
+    double min_confidence = 3; // @gotags: yaml:"minConfidence"
+    double max_confidence = 4; // @gotags: yaml:"maxConfidence"
+    ContentGuardrailLevel contents = 5; // @gotags: yaml:"contents"
+    repeated TopicGuardrails topics = 6; // @gotags: yaml:"topics"
+    repeated WordGuardRails words = 7; // @gotags: yaml:"words"
+    repeated SensitiveDataGuardrails sensitive_dataset = 8; // @gotags: yaml:"sensitiveDataset"
+    string description = 9; // @gotags: yaml:"description"
+    string failure_message = 10; // @gotags: yaml:"failureMessage"
+    string guardrail_id = 11; // @gotags: yaml:"guardrailId"
+    VapusBase resource_base = 12; // @gotags: yaml:"resourceBase"
+    string schema = 13; // @gotags: yaml:"schema"
+    AIGuardrailScanMode scan_mode = 14; // @gotags: yaml:"scanMode"
+    GuardModels guard_model = 15; // @gotags: yaml:"guardModel"
+    repeated string eligible_model_nodes = 16; // @gotags: yaml:"eligibleModelNodes"
+    
+}
+
+message GuardModels {
+    string model_id = 1; // @gotags: yaml:"modelId"
+    string model_node_id = 2; // @gotags: yaml:"modelNodeId"
+}
+
+message ContentGuardrailLevel {
+    GuardRailLevels hate_speech = 1; // @gotags: yaml:"hateSpeech"
+    GuardRailLevels insults = 2; // @gotags: yaml:"insults"
+    GuardRailLevels sexual = 3; // @gotags: yaml:"sexual"
+    GuardRailLevels threats = 4; // @gotags: yaml:"threats"
+    GuardRailLevels misconduct = 5; // @gotags: yaml:"misconduct"
+}
+
+message TopicGuardrails {
+    string topic = 1; // @gotags: yaml:"topic"
+    string description = 2; // @gotags: yaml:"description"
+    repeated string samples = 3; // @gotags: yaml:"samples"
+}
+
+message WordGuardRails {
+    repeated string words = 1; // @gotags: yaml:"words"
+    string file_location = 2; // @gotags: yaml:"fileLocation"
+}
+
+message SensitiveDataGuardrails {
+    string pii_type = 1; // @gotags: yaml:"piiType"
+    string action = 2; // @gotags: yaml:"action"
+    string regex = 3; // @gotags: yaml:"regex"
+}
+
+message ResponseFormat {
+    string type = 1; // @gotags: yaml:"type"
+    ResponseJsonSchema json_schema = 2; // @gotags: yaml:"jsonSchema"
+}
+
+message ToolCall {
+    string id = 1;  // @gotags: yaml:"id"
+    string type = 2; // @gotags: yaml:"type"
+    FunctionCall function_schema = 3; // @gotags: yaml:"functionSchema"
+}
+
+message FunctionCall {
+    string name = 1; // @gotags: yaml:"name"
+    string parameters = 2; // @gotags: yaml:"parameters"
+    string description = 3; // @gotags: yaml:"description"
+    repeated string required = 4; // @gotags: yaml:"required"
+    bool strict = 5; // @gotags: yaml:"required"
+}
+
+message ResponseJsonSchema {
+    string name = 1; // @gotags: yaml:"name"
+    bool strict = 2; // @gotags: yaml:"strict"
+    string schema = 3; // @gotags: yaml:"schema"
+    bool auto_generate = 4; // @gotags: yaml:"autoGenerate,omitempty"
+    string raw_json_params = 5; // @gotags: yaml:"rawJsonParams,omitempty"
+}
+
+message StructuredResponseFormat {
+    string type = 1; // @gotags: yaml:"name"
+    ResponseJsonSchema json_schema = 2; // @gotags: yaml:"jsonSchema"
+}
+
+message ToolChoice {
+    string type = 1; // @gotags: yaml:"type"
+    FunctionChoice function = 2; // @gotags: yaml:"function"
+}
+
+message FunctionChoice {
+    string name = 1; // @gotags: yaml:"name"
+}

@@ -1,0 +1,178 @@
+## This file contains all available configuration options
+## with their default values.
+## options for analysis running
+#run:
+#  # default concurrency is a available CPU number
+#  concurrency: 4
+#  # timeout for analysis, e.g. 30s, 5m, default is 1m
+#  timeout: 1m
+#  # exit code when at least one issue was found, default is 1
+#  issues-exit-code: 1
+#  # include test files or not, default is true
+#  tests: true
+#  # list of build tags, all linters use it. Default is empty list.
+#  build-tags:
+#    - mytag
+##  modules-download-mode: readonly|release|vendor
+#  # Allow multiple parallel golangci-lint instances running.
+#  # If false (default) - golangci-lint acquires file lock on start.
+#  allow-parallel-runners: true
+#
+#  # output configuration options
+#  output:
+#    # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
+#    format: colored-line-number
+#    # print lines of code with issue, default is true
+#    print-issued-lines: true
+#    # print linter name in the end of issue text, default is true
+#    print-linter-name: true
+#    # make issues output unique by line, default is true
+#    uniq-by-line: true
+#    # add a prefix to the output file references; default is no prefix
+#    path-prefix: ""
+
+#run:
+#  # default concurrency is a available CPU number
+#  concurrency: 4
+#  # timeout for analysis, e.g. 30s, 5m, default is 1m
+#  timeout: 1m
+#  # exit code when at least one issue was found, default is 1
+#  issues-exit-code: 1
+#  # include test files or not, default is true
+#  tests: true
+linters-settings:
+  dupl:
+    threshold: 200
+  exhaustive:
+    default-signifies-exhaustive: false
+  funlen:
+    lines: 100
+    statements: 50
+  goconst:
+    min-len: 2
+    min-occurrences: 1
+    numbers: true
+    min: 1
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
+      - ifElseChain
+      - octalLiteral
+      - whyNoLint
+      - wrapperFunc
+  gocyclo:
+    min-complexity: 7
+  gofmt:
+    simplify: true
+  misspell:
+    locale: US
+  nakedret:
+    max-func-lines: 10
+  nestif:
+    min-complexity: 3
+  nolintlint:
+    allow-unused: false # report any unused nolint directives
+    require-explanation: false # don't require an explanation for nolint directives
+    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
+  varnamelen:
+    max-distance: 5
+    min-name-length: 2
+    ignore-type-assert-ok: true
+    ignore-map-index-ok: true
+    ignore-chan-recv-ok: true
+  forbidigo:
+    forbid:
+      - ^print.*$
+      - '^t\.Error.*$(# forbid t.Error in favor of using testify\.)?'
+      - '^t\.Fatal.*$(# forbid t.Fatal in favor of using testify\.)?'
+  staticcheck:
+    # SAxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
+    # Disable deprecation checks, note that we need to deprecate it because golangci-lint doesn't support
+    # setting a non-error exit code on info severity (setup below)
+    # https://github.com/golangci/golangci-lint/issues/1981
+    checks: ["all", "-SA1019"]
+  goheader:
+    template: |-
+      Copyright {{copyright-year}} VapusData Authors.
+
+    values:
+      regexp:
+        copyright-year: 202[4]
+    
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    - bodyclose
+    - dupl
+    - errcheck
+    - funlen
+    #    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - goerr113
+    - gofmt
+    - goimports
+    - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - nestif
+    - nolintlint
+    - rowserrcheck
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - testpackage
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - wsl
+    - wrapcheck
+
+  # don't enable:
+  # - asciicheck
+  # - exhaustive (TODO: enable after next release; current release at time of writing is v1.27)
+  # - gochecknoglobals
+  # - gocognit
+  # - godot
+  # - godox
+  # - goerr113
+  # - maligned
+  # - nestif
+  # - noctx (TODO: enable after next release; current release at time of writing is v1.27)
+  # - prealloc
+  # - testpackage
+  # - wsl
+
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gomnd
+
+    # https://github.com/go-critic/go-critic/issues/926
+    - linters:
+        - gocritic
+      text: "unnecessaryDefer:"
+
+run:
+  concurrency: 4
+  tests: false

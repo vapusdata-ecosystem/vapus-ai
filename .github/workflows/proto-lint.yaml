@@ -1,0 +1,20 @@
+name: Buf Linter
+
+on:
+  push:
+    paths:
+      - 'apis/**'
+  workflow_call:
+jobs:
+  proto-linter:
+    name: Lint Protos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Buf
+        uses: bufbuild/buf-setup-action@v1
+      - name: Lint Protos
+        working-directory: apis
+        run: |
+          buf lint

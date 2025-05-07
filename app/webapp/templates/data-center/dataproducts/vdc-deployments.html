@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+</head>
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+
+   <div class="flex-grow p-2 w-full">
+        <section id="grids" class="space-y-6">
+            <div class="flex justify-end mb-2 items-center p-2">
+           
+        </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {{ range $id, $val := .Response.VdcDeployments }}
+                <div class="relative p-4 bg-[#1b1b1b] rounded-lg text-xs shadow-lg  border border-zinc-600">
+                    <a href="{{ $.Response.BackListingLink }}/{{ $val.DeploymentId }}" target="_blank" class="absolute top-2 right-2 text-blue-800 hover:underline">
+                        {{ template "view-details-svg.html" . }}
+                    </a>
+                    <h3 class="text-md font-semibold text-gray-100 mb-3">{{ $val.Name }}</h3>
+                    <div class="grid grid-cols-1 gap-2 text-gray-100">
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">ID:</span>
+                            <span class="flex items-center cursor-pointer" onclick="copyToClipboard(`{{ $val.DeploymentId }}`)">
+                                {{ $val.DeploymentId }}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Dataproduct:</span>
+                            <span class="flex items-center">{{ $val.DataProductId }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Status:</span>
+                            <span class="px-3 py-1  font-medium rounded-full {{ if eq $val.ResourceBase.Status `FAILED_ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }}">{{ $val.ResourceBase.Status }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Deployed At:</span>
+                            <span class="flex items-center">{{ epochConverter $val.DeployedAt }}</span>
+                        </div>
+                    </div>
+                </div>
+                {{ else }}
+                <div class="text-center text-gray-100 m-20 text-4xl  w-full">
+                    <p>No vapusdata Containers Deployment found.</p>
+                </div>
+                {{ end }}
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

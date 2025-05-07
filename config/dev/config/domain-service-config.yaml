@@ -1,0 +1,20 @@
+vapusBESecretStorage:
+  path: "secrets/be-secret-storage.yaml"
+vapusBEDbStorage:
+  path: "secrets/be-db-storages.yaml"
+localFSPaths:
+  domainFiles: local-storage/domains
+  dataSourceFiles: local-storage/datasource
+serverConfig:
+  port: 9010
+  serviceName: localhost
+  scheme: http
+  external: http://localhost:9010
+datastores: {}
+JWTAuthnSecrets:
+  path: "secrets/jwt-secrets.yaml"
+serverCerts:
+  mtls: True
+  caCertFile: "certs/ca-cert.pem"
+  serverCertFile: "certs/server-cert.pem"
+  serverKeyFile: "certs/server-key.pem"  

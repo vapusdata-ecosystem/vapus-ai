@@ -1,0 +1,20 @@
+version: v2
+modules:
+  - path: .
+    name: buf.build/vapusdata-ecosystem/vapus-platform
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - BASIC
+  except:
+    - PACKAGE_LOWER_SNAKE_CASE
+    - PACKAGE_DIRECTORY_MATCH
+    - ONEOF_LOWER_SNAKE_CASE
+    - FIELD_LOWER_SNAKE_CASE
+deps:
+  - buf.build/bufbuild/protovalidate
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway
+  # - github.com/favadi/protoc-go-inject-tag@latest

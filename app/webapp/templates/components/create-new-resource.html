@@ -1,0 +1,21 @@
+{{ range $rule := .Response.ActionRules }}
+<a href="#" onclick="VapusResourceActionHandler(`{{ $rule.Action }}`,
+    `{{ $rule.Action}}`,`{{ $rule.Method}}`,`{{ $rule.Title}}`,`{{ $.GlobalContext.AccessTokenKey }}`,`{{ $rule.API}}`)"
+class="text-white px-1 py-1 rounded-lg bg-orange-700 text-sm flex items-center">
+<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg">
+  <path fill="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+</svg>
+Add New
+<div hidden id="{{ $rule.Action }}">{{ $rule.YamlSpec }}</div>
+</a>
+{{ else }}
+<a href="#" onclick="createNewResource()"
+class="text-white px-2 py-2 rounded-lg bg-orange-700 text-lg flex items-center">
+<svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg">
+  <path fill="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+</svg>
+Configure New
+</a>
+{{ end }}

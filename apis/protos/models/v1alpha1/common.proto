@@ -1,0 +1,352 @@
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+import "protos/models/v1alpha1/enums.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+message SearchParam {
+    string q = 1; //  @gotags: yaml:"q"
+    repeated Mapper filters = 2; //  @gotags: yaml:"filters"
+}
+
+message Mapper {
+  string key = 1; //  @gotags: yaml:"key"
+  string value = 2; //  @gotags: yaml:"value"
+}
+
+message AnyMapper {
+  string key = 1; //  @gotags: yaml:"key"
+  google.protobuf.Any value = 2; //  @gotags: yaml:"value"
+}
+
+message MapList {
+  string key = 1; //  @gotags: yaml:"key"
+  repeated string values = 2; //  @gotags: yaml:"values"
+}
+
+message BaseIdentifier {
+  string name = 1; //  @gotags: yaml:"name"
+  string type = 2; //  @gotags: yaml:"type"
+  string identifier = 3; //  @gotags: yaml:"identifier"
+}
+
+message FrequencyTab {
+  Frequency frequency = 1; // @gotags: yaml:"frequency"
+  int32 interval = 2; // @gotags: yaml:"interval"
+}
+
+message CronTab {
+  repeated FrequencyTab frequency_tab = 1; // @gotags: yaml:"frequencyTab"
+  repeated int32 minutes       = 2; // @gotags: yaml:"minutes"
+  repeated int32 hours         = 3; // @gotags: yaml:"hours"
+  repeated int32 days_of_month = 4; // @gotags: yaml:"daysOfMonth"
+  repeated int32 months        = 5; // @gotags: yaml:"months"
+  repeated int32 days_of_week  = 6; // @gotags: yaml:"daysOfWeek"
+  string cron_string = 7; // @gotags: yaml:"cronString"
+}
+
+message VapusSchedule {
+    int64 limit = 1; // @gotags: yaml:"limit"
+    CronTab cron_tab = 2; // @gotags: yaml:"cronTab"
+    int64 run_at = 3; // @gotags: yaml:"runAt"
+    bool run_now = 4; // @gotags: yaml:"runNow"
+    int64 run_after = 5; // @gotags: yaml:"runAfter"
+    bool is_recurring = 6; // @gotags: yaml:"isRecurring"
+}
+
+message FilterBase {
+    int64 limit = 1; //  @gotags: yaml:"limit"
+    string order_field = 2; //  @gotags: yaml:"orderField"
+    OrderBys order_by = 3; //  @gotags: yaml:"orderBy"
+    repeated string included_fields = 4; //  @gotags: yaml:"includedFields"
+    repeated string excluded_fields = 5; //  @gotags: yaml:"excludedFields"
+}
+
+message JWTParams {
+  string name = 1; //  @gotags: yaml:"name"
+  string public_jwt_key = 2; //  @gotags: yaml:"publicJWTKey"
+  string private_jwt_key = 3; //  @gotags: yaml:"privateJWTKey"
+  string v_id = 4; // Ignore in Requests
+  EncryptionAlgo signing_algorithm = 5; //  @gotags: yaml:"signingAlgorithm"
+  bool is_already_in_secret_bs = 6; //  @gotags: yaml:"isAlreadyInSecretBS"
+  string status = 7; //  @gotags: yaml:"status"
+  bool generate_in_platform = 8; //  @gotags: yaml:"generateInPlatform"
+}
+
+message TlsConfig {
+  TlsType tls_type = 1; // @gotags: yaml:"tlsType"
+  string ca_cert_file = 2; // @gotags: yaml:"caCertFile"
+  string server_key_file = 3; // @gotags: yaml:"serverKeyFile"
+  string server_cert_file = 4; // @gotags: yaml:"serverCertFile"
+}
+
+message SSLCerts {
+  string ssl_cert = 1; //  @gotags: yaml:"sslCert"
+  string ssl_key = 2; //  @gotags: yaml:"sslKey"
+  string v_id = 3; // Ignore in Requests
+  bool is_already_in_secret_bs = 4; //  @gotags: yaml:"isAlreadyInSecretBS"
+  string status = 5; //  @gotags: yaml:"status"
+}
+
+message DMResponse {
+  string message = 1; //  @gotags: yaml:"message"
+  string dm_status_code = 2; //  @gotags: yaml:"dmStatusCode"
+  repeated MapList custom_message = 3; //  @gotags: yaml:"customMessage"
+  repeated AgentShort agents = 4; //  @gotags: yaml:"agents"
+}
+
+message AgentShort {
+  string agent = 1; //  @gotags: yaml:"agent"
+  string agent_type = 2; //  @gotags: yaml:"agentType"
+  string goal_status = 3; //  @gotags: yaml:"goalStatus"
+  string error = 4; //  @gotags: yaml:"error"
+  string result = 5; //  @gotags: yaml:"result"
+}
+
+message DynamicMessage {
+  //google.protobuf.Struct struct_field = 1;
+  //google.protobuf.Value value_field = 2;
+}
+
+message DynamicMessageUpdate {
+  DynamicMessage body = 1; //  @gotags: yaml:"body"
+  //google.protobuf.FieldMask update_mask = 2; //  @gotags: yaml:"username"
+}
+
+/**
+ * @message
+ * Represents the package server construct.
+ */
+message ArtifactGrid {
+  SSLCerts ssl_certs = 1;
+  JWTParams package_jwt_params = 2;
+}
+
+message GenericCredentialObj {
+  string username = 1; //  @gotags: yaml:"username"
+  string password = 2; //  @gotags: yaml:"password"
+  string api_token = 3; //  @gotags: yaml:"apiToken"
+  ApiTokenType api_token_type = 4; //  @gotags: yaml:"apiTokenType"
+  AWSCreds aws_creds = 5; //  @gotags: yaml:"awsCreds"
+  GCPCreds gcp_creds = 6; //  @gotags: yaml:"gcpCreds"
+  AzureCreds azure_creds = 7; //  @gotags: yaml:"azureCreds"
+  string client_id = 8; //  @gotags: yaml:"clientId"
+  string client_secret = 9; //  @gotags: yaml:"clientSecret"
+  repeated Mapper params = 10; //  @gotags: yaml:"params"
+}
+
+message AWSCreds {
+  string access_key_id = 1; //  @gotags: yaml:"accessKeyId"
+  string secret_access_key = 2; //  @gotags: yaml:"secretAccessKey"
+  string region = 3; //  @gotags: yaml:"region"
+  string session_token = 4; //  @gotags: yaml:"sessionToken"
+  string role_arn = 5; //  @gotags: yaml:"roleArn"
+}
+
+message GCPCreds {
+  string service_account_key = 1; //  @gotags: yaml:"serviceAccountKey"
+  bool base64_encoded = 2; //  @gotags: yaml:"base64Encoded"
+  string region = 3; //  @gotags: yaml:"region"
+  string project_id = 4; //  @gotags: yaml:"projectId"
+  string zone = 5; //  @gotags: yaml:"zone"
+}
+
+message AzureCreds {
+  string tenant_id = 1; //  @gotags: yaml:"tenantId"
+  string client_id = 2; //  @gotags: yaml:"clientId"
+  string client_secret = 3; //  @gotags: yaml:"clientSecret"
+}
+
+message DigestVal {
+  HashAlgos algo = 1;
+  string digest = 2; 
+}
+
+message EmptyRequest {  
+}
+
+/**
+ * @message
+ * Represents the network parameters of a data source.
+ */
+message DataSourceNetParams {
+  string address = 1; // @gotags: yaml:"address"
+  int32 port = 2; // @gotags: yaml:"port"
+  repeated string databases = 3; // @gotags: yaml:"databases"
+  repeated DataSourceCreds ds_creds = 4; // @gotags: yaml:"dsCreds"
+  repeated string database_prefixes = 5; // @gotags: yaml:"databasePrefixes"
+  string version = 6; // @gotags: yaml:"version"
+}
+
+/**
+ * @message
+ * Represents the credentials of a data source.
+ */
+message DataSourceCreds {
+  string name = 1; // @gotags: yaml:"name"
+  bool is_already_in_secret_bs = 2; // @gotags: yaml:"isAlreadyInSecretBS"
+  GenericCredentialObj credentials = 3; // @gotags: yaml:"credentials"
+  int32 priority = 4; // @gotags: yaml:"priority"
+  DataSourceAccessScope access_scope = 5; // @gotags: yaml:"accessScope"
+  string db = 6; // @gotags: yaml:"db"
+  string secret_name = 7; // @gotags: yaml:"secretName"
+}
+
+/**
+ * Message representing the backend storages.
+ */
+message BackendStorages {
+  DataSourceType bes_type = 1; //  @gotags: yaml:"besType"
+  BackendStorageOnboarding bes_onboarding = 2; //  @gotags: yaml:"besOnboarding"
+  DataSourceServices bes_service = 3; //  @gotags: yaml:"besService"
+  DataSourceNetParams net_params = 4; //  @gotags: yaml:"netParams"
+  string status = 5; //  @gotags: yaml:"status"
+  string bes_engine = 6; //  @gotags: yaml:"besEngine"
+}
+
+
+/**
+ * Message representing the OIDC authentication parameters.
+ */
+message AuthnOIDC {
+  string callback = 1; //  @gotags: yaml:"callback"
+  string client_id = 2; //  @gotags: yaml:"clientId"
+  string client_secret = 3; //  @gotags: yaml:"clientSecret"
+  string v_id = 4; //@gotags: yaml:"vId"
+  bool is_already_in_secret_bs = 5; //  @gotags: yaml:"isAlreadyInSecretBS"
+  string status = 6; //  @gotags: yaml:"status"
+}
+
+message BaseResponse {
+  models.v1alpha1.DMResponse dm_resp = 1; //  @gotags: yaml:"dmResp"
+  string workflow_id = 2; //  @gotags: yaml:"workflowId"
+}
+
+/**
+ * @message
+ * Represents the credential salt value.
+ */
+message CredentialSalt {
+  string salt_val = 1; //  @gotags: yaml:"saltVal"
+}
+message Logs {
+  int64 time = 1; //  @gotags: yaml:"time"
+  string h_time = 2; //  @gotags: yaml:"hTime"
+  string log_type = 3; //  @gotags: yaml:"logType"
+  string message = 4; //  @gotags: yaml:"message"
+}
+
+message PlatformArtifact {
+  string artifact = 1; //  @gotags: yaml:"artifact"
+  string tag = 2; //  @gotags: yaml:"tag"
+  string digest = 3; //  @gotags: yaml:"digest"
+  bool is_latest = 4; //  @gotags: yaml:"isLatest"
+  int64 added_on = 5; //  @gotags: yaml:"addedOn"
+}
+
+message K8SInfraParams {
+  ServiceProvider service_provider = 1; //  @gotags: yaml:"serviceProvider"
+  InfraService infra_service = 2; //  @gotags: yaml:"infraService"
+  string name = 3; //  @gotags: yaml:"name"
+  GenericCredentialObj credentials  = 4; //  @gotags: yaml:"credentials"
+  string display_name = 5; //  @gotags: yaml:"displayName"
+  string infra_id = 6; //  @gotags: yaml:"infraId"
+  string kube_config = 7; //  @gotags: yaml:"kubeConfig"
+  string secret_name = 8; //  @gotags: yaml:"secretName"
+  bool is_default = 9; //  @gotags: yaml:"isDefault"
+  ContentFormats kube_config_format = 10; //  @gotags: yaml:"kubeConfigFormat"
+}
+
+message SvcNetworkParams {
+  int64 port = 1; //  @gotags: yaml:"port"
+  string svc_addr = 2; //  @gotags: yaml:"svcAddr"
+  string svc_name = 3; //  @gotags: yaml:"svcName"
+  VapusSvcs svc_tag = 4; //  @gotags: yaml:"svcTag"
+}
+
+message QueryPrompts {
+  string query = 1; //  @gotags: yaml:"query"
+  repeated string schemas = 2; //  @gotags: yaml:"schemas"
+}
+
+message SearchResult {
+  string name = 1; // @gotags: yaml:"name"
+  string resource = 2; // @gotags: yaml:"resource"
+  string url = 3; // @gotags: yaml:"url"
+  string resource_id = 4; // @gotags: yaml:"resourceId"
+}
+
+message Comment {
+  string comment = 1; //  @gotags: yaml:"comment"
+  string user = 2; //  @gotags: yaml:"user"
+  int64 commented_at = 3; //  @gotags: yaml:"commentedAt"
+  string organization = 4; //  @gotags: yaml:"organization"
+}
+
+message MainRequestSpec {
+  string api_version = 1; //  @gotags: yaml:"apiVersion"
+  string kind = 2; //  @gotags: yaml:"kind"
+  google.protobuf.Any spec = 3; //  @gotags: yaml:"spec"
+}
+
+message NabhikTaskStreamChunk {
+  int64 event_at = 1; //  @gotags: yaml`:"eventAt"
+  VapusStreamEvents event = 2; //  @gotags: yaml:"event"
+  VapusContentObject data = 3; //  @gotags: yaml:"data"
+  FileData files = 4; //  @gotags: yaml:"files"
+  string task_id = 5; //  @gotags: yaml:"taskId"
+}
+
+message VapusContentObject {
+  ContentFormats content_type = 1; //  @gotags: yaml:"contentType"
+  string content = 2; //  @gotags: yaml:"content"
+  VapusEOL final = 3; //  @gotags: yaml:"final"
+  google.protobuf.Struct dataset = 4; //  @gotags: yaml:"dataset"
+  string content_id=5; //  @gotags: yaml:"contentId"
+}
+
+message VapusEOL {
+  EOSReasons reason = 1; //  @gotags: yaml:"reason"
+  string metadata = 2; //  @gotags: yaml:"metadata"
+}
+
+message FileData {
+  string name = 1; //  @gotags: yaml:"name"
+  bytes data = 2; //  @gotags: yaml:"data"
+  ContentFormats format = 3; //  @gotags: yaml:"format"
+  string path = 4; //  @gotags: yaml:"path"
+  bool eof = 5; //  @gotags: yaml:"eof"
+  google.protobuf.Struct params = 6; //  @gotags: yaml:"params"
+  string description = 7; //  @gotags: yaml:"description"
+  string redirect_url = 8; //  @gotags: yaml:"redirectUrl"
+}
+
+message VapusBase {
+    int64 created_at = 1; // @gotags: yaml:"createdAt"
+    string created_by = 2; // @gotags: yaml:"createdBy"
+    int64 deleted_at = 3; // @gotags: yaml:"deletedAt"
+    string deleted_by = 4; // @gotags: yaml:"deletedBy"
+    int64 updated_at = 5; // @gotags: yaml:"updatedAt"
+    string updated_by = 6; // @gotags: yaml:"updatedBy"
+    string organization = 7; // @gotags: yaml:"organization"
+    string account = 8; // @gotags: yaml:"account"
+    string status = 9; // @gotags: yaml:"status"
+    repeated string owners = 10; // @gotags: yaml:"owners"
+    models.v1alpha1.ResourceScope scope = 11; // @gotags: yaml:"scope"
+    repeated string labels =12; // @gotags: yaml:"labels"
+    repeated string editors = 13; // @gotags: yaml:"editors"
+}
+
+message VapusCreateResponse {
+  models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+  message ResourceInfo {
+    Resources resource = 1; // @gotags: yaml:"resource"
+    string resource_id = 2; // @gotags: yaml:"resourceId"
+  }
+  ResourceInfo result = 2; // @gotags: yaml:"result"
+}

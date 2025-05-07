@@ -1,0 +1,22 @@
+	target, err := url.Parse("http://localhost:9090/")
+	if err != nil {
+		e.Logger.Fatal("Failed to parse target URL: ", err)
+	}
+
+	// Create a reverse proxy.
+	proxy := httputil.NewSingleHostReverseProxy(target)
+
+	// Customize the Director to adjust the request path.
+	originalDirector := proxy.Director
+	proxy.Director = func(req *http.Request) {
+		originalDirector(req)
+		// Remove the "/asynqmon" prefix so that the asynqmon server receives the correct path.
+		// For example, "/asynqmon/foo" becomes "/foo".
+		req.URL.Path = singleJoiningSlash(target.Path, req.URL.Path[len("/asynqmon"):])
+	}
+
+	// Define an endpoint in Echo that uses the reverse proxy.
+	e.Any("/asynqmon/*", func(c echo.Context) error {
+		proxy.ServeHTTP(c.Response(), c.Request())
+		return nil
+	})

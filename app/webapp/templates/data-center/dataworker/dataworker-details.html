@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+      <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+        <div class="flex-grow p-2 w-full">
+            {{ template "section-headers.html" . }}
+    
+          <!-- Tabs -->
+          <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+            <div class="flex border-b border-zinc-500">
+          <button id="overview-tabhead" class="tab-button px-4 py-2 focus:outline-none"
+            onclick="showTab('overview')">Overview</button>
+          <button class="tab-button px-4 py-2  focus:outline-none"
+            onclick="showTab('extractor')">Extractor</button>
+          <button class="tab-button px-4 py-2  focus:outline-none"
+            onclick="showTab('loader')">Loader</button>
+          <button class="tab-button px-4 py-2  focus:outline-none"
+            onclick="showTab('transformer')">Transformer</button>
+        </div>
+
+        <!-- Tab Content -->
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content mt-2 bg-[#1b1b1b] p-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Name:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.Name }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Organization:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.ResourceBase.Organization }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Id:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.DataWorkerId }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Type:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.DataWorkerType }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Worker Engine:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.WorkerEngine.Name }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Worker Mode:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.Mode }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Status:</p>
+              <p class=" break-words p-2"><span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .Response.DataWorker.ResourceBase.Status `WORKER_BUILD_FAILED` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }} rounded-full">{{
+                  .Response.DataWorker.ResourceBase.Status }}</span></p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Created By:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.CreatedBy }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">SpecDigest:</p>
+              <p class=" break-words p-2">
+                {{ if .Response.DataWorker.SpecDigest}}
+                {{ .Response.DataWorker.SpecDigest.Digest }}
+                {{ else }}
+                N/A
+                {{ end }}
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Deployment Link :</p>
+              <p class=" break-words p-2">
+                {{ if eq .Response.DataWorker.Metadata.LastDeploymentId "" }}
+                Not Deployed
+                {{ else }}
+                {{ .Response.DataWorker.Metadata.LastDeploymentId }}
+                <a class="indescription-link"
+                  href="/ui/domain/manage/workers-deployments/{{ .Response.DataWorker.Metadata.LastDeploymentId }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 40 40">
+                    <path fill="#c2e8ff" d="M1.5 5.5H34.5V38.5H1.5z"></path>
+                    <path fill="#7496c4" d="M34,6v32H2V6H34 M35,5H1v34h34V5L35,5z"></path>
+                    <path fill="#c2e8ff" d="M30.611 13.611H37.055V15.944H30.611z" transform="rotate(90 33.833 14.778)">
+                    </path>
+                    <path fill="#c2e8ff" d="M22 5H28.444V7.333H22z"></path>
+                    <g>
+                      <path fill="#8bb7f0" d="M18.707 16L28.707 6 24.207 1.5 38.5 1.5 38.5 15.793 34 11.293 24 21.293z">
+                      </path>
+                      <path fill="#4e7ab5"
+                        d="M38,2v12.586l-3.293-3.293L34,10.586l-0.707,0.707L24,20.586L19.414,16l9.293-9.293L29.414,6 l-0.707-0.707L25.414,2H38 M39,1H23l5,5L18,16l6,6l10-10l5,5V1L39,1z">
+                      </path>
+                    </g>
+                  </svg>
+                </a>
+              </p>
+              {{ end }}
+            </div>
+          </div>
+          {{ if .Response.DataWorker.Schedule }}
+          <div class="sub-tab-content p-4 rounded-lg">
+            <h3 class="text-xl mb-4 detail-heading">Schedule</h3>
+          <div class="grid grid-cols-3 sm:grid-cols-3 gap-4">
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Running Frequency Limit:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.Schedule.Limit }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Run Now:</p>
+              <p class=" break-words p-2">{{ .Response.DataWorker.Schedule.RunNow }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Run At:</p>
+              <p class=" break-words p-2">{{ epochConverterFull .Response.DataWorker.Schedule.RunAt }}</p>
+            </div>
+          </div>
+        
+          {{ if .Response.DataWorker.Schedule.CronTab }}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <h3 class="text-xl mb-4 detail-heading">Recurring Schedule</h3>
+            <div class="col-span-2">
+              {{ range $tab := .Response.DataWorker.Schedule.CronTab.FrequencyTab }}
+              <div class="flex items-center">
+                <p class="detail-section-title mr-2">Frequency:</p>
+                <p class=" break-words p-2">{{ $tab.Frequency }}</p>
+                <p class="detail-section-title mx-2">Interval:</p>
+                <p class=" break-words p-2">{{ $tab.Interval }}</p>
+              </div>
+              {{ end }}
+            </div>
+            {{ if gt (len .Response.DataWorker.Schedule.CronTab.Minutes) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Minutes:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataWorker.Schedule.CronTab.Minutes }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataWorker.Schedule.CronTab.Hours) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Hours:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataWorker.Schedule.CronTab.Hours }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataWorker.Schedule.CronTab.DaysOfMonth) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Days of Month:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataWorker.Schedule.CronTab.DaysOfMonth }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataWorker.Schedule.CronTab.Months) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Months:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataWorker.Schedule.CronTab.Months }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataWorker.Schedule.CronTab.DaysOfWeek) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Days of Week:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataWorker.Schedule.CronTab.DaysOfWeek }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+            </div>
+          {{ end }}
+        </div>
+          {{ end }}
+          {{ if .Response.DataWorker.Metadata.Lineage }}
+          {{ range $val := .Response.DataWorker.Metadata.Lineage }}
+          <div class="sub-tab-content p-4 rounded-lg">
+            <h3 class="text-xl mb-4 detail-heading">Runners Log</h3>
+            <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500">
+              <thead class="bg-zinc-900 ">
+                <tr>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Last Run At
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Total Runs
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Last Run Id
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Status
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Next Sync
+                    At
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Task Id
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Scheduled Task Id
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500">
+                <tr>
+                  <td class="px-4 py-2">{{ epochConverterFull $val.LastSyncAt }}</td>
+                  <td class="px-4 py-2">{{ $val.TotalRuns }}</td>
+                  <td class="px-4 py-2">{{ $val.LastRunId }}</td>
+                  <td class="px-4 py-2">
+                    <span
+                  class="px-3 py-1 text-sm font-medium {{ if eq $val.LastSyncStatus `SUCCESS` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
+                    $val.LastSyncStatus }}</span></td>
+                  <td class="px-4 py-2">{{ epochConverterFull $val.NextSyncAt }}</td>
+                  <td class="px-4 py-2">{{ $.Response.DataWorker.Metadata.RunnerEntryId }}</td>
+                  <td class="px-4 py-2">{{ $.Response.DataWorker.Metadata.ScheduledRunnerEntryId }}</td>
+                </tr>
+                <!-- More rows as needed -->
+              </tbody>
+            </table>
+          </div>
+          {{ end }}
+          {{ end }}
+          <div class="sub-tab-content p-4 rounded-lg">
+            <h3 class="text-xl mb-4 detail-heading">Container Build</h3>
+            {{ range $val := .Response.DataWorker.Metadata.Artifacts }}
+            <div class="p-4 rounded-lg shadow-md bg-zinc-700">
+              <h4 class="text-lg font-semibold">Artifact: {{ $val.Artifact }}</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
+                <div>
+                  <p class="detail-sect-key font-medium">Digest:</p>
+                  <p class=" break-words p-2">{{ $val.Digest }}</p>
+                </div>
+                <div>
+                  <p class="detail-sect-key font-medium">IsLatest:</p>
+                  <p class=" break-words p-2">{{ $val.IsLatest }}</p>
+                </div>
+                <div>
+                  <p class="detail-sect-key font-medium">AddedOn:</p>
+                  <p class=" break-words p-2">{{ epochConverter $val.AddedOn }}</p>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+
+        <div id="extractor" class="tab-content mt-2">
+          {{ range $val := .Response.DataWorker.WorkerEngine.Extracter }}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Name:</p>
+              <p class=" break-words p-2">{{ $val.Name }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Data Source ID:</p>
+              <p class=" break-words p-2">{{ $val.DataSource }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Id:</p>
+              <p class=" break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">{{ $val.Label
+                  }}</span>
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">DataBase:</p>
+              <p class=" break-words p-2">{{ $val.DataRule.DataBase }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Data Tables:</p>
+              <p class=" break-words p-2">
+              <ul class="list-disc ml-5 ">
+                {{ range $table := $val.DataRule.RawQuery.DataTables }}
+                <li>{{ $table }}</li>
+                {{ end }}
+              </ul>
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-1 gap-4 p-3">
+            <p class="detail-sect-key font-medium">Extraction Query:</p>
+            <div class="relative bg-zinc-700 text-white p-4 rounded-lg font-mono text-sm overflow-auto">
+              <button onclick="copyCode(this)"
+                class="absolute top-2 right-2 bg-zinc-700 text-white px-2 py-1 text-xs rounded hover:bg-zinc-900 focus:outline-none"
+                title="Copy to clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-4 inline mr-1"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z" />
+                </svg>
+                Copy
+              </button>
+              <pre class="whitespace-pre-wrap">
+              <code id="code-block" class="language-sql">
+                {{ $val.DataRule.RawQuery.RawQuery }}
+              </code>
+            </pre>
+            </div>
+          </div>
+          {{ end }}
+        </div>
+
+        <div id="loader" class="tab-content mt-2">
+          {{ range $val := .Response.DataWorker.WorkerEngine.Loader }}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Name:</p>
+              <p class=" break-words p-2">{{ $val.Name }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Data Source ID:</p>
+              <p class=" break-words p-2">{{ $val.DataSource }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Id:</p>
+              <p class=" break-words p-2">
+                {{ range $label := $val.Labels }}
+                <span class="px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">{{ $label }}</span>
+                {{ end }}
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">DataBase:</p>
+              <p class=" break-words p-2">{{ $val.DataRule.DataBase }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Generate Schema:</p>
+              <p class=" break-words p-2">{{ $val.DataRule.GenerateSchemaByPlatform }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Create Tables:</p>
+              <p class=" break-words p-2">{{ $val.DataRule.CreateTables }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Data Tables:</p>
+              <p class=" break-words p-2">
+              <ul class="list-disc ml-5 ">
+                {{ range $table := $val.DataRule.DataTables }}
+                <li>{{ $table }}</li>
+                {{ end }}
+              </ul>
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-1 gap-4 p-3">
+            <p class="detail-sect-key font-medium">Extraction Query:</p>
+            <div class="relative bg-zinc-700 text-white p-4 rounded-lg font-mono text-sm overflow-auto">
+              <button onclick="copyCode(this)"
+                class="absolute top-2 right-2 bg-zinc-700 text-white px-2 py-1 text-xs rounded hover:bg-zinc-900 focus:outline-none"
+                title="Copy to clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-4 h-4 inline mr-1"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z" />
+                </svg>
+                Copy
+              </button>
+              <pre class="whitespace-pre-wrap">
+              <code id="code-block" class="language-sql">
+                {{ $val.DataRule.SchemaQueries }}
+              </code>
+            </pre>
+            </div>
+          </div>
+          {{ end }}
+        </div>
+
+        <div id="transformer" class="tab-content mt-2">
+          {{ range $id, $val := .Response.DataWorker.WorkerEngine.Transformers.Steps }}
+          <!-- Sub-tabs for Transformer Actions -->
+          <div class="flex mb-6 text-xs">
+            <button class="sub-tab-button active px-4 py-2 border-b border-gray-200 focus:outline-none"
+              onclick="openSubTab(event, 'add')">ADD</button>
+            <button class="sub-tab-button px-4 py-2 border-b border-gray-200  focus:outline-none"
+              onclick="openSubTab(event, 'update')">UPDATE</button>
+            <button class="sub-tab-button px-4 py-2 border-b border-gray-200  focus:outline-none"
+              onclick="openSubTab(event, 'rename')">RENAME</button>
+            <button class="sub-tab-button px-4 py-2 border-b border-gray-200  focus:outline-none"
+              onclick="openSubTab(event, 'drop')">DROP</button>
+            <!-- Add more sub-tabs as needed -->
+          </div>
+
+          <!-- ADD Tab Content -->
+          <div id="add" class="sub-tab-content block p-4 rounded-lg">
+            <h4 class="text-md font-semibold mb-2">Add Columns</h4>
+            {{ if $val.Column.Add}}
+            <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500" id="{{ $id }}-add-columns">
+              <thead class="bg-zinc-900 ">
+               
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                
+              </tbody>
+            </table>
+            {{ else }}
+            <p class="text-md">No columns added</p>
+            {{ end }}
+          </div>
+
+          <!-- UPDATE Tab Content -->
+          <div id="update" class="sub-tab-content hidden p-4 rounded-lg">
+            <h4 class="text-md font-semibold mb-2">Update Columns</h4>
+            {{ if $val.Column.Update }}
+            <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500" id="{{ $id }}-update-columns">
+              <thead class="bg-zinc-900 ">
+                
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                
+                <!-- More rows as needed -->
+              </tbody>
+            </table>
+            {{ else }}
+            <p class="text-md">No columns updated</p>
+            {{ end }}
+          </div>
+
+          <!-- RENAME Tab Content -->
+          <div id="rename" class="sub-tab-content hidden p-4 rounded-lg">
+            <h4 class="text-md font-semibold mb-2">Rename Columns</h4>
+            {{ if $val.Column.Rename }}
+            <table class="min-w-full bg-zinc-800 divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500" id="{{ $id }}-rename-columns">
+             <thead class="bg-zinc-900 ">
+               
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+               
+                <!-- More rows as needed -->
+              </tbody>
+            </table>
+            {{ else }}
+            <p class="text-md">No columns renamed</p>
+            {{ end }}
+          </div>
+
+          <!-- DROP Tab Content -->
+          <div id="drop" class="sub-tab-content hidden p-4 rounded-lg">
+            <h4 class="text-md font-semibold mb-2">Drop Columns</h4>
+            {{ if $val.Column.Rename }}
+            <table class="min-w-full bg-zinc-800 divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500" id="{{ $id }}-drop-columns">
+             <thead class="bg-zinc-900 ">
+                <tr>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Name</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Transform
+                    Value</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Condition
+                  </th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Data
+                    Table</th>
+                  <th class="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Label
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                <tr>
+                  {{ range $column := $val.Column.Drop }}
+                  <td class="px-4 py-2">{{ $column.Name }}</td>
+                  <td class="px-4 py-2">{{ $column.Value }}</td>
+                  <td class="px-4 py-2">{{ $column.Condition }}</td>
+                  <td class="px-4 py-2">{{ $column.DataTable }}</td>
+                  <td class="px-4 py-2">{{ $column.Label }}</td>
+                  {{ end }}
+                </tr>
+                <!-- More rows as needed -->
+              </tbody>
+            </table>
+            {{ else }}
+            <p class="text-md">No columns dropped</p>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('overview');
+      loadAllTables();
+    });
+
+    function openSubTab(event, subTabId) {
+      const subTabContent = document.querySelectorAll('.sub-tab-content');
+      subTabContent.forEach(tab => tab.classList.add('hidden'));
+      document.getElementById(subTabId).classList.remove('hidden');
+
+      const subTabButtons = document.querySelectorAll('.sub-tab-button');
+      subTabButtons.forEach(button => button.classList.remove('active-tab'));
+      event.currentTarget.classList.add('active-tab');
+    }
+    function copyCode(button) {
+      const code = document.getElementById("code-block").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        button.title = "Copied!";
+        setTimeout(() => {
+          button.title = "Copy to clipboard";
+        }, 1500); // Reset after 1.5 seconds
+      }).catch(err => {
+        console.error("Failed to copy code: ", err);
+      });
+    }
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+
+    function loadAllTables(){
+      let schema = [];
+      {{ range $val := .Response.DataWorker.WorkerEngine.Transformers.Steps }}
+        var schemaEntry = JSON.parse(`{{ protoToJSON $val }}`);
+        schema.push(schemaEntry);
+        console.log("schemaEntry: ", schemaEntry)
+      {{ end }}
+      schema.forEach((schemaEntry, index) => {
+        // columns
+          let tableID = `#${index}-add-columns`;
+
+          var columnTableData = schemaEntry.column.add?.map(table => ({
+              name: table.name ?? 'N/A',
+              transformersValue: table.transformersValue ?? 'N/A',
+              condition: table.condition ?? 'N/A',
+              dataTable: table.dataTable ?? 'N/A',
+              label: table.label ?? 'N/A'
+          })) || [];
+          $(tableID).DataTable({
+              destroy: true,
+              data: columnTableData,
+              columns: [
+                  { data: 'name', title: 'Name' },
+                  { data: 'transformersValue', title: 'Transformers Value' },
+                  { data: 'condition', title: 'Condition' },
+                  { data: 'dataTable', title: 'Data Table' },
+                  { data: 'label', title: 'Label' }
+              ],
+              pageLength: 10,
+              searching: true,
+              ordering: true,
+              responsive: true
+          });
+        // Update
+          let updateTableID = `#${index}-update-columns`;
+
+          var updateTableData = schemaEntry.column.update?.map(table => ({
+              name: table.name ?? 'N/A',
+              transformersValue: table.transformersValue ?? 'N/A',
+              condition: table.condition ?? 'N/A',
+              dataTable: table.dataTable ?? 'N/A',
+              label: table.label ?? 'N/A'
+          })) || [];
+          $(updateTableID).DataTable({
+              destroy: true,
+              data: updateTableData,
+              columns: [
+                  { data: 'name', title: 'Name' },
+                  { data: 'transformersValue', title: 'Transformers Value' },
+                  { data: 'condition', title: 'Condition' },
+                  { data: 'dataTable', title: 'Data Table' },
+                  { data: 'label', title: 'Label' }
+              ],
+              pageLength: 10,
+              searching: true,
+              ordering: true,
+              responsive: true
+          });
+        
+        // Rename
+          let renameTableID = `#${index}-rename-columns`;
+
+          var renameTableData = schemaEntry.column.rename?.map(table => ({
+              name: table.name ?? 'N/A',
+              transformersValue: table.transformersValue ?? 'N/A',
+              condition: table.condition ?? 'N/A',
+              dataTable: table.dataTable ?? 'N/A',
+              label: table.label ?? 'N/A'
+          })) || [];
+          $(renameTableID).DataTable({
+              destroy: true,
+              data: renameTableData,
+              columns: [
+                  { data: 'name', title: 'Name' },
+                  { data: 'transformersValue', title: 'Transformers Value' },
+                  { data: 'condition', title: 'Condition' },
+                  { data: 'dataTable', title: 'Data Table' },
+                  { data: 'label', title: 'Label' }
+              ],
+              pageLength: 10,
+              searching: true,
+              ordering: true,
+              responsive: true
+          });
+
+        // Drop
+          let dropTableID = `#${index}-drop-columns`;
+
+          var dropTableData = schemaEntry.column.drop?.map(table => ({
+              name: table.name ?? 'N/A',
+              transformersValue: table.transformersValue ?? 'N/A',
+              condition: table.condition ?? 'N/A',
+              dataTable: table.dataTable ?? 'N/A',
+              label: table.label ?? 'N/A'
+          })) || [];
+          $(dropTableID).DataTable({
+              destroy: true,
+              data: dropTableData,
+              columns: [
+                  { data: 'name', title: 'Name' },
+                  { data: 'transformersValue', title: 'Transformers Value' },
+                  { data: 'condition', title: 'Condition' },
+                  { data: 'dataTable', title: 'Data Table' },
+                  { data: 'label', title: 'Label' }
+              ],
+              pageLength: 10,
+              searching: true,
+              ordering: true,
+              responsive: true
+          });
+
+      })
+      // add-columns
+    }
+  </script>
+</body>
+
+</html>

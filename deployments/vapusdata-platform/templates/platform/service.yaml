@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.platform.fullname | default .Values.platform.name }}
+  labels:
+    {{- include "vapusdata.platform.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.platform.service.type }}
+  selector:
+    {{- include "vapusdata.platform.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: {{ .Values.platform.service.grpc.name }}
+    port: {{ .Values.platform.service.grpc.port }}
+    targetPort: {{ .Values.platform.service.grpc.port }}
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.nabhikserver.fullname | default .Values.nabhikserver.name }}
+  labels:
+    {{- include "vapusdata.nabhikserver.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.nabhikserver.service.type }}
+  selector:
+    {{- include "vapusdata.nabhikserver.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: {{ .Values.nabhikserver.service.grpc.name }}
+    port: {{ .Values.nabhikserver.service.grpc.port }}
+    targetPort: {{ .Values.nabhikserver.service.grpc.port }}
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.webapp.fullname | default .Values.webapp.name }}
+  labels:
+    {{- include "vapusdata.webapp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.webapp.service.type }}
+  selector:
+    {{- include "vapusdata.webapp.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: {{ .Values.webapp.service.http.name }}
+    port: {{ .Values.webapp.service.http.port }}
+    targetPort: {{ .Values.webapp.service.http.port }}
+    protocol: TCP

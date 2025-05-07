@@ -19,7 +19,55 @@
 
 # Go workspace file
 go.work
-go.work.sum
 
-# env file
-.env
+localtests/
+
+# Go mod vendor dir
+vendor/
+
+# A prefix to avoid pushes in git
+nopush-*
+
+# A prefix to avoid local configuration files
+
+local-configs*
+
+no-push*
+dist/
+dist-bin/
+local-bin/
+# Python cache files
+__pycache__/
+build/
+*.pyc
+
+*lint-reports*
+
+*sec-reports*
+
+*.log
+
+.DS_Store
+
+.DS_Store?
+
+.DS_Store*
+
+
+*.pb.go
+
+*.gw.go
+
+*_grpc.py
+
+*_pb2.py
+
+apis/gen-go/apidocs.swagger.json
+
+*node_modules
+
+app/webapp/node_modules
+
+apis/gen-go/apidocs.swagger.json
+
+/app/webapp/static/css/vapus.css

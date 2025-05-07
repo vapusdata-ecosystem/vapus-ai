@@ -1,0 +1,20 @@
+/**
+ * @fileoverview
+ * This file contains the protocol buffer definitions for the VapusDataPlatform API.
+ * The VapusDataPlatformService API allows users to create and manage data marketplacees, which are
+ * virtualized data environments that provide a unified view of data from
+ * multiple sources.
+ *
+ * @packageDocumentation
+ */
+
+syntax = "proto3";
+
+package vapusdata.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/vapusdata/v1alpha1";
+
+service ObservabilityService {
+    
+}
+

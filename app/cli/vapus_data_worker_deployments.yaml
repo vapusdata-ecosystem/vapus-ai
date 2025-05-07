@@ -1,0 +1,23 @@
+action: 0
+spec:
+    dataWorkerId: ""
+    name: ""
+    artifactPullSecrets: ""
+    namespace: ""
+    deploymentId: ""
+    infraId: ""
+    workerDeploymentSpec:
+        jobName: ""
+        totalRuns: 0
+        schedule: null
+        lastRun: 0
+        configName: ""
+        secretName: ""
+        port: 0
+    deployedAt: 0
+    domain: ""
+    status: ""
+    isLatest: false
+    runType: 0
+    log: ""
+    artifact: null

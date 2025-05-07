@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+</head>
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+  {{ template "header.html" . }}
+  {{ template "yaml-editor-modal.html" . }}
+  <div class="flex-grow p-2 w-full">
+    <div class="flex justify-end mb-2 items-center p-2">
+      {{ template "create-new-resource-href.html" . }}
+    </div>
+        <section id="tables" class="space-y-6">
+            <div class="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
+              <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id = "pluginSettingsTable">
+                <thead class="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase">
+                  <tr>
+                  </tr>
+                </thead>
+                <tbody class=" divide-y divide-gray-200 text-sm">
+                   
+                 
+                </tbody>
+               
+              </table>
+            </div>
+          </section>
+        </div>
+</div>
+<div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+<script>
+ 
+  document.addEventListener("DOMContentLoaded", function() {
+    var headers = ["Plugin Service", "Plugin Type", "Name", "Scope", "Status", "View Details"];
+      var dataTableArray = [];
+      {{ range $id, $val := .Response.Plugins }}
+        dataTableArray.push({"Plugin Service": "{{ $val.PluginService }}", 
+        "Plugin Type": "{{ $val.PluginType }}", 
+        "Name": "{{ $val.Name }}", 
+        "Scope": `{{ $val.Scope }}`,  
+        "Status": ` <span
+                        class="px-3 py-1 text-sm font-medium {{ if eq $val.ResourceBase.Status "ACTIVE" }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                        {{ $val.ResourceBase.Status }}
+                      </span>`,
+        "View Details": `<a href="{{ $.Response.BackListingLink }}/{{ $val.PluginId }}" target="_blank" title="Open in new tab">{{ template "view-details-svg.html" . }}</a>`})
+
+      {{ end }}
+      renderDatatable("pluginSettingsTable", dataTableArray,headers, null);
+    });
+</script>
+</body>
+</html>

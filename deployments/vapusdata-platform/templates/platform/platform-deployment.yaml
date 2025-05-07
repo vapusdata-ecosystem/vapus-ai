@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.platform.fullname }}
+  labels:
+    {{- include "vapusdata.platform.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.platform.replicaCount }}
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "vapusdata.platform.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "vapusdata.platform.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ .Values.platform.serviceAccount.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.platform.service.grpc.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{.Values.vapusdata.registry }}{{ .Values.platform.artifacts.image }}@{{ .Values.platform.artifacts.digest }}
+          imagePullPolicy: {{ .Values.platform.artifacts.pullPolicy }}
+          ports:
+            - name: {{ .Values.platform.service.grpc.name }}
+              containerPort: {{ .Values.platform.service.grpc.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ .Values.platform.volumePaths.secretsMount.name }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.platform.volumePaths.secretsMount.path }}
+              readOnly: true
+            - name: {{ .Values.vapusdata.globalSecrets.certs.tlsSecret }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.platform.volumePaths.certMount.path }}
+              readOnly: true
+            - name: {{ .Values.platform.volumePaths.serviceConfig.name }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.platform.volumePaths.serviceConfig.path }}
+              readOnly: true
+            - name: {{ .Values.vapusdata.globalConfigs.policyConfig.name }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.platform.volumePaths.policyConfig.path }} 
+              readOnly: true
+            - name: {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.platform.volumePaths.networkConfig.path }}
+              readOnly: true
+          env:
+            - name: MOUNT_PATH
+              value: {{ .Values.app.podMountPath }}
+          resources:
+            {{- toYaml .Values.platform.resources | nindent 12 }}
+          readinessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.platform.service.grpc.port }}","-rpc-timeout=150s","-connect-timeout=150s"]
+            initialDelaySeconds: 20
+            successThreshold: 1
+            periodSeconds: 300
+            failureThreshold: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.platform.service.grpc.port }}","-rpc-timeout=150s","-connect-timeout=150s"]
+            initialDelaySeconds: 20
+            successThreshold: 1
+            periodSeconds: 300
+            failureThreshold: 5
+            timeoutSeconds: 5
+          # livenessProbe:
+          #   grpc:
+          #     port: {{ .Values.platform.service.grpc.port }}
+      volumes:
+        - name: {{ .Values.platform.volumePaths.serviceConfig.name }}
+          configMap:
+            name: {{ .Values.platform.volumePaths.serviceConfig.name }}
+        - name: {{ .Values.vapusdata.globalConfigs.policyConfig.name }}
+          configMap:
+            name: {{ .Values.vapusdata.globalConfigs.policyConfig.name }}
+        - name:  {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+          configMap:
+            name:  {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+        - name: {{ .Values.platform.volumePaths.secretsMount.name }}
+          projected:
+            sources:
+              - secret:
+                  name: {{ .Values.vapusdata.globalSecrets.backend.secretStore }}
+        - name: {{ .Values.vapusdata.globalSecrets.certs.tlsSecret }}
+          projected:
+            sources:
+              - secret:
+                  name: {{ .Values.vapusdata.globalSecrets.certs.tlsSecret }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

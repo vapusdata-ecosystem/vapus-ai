@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: v0.0.250
+dependencies:
+- condition: app.dev
+  name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 16.0.6
+- name: trino
+  repository: https://trinodb.github.io/charts
+  version: 0.34.0
+description: A Helm chart for vapusdata-ecosystem providing services for vapusdata
+  ecosystem.
+icon: https://avatars.githubusercontent.com/u/165878749?s=48&v=4
+name: vapusdata-platform-helmchart
+type: application
+version: 0.0.87

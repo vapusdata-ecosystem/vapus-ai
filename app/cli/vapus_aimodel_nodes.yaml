@@ -1,0 +1,27 @@
+action: 0
+spec:
+    - modelNodeId: ""
+      name: ""
+      attributes:
+        generativeModels: []
+        embeddingModels: []
+        discoverModels: false
+        networkParams:
+            url: ""
+            apiVersion: ""
+            localPath: ""
+            credentials:
+                username: ""
+                password: ""
+                apiToken: ""
+                apiTokenType: 0
+                awsCreds: null
+                gcpCreds: null
+                azureCreds: null
+            secretName: ""
+        scope: 0
+        domainId: []
+        hosting: 0
+        serviceProvider: 0
+      nodeOwners: []
+      status: ""

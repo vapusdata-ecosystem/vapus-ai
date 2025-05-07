@@ -1,0 +1,127 @@
+To package Trino and Vault Helm charts within your VapusData Helm chart using the Go SDK for Helm, you would need to use the helm package within the Go program to programmatically add the dependencies and install the chart.
+
+Here’s a step-by-step guide on how to achieve this using the Helm Go SDK.
+
+1. Set Up Your Go Project and Import Required Packages
+First, make sure you have a Go module set up and that you install the required Helm SDK packages.
+
+bash
+Copy code
+go mod init vapusdata-helm
+go get k8s.io/helm/pkg/helm
+go get k8s.io/helm/pkg/repo
+go get k8s.io/helm/pkg/action
+2. Define the Code for Managing Helm Dependencies
+Below is an example that demonstrates how you can define and manage Helm dependencies for Trino and Vault within your Go code:
+
+go
+Copy code
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"helm.sh/helm/v3/pkg/action"
+	"helm.sh/helm/v3/pkg/cli"
+	"helm.sh/helm/v3/pkg/repo"
+	"helm.sh/helm/v3/pkg/chart/loader"
+	"helm.sh/helm/v3/pkg/chart"
+	"helm.sh/helm/v3/pkg/chartutil"
+)
+
+func main() {
+	// Set up Helm environment
+	settings := cli.New()
+	actionConfig := new(action.Configuration)
+	if err := actionConfig.Init(settings.RESTClientGetter(), "default", os.Getenv("HELM_DRIVER"), log.Printf); err != nil {
+		log.Fatal(err)
+	}
+
+	// Create Helm action clients for dependency update and installation
+	depClient := action.NewDependency()
+	installClient := action.NewInstall(actionConfig)
+
+	// Load VapusData Chart
+	chartPath := "./vapusdata"
+	ch, err := loader.Load(chartPath)
+	if err != nil {
+		log.Fatalf("failed to load chart: %v", err)
+	}
+
+	// Add Trino and Vault repositories
+	repoAdd("trinodb", "https://trinodb.github.io/charts")
+	repoAdd("hashicorp", "https://helm.releases.hashicorp.com")
+
+	// Download dependencies
+	if err := depClient.Build(chartPath); err != nil {
+		log.Fatalf("failed to build dependencies: %v", err)
+	}
+
+	// Install the chart with dependencies
+	installClient.ReleaseName = "vapusdata"
+	installClient.Namespace = "default"
+
+	rel, err := installClient.Run(ch, map[string]interface{}{
+		"trino.coordinator.service.type": "ClusterIP",
+		"vault.server.ha.enabled":        true,
+	})
+	if err != nil {
+		log.Fatalf("failed to install the chart: %v", err)
+	}
+
+	fmt.Printf("Chart installed: %s\n", rel.Name)
+}
+
+// Helper function to add a Helm repository
+func repoAdd(name, url string) {
+	repoFile := "/path/to/helm/repositories.yaml"
+	entry := repo.Entry{
+		Name: name,
+		URL:  url,
+	}
+
+	repoFileStruct := repo.File{}
+	if _, err := os.Stat(repoFile); os.IsNotExist(err) {
+		repoFileStruct = repo.File{}
+	} else {
+		repoFileStruct.LoadFile(repoFile)
+	}
+
+	if err := repoFileStruct.Update(&entry); err != nil {
+		log.Fatalf("failed to update repo: %v", err)
+	}
+
+	repoFileStruct.WriteFile(repoFile, 0644)
+}
+Explanation of Code:
+Helm Configuration and Setup:
+
+We create a Helm environment (settings), initialize the Helm configuration, and define actionConfig for Helm actions.
+We use the Helm SDK’s action.NewInstall to prepare for the installation of the chart.
+Chart Loading:
+
+We use loader.Load to load your VapusData Helm chart from the directory.
+We also add repositories for Trino and Vault using the repoAdd function.
+Managing Dependencies:
+
+The depClient.Build function ensures that the Helm dependencies are fetched and built (Trino and Vault in this case).
+Installing the Chart:
+
+The installClient.Run function installs the VapusData Helm chart along with Trino and Vault based on the parameters you define in the Go code.
+Adding Helm Repositories:
+
+The repoAdd function adds new Helm repositories for Trino and Vault if they are not already present. It updates the repository list and writes it to a file.
+3. Run the Go Code
+Once you’ve set up the Go code, run it to install the VapusData Helm chart with Trino and Vault as dependencies.
+
+bash
+Copy code
+go run main.go
+This will automatically set up and install your VapusData chart with Trino and Vault, ensuring that all dependencies are installed and configured properly.
+
+Conclusion
+Using the Go SDK for Helm, you can programmatically manage dependencies, load Helm charts, and install charts with their required configurations. This allows for dynamic and automated Helm chart management within your Go applications.
+
+Let me know if you need more help or any clarification!

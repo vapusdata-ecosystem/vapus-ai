@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/vapusai.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+message VapusAgent {
+    string name = 1; // @gotags: yaml:"name"
+    string description = 2; // @gotags: yaml:"description"
+    string agent_id = 3; // @gotags: yaml:"agentId"
+    repeated AgentSpec specs = 4; // @gotags: yaml:"specs"
+    string current_version = 5; // @gotags: yaml:"currentVersion"
+    string current_message = 6; // @gotags: yaml:"currentMessage"
+    AgentAttributes attributes = 7; // @gotags: yaml:"attributes"
+    string model_node = 8; // @gotags: yaml:"modelNode"
+    string model = 9; // @gotags: yaml:"model"
+    VapusBase resource_base = 14; // @gotags: yaml:"resourceBase"
+}
+
+message AgentAttributes {
+    int32 log_retention_count = 1; // @gotags: yaml:"logRetentionCount"
+    int32 log_retention_days = 2; // @gotags: yaml:"logRetentionDays"
+    int32 error_log_retention_count = 3; // @gotags: yaml:"errorLogRetentionCount"
+    int32 retry_count = 4; // @gotags: yaml:"retryCount"
+    bool retry_failure_exit = 5; // @gotags: yaml:"retryFailureExit"
+    VapusSchedule schedule = 6; // @gotags: yaml:"schedule"
+    string fail_channel_plugin = 7; // @gotags: yaml:"failChannelPlugin"
+}
+
+message AgentSpec {
+    string instructions = 1; // @gotags: yaml:"instructions"
+    repeated string dataproducts = 2; // @gotags: yaml:"dataproducts"
+    string goal = 3; // @gotags: yaml:"goal"
+    string release_notes = 4; // @gotags: yaml:"releaseNotes"
+    string version = 5; // @gotags: yaml:"version"
+    repeated FunctionCall input_tool_calls = 6; // @gotags: yaml:"inputToolCalls"
+    FunctionCall agent_def_tool_call = 7; // @gotags: yaml:"agentDefToolCall"
+    repeated string target_users = 8; // @gotags: yaml:"targetUsers"
+    repeated string datasources = 9; // @gotags: yaml:"datasources"
+    repeated string files = 10; // @gotags: yaml:"files"
+    
+}

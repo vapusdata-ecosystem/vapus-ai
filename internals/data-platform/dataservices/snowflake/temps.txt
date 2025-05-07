@@ -1,0 +1,7 @@
+  // Set up Snowflake connection
+    dsn := "user:password@account.snowflakecomputing.com/dbname/schema?warehouse=WAREHOUSE&role=ROLE"
+    db, err := sql.Open("snowflake", dsn)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()

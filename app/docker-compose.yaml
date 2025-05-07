@@ -1,0 +1,54 @@
+version: "2.33.1"
+services:
+  platform:
+    container_name: platform
+    build:
+      context: ./platform
+      dockerfile: Dockerfile
+    ports:
+      - "9013:9013"  
+    command:
+      - --conf=/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs
+      - --debug=true
+    depends_on:
+      []
+  
+  aistudio:
+    container_name: aistudio
+    build:
+      context: ./aistudio
+      dockerfile: Dockerfile
+    ports:
+      - "9019:9019"
+    command:
+      - --conf=/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs
+      - --debug=true
+    depends_on:
+      - platform  
+
+  nabhikserver:
+    container_name: nabhikserver
+    build:
+      context: ./nabhikserver
+      dockerfile: Dockerfile
+    ports:
+      - "9021:9021"
+    command:
+      - --conf=/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs
+      - --debug=true
+    depends_on:
+      - platform
+      - aistudio
+
+  aigateway:
+    container_name: aigateway
+    build:
+      context: ./aigateway
+      dockerfile: Dockerfile
+    ports:
+      - "9017:9017"
+    command:
+      - --conf=/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs
+      - --debug=true
+    depends_on:
+      - platform

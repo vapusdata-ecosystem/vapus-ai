@@ -1,0 +1,249 @@
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
+)
+
+const (
+	tokenURL      = "https://login.salesforce.com/services/oauth2/token"
+	clientID      = "YOUR_CLIENT_ID"
+	clientSecret  = "YOUR_CLIENT_SECRET"
+	refreshToken  = "YOUR_REFRESH_TOKEN"
+)
+
+type TokenResponse struct {
+	AccessToken string `json:"access_token"`
+	InstanceURL string `json:"instance_url"`
+}
+
+func main() {
+	// Step 1: Get a new access token using the refresh token
+	formData := url.Values{}
+	formData.Set("grant_type", "refresh_token")
+	formData.Set("client_id", clientID)
+	formData.Set("client_secret", clientSecret)
+	formData.Set("refresh_token", refreshToken)
+
+	resp, err := http.Post(tokenURL, "application/x-www-form-urlencoded", bytes.NewBufferString(formData.Encode()))
+	if err != nil {
+		log.Fatalf("Failed to get new access token: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Failed to read response body: %v", err)
+	}
+
+	var tokenResp TokenResponse
+	if err := json.Unmarshal(body, &tokenResp); err != nil {
+		log.Fatalf("Failed to parse token response: %v", err)
+	}
+
+	// Step 2: Use the new access token to fetch Salesforce metadata
+	describeURL := fmt.Sprintf("%s/services/data/v57.0/sobjects/", tokenResp.InstanceURL)
+	req, err := http.NewRequest("GET", describeURL, nil)
+	if err != nil {
+		log.Fatalf("Failed to create request: %v", err)
+	}
+	req.Header.Set("Authorization", "Bearer "+tokenResp.AccessToken)
+
+	client := &http.Client{}
+	resp, err = client.Do(req)
+	if err != nil {
+		log.Fatalf("Failed to fetch tables: %v", err)
+	}
+	defer resp.Body.Close()
+
+	describeBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Failed to read describe response: %v", err)
+	}
+
+	fmt.Println("Salesforce Objects Metadata:")
+	fmt.Println(string(describeBody))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
+)
+
+const (
+	authURL      = "https://login.salesforce.com/services/oauth2/token"
+	consumerKey  = "YOUR_CLIENT_ID"
+	consumerSecret = "YOUR_CLIENT_SECRET"
+	username     = "YOUR_USERNAME"
+	password     = "YOUR_PASSWORD"
+)
+
+type AuthResponse struct {
+	AccessToken string `json:"access_token"`
+	InstanceURL string `json:"instance_url"`
+}
+
+type DescribeGlobalResponse struct {
+	Sobjects []struct {
+		Name string `json:"name"`
+	} `json:"sobjects"`
+}
+
+func main() {
+	// Step 1: Get access token
+	authPayload := fmt.Sprintf("grant_type=password&client_id=%s&client_secret=%s&username=%s&password=%s",
+		consumerKey, consumerSecret, username, password)
+
+	resp, err := http.Post(authURL, "application/x-www-form-urlencoded", strings.NewReader(authPayload))
+	if err != nil {
+		log.Fatalf("Failed to get access token: %v", err)
+	}
+	defer resp.Body.Close()
+
+	authBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Failed to read auth response: %v", err)
+	}
+
+	var authResp AuthResponse
+	if err := json.Unmarshal(authBody, &authResp); err != nil {
+		log.Fatalf("Failed to parse auth response: %v", err)
+	}
+
+	// Step 2: Fetch all tables/schemas (Describe Global)
+	describeURL := fmt.Sprintf("%s/services/data/v57.0/sobjects/", authResp.InstanceURL)
+	req, err := http.NewRequest("GET", describeURL, nil)
+	if err != nil {
+		log.Fatalf("Failed to create request: %v", err)
+	}
+	req.Header.Set("Authorization", "Bearer "+authResp.AccessToken)
+
+	client := &http.Client{}
+	resp, err = client.Do(req)
+	if err != nil {
+		log.Fatalf("Failed to fetch tables: %v", err)
+	}
+	defer resp.Body.Close()
+
+	describeBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Failed to read describe response: %v", err)
+	}
+
+	var describeResp DescribeGlobalResponse
+	if err := json.Unmarshal(describeBody, &describeResp); err != nil {
+		log.Fatalf("Failed to parse describe response: %v", err)
+	}
+
+	// Step 3: Print all table names
+	fmt.Println("Available Salesforce Objects:")
+	for _, obj := range describeResp.Sobjects {
+		fmt.Println(obj.Name)
+	}
+}
+
+
+
+
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
+
+type TokenResponse struct {
+	AccessToken string `json:"access_token"`
+	InstanceURL string `json:"instance_url"`
+}
+
+type DescribeGlobalResponse struct {
+	Sobjects []struct {
+		Name string `json:"name"`
+	} `json:"sobjects"`
+}
+
+type ObjectDescribe struct {
+	Fields []struct {
+		Name       string `json:"name"`
+		Label      string `json:"label"`
+		Type       string `json:"type"`
+		Length     int    `json:"length,omitempty"`
+		Precision  int    `json:"precision,omitempty"`
+		Scale      int    `json:"scale,omitempty"`
+		Required   bool   `json:"nillable"`
+	} `json:"fields"`
+}
+
+func main() {
+	// Assume tokenResp contains your valid access token and instance URL
+	tokenResp := TokenResponse{
+		AccessToken: "YOUR_ACCESS_TOKEN",
+		InstanceURL: "YOUR_INSTANCE_URL",
+	}
+
+	// Get schema for each object (e.g., Account, Contact)
+	objectName := "Account"
+	describeURL := fmt.Sprintf("%s/services/data/v57.0/sobjects/%s/describe/", tokenResp.InstanceURL, objectName)
+
+	req, err := http.NewRequest("GET", describeURL, nil)
+	if err != nil {
+		log.Fatalf("Failed to create request: %v", err)
+	}
+	req.Header.Set("Authorization", "Bearer "+tokenResp.AccessToken)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalf("Failed to fetch object schema: %v", err)
+	}
+	defer resp.Body.Close()
+
+	describeBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Failed to read describe response: %v", err)
+	}
+
+	// Parse and print the schema of the object
+	var objectDescribe ObjectDescribe
+	if err := json.Unmarshal(describeBody, &objectDescribe); err != nil {
+		log.Fatalf("Failed to parse describe response: %v", err)
+	}
+
+	fmt.Printf("Schema of %s object:\n", objectName)
+	for _, field := range objectDescribe.Fields {
+		fmt.Printf("Field Name: %s, Label: %s, Type: %s\n", field.Name, field.Label, field.Type)
+	}
+}

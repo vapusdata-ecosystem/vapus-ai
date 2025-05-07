@@ -1,0 +1,73 @@
+<div id="topKPopup" class="hidden fixed inset-0 bg-zinc-600/90 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-5/6 h-5/6 overflow-auto">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Top K Options</h3>
+
+      <!-- Options -->
+      <ul class="divide-y divide-gray-200 mb-4">
+        <!-- Upload from Computer -->
+        <li class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="uploadFromComputer()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2 text-gray-700" viewBox="0 0 20 20"
+            fill="currentColor">
+            <path
+              d="M8 2a2 2 0 00-2 2v5H3.5a1.5 1.5 0 00-1.415 1H2a2 2 0 000 4h1v2.5a1.5 1.5 0 003 0V14h8v2.5a1.5 1.5 0 003 0V14h1a2 2 0 000-4h-.085A1.5 1.5 0 0016.5 9H14V4a2 2 0 00-2-2H8zM5 4a1 1 0 011-1h6a1 1 0 011 1v5H5V4zm-2 9a1 1 0 110-2h14a1 1 0 110 2H3z" />
+          </svg>
+          <span class="text-sm text-gray-700">Upload from Computer</span>
+        </li>
+
+        <!-- Connect to Google Drive -->
+        <li class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="connectGoogleDrive()">
+          <img src="https://www.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png" alt="Google Drive"
+            class="w-6 h-6 mr-2">
+          <span class="text-sm text-gray-700">Connect to Google Drive</span>
+        </li>
+
+        <!-- Connect to Microsoft OneDrive -->
+        <li class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="connectOneDrive()">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Microsoft_Office_OneDrive_%282019%E2%80%93present%29.svg"
+            alt="OneDrive" class="w-6 h-6 mr-2">
+          <span class="text-sm text-gray-700">Connect to Microsoft OneDrive</span>
+        </li>
+
+        <!-- Paste URL -->
+        <li class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="toggleURLCrawlFlag()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2 text-gray-700" viewBox="0 0 20 20"
+            fill="currentColor">
+            <path
+              d="M10 2a6 6 0 100 12A6 6 0 1010 2zM4.293 9.293a1 1 0 011.414 0L10 13.586l4.293-4.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414z" />
+          </svg>
+          <span class="text-sm text-gray-700">Enter URL</span>
+        </li>
+
+        <!-- Adjacent Div for URL and Crawl Flag -->
+        <div id="urlCrawlDiv" class="hidden mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <label for="urlInput" class="block text-gray-700 text-sm font-medium mb-2">Enter URL:</label>
+          <input type="text" id="urlInput" placeholder="https://example.com"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-orange-700 mb-4">
+
+          <div class="flex items-center">
+            <button
+              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300"
+              onclick="crawlUrlWithContent(`urlInput`,true)">Crawl</button>
+          </div>
+        </div>
+
+      </ul>
+
+      <!-- Text Area -->
+      Context Type
+      
+      <div id="agentStepsContainer"></div>
+      
+      Context Value<textarea id="contextValue"
+        class="w-full h-2/5 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-[#ff5f1f]"
+        rows="5" placeholder="Enter your val..."></textarea>
+
+      <!-- Close Button -->
+      <div class="flex justify-end mt-4">
+        <button
+          class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300"
+          onclick="closeAgentContextPopup()">Done</button>
+      </div>
+    </div>
+  </div>

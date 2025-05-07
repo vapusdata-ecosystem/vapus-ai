@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="flex-grow p-2 w-full text-gray-100">
+      {{ template "section-headers.html" . }}
+      <!-- Tabs -->
+      <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+        <div class="flex border-b border-zinc-500 font-semibold text-gray-50">
+          <button onclick="showTab('basic-info')"
+            class="tab-button px-4 py-2 focus:outline-none">Basic Info</button>
+          <button onclick="showTab('storage-info')"
+            class="tab-button px-4 py-2 focus:outline-none">Storages</button>
+          <button onclick="showTab('base-os')"
+            class="tab-button px-4 py-2 focus:outline-none">Operating Systems</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="basic-info" class="tab-content mt-6 overflow-y-auto scrollbar bg-[#1b1b1b] p-4" style="height: 700px; max-height: 700px;">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Organization ID</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.AccountId }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Type</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.OrganizationType }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Authentication Method</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.AuthnMethod }}</p>
+            </div>
+            {{ if .GlobalContext.Account.Profile }}
+            <div>
+              <p class="detail-sect-key font-medium">Logo</p>
+              <p class="detail-section-text"
+               style="cursor: pointer;"
+               onclick="copyToClipboard('{{ .GlobalContext.Account.Profile.Logo }}')">{{ limitletters .GlobalContext.Account.Profile.Logo 50 }}
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Favicon</p>
+              <p class="detail-section-text"
+               style="cursor: pointer;"
+               onclick="copyToClipboard('{{ .GlobalContext.Account.Profile.Favicon }}')">{{ limitletters .GlobalContext.Account.Profile.Favicon 50 }}
+              </p>
+            </div>
+            {{ end }}
+            <div>
+              <p class="detail-sect-key font-medium">Description</p>
+              <p class="detail-section-text">{{ limitletters .GlobalContext.Account.Profile.Description
+                70 }}
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Status</p>
+              <p class="detail-section-text"><span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .GlobalContext.Account.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
+                  .GlobalContext.Account.Status }}</span></p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Users</p>
+              <ul class="list-disc ml-5 ">
+                {{ range $user := .Response.CurrentOrganization.Users }}
+                <li>{{ $user }}</li>
+                {{ end }}
+              </ul>
+            </div>
+          </div>
+          </br>
+          <h3 class="text-xl mb-4 detail-heading">JWT Params</h3>
+          <div class="space-y-4">
+            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold">Secret Name</p>
+                  <p class="detail-section-text">
+                    {{ if .GlobalContext.Account.DmAccessJwtKeys }}
+                    {{ .GlobalContext.Account.DmAccessJwtKeys.Name }}
+                    {{ else }}
+                    N/A
+                    {{ end }}
+                  </p>
+                </div>
+                <div>
+                  <p class="font-semibold">Signing Algo</p>
+                  <p class="detail-section-text">
+                    {{ if .GlobalContext.Account.DmAccessJwtKeys }}
+                    {{ .GlobalContext.Account.DmAccessJwtKeys.SigningAlgorithm }}
+                    {{ else }}
+                    N/A
+                    {{ end }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-xl mb-4 detail-heading">Generative AI Params</h3>
+          <div class="space-y-4">
+            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold">Genrative Model</p>
+                  <p class="detail-section-text">
+                    {{ .GlobalContext.Account.AiAttributes.GenerativeModel }}
+                  </p>
+                </div>
+                <div>
+                  <p class="font-semibold">Generative Model Node</p>
+                  <p class="detail-section-text">
+                    {{ .GlobalContext.Account.AiAttributes.GenerativeModelNode }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-xl mb-4 detail-heading">Embedding Generator AI Params</h3>
+          <div class="space-y-4">
+            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold">Embedding Model</p>
+                  <p class="detail-section-text">
+                    {{ .GlobalContext.Account.AiAttributes.EmbeddingModel }}
+                  </p>
+                </div>
+                <div>
+                  <p class="font-semibold">Embedding Model Node</p>
+                  <p class="detail-section-text">
+                    {{ .GlobalContext.Account.AiAttributes.EmbeddingModelNode }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-xl mb-4 detail-heading">Guardrail AI Params</h3>
+          <div class="space-y-4">
+            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold">Embedding Model Node</p>
+                  <p class="detail-section-text">
+                    {{ .GlobalContext.Account.AiAttributes.GuardrailModel }}
+                  </p>
+                </div>
+                <div>
+                  <p class="font-semibold">Embedding Model Node</p>
+                  <p class="detail-section-text">
+                    {{ .GlobalContext.Account.AiAttributes.GuardrailModelNode }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+        </div>
+
+        <div id="storage-info" class="tab-content mt-6 hidden overflow-y-auto scrollbar bg-[#1b1b1b] p-4" style="max-height: 700px;">
+          <h3 class="text-xl font-semibold mt-4 mb-4">Secret Store</h3>
+          {{ if .GlobalContext.Account.BackendSecretStorage }}
+          <div class=" p-4 rounded-lg shadow-md">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <p class="detail-sect-key font-medium">Storage Type</p>
+                <p class="detail-section-text">{{ .GlobalContext.Account.ArtifactStorage.BesType }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Storage Service</p>
+                <p class="detail-section-text">{{ .GlobalContext.Account.BackendSecretStorage.BesService
+                  }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Onboarding Type</p>
+                <p class="detail-section-text">{{
+                  .GlobalContext.Account.BackendSecretStorage.BesOnboarding }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Storage Engine</p>
+                <p class="detail-section-text">{{ .GlobalContext.Account.BackendSecretStorage.BesEngine
+                  }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Address</p>
+                <p class="detail-section-text">{{
+                  .GlobalContext.Account.BackendSecretStorage.NetParams.Address }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Status</p>
+                <p class="detail-section-text"><span
+                    class="px-3 py-1 text-sm font-medium {{ if eq .GlobalContext.Account.BackendSecretStorage.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
+                    .GlobalContext.Account.BackendSecretStorage.Status }}</span></p>
+              </div>
+            </div>
+          </div>
+          {{ else }}
+          <p class="">No secret storage information available.</p>
+          {{ end }}
+
+          <h3 class="text-xl font-semibold mt-4 mb-4">Backend Storage</h3>
+          {{ if .GlobalContext.Account.BackendDataStorage }}
+          <div class=" p-4 rounded-lg shadow-md">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <p class="detail-sect-key font-medium">Storage Type</p>
+                <p class="detail-section-text">{{ .GlobalContext.Account.BackendDataStorage.BesType }}
+                </p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Storage Service</p>
+                <p class="detail-section-text">{{ .GlobalContext.Account.BackendDataStorage.BesService
+                  }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Onboarding Type</p>
+                <p class="detail-section-text">{{
+                  .GlobalContext.Account.BackendDataStorage.BesOnboarding }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Storage Engine</p>
+                <p class="detail-section-text">{{ .GlobalContext.Account.BackendDataStorage.BesEngine }}
+                </p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Address</p>
+                <p class="detail-section-text">{{
+                  .GlobalContext.Account.BackendDataStorage.NetParams.Address }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Status</p>
+                <p class="detail-section-text"><span
+                    class="px-3 py-1 text-sm font-medium {{ if eq .GlobalContext.Account.BackendDataStorage.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
+                    .GlobalContext.Account.BackendDataStorage.Status }}</span></p>
+              </div>
+            </div>
+          </div>
+          {{ else }}
+          <p class="">No backend storage information available.</p>
+          {{ end }}
+
+          <h3 class="text-xl font-semibold mt-4 mb-4">Artifact Storage</h3>
+          {{ if .GlobalContext.Account.ArtifactStorage }}
+          <div class=" p-4 rounded-lg shadow-md"></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Storage Type</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.ArtifactStorage.BesType }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Storage Service</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.ArtifactStorage.BesService }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Onboarding Type</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.ArtifactStorage.BesOnboarding }}
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Storage Engine</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.ArtifactStorage.BesEngine }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Address</p>
+              <p class="detail-section-text">{{ .GlobalContext.Account.ArtifactStorage.NetParams.Address
+                }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Status</p>
+              <p class="detail-section-text"><span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .GlobalContext.Account.ArtifactStorage.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
+                  .GlobalContext.Account.ArtifactStorage.Status }}</span></p>
+            </div>
+          </div>
+        </div>
+        {{ else }}
+        <p class="">No artifact storage information available.</p>
+        {{ end }}
+
+      <div id="base-os" class="tab-content mt-6 hidden overflow-y-auto scrollbar bg-[#1b1b1b] p-4" style="max-height: 700px;">
+        <div class="space-y-4">
+          {{ range $obj := .GlobalContext.Account.BaseOsArtifacts }}
+          <div class=" p-4 rounded-lg shadow-md">
+            <h4 class="text-lg font-semibold underline">Artifact
+              Type: {{ $obj.ArtifactType }}</h4>
+            <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
+              {{ range $val := $obj.Artifacts }}
+              <div>
+                <p class="detail-sect-key font-medium">Url</p>
+                <div class="flex items-center">
+                  <p class="" style="max-width: 500px; overflow-wrap: break-word;"
+                    style="max-width: 200px; overflow-wrap: break-word;">{{ $val.Artifact }}
+                    <button onclick="copyToClipboard('{{ $val.Artifact }}')" title="Copy" class="ml-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                        <path
+                          d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z" />
+                      </svg>
+
+                    </button>
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Digest</p>
+                <div class="flex items-center">
+                  <p class="" style="max-width: 500px; overflow-wrap: break-word;"
+                    style="max-width: 200px; overflow-wrap: break-word;">{{ $val.Digest }}
+                    <button onclick="copyToClipboard('{{ $val.Digest }}')" title="Copy" class="ml-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                        <path
+                          d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z" />
+                      </svg>
+                    </button>
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">IsLatest</p>
+                <p class="detail-section-text">{{ $val.IsLatest }}</p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">AddedOn</p>
+                <p class="detail-section-text">{{ epochConverter $val.AddedOn }}</p>
+              </div>
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+      </div>
+  </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('basic-info');
+    });
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+   
+  </script>
+
+</body>
+
+</html>

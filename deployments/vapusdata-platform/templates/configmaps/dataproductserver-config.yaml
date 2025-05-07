@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.nabhikserver.volumePaths.serviceConfig.name }}
+  labels:
+    {{- include "vapusdata.nabhikserver.labels" . | nindent 4 }}
+data:
+  nabhikserver-config.yaml: |-
+    vapusBESecretStorage: 
+      filePath: "{{ .Values.nabhikserver.volumePaths.secretsMount.path }}/{{ .Values.vapusdata.globalSecrets.backend.secretStoreFileName }}"
+    vapusBEDbStorage: 
+      secret:  {{ .Values.secrets.backendDataStore.secret }}
+    vapusBECacheStorage: 
+      secret:  {{ .Values.secrets.backendCacheStore.secret }}
+    vapusFileStorage: 
+      secret:  {{ .Values.secrets.fileStore.secret }}
+    JWTAuthnSecrets: 
+      secret: {{ .Values.secrets.JWTAuthnSecrets.secret }}
+    serverCerts:
+      mtls: False
+      caCertFile: {{ .Values.nabhikserver.volumePaths.certMount.path }}/ca-cert.pem
+      serverCertFile: {{ .Values.nabhikserver.volumePaths.certMount.path }}/tls.crt
+      serverKeyFile: {{ .Values.nabhikserver.volumePaths.certMount.path }}/tls.key
+      clientCertFile: {{ .Values.nabhikserver.volumePaths.certMount.path }}/client-cert.pem
+      clientKeyFile: {{ .Values.nabhikserver.volumePaths.certMount.path }}/client-key.pem
+    networkConfigFile: {{ .Values.nabhikserver.volumePaths.networkConfig.path }}/{{ .Values.vapusdata.globalConfigs.networkConfig.fileName }}
+    trinoSpecs:
+      appSelector: {{ .Values.trino.fullnameOverride }}
+      namespace: {{ .Values.app.namespace }}
+      trinoCordDeployment: {{ .Values.trino.coordinatorNameOverride }}
+      trinoWorkerDeployment: {{ .Values.trino.workerNameOverride }}
+      trinoCordSvc: {{ .Values.trino.fullnameOverride }}
+      trinoWorkerSvc: {{ .Values.trino.fullnameOverride }}-worker
+      trinoCordDeploymentContainer: trino-coordinator
+      trinoWorkerDeploymentContainer: trino-worker
+      trnioWorkerPort: {{ .Values.trino.service.port }}
+      trinoCordPort: {{ .Values.trino.service.port }}
+      trinoCordSvcPort: {{ .Values.trino.service.port }}
+      trinoWorkerSvcPort: {{ .Values.trino.service.port }}
+      trinoAppName: {{ .Values.trino.fullnameOverride }}
+      trinoCatalog: {{ .Values.trino.fullnameOverride }}-catalog

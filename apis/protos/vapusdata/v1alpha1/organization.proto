@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/organization.proto";
+import "protos/models/v1alpha1/users.proto";
+
+package vapusdata.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/vapusdata/v1alpha1";
+
+/**
+ * @fileoverview This file defines the OrganizationService, which is responsible for managing organizations and data sources.
+ */
+
+/**
+ * @classdesc The OrganizationService provides methods for managing organizations and data sources.
+ * @interface
+ */
+service OrganizationService {
+    rpc Dashboard(models.v1alpha1.EmptyRequest) returns (OrganizationDashboardResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/organizations-dashboard"
+        };
+    }
+    /**
+     * Manages a organization.
+     * @param {OrganizationManagerRequest} request - The request object containing the organization details.
+     * @returns {OrganizationResponse} The response object containing the result of the organization management actions.
+     */
+    rpc Create(OrganizationManagerRequest) returns (models.v1alpha1.VapusCreateResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/organizations"
+            body: "*"
+        };
+    }
+
+    rpc Update(OrganizationManagerRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            put: "/api/v1alpha1/organizations"
+            body: "*"
+        };
+    }
+
+    rpc AddUsers(OrganizationAdduserRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            put: "/api/v1alpha1/organizations/{organization_id}/users"
+            body: "*"
+        };
+    }
+
+    /**
+     * Retrieves a organization.
+     * @param {OrganizationGetterRequest} request - The request object containing the organization ID.
+     * @returns {OrganizationResponse} The response object containing the retrieved organization.
+     */
+    rpc Get(OrganizationGetterRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/organizations/{organization_id}"
+        };
+    }
+
+    rpc List(OrganizationGetterRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/organizations"
+        };
+    }
+
+    rpc Archive(OrganizationGetterRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            delete: "/api/v1alpha1/organizations/{organization_id}"
+        };
+    }
+}
+
+message OrganizationDashboardResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    models.v1alpha1.OrganizationDashboard output = 2; // @gotags: yaml:"output"
+}
+
+/**
+ * @typedef {Object} ManageOrganizationRequest
+ * @property {OrganizationAgentActions} actions - The actions to perform on the organization.
+ * @property {models.v1alpha1.Organization} spec - The request body containing the organization details.
+ */
+message OrganizationManagerRequest {
+    // The request body containing the organization details
+    models.v1alpha1.Organization spec = 1; // @gotags: yaml:"spec"
+}
+
+message OrganizationAdduserRequest {
+    string organization_id = 1; // @gotags: yaml:"organizationId"
+    // The list of organization user operations
+    repeated models.v1alpha1.OrganizationUserOps users = 2; // @gotags: yaml:"users"
+}
+
+message OrganizationGetterRequest {
+    // The organization ID to retrieve
+    string organization_id = 1; // @gotags: yaml:"organizationId"
+    // The search parameter for organization retrieval
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}
+
+message OrganizationResponse {
+    // The response from the organization management service
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    // The list of organizations
+    message OrganizationOutput{
+        // The list of organizations
+        repeated models.v1alpha1.Organization organizations = 1; // @gotags: yaml:"organizations"
+        // The list of organization users
+        message OrganizationUsers {
+            // The organization
+            string organization = 1; // @gotags: yaml:"organization"
+            // The list of users
+            repeated models.v1alpha1.User users = 2; // @gotags: yaml:"users"
+        }
+        // The list of organization users
+        repeated OrganizationUsers users = 2; // @gotags: yaml:"users"
+    }
+    // The output of the organization response
+    OrganizationOutput output = 2; // @gotags: yaml:"output"
+}
+

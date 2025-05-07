@@ -1,0 +1,33 @@
+FROM ubuntu:24.04
+
+# Install dependencies and create a user with user group
+USER root
+
+RUN groupadd --gid 1042 vapusdata
+
+RUN useradd -m -u 503 -g vapusdata vapusdata-webapp-app
+
+RUN mkdir -p /src
+
+COPY ./webapp /src
+
+RUN ls
+
+RUN chown -R vapusdata-webapp-app:vapusdata .
+
+# RUN GRPC_HEALTH_PROBE_VERSION=v0.4.28 && \
+#     curl -Lo /bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
+#     chmod +x /bin/grpc_health_probe
+
+USER vapusdata-webapp-app
+
+WORKDIR /src
+
+COPY templates ./templates
+COPY static ./static
+
+EXPOSE 9014
+
+RUN date -u
+
+CMD ["./webapp","--conf","/data/vapusdata"]

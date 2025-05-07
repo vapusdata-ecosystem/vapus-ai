@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+       <div class="flex-grow p-2 w-full">
+            <section id="grids" class="space-y-6">
+                <div class="flex justify-end mb-2 items-center p-2">
+                   
+                    {{ template "create-new-resource-href.html" . }}
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {{ range $id, $val := .Response.DataSources }}
+                    <div class="relative p-4 bg-[#1b1b1b] text-gray-100 rounded-lg shadow-lg text-xs  border border-zinc-600">
+                        <a href="{{ $.Response.BackListingLink }}/{{ $val.DataSourceId }}" target="_blank"
+                            class="absolute top-2 right-2 text-blue-800 hover:underline">
+                            {{ template "view-details-svg.html" . }}
+                        </a>
+                        <h3 class="text-md font-semibold text-gray-100 mb-3">{{ $val.Name }}</h3>
+                        <div class="grid grid-cols-1 gap-2  text-gray-100">
+                            <div class="flex items-center justify-left">
+                                <span class="font-semibold pr-2">ID:</span>
+                                <span class="flex items-center cursor-pointer" onclick="copyToClipboard(`{{ $val.DataSourceId }}`)">
+                                    {{ $val.DataSourceId }}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-left">
+                                <span class="font-semibold pr-2">Owners:</span>
+                                <span class="flex items-center">{{ $val.Owners }}</span>
+                            </div>
+                            <div class="flex items-center justify-left">
+                                <span class="font-semibold pr-2">Status:</span>
+                                <span>
+                                    <span
+                                        class="px-3 py-1  font-medium {{ if strContains $val.ResourceBase.Status `ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }} rounded-full">
+                                        {{ $val.ResourceBase.Status }}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-left">
+                                <!-- <span class="font-semibold pr-2"></span> -->
+                                <span class="flex items-center text-xs break-all gap-2">
+                                    <span
+                                        class="px-3 py-1  font-medium bg-blue-800 text-white rounded-full">
+                                        {{ enumoTitle "" $val.Attributes.ServiceName }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {{ else }}
+                    <div class="text-center text-gray-100 m-20 text-4xl  w-full">
+                        <p>No data sources available.</p>
+                    </div>
+                    {{ end }}
+                </div>
+            </section>
+        </div>
+        <div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+    </div>
+</body>
+</html>

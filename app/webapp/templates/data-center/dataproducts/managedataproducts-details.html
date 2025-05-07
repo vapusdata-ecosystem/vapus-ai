@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+    <script>
+        // JavaScript function to toggle expand/collapse rows
+        function toggleRow(rowId) {
+            const expandedRow = document.getElementById(rowId);
+            expandedRow.classList.toggle("hidden");
+        }
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            section.classList.toggle("hidden");
+        }
+    </script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+      <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+        <div class="flex-grow p-2 w-full">
+            {{ template "section-headers.html" . }}
+    
+          <!-- Tabs -->
+          <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+                <div class="flex border-b border-zinc-500">
+                    <button onclick="showTab('overview')"
+                        class="tab-button px-4 py-2 focus:outline-none">Overview</button>
+                    <button onclick="showTab('schemas')"
+                        class="tab-button px-4 py-2 focus:outline-none">Schemas</button>
+                    <button onclick="showTab('ioports')"
+                        class="tab-button px-4 py-2 focus:outline-none">I/O Ports</button>
+                    <button onclick="showTab('compliances')"
+                        class="tab-button px-4 py-2 focus:outline-none">Compliances</button>
+                    <button onclick="showTab('governance')"
+                        class="tab-button px-4 py-2 focus:outline-none">Governance</button>
+                    <button onclick="showTab('lineages')"
+                        class="tab-button px-4 py-2 focus:outline-none">Lineage
+                        Attributes</button>
+                    <button onclick="showTab('accessPolicies')"
+                        class="tab-button px-4 py-2 focus:outline-none">Access
+                        Policies</button>
+                    <button onclick="showTab('consumerRequests')"
+                        class="tab-button px-4 py-2 focus:outline-none">Consumer Requests</button>
+                    {{ if eq .HostScope "DOMAIN_HOSTED" }}
+                    <button onclick="showTab('manageVDC')"
+                        class="tab-button px-4 py-2 focus:outline-none">Manage VDC</button>
+                    {{ end }}
+                </div>
+
+                <!-- Tab Content -->
+                {{ template "dataproduct-details-common.html" . }}
+
+                <div id="consumerRequests" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+                    <div class="overflow-x-auto scrollbar  bg-zinc-800 rounded-lg p-4 shadow-md">
+                        <table class="min-w-full divide-y divide-zinc-500 border-2 border-zinc-500">
+                            <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                                <tr>
+                                    <th
+                                        class="px-3 py-3 text-left text-xs tracking-wider">
+                                        User</th>
+                                    <th
+                                        class="px-3 py-3 text-left text-xs tracking-wider">
+                                        Organization</th>
+                                    <th
+                                        class="px-3 py-3 text-left text-xs tracking-wider">
+                                        RequestedOn</th>
+                                    <th
+                                        class="px-3 py-3 text-left text-xs tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="px-3 py-3 text-left text-xs tracking-wider">
+                                        Resolution Date</th>
+                                    <th
+                                        class="px-3 py-3 text-left text-xs tracking-wider">
+                                        Action</th>
+                                </tr>
+                            </thead>
+                            <div class="bg-zinc-800 divide-y divide-gray-200">
+                                {{ range $val := .Response.AccessRequests }}
+                                <!-- Modal Overlay -->
+                                <div id="{{ $val.RequestId }}"
+                                    class="fixed inset-0 bg-zinc-600/90 flex items-center justify-center hidden">
+                                    <div id="loading-overlay"
+                                        class="absolute inset-0 z-10 flex items-center justify-center bg-zinc-800  hidden">
+                                        <svg class="animate-spin h-10 w-10 text-blue-500"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="bg-zinc-800 rounded-lg shadow-lg w-4/5 h-3/5">
+                                        <div class="px-3 py-3">
+                                            <h3 class="text-lg font-semibold"></h3>
+                                        </div>
+                                        <div class="p-6 space-y-4">
+                                            <!-- Read-only area -->
+                                            <div id="displayArea-{{ $val.RequestId }}"
+                                                class="bg-zinc-600 p-4 rounded-lg h-48 overflow-y-auto scrollbar  border-gray-300 space-y-2">
+                                                <!-- Example messages -->
+                                                {{ range $msg := $val.Comments }}
+                                                {{ if eq $msg.Organization $.GlobalContext.CurrentOrganization.OrganizationId }}
+                                                <div class="flex justify-end">
+                                                    <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
+                                                        <p class="text-sm text-gray-200">
+                                                            {{ $msg.Comment }} 
+                                                        </p>
+                                                        <p class="text-xs text-yellow-500 mt-1">{{ epochConverterFull
+                                                            $msg.CommentedAt }}</p>
+                                                    </div>
+                                                </div>
+                                                {{ else }}
+                                                <div class="flex justify-start">
+                                                    <div class="bg-gray-200 px-4 py-2 rounded-lg max-w-xs">
+                                                        <p class="text-sm text-gray-800">{{ $msg.Comment }}</p>
+                                                        <p class="text-xs text-purple-500 mt-1">{{ epochConverterFull
+                                                            $msg.CommentedAt }}</p>
+                                                    </div>
+                                                </div>
+                                                {{ end }}
+                                                {{ end }}
+                                            </div>
+
+                                            <!-- Textarea -->
+                                            <textarea id="accessRequestComment-{{ $val.RequestId }}"
+                                                class="w-full px-3 py-2 bg-zinc-700 rounded-lg focus:ring focus:ring-orange-700"
+                                                placeholder="Type your message..."></textarea>
+
+                                            <!-- Dropdown -->
+                                            <label for="dropdown" class="block text-sm font-medium">Choose Action</label>
+                                            {{ if $.Response.ActionParams}}
+                                            <select id="requestStatus-{{ $val.RequestId }}"
+                                                class="w-full px-3 py-2 border border-zinc-700 rounded-lg focus:ring focus:ring-orange-700">
+                                                {{ range $v := $.Response.ActionParams.SupportedActions }}
+                                                <option value="{{ $v }}">{{ $v }}</option>
+                                                {{ end }}
+                                            </select>
+                                            {{ end }}
+                                        </div>
+                                        <div class="px-3 py-3 flex justify-end space-x-3">
+                                            <!-- Buttons -->
+                                            <button id="cancelBtn"
+                                                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                                                onclick="closeRequestAccessModal(`{{ $val.RequestId }}`)">
+                                                Cancel
+                                            </button>
+                                            <button id="submitBtn"
+                                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                                onclick="manageAccessRequests(`{{ $.RequestAccessAPI }}`,
+                        `{{ $.Response.DataProduct.DataProductId }}`,
+                        `{{ $.GlobalContext.AccessTokenKey }}`,`accessRequestComment-{{ $val.RequestId }}`,
+                        `{{ $val.RequestId }}`,`requestStatus-{{ $val.RequestId }}`)">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <tr class="cursor-pointer">
+                                    <td class="px-3 py-3 whitespace-nowrap">{{ $val.UserId }}</td>
+                                    <td class="px-3 py-3 whitespace-nowrap">{{ $val.Organization }}</td>
+                                    <td class="px-3 py-3 whitespace-nowrap">{{ epochConverter $val.RequestOn }}</td>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <span class="px-3 py-1 text-sm font-medium 
+                                text-blue-800 bg-blue-100
+                            rounded-full">
+                                            {{ $val.Organization }}
+                                        </span>
+                                    </td>
+                                    <td class="px-3 py-3 whitespace-nowrap">{{ epochConverter $val.ResolutionDate }}
+                                    </td>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <button onclick="openRequestAccessModal(`{{ $val.RequestId }}`)"
+                                            class="px-4 py-2 bg-orange-700  text-white rounded-lg hover:bg-pink-900">
+                                            Resolve
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{ else }}
+                                <tr>
+                                    <td colspan="5" class="px-3 py-3 whitespace-nowrap text-2xl">No Access Requests
+                                        available</td>
+                                </tr>
+                                {{ end }}
+                                <!-- Additional rows... -->
+                            </div>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="manageVDC" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+                    <div class="max-w-8xl mx-auto bg-zinc-800 rounded-lg shadow-lg p-6">
+                        <!-- Status Display -->
+                        <div class="mb-6 hidden">
+                            <span id="statusDisplay"
+                                class="px-3 py-1 text-xl font-medium text-purple-700 bg-purple-200 rounded-full">
+                            </span>
+                        </div>
+
+                        <!-- Button for Action -->
+                        <div class="mb-6">
+                            <button id="actionButton"
+                                onclick="checkVdcStatus(`{{ (index $.Response.DataProduct.Contract.IoPorts.ProductOutputPorts 0).Endpoint }}`,`{{ $.Response.DataContainerOps.ConfigUri }}`,`{{ $.GlobalContext.AccessTokenKey }}`,`statusDisplay`)"
+                                class="px-4 py-2 text-white bg-orange-700  rounded-lg hover:bg-pink-900">
+                                Check Status
+                            </button>
+                        </div>
+
+                        <!-- Dropdown with List of Actions -->
+                        <div class="mb-6">
+                            <button id="dropdownToggle"
+                                class="bg-orange-700 text-white px-4 py-2 rounded-lg shadow  hover:bg-pink-900 focus:outline-none"
+                                onclick="toggleDropdown()">
+                                Actions
+                            </button>
+                            <ul id="actionsList"
+                                class="absolute w-64 mt-2 bg-gray-100 rounded-lg shadow-md divide-y divide-gray-200 hidden">
+                                {{ range $val := $.Response.DataContainerOps.Actions }}
+                                <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer"
+                                    onclick="manageVDCAction(`{{ (index $.Response.DataProduct.Contract.IoPorts.ProductOutputPorts 0).Endpoint }}`,`{{ $.Response.DataContainerOps.ConfigUri }}`,`{{ $.GlobalContext.AccessTokenKey }}`,`statusDisplay`,`{{ $val}}`)">
+                                    {{ $val}}
+                                </li>
+                                {{ end }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+</div>
+        </div>
+    </div>
+    <!-- JavaScript for Tabs -->
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active-tab'));
+
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+        }
+
+        // Show the first tab by default
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            showTab('overview');
+        });
+        document.addEventListener("click", (event) => {
+            const dropdown = document.getElementById("actionDropdownMenu");
+            const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+            if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                dropdown.classList.add("hidden");
+            }
+        });
+
+        function openRequestAccessModal(id) {
+            document.getElementById(id).classList.remove("hidden");
+        }
+
+        function closeRequestAccessModal(id) {
+            document.getElementById(id).classList.add("hidden");
+        }
+
+        function manageVDCAction(host, uri, tokenKey, statuselem, action) {
+            mess = `Are you sure you want to ${action} VDC container?`
+            ShowConfirm("Confirm Action", mess, () => {
+                console.log("Confirmed!");
+                manageVdc(host, uri, tokenKey, statuselem, action)
+            });
+        }
+        // Close the dropdown when clicking outside
+        function toggleDropdown() {
+            const actionsList = document.getElementById("actionsList");
+            actionsList.classList.toggle("hidden");
+        }
+        document.addEventListener("click", function (event) {
+            const dropdownToggle = document.getElementById("dropdownToggle");
+            const actionsList = document.getElementById("actionsList");
+
+            if (
+                !dropdownToggle.contains(event.target) &&
+                !actionsList.contains(event.target)
+            ) {
+                actionsList.classList.add("hidden");
+            }
+        });
+
+       
+       
+    </script>
+    
+</body>
+
+</html>

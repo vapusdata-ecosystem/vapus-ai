@@ -1,0 +1,5 @@
+# FILE: bandir.toml
+[tool.bandit]
+exclude_dirs = ["tests","./dist/"]
+tests = ["B201", "B301"]
+skips = ["B101", "B601"]

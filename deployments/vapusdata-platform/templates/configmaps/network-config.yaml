@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
+  labels:
+    {{- include "vapusdata.common.labels" . | nindent 4 }}
+data:
+  {{ .Values.vapusdata.globalConfigs.networkConfig.fileName }}: |-
+    platformSvc:
+      port: {{ .Values.platform.service.grpc.port }}
+      httpPort: {{ .Values.platform.service.grpc.port }}
+      serviceName: {{ .Values.platform.name }}
+      servicePort: {{ .Values.platform.service.svcPort }}
+      svcType: {{ .Values.platform.service.type }}
+    aistudioSvc:
+      port: {{ .Values.aistudio.service.grpc.port }}
+      httpPort: {{ .Values.aistudio.service.grpc.port }}
+      serviceName: {{ .Values.aistudio.name }}
+      servicePort: {{ .Values.aistudio.service.svcPort }}
+      svcType: {{ .Values.aistudio.service.type }}
+    webappSvc:
+      port: {{ .Values.webapp.service.http.port }}
+      httpPort: {{ .Values.webapp.service.http.port }}
+      serviceName: {{ .Values.webapp.name }}
+      servicePort: {{ .Values.webapp.service.svcPort }}
+      svcType: {{ .Values.webapp.service.type }}
+    nabhikserver:
+      port: {{ .Values.nabhikserver.service.grpc.port }}
+      httpPort: {{ .Values.nabhikserver.service.grpc.port }}
+      serviceName: {{ .Values.nabhikserver.name }}
+      servicePort: {{ .Values.nabhikserver.service.svcPort }}
+      svcType: {{ .Values.nabhikserver.service.type }}
+    externalUrl: {{ .Values.app.address }}
+        
+  # Compare this snippet from anekam/vapusdata/vapusdata-ecosystem/vapusdata/deployments/helm-chart/vapusdata-platform/templates/configmaps/vapus-policies.yaml:

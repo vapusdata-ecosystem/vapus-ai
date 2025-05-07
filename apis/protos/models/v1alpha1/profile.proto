@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+message Address {
+    string street_address1 = 1; // @gotags: yaml:"streetAddress1"
+    string street_address2 = 2;// @gotags: yaml:"streetAddress2"
+    string city = 3;// @gotags: yaml:"city"
+    string state = 4;// @gotags: yaml:"state"
+    string zip_code = 5;// @gotags: yaml:"zipCode"
+    string country = 6;// @gotags: yaml:"country"
+    string others = 7;// @gotags: yaml:"others"
+}
+
+message AccountProfile {
+    repeated Address addresses = 1; // @gotags: yaml:"addresses"
+    string logo = 2; // @gotags: yaml:"logo"
+    string description = 3; // @gotags: yaml:"description"
+    string moto = 4; // @gotags: yaml:"moto"
+    string favicon = 5; // @gotags: yaml:"favicon"
+}
+
+message AccountSettings {
+    string google_analytics_tag_id = 1; // @gotags: yaml:"googleAnalyticsTagId"
+}
+

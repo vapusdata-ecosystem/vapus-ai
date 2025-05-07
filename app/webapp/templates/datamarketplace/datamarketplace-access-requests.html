@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    <script src="/static/js/datamarketplace.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+       <div class="flex-grow p-2 w-full">
+                <div class="overflow-x-auto scrollbar rounded-lg p-4 shadow-md">
+                    <table class="min-w-full divide-y text-xs divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-sm" id="accessRequestsDataTable">
+                        <thead class="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase">
+                            <tr>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    User</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Organization</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    RequestedOn</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Resolution Date</th>
+                                <th
+                                    class="px-3 py-3 text-center tracking-wider">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words">
+                            {{ range $val := .Response.AccessRequests }}
+                            <!-- Modal Overlay -->
+                            <div id="{{ $val.RequestId }}"
+                                class="fixed inset-0 bg-zinc-600/90 flex items-center justify-center hidden">
+                                <div id="loading-overlay"
+                                    class="absolute inset-0 z-10 flex items-center justify-center bg-white bg-zinc-600/90 hidden">
+                                    <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                    </svg>
+                                </div>
+                                <div class="bg-zinc-800 text-gray-100 rounded-lg shadow-lg w-4/5 h-[65%]">
+                                    <div class="p-6 space-y-4">
+                                        <!-- Read-only area -->
+                                        <div id="displayArea-{{ $val.RequestId }}"
+                                            class="bg-zinc-700 p-4 rounded-lg h-48 overflow-y-auto scrollbar  border border-zinc-500 space-y-2">
+                                            <!-- Example messages -->
+                                            {{ range $msg := $val.Comments }}
+                                            {{ if eq $msg.Organization $.GlobalContext.CurrentOrganization.OrganizationId }}
+                                            <div class="flex justify-end">
+                                                <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
+                                                    <p class="text-sm text-gray-200">
+                                                        {{ $msg.Comment }}
+                                                    </p>
+                                                    <p class="text-xs text-yellow-500 mt-1">{{ epochConverterFull
+                                                        $msg.CommentedAt }}</p>
+                                                </div>
+                                            </div>
+                                            {{ else }}
+                                            <div class="flex justify-start">
+                                                <div class="bg-gray-200 px-4 py-2 rounded-lg max-w-xs">
+                                                    <p class="text-sm text-gray-700">{{ $msg.Comment }}</p>
+                                                    <p class="text-xs text-purple-500 mt-1">{{ epochConverterFull
+                                                        $msg.CommentedAt }}</p>
+                                                </div>
+                                            </div>
+                                            {{ end }}
+                                            {{ end }}
+                                        </div>
+
+                                        <!-- Textarea -->
+                                        <textarea id="commentMessage-{{ $val.RequestId }}"
+                                            class="w-full px-3 py-2 bg-zinc-700 rounded-lg focus:ring focus:ring-orange-700"
+                                            placeholder="Type your message..."></textarea>
+
+                                        <!-- Dropdown -->
+                                        <label for="dropdown" class="block text-sm font-medium">Select an Option</label>
+                                        <select id="requestStatus-{{ $val.RequestId }}"
+                                            class="w-full px-3 py-2 border border-zinc-500 rounded-lg focus:ring focus:ring-orange-700 text-gray-100">
+                                            <option value="">No Action</option>
+                                            {{ range $val := $.Response.ActionParams.SupportedActions }}
+                                            <option value="{{ $val }}">{{ $val }}</option>
+                                            {{ end }}
+                                        </select>
+                                    </div>
+                                    <div class="px-3 py-3 flex justify-end space-x-3">
+                                        <!-- Buttons -->
+                                        <button id="cancelBtn"
+                                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                                            onclick="closeModal(`{{ $val.RequestId }}`)">
+                                            Cancel
+                                        </button>
+                                        <button id="submitBtn"
+                                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                            onclick="manageAccessRequests(`{{ $.Response.ActionParams.API }}`,
+                            `{{ $val.DataProductId }}`,
+                            `{{ $.GlobalContext.AccessTokenKey }}`,`commentMessage-{{ $val.RequestId }}`,
+                            `{{ $val.RequestId }}`,
+                            `requestStatus-{{ $val.RequestId }}`,
+                            `{{ $val.Organization }}-{{ $val.RequestId }}`)">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <tr class="cursor-pointer">
+                                <td class="px-3 py-3 whitespace-nowrap">{{ $val.UserId }}</td>
+                                <td class="px-3 py-3 whitespace-nowrap">{{ $val.Organization }}</td>
+                                <td class="px-3 py-3 whitespace-nowrap">{{ epochConverter $val.RequestOn }}</td>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <span class="px-3 py-1 text-xs font-medium 
+                                    text-blue-800 bg-blue-100
+                                rounded-full">
+                                        {{ $val.Status }}
+                                    </span>
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">{{ epochConverter $val.ResolutionDate }}</td>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <button onclick="openModal(`{{ $val.RequestId }}`)"
+                                        class="px-4 py-2 bg-orange-700 text-white rounded-lg hover:bg-pink-900"> Manage
+                                    </button>
+                                </td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="6" class="px-3 py-3 whitespace-nowrap text-2xl">No Access Requests
+                                    available</td>
+                            </tr>
+                            {{ end }}
+                            <!-- Additional rows... -->
+                        </tbody>
+                        {{ template "table-pagination-footer.html" . }}
+                    </table>
+                </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+            const buttons = sidebar.getElementsByTagName('button');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuitems = document.getElementById('menuitems');
+            const buttons = menuitems.getElementsByTagName('a');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+        document.getElementById('searchInput').addEventListener('input', function () {
+            var filter = this.value.toLowerCase();
+            var items = document.querySelectorAll('.dataproductItem');
+
+            items.forEach(function (item) {
+                if (item.textContent.toLowerCase().includes(filter)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+        function openModal(id) {
+            document.getElementById(id).classList.remove("hidden");
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add("hidden");
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(() => {
+                addTablePagination({
+                    tableId: "accessRequestsDataTable",
+                    rowsPerPage: 10,
+                    prevPageBtn: document.getElementById("prevPage"),
+                    nextPageBtn: document.getElementById("nextPage"),
+                    currentPageSizeSpan: document.getElementById("currentPageSize"),
+                    totalElementsSpan: document.getElementById("totalElements"),
+                });
+            }, 100);
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0c0c0c;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.worker {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #444;
+}
+
+.logo {
+    width: 100px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.cli-section {
+    background-color: #1b1b1b;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #444;
+}
+
+.cli-input {
+    width: calc(100% - 100px);
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #444;
+    margin-right: 10px;
+}
+
+.run-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #065f46;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.output {
+    margin-top: 20px;
+}
+
+.output p {
+    margin: 0 0 10px;
+    font-weight: bold;
+}
+
+.output ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.output ul li {
+    margin: 5px 0;
+}
+
+.grid-worker {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.grid-item {
+    background-color: #333;
+    padding: 20px;
+    text-align: center;
+    border: 1px dashed #555;
+}

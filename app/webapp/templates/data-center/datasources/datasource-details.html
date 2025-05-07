@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+    <script src="/static/js/visualization.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // JavaScript function to toggle expand/collapse rows
+        function toggleRow(rowId) {
+          const expandedRow = document.getElementById(rowId);
+          expandedRow.classList.toggle("hidden");
+        }
+        function toggleSection(id) {
+            loadSchemas();
+            loadTables();
+            const section = document.getElementById(id);
+            // document.getElementById(id + '-structure_model-button').classList.add('active-tab');
+            section.classList.toggle("hidden");
+        }
+      </script>
+</head>
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+      <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+        <div class="flex-grow p-2 w-full">
+            {{ template "section-headers.html" . }}
+    
+          <!-- Tabs -->
+          <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+            <div class="flex border-b border-zinc-500">
+              <button onclick="showTab('datasource')" class="tab-button px-4 py-2 focus:outline-none">Data Source</button>
+              <button onclick="showTab('source-metadata')" class="tab-button px-4 py-2 focus:outline-none">Source
+                MetaData</button>
+            </div>
+        <!-- Tab Content -->
+        <div id="datasource" class="tab-content mt-2 bg-[#1b1b1b] p-4">
+          <h3 class="text-xl mb-4 detail-heading">Basic Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class = "flex items-center">
+              <p class="detail-sect-key font-medium">Name:</p>
+              <p class="break-words p-2">{{ stringCheck .Response.DataSource.Name }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-sect-key font-medium">Id:</p>
+              <p class="detail-section-text break-words p-2"
+                onclick="copyToClipboard('{{ .Response.DataSource.DataSourceId }}')">
+                {{stringCheck  .Response.DataSource.DataSourceId }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-sect-key font-medium">DataSource Type:</p>
+              <p class=" break-words p-2">{{ .Response.DataSource.DataSourceType }}</p>
+            </div>
+            <div>
+                <p class="detail-sect-key font-medium">Tags:</p>
+                <p class=" break-words p-2">
+                    {{ range $tag := .Response.DataSource.Tags }}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-900">
+                        {{ stringCheck $tag }}
+                      </span>
+                    {{ end }}
+                </p>
+              </div>
+              <div>
+                <p class="detail-sect-key font-medium">Owners:</p>
+                <p class=" break-words p-2">
+                    {{ range $tag := .Response.DataSource.Owners }}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                        {{ stringCheck $tag }}
+                      </span>
+                    {{ end }}
+                </p>
+              </div>
+              <div class = "flex items-center">
+              <p class="detail-sect-key font-medium">Status:</p>
+              <p class=" break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium {{ if eq .Response.DataSource.ResourceBase.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                  {{ .Response.DataSource.ResourceBase.Status }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </br>
+        <h3 class="text-xl mb-4 detail-heading">Attributes</h3>
+          <div class="space-y-4">
+            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-100">Storage Attributes</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="detail-section-title font-semibold">Storage Engine</p>
+                  <p class=" break-words p-2">{{ .Response.DataSource.Attributes.StorageEngine }}</p>
+                </div>
+                <div>
+                    <p class="detail-section-title font-semibold">Service Name</p>
+                    <p class=" break-words p-2">{{ .Response.DataSource.Attributes.ServiceName }}</p>
+                </div>
+                <div>
+                    <p class="detail-section-title font-semibold">Service Provider</p>
+                    <p class=" break-words p-2">{{ .Response.DataSource.Attributes.ServiceProvider }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-xl mb-4 detail-heading">Network</h3>
+          <div class="space-y-4">
+            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-100">Address: {{ .Response.DataSource.NetParams.Address }}</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="detail-section-title font-semibold">Port</p>
+                  <p class=" break-words p-2">{{ .Response.DataSource.NetParams.Port }}</p>
+                </div>
+                <div>
+                    <p class="detail-section-title font-semibold">Databases</p>
+                    <p class=" break-words p-2">
+                        {{ range $tag := .Response.DataSource.NetParams.Databases }}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                                {{ stringCheck $tag }}
+                            </span>
+                        {{ end }}
+                    </p>
+                </div>
+                <div>
+                    <p class="detail-section-title font-semibold">Creds</p>
+                    <p class=" break-words p-2">
+                        <ul class="list-disc ml-5">
+                            {{ range $obj := .Response.DataSource.NetParams.DsCreds }}
+                                <li class="break-words">{{ stringCheck $obj.SecretName }}</li>
+                            {{ end }}
+                        </ul>
+                    </p>
+                </div>
+                <div>
+                    <p class="detail-section-title font-semibold">DatabasePrefixes</p>
+                    <p class=" break-words p-2">
+                        <ul class="list-disc ml-5">
+                        {{ range $obj := .Response.DataSource.NetParams.DatabasePrefixes }}
+                            <li>{{ stringCheck $obj }}</li>
+                        {{ end }}
+                        </ul>
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{ if .Response.DataSource.MetaSyncSchedule }}
+          <h3 class="text-xl mb-4 detail-heading">Metadata Sync Schedule</h2>
+          <div class="sub-tab-content p-4 rounded-lg  bg-zinc-700">
+          <div class="grid grid-cols-3 sm:grid-cols-3 gap-4">
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Running Frequency Limit:</p>
+              <p class=" break-words p-2">{{ .Response.DataSource.MetaSyncSchedule.Limit }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Run Now:</p>
+              <p class=" break-words p-2">{{ .Response.DataSource.MetaSyncSchedule.RunNow }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Run At:</p>
+              <p class=" break-words p-2">{{ epochConverterFull .Response.DataSource.MetaSyncSchedule.RunAt }}</p>
+            </div>
+          </div>
+        
+          {{ if .Response.DataSource.MetaSyncSchedule.CronTab }}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <h3 class="text-xl mb-4 detail-heading">Recurring Schedule</h2>
+            <div class="col-span-2">
+              <div class="space-y-2">
+              {{ range $tab := .Response.DataSource.MetaSyncSchedule.CronTab.FrequencyTab }}
+              <div class="flex items-center">
+                <p class="detail-section-title font-medium mr-2">Frequency:</p>
+                <p class=" break-words p-2">{{ $tab.Frequency }}</p>
+                <p class="detail-section-title font-medium mx-2">Interval:</p>
+                <p class=" break-words p-2">{{ $tab.FrequencyInterval }}</p>
+              </div>
+              {{ end }}
+              </div>
+            </div>
+            {{ if gt (len .Response.DataSource.MetaSyncSchedule.CronTab.Minutes) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Minutes:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataSource.MetaSyncSchedule.CronTab.Minutes }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataSource.MetaSyncSchedule.CronTab.Hours) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Hours:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataSource.MetaSyncSchedule.CronTab.Hours }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataSource.MetaSyncSchedule.CronTab.DaysOfMonth) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Days of Month:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataSource.MetaSyncSchedule.CronTab.DaysOfMonth }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataSource.MetaSyncSchedule.CronTab.Months) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Months:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataSource.MetaSyncSchedule.CronTab.Months }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+
+            {{ if gt (len .Response.DataSource.MetaSyncSchedule.CronTab.DaysOfWeek) 0 }}
+              <div class="flex items-center">
+                <p class="detail-sect-key font-medium">Days of Week:</p>
+                <p class=" break-words p-2">
+                  {{ range $index, $min := .Response.DataSource.MetaSyncSchedule.CronTab.DaysOfWeek }}
+                    {{ if gt $index 0 }}, {{ end }}{{ printf "%d" $min }}
+                  {{ end }}
+                </p>
+              </div>
+            {{ end }}
+            </div>
+          {{ end }}
+        </div>
+          {{ end }}
+
+        </div>
+    
+        <div id="source-metadata" class="tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+          {{ range $metadata := .Response.DataSourceMetadataList }}
+          {{ range $obj := $metadata.Lineage }}
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Sync At:</p>
+              <p class=" break-words p-2">{{ epochConverter $obj.SyncAt }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Digest:</p>
+              <p class=" break-words p-2">{{ $obj.Digest.Digest }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Workflow Id:</p>
+              <p class=" break-words p-2">{{ stringCheck $obj.WorkflowId }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Is Latest:</p>
+              <p class=" break-words p-2">{{ $obj.IsLatest }}</p>
+            </div>
+          </div>
+          {{ end }}
+          {{ range $schema := $metadata.SourceSchemas }}
+          <div class="flex mb-4">
+            <div id="{{ $schema.Datastore }}-modal"
+            class="fixed inset-0 flex items-center justify-center  bg-zinc-600/90 hidden">
+            <div class="bg-black relative p-4 rounded-lg w-[95%] h-[95%]">
+              <button onclick="closeVisualModal('{{ $schema.Datastore }}')"
+                class="absolute top-2 right-2 text-2xl font-bold cursor-pointer text-white text-lg">
+                &times;
+              </button>
+              <div class="mb-4 justify-right flex">
+                <input type="text" placeholder="Search metadata..." class="w-1/3 p-2 border border-white rounded-2xl text-white" />
+              </div>
+                <svg id="{{ $schema.Datastore }}-canvas" width="100%" height="100%" class="svg-graph-canvas"
+                style="background: radial-gradient(circle, white -25%, transparent 10%) 0 0, radial-gradient(circle, white -25%, transparent 10%) 10px 10px; background-size: 20px 20px;">
+              </svg>
+            </div>
+          </div>
+          <!-- Do Not Interfere -->
+            <table class="min-w-full divide-y divide-zinc-500 text-gray-100 bg-zinc-800 border-2 border-zinc-500 text-xs">
+              <thead class="bg-zinc-900">
+                <tr>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Datastore</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Schemas</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">View Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                <tr>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $schema.Datastore }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">
+                    {{ range $tag := $schema.MetaSchemas }}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-900">
+                      {{ $tag }}
+                    </span>
+                    {{ end }}
+                  </td>
+                  <td class="px-3 py-3 whitespace-nowrap flex gap-4 justify-center">
+                    <button onclick="toggleSection(`{{ $schema.TrinoCatalog }}`)"
+                      class="px-4 py-2 mt-4 bg-orange-700 text-white font-semibold rounded-lg hover:bg-pink-900">
+                      View Schema
+                    </button>
+                  
+                    <button onclick="openVisualModal('{{ $schema.Datastore }}')"
+                      class="px-4 py-2 mt-4 bg-orange-700 text-white font-semibold rounded-lg hover:bg-pink-900">
+                      Visualize
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        
+        
+          <div id="{{ $schema.TrinoCatalog }}" class="overflow-x-auto scrollbar bg-zinc-800 rounded-lg shadow-md hidden">
+            <div class="flex border-b border-zinc-500">
+              <button onclick="toggleSubTab('{{ $schema.TrinoCatalog }}-structure_model');" id = "{{ $schema.TrinoCatalog }}-structure_model-button"
+                class="subtab-button px-4 py-2 font-semibold text-gray-600 active-tab focus:outline-none cursor-pointer" data-schema='{{ toJSON $schema }}'>Data Models</button>
+              <button onclick="toggleSubTab('{{ $schema.TrinoCatalog }}-compliances');"  id = "{{ $schema.TrinoCatalog }}-compliances-button"
+                class="subtab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none cursor-pointer" data-schema='{{ toJSON $schema }}'>Compliances</button>
+              <button onclick="toggleSubTab('{{ $schema.TrinoCatalog }}-constraints');"  id = "{{ $schema.TrinoCatalog }}-constraints-button"
+                class="subtab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none cursor-pointer" data-schema='{{ toJSON $schema }}'>Constraints</button>
+            </div>
+            <div id="{{ $schema.TrinoCatalog }}-structure_model" class="subtab-content">
+              <table class="min-w-full divide-y divide-zinc-500 text-gray-100 bg-zinc-800 border-2 border-zinc-500 text-xs" id="{{ $schema.TrinoCatalog }}-datamodel-table">
+                <thead class="bg-zinc-900">
+                 
+                </thead>
+                <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                
+                </tbody>
+              </table>
+            </div>
+
+            <!-- compliances -->
+            <div id="{{ $schema.TrinoCatalog }}-compliances" class="hidden subtab-content">
+              <table class="min-w-full divide-y divide-zinc-500 text-gray-100 bg-zinc-800 border-2 border-zinc-500 text-xs" id="{{ $schema.TrinoCatalog }}-compliances-table">
+                <thead class="bg-zinc-900">
+                 
+                </thead>
+                <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                 
+                </tbody>
+              </table>
+            </div>
+            <!-- constraints -->
+            <div id="{{ $schema.TrinoCatalog }}-constraints" class="hidden subtab-content">
+              <table class="min-w-full divide-y divide-zinc-500 text-gray-100 bg-zinc-800 border-2 border-zinc-500 text-xs" id="{{ $schema.TrinoCatalog }}-constraints-table">
+                <thead class="bg-zinc-900">
+                
+                </thead>
+                <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                 
+                </tbody>
+              </table>
+            </div>
+        
+          </div>
+          {{ end}}
+          {{ end }}
+        </div>
+        </div>
+      </div>
+  </div>
+</div>
+      <!-- JavaScript for Tabs -->
+      <script>
+      function toggleSubTab(tabId) {
+        const parentContainer = document.getElementById(tabId).closest('.overflow-x-auto');
+        parentContainer.querySelectorAll('.subtab-content').forEach(tab => {
+            if (tab.id !== tabId) {
+                tab.classList.add('hidden');
+            }
+        });
+
+        document.getElementById(tabId).classList.remove('hidden');
+        parentContainer.querySelectorAll('.subtab-button').forEach(button => button.classList.remove('active-tab'));
+        document.getElementById(tabId + '-button').classList.add('active-tab');
+    }
+
+
+
+        function openVisualModal(datastore) {
+          drawGraphForSQLMD(datastore, metadataMap);
+          document.getElementById(datastore + '-modal').classList.remove('hidden');
+        }
+
+        function closeVisualModal(datastore) {
+          document.getElementById(datastore + '-modal').classList.add('hidden');
+        }
+        
+        function showTab(tabId) {
+          const tabs = document.querySelectorAll('.tab-content');
+          tabs.forEach(tab => tab.classList.add('hidden'));
+    
+          document.getElementById(tabId).classList.remove('hidden');
+          
+          const buttons = document.querySelectorAll('.tab-button');
+          buttons.forEach(button => button.classList.remove('active-tab'));
+          
+          document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+        }
+        const metadataList = [];
+        const metadataMap = {};
+        const htmlTableList = [];
+        // Show the first tab by default
+
+        function loadSchemas() {
+          {{ range $metadata := $.Response.DataSourceMetadataList }}
+            {{ range $schema := $metadata.SourceSchemas }}
+              lad = `{{ protoToJSON $schema }}`;
+              metadataList.push(JSON.parse(lad));
+              metadataMap[`{{ $schema.Datastore }}`] = JSON.parse(lad);
+              htmlTableList.push(`{{ $schema.TrinoCatalog }}-datamodel-table`);
+              htmlTableList.push(`{{ $schema.TrinoCatalog }}-compliances-table`);
+              htmlTableList.push(`{{ $schema.TrinoCatalog }}-constraints-table`);
+            {{ end }}
+          {{ end }}
+         console.log(metadataMap);
+        }
+
+        function toggleVisuals(id) {
+            // const allCharts = document.querySelectorAll('.visual-charts');
+            // allCharts.forEach(chart => chart.classList.add('hidden'));
+            const visual = document.getElementById(id+"-visual");
+            visual.classList.toggle('hidden');
+            drawGraphForSQLMD(id,metadataMap);
+        }
+        // Close dropdown if clicked outside
+        document.addEventListener("click", (event) => {
+          const dropdown = document.getElementById("actionDropdownMenu");
+          const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+          if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+            dropdown.classList.add("hidden");
+          }
+        });
+
+        function loadTables() {
+              let schema = []; 
+              let metaData = {};
+
+              {{ range $metadata := $.Response.DataSourceMetadataList }}
+                  {{ range $schema := $metadata.SourceSchemas }}
+                      var schemaEntry = JSON.parse(`{{ protoToJSON $schema }}`);
+                      schema.push(schemaEntry);
+
+                      var datastore = schemaEntry.Datastore;
+                      if (datastore) {
+                          metaData[datastore] = schemaEntry;
+                      }
+                  {{ end }}
+              {{ end }}
+
+              schema.forEach(schemaEntry => {
+                  let trinoCatalog = schemaEntry.trinoCatalog;
+                  let tableID = `#${trinoCatalog}-datamodel-table`;
+                  console.log(`Initializing DataTable for: ${tableID}`);
+
+                  if (!$(tableID).length) {
+                      console.warn(`Table with ID ${tableID} not found`);
+                      return;
+                  }
+
+                  var insightstable = schemaEntry.dataTables?.map(table => ({
+                      table: table.name ?? 'N/A',
+                      totalRow: table.totalRows ?? 'N/A',
+                      dataLength: table.dataLength ?? 'N/A',
+                      avgRowLength: table.averageRowLength ?? 'N/A',
+                      schema: table.schema ?? 'N/A',
+                      createdAt: table.createdAt ?? 'N/A',
+                      totalSize: table.totalSize ?? 'N/A',
+                      details: table.fields.map(field => ({
+                          field: field.field ?? 'N/A',
+                          type: field.type ?? 'N/A',
+                          null: field.null ?? 'N/A',
+                          defaults: field.Default ?? 'N/A'
+                      }))
+                  })) || [];
+
+                  if ($.fn.DataTable.isDataTable(tableID)) {
+                      $(tableID).DataTable().clear().rows.add(insightstable).draw(); 
+                  } else {
+                    var mainTable = $(tableID).DataTable({
+                        destroy: false,
+                        data: insightstable,
+                        columns: [
+                            { data: 'table', title: 'Table' },
+                            { data: 'totalRow', title: 'Total Rows' },
+                            { data: 'dataLength', title: 'Data Length' },
+                            { data: 'avgRowLength', title: 'Average Row Length' },
+                            { data: 'schema', title: 'Schema' },
+                            { data: 'createdAt', title: 'Created At' },
+                            { data: 'totalSize', title: 'Total Size' }
+                        ],
+                        pageLength: 10,
+                        searching: true,
+                        ordering: true,
+                        responsive: true
+                    });
+
+                    $(tableID + " tbody").on('click', 'tr', function () {
+                    var tr = $(this);
+                    var row = mainTable.row(tr);
+                    var rowData = row.data();
+
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                      var childTableHtml = `<h4 class='text-sm font-semibold mb-2'>Fields</h4>` +
+                        `<div class='overflow-x-auto scrollbar' style="width: 100%;"><table class="display text-sm divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 child-table" style="width: 100%">` +
+                        `<thead class='bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase'>
+                            <tr><th>Field</th><th>Type</th><th>Null</th><th>Default</th></tr></thead><tbody class='bg-zinc-800 divide-y divide-zinc-500 divide-y divide-gray-200'>`;
+
+                          rowData.details.forEach(detail => {
+                              childTableHtml += `<tr>
+                                  <td>${detail.field}</td>
+                                  <td>${detail.type}</td>
+                                  <td>${detail.null}</td>
+                                  <td>${detail.defaults}</td>
+                              </tr>`;
+                          });
+
+                          childTableHtml += '</tbody></table></div>';
+                          row.child(childTableHtml).show();
+                          tr.addClass('shown');
+                          row.child().find('table').DataTable({
+                              pageLength: 6,
+                              paging: true,
+                              searching: false,
+                              info: false,
+                              ordering: true,
+                              lengthChange: false,
+                              autoWidth: false,
+                          });
+
+                          $('.child-table').css({
+                              'width': '100%',
+                          });
+                        }
+                    });
+                  }
+                  // Load compliance table
+                  let complianceTableID = `#${trinoCatalog}-compliances-table`;
+                      console.log(`Initializing Compliance DataTable for: ${complianceTableID}`);
+
+                      if (!$(complianceTableID).length) {
+                          console.warn(`Compliance table with ID ${complianceTableID} not found`);
+                          return;
+                      }
+
+                      var complianceTableData = schemaEntry.complianceFields?.map(table => ({
+                          name: table.name ?? 'N/A',
+                          description: table.description ?? 'N/A',
+                          field_type: `<td class="px-3 py-3 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                                          ${table.fieldType ?? 'N/A'}
+                                        </span>
+                                      </td>`,
+                          compliance_types: `<td class="px-3 py-3 whitespace-nowrap">
+                                              ${(table.complianceTypes || []).map(tag => `
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-900">
+                                                  ${tag}
+                                                </span>`).join('')}
+                                            </td>`,
+                          data_table: table.dataTable ?? 'N/A',
+                          schema: table.schema ?? 'N/A'
+                      })) || [];
+
+                      $(complianceTableID).DataTable({
+                          destroy: true,
+                          data: complianceTableData,
+                          columns: [
+                              { data: 'name', title: 'Name' },
+                              { data: 'description', title: 'Description' },
+                              { data: 'field_type', title: 'Field Type' },
+                              { data: 'compliance_types', title: 'Compliance Types' },
+                              { data: 'data_table', title: 'Data Table' },
+                              { data: 'schema', title: 'Schema' }
+                          ],
+                          pageLength: 10,
+                          searching: true,
+                          ordering: true,
+                          responsive: true
+                      });
+              
+
+                  // Constraints Table
+                  let constraintsTableID = `#${trinoCatalog}-constraints-table`;
+                      console.log(`Initializing Constraints DataTable for: ${constraintsTableID}`);
+
+                      if (!$(constraintsTableID).length) {
+                          console.warn(`Constraints table with ID ${constraintsTableID} not found`);
+                          return;
+                      }
+
+                      var constraintsTableData = schemaEntry.constraints?.map(constraint => ({
+                          type: constraint.constraintType ?? 'N/A',
+                          name: constraint.constraintName ?? 'N/A',
+                          field: constraint.fieldName ?? 'N/A',
+                          table: constraint.tableName ?? 'N/A',
+                          enforced: constraint.enforced ?? 'N/A',
+                          schema: constraint.schema ?? 'N/A',
+                      })) || [];
+
+                      console.log("Constraints Table Data:", constraintsTableData);
+
+                      $(constraintsTableID).DataTable({
+                          destroy: true,
+                          data: "",
+                          columns: [
+                              { data: 'type', title: 'Type' },
+                              { data: 'name', title: 'Name' },
+                              { data: 'field', title: 'Field' },
+                              { data: 'table', title: 'Table' },
+                              { data: 'enforced', title: 'Enforced' },
+                              { data: 'schema', title: 'Schema' }
+                          ],
+                          pageLength: 10,
+                          searching: true,
+                          ordering: true,
+                          responsive: true
+                      });
+                  
+              });
+          }
+
+
+      </script>
+
+</body>
+</html>

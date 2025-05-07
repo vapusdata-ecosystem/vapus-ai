@@ -1,0 +1,229 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/vapusai.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/enums.proto";
+import "google/protobuf/struct.proto";
+
+package aistudio.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha1";
+
+service AIStudio {
+    // Generates embeddings for the given input text.
+    // @param {EmbeddingsInterface} request - The request object containing the embeddings interface.
+    // @returns {EmbeddingsResponse} The response object containing the embeddings.
+    rpc GenerateEmbeddings(EmbeddingsInterface) returns(EmbeddingsResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/embeddings"
+            body: "*"
+        };
+    }
+
+    rpc BidiChat(stream ChatRequest) returns(stream ChatStreamResponse) {}
+
+    rpc Chat(ChatRequest) returns(stream ChatStreamResponse) {
+         option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/chat"
+            body: "*"
+        };
+    }
+
+    rpc Completions(ChatRequest) returns(ChatResponse) {}
+
+    rpc Getter(GetAIChatRequest) returns (AIChatResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/chats"
+        };
+    }
+
+    rpc Manager(ManageAIChatRequest) returns (AIChatResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/chats"
+            body: "*"
+        };
+    }
+}
+
+enum AIInterfaceMode {
+    P2P = 0;
+    CHAT_MODE = 1;
+}
+
+enum AIChatAction {
+    INVALID_AI_CHAT_ACTION = 0;
+    CREATE = 1;
+    ARCHIVE = 2;
+}
+
+enum AudioResponseFormat {
+    ARF_TEXT = 0;
+    ARF_JSON = 1;
+    ARF_SRT = 2;
+    ARF_VERBOSE_JSON = 3;
+    ARF_VTT = 4;
+}
+
+message AIStudioChat {
+    string chat_id = 1; // @gotags: yaml:"chatId"
+    repeated ChatMessageObject messages = 2; // @gotags: yaml:"messages"
+    int64 ended_at = 3; // @gotags: yaml:"endedAt"
+    int64 stopped_at = 4; // @gotags: yaml:"stoppedAt"
+    repeated string message_ids = 5; // @gotags: yaml:"messageIds"
+    models.v1alpha1.Mapper current_log = 6; // @gotags: yaml:"currentLog"
+    int64 started_at = 7; // @gotags: yaml:"startedAt"
+}
+
+message AIChatResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated AIStudioChat output = 2; // @gotags: yaml:"output"
+}
+
+message GetAIChatRequest {
+    string chat_id = 1; // @gotags: yaml:"chatId"
+}
+
+message ManageAIChatRequest {
+    string chat_id = 1; // @gotags: yaml:"chatId"
+    AIChatAction action = 2; // @gotags: yaml:"action"
+}
+
+message ChatRequest {
+    repeated ChatMessageObject messages = 1; // @gotags: yaml:"messages"
+    repeated models.v1alpha1.Mapper contexts = 2; // @gotags: yaml:"contexts"
+    float temperature = 3; // @gotags: yaml:"temperature"
+    string chat_id = 4; // @gotags: yaml:"chatId"
+    string model_node_id = 5; // @gotags: yaml:"modelNodeId"
+    string model = 6; // @gotags: yaml:"model"
+    string prompt_id = 7; // @gotags: yaml:"promptId"
+    int32 max_completion_tokens = 8; // @gotags: yaml:"maxCompletionTokens"
+    double top_p = 9; // @gotags: yaml:"topP"
+    double top_k = 10; // @gotags: yaml:"topK"
+    models.v1alpha1.ResponseFormat response_format = 11; // @gotags: yaml:"responseFormat"
+    repeated models.v1alpha1.ToolCall tools = 12; // @gotags: yaml:"tools"
+    models.v1alpha1.ToolChoice tool_choice = 14; // @gotags: yaml:"toolChoice"
+    bool stream = 15; // @gotags: yaml:"stream"
+    google.protobuf.Struct prompt_input = 16; // @gotags: yaml:"promptInput"
+    StreamOptions stream_options = 17; // @gotags: yaml:"streamOptions"
+    string tool_choice_params = 18; // @gotags: yaml:"toolChoiceParams"
+}
+
+message StreamOptions {
+    bool include_usage = 1; // @gotags: yaml:"includeUsage"
+}
+
+message Usage {
+    int64 prompt_tokens = 1; // @gotags: yaml:"promptTokens"
+    int64 completion_tokens = 2; // @gotags: yaml:"completionTokens"
+    int64 total_tokens = 3; // @gotags: yaml:"totalTokens"
+    PromptTokensDetails prompt_tokens_details = 4; // @gotags: yaml:"promptTokensDetails"
+    CompletionTokensDetails completion_tokens_details = 5; // @gotags: yaml:"completionTokensDetails"
+}
+
+message PromptTokensDetails {
+    int64 cached_tokens = 1; // @gotags: yaml:"cachedTokens"
+    int64 audio_tokens = 2; // @gotags: yaml:"audioTokens"
+}
+
+message CompletionTokensDetails {
+    int64 reasoning_tokens = 1; // @gotags: yaml:"reasoningTokens"
+    int64 audio_tokens = 2; // @gotags: yaml:"audioTokens"
+    int64 accepted_prediction_tokens = 3; // @gotags: yaml:"acceptedPredictionTokens"
+    int64 rejected_prediction_tokens = 4; // @gotags: yaml:"rejectedPredictionTokens"
+}
+
+message ChatMessageObject {
+    string role = 1; // @gotags: yaml:"role"
+    string content = 2; // @gotags: yaml:"content"
+    repeated RequestContentPart structured_content = 3; // @gotags: yaml:"structuredContent"
+    repeated models.v1alpha1.ToolCall tool_calls = 4; // @gotags: yaml:"toolCalls"
+}
+
+message EmbeddingsInterface {
+    string model_node_id = 1; // @gotags: yaml:"modelNodeId"
+    string ai_model =2; // @gotags: yaml:"aiModel"
+    int64 dimension = 3; // @gotags: yaml:"aiModel"
+    string input_text = 4; // @gotags: yaml:"inputText"
+}
+
+message EmbeddingsResponse {
+    models.v1alpha1.Embeddings output = 1; // @gotags: yaml:"output"
+}
+
+message ChatResponse {
+    int64 created = 1; // @gotags: yaml:"created"
+    string model = 2; // @gotags: yaml:"model"
+    string object = 3; // @gotags: yaml:"object"
+    repeated ChatResponseChoice choices = 4; // @gotags: yaml:"choices"
+    Usage usage = 5; // @gotags: yaml:"usage"
+    string event = 6; // @gotags: yaml:"event"
+    string id = 7; // @gotags: yaml:"id"
+    string service_tier = 8; // @gotags: yaml:"serviceTier"
+    string system_fingerprint = 9; // @gotags: yaml:"systemFingerprint"
+}
+
+message ChatStreamResponse {
+    int64 created = 1; // @gotags: yaml:"created"
+    string model = 2; // @gotags: yaml:"model"
+    string object = 3; // @gotags: yaml:"object"
+    repeated ChatResponseStreamChoice choices = 4; // @gotags: yaml:"choices"
+    repeated google.protobuf.Struct usage = 5; // @gotags: yaml:"usage"
+    string event = 6; // @gotags: yaml:"event"
+    string id = 7; // @gotags: yaml:"id"
+    string service_tier = 8; // @gotags: yaml:"serviceTier"
+    string system_fingerprint = 9; // @gotags: yaml:"systemFingerprint"
+}
+
+message RequestContentPart {
+    string type  = 1; // @gotags: yaml:"type"
+    string text = 2; // @gotags: yaml:"text"
+    RequestImagePart image_url = 3; // @gotags: yaml:"inputUrl"
+    RequestAudioPart input_audio = 4; // @gotags: yaml:"inputAudio"
+    RequestFilePart file = 5; // @gotags: yaml:"file"
+    bool upload = 6; // @gotags: yaml:"upload"
+    bool ispublic = 7; // @gotags: yaml:"ispublic"
+}
+
+message RequestImagePart {
+    string url = 1; // @gotags: yaml:"url"
+    string detail = 2; // @gotags: yaml:"detail"
+    models.v1alpha1.ContentFormats format = 3; // @gotags: yaml:"format"
+    string data = 4; // @gotags: yaml:"data"
+}
+
+message RequestFilePart {
+    string file_id = 1; // @gotags: yaml:"fileId"
+    string filename = 2; // @gotags: yaml:"filename"
+    string file_data = 3; // @gotags: yaml:"fileData"
+    string url = 4; // @gotags: yaml:"url"
+    models.v1alpha1.ContentFormats format = 5; // @gotags: yaml:"format"
+}
+
+message RequestAudioPart {
+    string data = 1; // @gotags: yaml:"data"
+    models.v1alpha1.ContentFormats format = 2; // @gotags: yaml:"format"
+    string url = 3; // @gotags: yaml:"format"
+}
+
+message ChatResponseChoice {
+    ChatMessageObject messages = 1; // @gotags: yaml:"messages"
+    string finish_reason = 2; // @gotags: yaml:"finishReason"
+    int64 index = 3; // @gotags: yaml:"index"
+}
+
+message ChatResponseStreamChoice {
+    ChatMessageObject messages = 1; // @gotags: yaml:"messages"
+    string finish_reason = 2; // @gotags: yaml:"finishReason"
+    int64 index = 3; // @gotags: yaml:"index"
+    ChatCompletionChunkChoicesDelta delta = 4; // @gotags: yaml:"delta"
+}
+
+message ChatCompletionChunkChoicesDelta {
+    string content = 1; // @gotags: yaml:"content,nullable"
+    string refusal = 3; // @gotags: yaml:"refusal,nullable"
+    string role = 4; // @gotags: yaml:"role"
+    repeated models.v1alpha1.ToolCall tool_calls = 5; // @gotags: yaml:"tool_calls"
+}
+

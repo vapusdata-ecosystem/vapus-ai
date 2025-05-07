@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-2 w-full text-gray-100">
+          {{ template "section-headers.html" . }}
+        <!-- Tabs -->
+       <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+        <!-- <div class="flex border-b border-zinc-500">
+          <button onclick="showTab('basic-info')"
+            class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Basic Info</button>
+        </div> -->
+
+        <!-- Tab Content -->
+
+        <div id="basic-info" class="tab-content mt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Display Name</p>
+              <p class="detail-section-text">{{ .Response.Plugin.Name }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Plugin ID</p>
+              <p class="detail-section-text">{{ .Response.Plugin.PluginId }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Organization</p>
+              <p class="detail-section-text">{{ .Response.Plugin.ResourceBase.Organization }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Plugin Type</p>
+              <p class="detail-section-text">{{ .Response.Plugin.PluginType }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Plugin Service</p>
+              <p class="detail-section-text">{{ .Response.Plugin.PluginService }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Status</p>
+              <p class="detail-section-text"><span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .Response.Plugin.ResourceBase.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
+                  .Response.Plugin.ResourceBase.Status }}</span></p>
+            </div>
+          </div>
+          </br>
+          <h3 class="text-xl mb-4 detail-heading">Parameters</h3>
+          {{ if .Response.Plugin.DynamicParams }}
+          <div class="w-full p-4 rounded-lg shadow-md">
+            <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">
+              <thead class="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase">
+                <tr>
+                  <th class="px-3 py-3 text-left tracking-wider">Key</th>
+                  <th class="px-3 py-3 text-left tracking-wider">Value</th>
+                </tr>
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500">
+                {{ range  $obj := .Response.Plugin.DynamicParams }}
+                {{ if ne $obj.Key "" }}
+                <tr>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $obj.Key }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $obj.Value }}</td>
+                </tr>
+                {{ end }}
+                <tr>
+                  No parameters available for this plugin.
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+          </div>
+          {{ else }}
+          <p class="text-gray-600">No parameters available for this plugin.</p>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+
+  </script>
+</body>
+
+</html>

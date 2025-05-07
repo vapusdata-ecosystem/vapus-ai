@@ -1,0 +1,202 @@
+<link href="/static/css/jsoneditor.css" rel="stylesheet">
+<style>
+    .json-editor-container {
+      width: 100%;
+      height: 75px;
+      /* Smaller editor for Plain JSON */
+      border: 1px solid #ddd;
+      margin-top: 10px;
+    }
+
+    #toolSchemaEditor {
+      height: 300px;
+      /* Larger editor for Tool Schema */
+    }
+</style>
+<div id="toolCallModal" class="fixed inset-0  bg-zinc-600/80  flex items-center justify-center z-50 hidden">
+    <div class="bg-zinc-800 rounded-lg shadow-lg w-4/5 h-4/5 md:w-2/3 overflow-y-auto scrollbar text-gray-100">
+        <div class="bg-zinc-900 px-4 py-2 flex justify-between items-center">
+            <h2 class="text-lg font-bold">AI Tool Schema Handler</h2>
+            <button id="closeModalButton" class="text-gray-100 cursor-pointer text-lg" type="button" onclick="closeToolCallModal()">&times;</button>
+        </div>
+        <div class="px-4 py-2 flex justify-between items-center">
+            <input type="text" id="functionName" placeholder="Enter function name..."
+                class="form-input-field">
+        </div>
+        <div class="px-4 py-2 flex justify-between items-center">
+            <input type="text" id="functionDescription" placeholder="Enter description name..."
+                class="form-input-field">
+        </div>
+        <div>
+            <div class="flex">
+                <button id="plainJSONTab" type="button"
+                    class="w-1/2 py-2 text-center text-orange-700">Plain
+                    JSON</button>
+                <button id="toolSchemaTab" type="button"
+                    class="w-1/2 py-2 text-center hover:text-orange-700 hover:border-orange-700 cursor-pointer">Tool
+                    Schema</button>
+            </div>
+            <div class="p-4">
+                <!-- Plain JSON Tab -->
+                <div id="plainJSONContent" class="tab-content">
+                    <textarea id="plainJSONEditor"
+                        class="w-full h-full form-textarea" rows="15"
+                        placeholder="Enter JSON here, and convert it to json Schema by clicking the button below...">
+            
+                        </textarea>
+                    <button id="convertToSchemaButton" onclick="convertToSchema()" type="button"
+                        class="bg-zinc-900 text-gray-100 px-4 py-2 mt-3 text-sm rounded-lg hover:bg-zinc-900 cursor-pointer">Convert
+                        to JSON
+                        Schema</button>
+                </div>
+                <!-- Tool Schema Tab -->
+                <div id="toolSchemaContent" class="tab-content hidden">
+                    <div id="toolSchemaEditor" class="json-editor-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="px-4 py-2 flex justify-end">
+            <button id="closeButton" class="bg-zinc-900 text-gray-100 px-4 py-2 rounded hover:bg-gray-600 mr-2 cursor-pointer" type="button" onclick="closeToolCallModal()">Close</button>
+            <button id="saveChangesButton" onclick="saveChanges()" type="button"
+                class="bg-orange-700 text-gray-100 px-4 py-2 rounded hover:bg-zinc-900 cursor-pointer">Add</button>
+        </div>
+        <input type="hidden" id="toolCallSchema" value="">
+    </div>
+</div>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.0/jsoneditor.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-monokai.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-json.js"></script>
+<script>
+    let toolSchemaEditor;
+    function openToolCallModal() {
+        document.getElementById("toolCallModal").classList.remove("hidden");
+    }
+
+    // Close Modal
+    function closeToolCallModal() {
+        document.getElementById("toolCallModal").classList.add("hidden");
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        // toolSchemaEditor = new JSONEditor(document.getElementById("toolSchemaEditor"), {
+        //     mode: "code",
+        //     mainMenuBar: true,
+        //     onError: function (err) {
+        //     console.error(err);
+        //     },
+
+        // });
+        toolSchemaEditor = ace.edit("toolSchemaEditor");
+        toolSchemaEditor.setTheme("ace/theme/monokai"); // Start with a dark theme
+        toolSchemaEditor.session.setMode("ace/mode/json");
+
+        // Customize the editor
+        toolSchemaEditor.setOptions({
+            fontSize: "14px",
+            showPrintMargin: false,
+            highlightActiveLine: false
+        });
+        toolSchemaEditor.setTheme("ace/theme/twilight");
+       
+        toolSchemaEditor.setValue(JSON.stringify({ schema: "Tool schema will appear here" }));
+
+
+
+        // Tab Switching
+        document.getElementById("plainJSONTab").addEventListener("click", () => switchTab("plainJSON"));
+        document.getElementById("toolSchemaTab").addEventListener("click", () => switchTab("toolSchema"));
+    });
+
+
+    // Switch Tabs
+    function switchTab(tab) {
+        const plainTab = document.getElementById("plainJSONTab");
+        const schemaTab = document.getElementById("toolSchemaTab");
+        const plainContent = document.getElementById("plainJSONContent");
+        const schemaContent = document.getElementById("toolSchemaContent");
+
+        if (tab === "plainJSON") {
+            plainContent.classList.remove("hidden");
+            schemaContent.classList.add("hidden");
+            plainTab.classList.add("text-orange-700");
+            schemaTab.classList.remove("text-orange-700");
+        } else {
+            schemaContent.classList.remove("hidden");
+            plainContent.classList.add("hidden");
+            schemaTab.classList.add("text-orange-700");
+            plainTab.classList.remove("text-orange-700");
+        }
+    }
+
+    // Convert JSON to Schema
+    function convertToSchema() {
+        try {
+            const plainJSON = document.getElementById("plainJSONEditor");
+            const jsonStr = plainJSON.value;
+            console.log(jsonStr);
+            const jsonData = JSON.parse(jsonStr);
+            console.log(jsonData);
+            const schema = generateJSONSchema(jsonData);
+            console.log(schema);
+            toolSchemaEditor.setValue(JSON.stringify(schema, null, 2));
+            switchTab("toolSchemaTab");
+        } catch (err) {
+            console.error(err);
+            showAlert(AlertError, "Format Error", "Invalid JSON! Cannot convert.");
+        }
+    }
+
+    function saveChanges() {
+        try {
+            const toolSchema = toolSchemaEditor.getValue();
+            console.log("Tool Schema:", toolSchema);
+            const toolCallSchema = document.getElementById("toolCallSchema");
+            toolCallSchema.value = toolSchema;
+            closeToolCallModal();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function generateJSONSchema(data) {
+        if (data === null) {
+            return { type: "null" };
+        }
+        
+        if (Array.isArray(data)) {
+            console.log("Array:", data);
+            if (data.length === 0) {
+            // If the array is empty, we don't know the items' type.
+            return { type: "array", items: {} };
+            }
+            return { type: "array", items: generateJSONSchema(data[0]) };
+        }
+        
+        if (typeof data === "object") {
+            console.log(data,"---------------------------------------------------");
+            const schema = {
+            type: "object",
+            properties: {},
+            required: []
+            };
+            
+            for (const key in data) {
+            if (Object.hasOwnProperty.call(data, key)) {
+                schema.properties[key] = generateJSONSchema(data[key]);
+                schema.required.push(key);
+            }
+            }
+            
+            return schema;
+        }
+        
+        // Handle primitives.
+        if (typeof data === "string") return { type: "string" };
+        if (typeof data === "number") return { type: "number" };
+        if (typeof data === "boolean") return { type: "boolean" };
+        
+        // Fallback.
+        return {};
+    }
+</script>

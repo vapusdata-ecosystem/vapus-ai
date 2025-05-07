@@ -1,0 +1,26 @@
+vapusBESecretStorage: 
+  filePath: "secrets/be-secret-storage.yaml"
+  secret: "vapusdata-be-secret"
+vapusBEDbStorage: 
+  filePath:  "secrets/be-db-storages.yaml"
+  secret:  764ed-secret
+vapusBECacheStorage: 
+  filePath:  96406-secret
+  secret:  a7739-secret
+vapusFileStorage: 
+  filePath:  96406-secret
+  secret:  vapus-demo-bucket-store
+JWTAuthnSecrets: 
+  filePath: "secrets/jwt-secrets.yaml"
+  secret: e7157-secret
+networkConfigFile: network/network-config.yaml
+serverCerts:
+  mtls: False
+  caCertFile: "/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs/certs/ca-cert.pem"
+  serverCertFile: "/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs/certs/server-cert.pem"
+  serverKeyFile: "/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs/certs/server-key.pem"
+  clientCertFile: "/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs/certs/client-cert.pem"
+  clientKeyFile: "/Users/vikrantsingh/vikrant/workspaces/anekam/vapusdata/vapusdata-ecosystem/vapusdata/local-configs/certs/client-key.pem"
+artifactStore:
+  filePath: "secrets/artifact-store-secret.yaml"
+  secret: ea144-secret

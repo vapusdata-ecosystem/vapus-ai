@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.aistudio.volumePaths.serviceConfig.name }}
+  labels:
+    {{- include "vapusdata.aistudio.labels" . | nindent 4 }}
+data:
+  aistudio-service-config.yaml: |-
+    vapusBESecretStorage: 
+      filePath: "{{ .Values.aistudio.volumePaths.secretsMount.path }}/{{ .Values.vapusdata.globalSecrets.backend.secretStoreFileName }}"
+    vapusBEDbStorage: 
+      secret:  {{ .Values.secrets.backendDataStore.secret }}
+    vapusBECacheStorage: 
+      secret:  {{ .Values.secrets.backendCacheStore.secret }}
+    vapusFileStorage: 
+      secret:  {{ .Values.secrets.fileStore.secret }}
+    localFSPaths:
+      domainFiles: local-storage/domains
+      dataSourceFiles: local-storage/datasource 
+    JWTAuthnSecrets: 
+      secret: {{ .Values.secrets.JWTAuthnSecrets.secret }}
+    serverCerts:
+      mtls: False
+      caCertFile: {{ .Values.aistudio.volumePaths.certMount.path }}/ca-cert.pem
+      serverCertFile: {{ .Values.aistudio.volumePaths.certMount.path }}/tls.crt
+      serverKeyFile: {{ .Values.aistudio.volumePaths.certMount.path }}/tls.key
+      clientCertFile: {{ .Values.aistudio.volumePaths.certMount.path }}/client-cert.pem
+      clientKeyFile: {{ .Values.aistudio.volumePaths.certMount.path }}/client-key.pem
+    artifactStore:
+      secret: {{ .Values.secrets.artifactStore.secret }}
+    networkConfigFile: {{ .Values.aistudio.volumePaths.networkConfig.path }}/{{ .Values.vapusdata.globalConfigs.networkConfig.fileName }}

@@ -1,0 +1,10 @@
+uris: 
+  login: "/login"
+  logout: "/logout"
+  callback: "/auth/callback"
+networkConfigFile: network/network-config.yaml
+serverCerts:
+  mtls: True
+  caCertFile: "certs/ca-cert.pem"
+  serverCertFile: "certs/server-cert.pem"
+  serverKeyFile: "certs/server-key.pem"  

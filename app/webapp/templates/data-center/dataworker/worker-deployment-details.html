@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    <script src="/static/js/manage.js"></script>
+</head>
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+      <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+        <div class="flex-grow p-2 w-full">
+            {{ template "section-headers.html" . }}
+          <!-- Tabs -->
+          <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+              <div class="max-w-8xl mx-auto text-gray-100 rounded-lg shadow-lg p-6 bg-[#1b1b1b]">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class = "flex items-center">
+                      <p class="detail-sect-key font-medium cursor-pointer">
+                        Data Worker</p>
+                      <p class="break-words p-2">{{ .Response.DataWorkerDeployment.DataWorkerId }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-sect-key font-medium">K8S Namespace</p>
+                      <p class="break-words p-2">{{ .Response.DataWorkerDeployment.Namespace }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-sect-key font-medium">Deployment Id</p>
+                      <p class="break-words p-2">{{ .Response.DataWorkerDeployment.DeploymentId }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-sect-key font-medium">Infra Id</p>
+                      <p class="break-words p-2">{{ .Response.DataWorkerDeployment.InfraId }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-sect-key font-medium">Deployed At</p>
+                      <p class="break-words p-2">{{ epochConverter .Response.DataWorkerDeployment.DeployedAt }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-sect-key font-medium">Status</p>
+                      <p class=" break-words p-2">
+                        <span class="px-3 py-1 text-sm font-medium {{ if eq .Response.DataWorkerDeployment.ResourceBase.Status `FAILED_ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }} rounded-full">{{ .Response.DataWorkerDeployment.ResourceBase.Status }}</span>
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <!-- Organization Roles Section -->
+                  <h3 class="text-xl mb-4 detail-heading">Deployment Spec</h3>
+                  <div class="space-y-4 text-gray-100">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-zinc-700 p-4 rounded-lg shadow-md">
+                      <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">ArtifactPullSecrets</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.ArtifactPullSecrets }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">RunType</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.RunType }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">Log</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.Log }}</p>
+                        </div>
+                        <div>
+                          <p class="detail-sect-key font-medium">Artifact</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.Artifact }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">Job Name</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.JobName }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">Job Type</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.RunType }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">Config Name</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.ConfigName }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">Secret Name</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.SecretName }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-sect-key font-medium">Schedule</p>
+                          <p class="break-words p-2">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.Schedule }}</p>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+    <script>
+          document.addEventListener("click", (event) => {
+        const dropdown = document.getElementById("actionDropdownMenu");
+        const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+          dropdown.classList.add("hidden");
+        }
+      });
+    function workerDeploymentAction(action) {
+      ShowConfirm("Confirm Action", "Are you sure you want to proceed?", () => {
+          console.log("Confirmed!");
+          ManageDataWorkerDeployment(action,
+            `{{ .Response.DataWorkerDeployment.DeploymentId }}`,
+            `{{ .Response.ActionParams.API }}`,
+            `{{ .GlobalContext.AccessTokenKey }}`)
+      });
+    }
+    </script>
+</body>
+</html>

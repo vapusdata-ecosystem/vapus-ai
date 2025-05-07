@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/enums.proto";
+import "protos/models/v1alpha1/profile.proto";
+
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+
+/**
+ * Enum representing the status of an account.
+ */
+enum AccountStatus {
+	VAS_INVALID = 0;
+	VAS_ACTIVE = 1;
+	VAS_INACTIVE = 2;
+}
+
+/**
+ * Enum representing the status of a datamarketplace.
+ */
+enum DataMarketplaceStatus {
+	INVALID_MARKETPLACE_STATUS = 0;
+	MARKETPLACE_ACTIVE         = 1;
+	MARKETPLACE_PENDING        = 2;
+	MARKETPLACE_INACTIVE       = 3;
+	MARKETPLACE_DELETED        = 4;
+	MARKETPLACE_REGISTERED     = 5;
+	MARKETPLACE_MAINTENANCE    = 6;
+}
+
+/**
+ * Enum representing the valid labels for a datamarketplace.
+ */
+enum DataMarketplaceValidLabels {
+	INVALID_DM_LABEL = 0;
+	DM_PRODUCTION = 1;
+	DM_DEVELOPMENT = 2;
+	DM_TESTING = 3;
+}
+
+/**
+ * Message representing an account.
+ */
+message Account {
+	string name = 1; // @gotags: yaml:"name"
+	string account_id = 2; // @gotags: yaml:"accountId"
+	string status = 3; // @gotags: yaml:"status"
+	AuthnMethod authn_method  = 4; // @gotags: yaml:"authnMethod"
+	JWTParams dm_access_jwt_keys = 5; // @gotags: yaml:"dmAccessJWTKeys"
+	BackendStorages backend_secret_storage = 6; // @gotags: yaml:"backendSecretStorage"
+	BackendStorages backend_data_storage = 7; // @gotags: yaml:"backendDataStorage"
+	BackendStorages artifact_storage = 8; // @gotags: yaml:"artifactStorage"
+	AuthnOIDC oidc_params = 9; // @gotags: yaml:"oidcParams"
+	AccountProfile profile = 11; // @gotags: yaml:"profile"
+	AIAttributes ai_attributes = 12; // @gotags: yaml:"aiAttributes"
+	AccountSettings settings = 17; // @gotags: yaml:"settings"
+}
+
+message AIAttributes {
+	string embedding_model_node = 1; // @gotags: yaml:"embeddingModelNode"
+	string embedding_model = 2; // @gotags: yaml:"embeddingModel"
+	string generative_model_node = 3; // @gotags: yaml:"generativeModelNode"
+	string generative_model = 4; // @gotags: yaml:"generativeModel"
+	string guardrail_model_node = 5; // @gotags: yaml:"guardrailModelNode"
+	string guardrail_model = 6; // @gotags: yaml:"guardrailModel"
+}
+
+/**
+ * Message representing the LDAP authentication parameters.
+ */
+message AuthnLDAP {
+  string v_id = 1; // @gotags: yaml:"vId"
+}
+
+message VapusPlatformSettings {
+	string service_address = 1; // @gotags: yaml:"serviceAddress"
+}
+
+message Plugin {
+	string status = 1; // @gotags: yaml:"status,omitempty"
+	IntegrationPluginTypes plugin_type = 2; // @gotags: yaml:"pluginType,omitempty"
+	string name = 3; // @gotags: yaml:"name,omitempty"
+	PluginNetworkParams network_params = 4; // @gotags: yaml:"networkParams,omitempty"
+	repeated Mapper dynamic_params = 5; // @gotags: yaml:"dynamicParams,omitempty"
+	string scope = 6; // @gotags: yaml:"scope,omitempty"
+	string organization = 7; // @gotags: yaml:"organization,omitempty"
+	bool editable = 8; // @gotags: yaml:"editable,omitempty"
+	string plugin_service = 9; // @gotags: yaml:"pluginService,omitempty"
+	string plugin_id = 10; // @gotags: yaml:"pluginId,omitempty"
+	VapusBase resource_base = 11; // @gotags: yaml:"resourceBase"
+	string datasource_id = 12; // @gotags: yaml:"datasourceId"
+}
+
+message PluginNetworkParams {
+	string url = 1; // @gotags: yaml:"url,omitempty"
+	string port = 2; // @gotags: yaml:"port,omitempty"
+	string version = 3; // @gotags: yaml:"version,omitempty"
+	GenericCredentialObj credentials = 4; // @gotags: yaml:"credentials,omitempty"
+	string name = 5; // @gotags: yaml:"name"
+	bool is_already_in_secret_bs = 6; // @gotags: yaml:"isAlreadyInSecretBS"
+	string secret_name = 7; // @gotags: yaml:"secretName"
+}
+
+message SecretSharingParams {
+    string organization = 1; // @gotags: yaml:"organization"
+    repeated string users = 2; // @gotags: yaml:"users"
+    repeated string groups = 3; // @gotags: yaml:"groups"
+}
+
+message SecretStore {
+    string name = 1; // @gotags: yaml:"name"
+    string provider = 2; // @gotags: yaml:"provider"
+    int64 expire_at = 3; // @gotags: yaml:"expireAt"
+    repeated SecretSharingParams sharing_params = 4; // @gotags: yaml:"sharingParams"
+    VapusSecretType secret_type = 5; // @gotags: yaml:"secretType"
+	string description = 6; // @gotags: yaml:"description"
+	bytes data = 7; // @gotags: yaml:"data"
+	VapusBase resource_base = 8; // @gotags: yaml:"resourceBase"
+}

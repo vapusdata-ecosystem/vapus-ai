@@ -1,0 +1,55 @@
+
+<!-- Modal -->
+<link href="/static/css/yamleditor.css" rel="stylesheet">
+<div id="yamlModal" class="fixed inset-0 z-50 flex items-center justify-center hidden  bg-zinc-600/90 ">
+    <!-- Modal Container -->
+    <div class="bg-zinc-800 text-gray-100 p-6 rounded-lg shadow-lg w-5/6 h-5/6 max-h-[200vh] max-h-[200vh] overflow-y-auto scrollbar  relative">
+        <div id="loading-overlay"
+        class="absolute inset-0 z-10 flex items-center h-full w-full justify-center  bg-zinc-600/70  hidden">
+        <svg class="animate-spin h-10 w-10 text-black m-4" xmlns="http://www.w3.org/2000/svg"
+            fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Wait a moment...
+    </div>
+            <!-- Modal Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold" id="actionTitle">Editor</h2>
+            <button onclick="closeYAMLedModal()" class="text-gray-100 cursor-pointer">
+                <!-- Close Icon -->
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div hidden id="modalParams"></div>
+
+        <!-- File Upload Section -->
+        <div class="flex flex-col items-center space-y-2">
+            <label 
+              for="fileInput" 
+              class="cursor-pointer inline-block px-5 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 focus:ring focus:ring-blue-300 transition"
+            >
+            Upload YAML Spec File
+            </label>
+            <input type="file" id="fileInput" accept=".yaml, .yml" onchange="loadFileContent(event)" class="mb-4 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-orange-700 hidden" oninput="adjustYamlFieldHeight(this)">
+          </div>
+        <!-- <label for="fileInput" class="block text-gray-700 font-medium mb-2">Upload YAML Spec File</label>
+        <input type="file" id="fileInput" accept=".yaml, .yml" onchange="loadFileContent(event)" class="mb-4 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-orange-700" oninput="adjustYamlFieldHeight(this)"> -->
+        <div class = "flex justify-center items-center text-gray-100 font-semibold text-xl"> 
+            OR </div>
+        <!-- YAML Editor Section -->
+        <label for="yamlEditor" class="block text-gray-100 font-medium mb-2" id="yamlSpecTitle">Edit YAML Content Here</label>
+        <div id="yamlEditor" class="w-full h-auto rounded-lg focus:outline-none font-mono custom-editor"></div> 
+          
+        <!-- Action Buttons -->
+         <input type="hidden" id="apiMethod" value="">
+        <div class="mt-4 flex justify-end space-x-2">
+            <button onclick="VapusDataAct()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 cursor-pointer">Execute</button>
+            <button onclick="closeYAMLedModal()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 cursor-pointer">Cancel</button>
+        </div>
+    </div>
+</div>

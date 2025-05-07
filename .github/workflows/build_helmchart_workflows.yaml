@@ -1,0 +1,174 @@
+name: Vapusdata Helm Chart
+
+on:
+  # push:
+  #   paths:
+  #     - 'deployments/helm-chart/vapusdata/**'
+  workflow_call:
+    secrets:
+      oci-username:
+        required: true
+      oci-password:
+        required: true
+      signing-key:
+        required: true
+      signing-password:
+        required: true
+    inputs:
+      platform-oci-tag:
+        required: false
+        type: string
+        default: ""
+      platform-oci-digest:
+        required: false
+        type: string
+        default: ""
+      dataworker-oci-tag:
+        required: false
+        type: string
+        default: ""
+      dataworker-oci-digest:
+        required: false
+        type: string
+        default: ""
+      vapusctl-oci-tag:
+        required: false
+        type: string
+        default: ""
+      vapusctl-oci-digest:
+        required: false
+        type: string
+        default: ""
+      vapus-containers-oci-tag:
+        required: false
+        type: string
+        default: ""
+      vapus-containers-oci-digest:
+        required: false
+        type: string
+        default: ""
+      vapus-aistudio-tag:
+        required: false
+        type: string
+        default: ""
+      vapus-aistudio-digest:
+        required: false
+        type: string
+        default: ""
+      nabhikserver-tag:
+        required: false
+        type: string
+        default: ""
+      nabhikserver-digest:
+        required: false
+        type: string
+        default: ""
+      webapp-tag:
+        required: false
+        type: string
+        default: ""
+      webapp-digest:
+        required: false
+        type: string
+        default: ""
+      nabrunners-tag:
+        required: false
+        type: string
+        default: ""
+      nabrunners-digest:
+        required: false
+        type: string
+        default: ""
+      aigateway-tag:
+        required: false
+        type: string
+        default: ""
+      aigateway-digest:
+        required: false
+        type: string
+        default: ""
+      upload-artifact:
+        required: false
+        type: boolean
+        default: false
+      tag:
+        required: false
+        type: string
+        default: ""
+      oci-registry:
+        required: true
+        type: string
+jobs:
+  helmchart-build-app:
+    name: Build Helm chart for vapusdata helmchart
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required for goreleaser to upload the release assets
+      packages: write # to push worker images
+      pull-requests: write
+      id-token: write
+    env:
+      SIGNING_KEY: ${{ secrets.signing-key }}
+      SIGNING_PASSWORD: ${{ secrets.signing-password }}
+      OCI_REGISTRY: ${{ inputs.oci-registry }}
+      OCI_USERNAME: ${{ secrets.oci-username }}
+      OCI_PASSWORD: ${{ secrets.oci-password }}
+      OCI_IMAGE: /vapusdata-ecosystem/vapusdata-platform-helmchart
+    steps:      
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v5.3.0
+        with:
+          go-version: 1.24.1
+
+      - name: Extract env vars
+        id: extract_env_vars
+        run: |
+          echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "GIT_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          
+     # Move this to raise MR
+      - name: Updating Helm Chart Version
+        working-directory: scripts/goscripts
+        run: |
+          echo "${{ inputs.vapus-aistudio-digest }}"
+          echo "${{ inputs.platform-oci-digest }}"
+          go mod tidy
+          go run main.go --helm-registry=a${{ env.OCI_REGISTRY }}/vapusdata-ecosystem \
+          --update-values=true \
+          --platform-svc-digest="${{ inputs.platform-oci-digest }}" \
+          --platform-svc-tag="${{ inputs.platform-oci-tag }}" \
+          --webapp-svc-digest="${{ inputs.webapp-digest }}" \
+          --webapp-svc-tag="${{ inputs.webapp-tag }}" \
+          --dataworker-svc-digest="${{ inputs.dataworker-oci-digest }}" \
+          --dataworker-svc-tag="${{ inputs.dataworker-oci-tag }}" \
+          --nabhikserver-svc-digest="${{ inputs.nabhikserver-digest }}" \
+          --nabhikserver-svc-tag="${{ inputs.nabhikserver-tag }}" \
+          --aistudio-svc-digest="${{ inputs.vapus-aistudio-digest }}" \
+          --aistudio-svc-tag="${{ inputs.vapus-aistudio-tag }}" \
+          --nabrunners-svc-digest="${{ inputs.nabrunners-digest }}" \
+          --nabrunners-svc-tag="${{ inputs.nabrunners-tag }}" \
+          --aigateway-svc-digest="${{ inputs.aigateway-digest }}" \
+          --aigateway-svc-tag="${{ inputs.aigateway-tag }}" \
+          --vapus-dc-svc-digest="${{ inputs.vapus-containers-oci-digest }}" \
+          --vapus-dc-svc-tag="${{ inputs.vapus-containers-oci-tag }}" \
+          --bump-version=true \
+          --appVersion="${{ env.TAG_NAME }}" \
+          --upload=${{ inputs.upload-artifact }} 
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6.1.0
+        with:
+          commit-message: |
+            Bumping helm Chart Version ${{ env.TAG_NAME }} 
+            for new release based on the code changes pushed to the ${{ env.TAG_NAME }} tag
+          signoff: true
+          base: main
+          branch: branch-ref-${{ env.TAG_NAME }} 
+          title: Bump Helm Chart with APP Version => ${{ env.TAG_NAME }}
+          body: |
+            New Vapusdata release is available.... \n Bumping Helm Chart reference to APP version ${{ env.TAG_NAME }}
+          labels: |
+            automated
+            helm update

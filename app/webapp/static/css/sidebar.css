@@ -1,0 +1,49 @@
+.datamarketplace-sidebar {
+    width: auto;
+    font-size: medium;
+}
+.vapsudata-sidebar {
+    font-size: medium;
+}
+
+/* 
+.sidebar {
+    width: 16rem; 
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 4rem; 
+}
+
+#sidebar-content .menu-text {
+    display: inline-block;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed #sidebar-content .menu-text {
+    display: none; 
+}
+
+
+.toggle-sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+} 
+
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 4rem; 
+    }
+
+    .toggle-sidebar-btn {
+        position: absolute; 
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+    }
+}
+*/

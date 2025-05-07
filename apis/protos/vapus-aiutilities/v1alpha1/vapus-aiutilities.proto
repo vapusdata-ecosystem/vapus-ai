@@ -1,0 +1,93 @@
+/**
+ * @fileoverview
+ * This file contains the protocol buffer definitions for the AI/ML utilties
+ *
+ * @packageDocumentation
+ */
+
+ syntax = "proto3";
+
+ package aiutilities.v1alpha1;
+ 
+ option go_package = "github.com/vapusdata-oss/vapusdata/apis/protos/aiutilities/v1alpha1";
+
+ service AIUtility {
+     /**
+      * Generates Vector Embeddings for the given text.
+      * @param {GenerateEmbeddingRequest} request - The request object containing the query parameters.
+      * @returns {GenerateEmbeddingResponse} The response object containing the query results.
+      */
+     rpc GenerateEmbedding(GenerateEmbeddingRequest) returns (GenerateEmbeddingResponse) {}
+
+     /**
+      * Analyzed and acts on the given text.
+      * @param {SensitivityAnalyzerRequest} request - The request object containing the query parameters.
+      * @returns {SensitivityAnalyzerResponse} The response object containing the query results.
+      */
+      rpc SensitivityAnalyzer(SensitivityAnalyzerRequest) returns (SensitivityAnalyzerResponse) {}
+
+      rpc Summarizer(SummarizerRequest) returns (SummarizerResponse) {}
+    
+ }
+ 
+ enum PostDetectActions{
+    INVALID_PDA = 0;
+    REDACT = 1;
+    FAKE = 2;
+    EMPTY = 3;
+ }
+
+ enum Actions{
+    INVALID_ACTION = 0;
+    ANALYZE = 1;
+    ACT = 2;
+ }
+
+ message SummarizerRequest {
+   bytes text = 1;
+   int64 sentences = 2;
+ }
+
+ message SummarizerResponse{
+   repeated bytes data = 1;
+ }
+
+ message GenerateEmbeddingRequest {
+     repeated string text = 1;     
+ }
+
+ message GenerateEmbeddingResponse {
+    message Embeddings {
+        repeated float embedding = 1;
+        int64 index = 2;
+    }
+    repeated Embeddings embeddings = 1;     
+ }
+ 
+
+ message SensitivityAnalyzerRequest {
+    repeated string text = 1;  
+    repeated string entities = 2;
+    Actions action = 3;
+    PostDetectActions postDetectAction = 4;
+}
+
+message AnalyzedOutput {
+   string type = 1;
+   int64 start = 2;
+   int64 end = 3;
+   float score = 4;
+}
+
+message SensitivityAnalyzerResponse {
+ 
+   message ProcessedOutput {
+      string text = 1;
+      int64 index = 2;
+      PostDetectActions action = 3; 
+      repeated string entities = 4;
+      repeated AnalyzedOutput AnalyzedOutputs = 5;
+   }
+   
+   repeated ProcessedOutput output = 1;
+}

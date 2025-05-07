@@ -1,0 +1,137 @@
+name: Vapusdata Helm Chart
+
+on:
+  # push:
+  #   paths:
+  #     - 'deployments/helm-chart/vapusdata/**'
+  workflow_call:
+    secrets:
+      oci-username:
+        required: true
+      oci-password:
+        required: true
+      signing-key:
+        required: true
+      signing-password:
+        required: true
+      pub-operator-repo-pat:
+        required: true
+    inputs:
+      upload-artifact:
+        required: false
+        type: boolean
+        default: false
+      tag:
+        required: false
+        type: string
+        default: ""
+      oci-registry:
+        required: true
+        type: string
+      pub-operator-repo:
+        required: true
+        type: string
+jobs:
+  helmchart-release-app:
+    name: Release Helm chart for vapusdata helmchart
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required for goreleaser to upload the release assets
+      packages: write # to push worker images
+      pull-requests: write
+      id-token: write
+    env:
+      SIGNING_KEY: ${{ secrets.signing-key }}
+      SIGNING_PASSWORD: ${{ secrets.signing-password }}
+      OCI_REGISTRY: ${{ inputs.oci-registry }}
+      OCI_USERNAME: ${{ secrets.oci-username }}
+      OCI_PASSWORD: ${{ secrets.oci-password }}
+      OCI_IMAGE: /vapusdata-ecosystem/vapusdata-platform-helmchart
+      PUB_OPERATOR_REPO: ${{ inputs.pub-operator-repo }}
+      PUB_OPERATOR_PACKAGE_PAT: ${{ secrets.pub-operator-repo-pat }}
+    steps:      
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v5.3.0
+        with:
+          go-version: 1.24.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.6.1 # v3.0.0
+        
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0.9.0
+        with:
+          syft-version: 'v1.17.0'
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+        with:
+          cosign-release: 'v2.4.1'
+
+      - name: Check cosign install!
+        run: cosign version
+
+      - name: Set Source Branch Name
+        id: branch-name
+        run: |
+          BC_NAME=${GITHUB_REF##*/}
+          echo "Source branch name is $BC_NAME"
+          BRANCH_TAG_NAME=$(echo "${BC_NAME}" | sed 's/branch-ref-//') 
+          echo "RELEASE=$BRANCH_TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Extract env vars
+        id: extract_env_vars
+        run: |
+          echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "GIT_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Use Branch Name
+        run: |
+          echo "Source Branch Name: ${{ steps.branch-name.outputs.BRANCH_NAME }}"
+
+      - name: Log in to Google Artifact Registry
+        run: |
+          echo ${{ secrets.GAR_DEV_USERNAME }}
+          echo ${{ secrets.VAPUS_BETA_GAR_PASS }}
+          docker login -u "${{ env.OCI_USERNAME }}" --password "${{ env.OCI_PASSWORD }}" "${{ env.OCI_REGISTRY }}"
+
+      # Move this to raise MR
+      - name: Updating Helm Chart Version
+        working-directory: scripts/goscripts
+        run: |
+          go mod tidy
+          go run main.go --helm-registry ${{ env.OCI_REGISTRY }}/vapusdata-ecosystem --update-values false --appVersion=${{ steps.branch-name.outputs.RELEASE }} --upload=true --registry-logout=false
+          echo "HELM_CHART_DIGEST=$(cat no-push-helm-chart-version.txt)" >> $GITHUB_ENV
+
+      - name: Log in to Google Artifact Registry
+        run: |
+          echo ${{ secrets.GAR_DEV_USERNAME }}
+          echo ${{ secrets.VAPUS_BETA_GAR_PASS }}
+          docker login -u "${{ env.OCI_USERNAME }}" --password "${{ env.OCI_PASSWORD }}" "${{ env.OCI_REGISTRY }}"
+
+      - name: Generate SBOM
+        working-directory: deployments
+        run: |
+          syft dir:./vapusdata-platform --output json --output vapusdata-platform-helmchart-${{ steps.branch-name.outputs.BRANCH_NAME }}.cyclonedx.json
+          syft dir:./vapusdata-platform --output json --output vapusdata-platform-helmchart-${{ steps.branch-name.outputs.BRANCH_NAME }}.syft.text
+
+      - name: Uploading SBOMs
+        id: upload-artifacts-golang
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          name: vapus-helm-SBOM-artifacts
+          path: /tmp/sbom* 
+
+      - name: Sign Helm Chart OCI Image 
+        env:
+          COSIGN_KEY: ${{ env.SIGNING_KEY }}
+          COSIGN_PASSWORD: ${{ env.SIGNING_PASSWORD }}
+        run: |
+          cosign sign --key env://COSIGN_KEY --upload=true ${{ env.OCI_REGISTRY }}${{ env.OCI_IMAGE }}@${{ env.HELM_CHART_DIGEST }}
+
+      - name: Upload All Files to Vapus Operator Repo
+        run: |
+          echo "${{ env.PUB_OPERATOR_PACKAGE_PAT }}" | gh auth login --with-token
+          gh release upload ${{ steps.branch-name.outputs.RELEASE }} /tmp/sbom* --repo ${{ env.PUB_OPERATOR_REPO }} --clobber

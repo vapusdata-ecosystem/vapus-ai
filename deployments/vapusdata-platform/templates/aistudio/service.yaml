@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.aistudio.fullname | default .Values.aistudio.name }}
+  # annotations:
+  #   # cloud.google.com/app-protocols: '{"{{ .Values.aistudio.service.grpc.name }}":"HTTP2"}'
+  #   service.alpha.kubernetes.io/app-protocols: '{"{{ .Values.aistudio.service.svcName }}":"HTTP2"}'
+  labels:
+    {{- include "vapusdata.aistudio.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.aistudio.service.type }}
+  selector:
+    {{- include "vapusdata.aistudio.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: {{ .Values.aistudio.service.grpc.name }}
+    port: {{ .Values.aistudio.service.grpc.port }}
+    targetPort: {{ .Values.aistudio.service.grpc.port }}
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.vapusaigateway.fullname | default .Values.vapusaigateway.name }}
+  # annotations:
+  #   # cloud.google.com/app-protocols: '{"{{ .Values.aistudio.service.grpc.name }}":"HTTP2"}'
+  #   service.alpha.kubernetes.io/app-protocols: '{"{{ .Values.aistudio.service.svcName }}":"HTTP2"}'
+  labels:
+    {{- include "vapusdata.vapusaigateway.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.aistudio.service.type }}
+  selector:
+    {{- include "vapusdata.vapusaigateway.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: {{ .Values.vapusaigateway.service.http.name }}
+    port: {{ .Values.vapusaigateway.service.http.port }}
+    targetPort: {{ .Values.vapusaigateway.service.http.port }}
+    protocol: TCP
+    

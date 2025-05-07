@@ -1,0 +1,14 @@
+actions: 0
+spec:
+    name: ""
+    displayName: ""
+    marketplaceId: ""
+    status: ""
+    attributes: null
+    enableAutoDataSoruceGovernance: false
+    federatedCatalog: ""
+    marketplaceAIModelSpec:
+        embeddingModelNode: ""
+        embeddingModel: ""
+        generativeModelNode: ""
+        generativeModel: ""

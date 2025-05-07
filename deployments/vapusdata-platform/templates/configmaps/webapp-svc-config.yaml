@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.webapp.volumePaths.serviceConfig.name }}
+  labels:
+    {{- include "vapusdata.webapp.labels" . | nindent 4 }}
+data:
+  webapp-config.yaml: |-
+    uris: 
+      login: {{ .Values.auth.oidc.login }}
+      logout: {{ .Values.auth.oidc.logout }}
+      callback: {{ .Values.auth.oidc.callback }}
+    networkConfigFile: {{ .Values.webapp.volumePaths.networkConfig.path }}/{{ .Values.vapusdata.globalConfigs.networkConfig.fileName }}
+    serverCerts:
+      mtls: False
+      caCertFile: {{ .Values.webapp.volumePaths.certMount.path }}/ca-cert.pem
+      serverCertFile: {{ .Values.webapp.volumePaths.certMount.path }}/tls.crt
+      serverKeyFile: {{ .Values.webapp.volumePaths.certMount.path }}/tls.key
+      clientCertFile: {{ .Values.webapp.volumePaths.certMount.path }}/client-cert.pem
+      clientKeyFile: {{ .Values.webapp.volumePaths.certMount.path }}/client-key.pem

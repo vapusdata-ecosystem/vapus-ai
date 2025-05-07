@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+  <script src="/static/js/create-resource.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "loading-overlay.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-full">
+      <section id="grids" class="space-y-2">
+        <div class="max-w-6xl mx-auto bg-[#1b1b1b] shadow rounded-lg p-2">
+          <div class="border-b border-zinc-500 mb-2 flex justify-center">
+            <button id="yamlSpecB"
+              class="whitespace-nowrap text-gray-100 border-b-2 border-black py-2 px-2 text-md font-medium focus:outline-none">
+              YAML
+            </button>
+            <button id="formSpecB"
+              class="whitespace-nowrap text-gray-100 border-b-2 py-2 px-2 text-md font-medium focus:outline-none ml-4 order-orange-700 text-orange-700 font-semibold">
+              Form
+            </button>
+          </div>
+          <div id="yamlSpec" style="display: none;">
+            {{ template "yaml-editor.html" . }}
+          </div>
+          <div id="formSpec">
+            <form id="dataSourceSpec" class="space-y-2 border border-zinc-500 rounded-md text-gray-100 p-2">
+              <fieldset class="p-4 rounded">
+                <legend class="text-xl font-bold text-gray-100">Spec</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <input id="spec_name" name="spec.name" type="text" placeholder="Enter name"
+                      class="form-input-field " />
+                  </div>
+                </div>
+                <fieldset class="rounded mb-4">
+                  <legend class="text-lg font-semibold text-gray-100">Attributes</legend>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <select name="spec.attributes.serviceName"
+                        class="form-select-field ">
+                        <option value="INVALID_DATA_SERVICE">
+                          Select Service Name
+                        </option>
+                        {{ range $key, $value := .Enums }}
+                        {{ if eq $key "StorageService" }}
+                        {{ range $val := $value }}
+                        <option value="{{ $val }}">{{ strTitle "" $val }}</option>
+                        {{ end}}
+                        {{ end }}
+                        {{ end}}
+                      </select>
+                    </div>
+                    <div>
+                      <select name="spec.attributes.serviceProvider"
+                        class="form-select-field ">
+                        <option value="INVALID_SERVICE_PROVIDER">
+                          Select Service Provider
+                        </option>
+                        {{ range $key, $value := .Enums }}
+                        {{ if eq $key "SvcProvider" }}
+                        {{ range $val := $value }}
+                        <option value="{{ $val }}">{{ strTitle "SSP" $val }}</option>
+                        {{ end}}
+                        {{ end }}
+                        {{ end}}
+                      </select>
+                    </div>
+                  </div>
+                </fieldset>
+                <details class="border border-zinc-500 p-4 rounded mb-4">
+                  <summary class="text-lg font-semibold text-gray-100 cursor-pointer">Network Credentials</summary>
+                  {{ template "network-params.html" . }}
+                </details>
+                <details class="border border-zinc-500 p-4 rounded mb-4">
+                  <summary class="text-lg font-semibold text-gray-100 cursor-pointer">Tags</summary>
+                  {{ template "tags-fieldset.html" . }}
+                </details>
+                <details class="border border-zinc-500 p-4 rounded mb-4">
+                  <summary class="text-lg font-semibold text-gray-100 cursor-pointer">MetaData Sync Schedule</summary>
+                  {{ template "schedule-fieldset.html" . }}
+                </details>
+              </fieldset>
+              <!-- Submit Button -->
+              <div class="mt-4 flex justify-end space-x-2">
+                <button type="submit" class="submit-form-button" id="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div hidden id="createTemplate">{{ $.Response.CreateActionParams.YamlSpec }}</div>
+  </div>
+  <script>
+    document.getElementById('yamlSpecB').addEventListener('click', function () {
+      document.getElementById('formSpecB').classList.remove('border-orange-700', 'text-orange-700', 'font-semibold');
+      this.classList.add('border-orange-700', 'text-orange-700', 'font-semibold');
+      document.getElementById('yamlSpec').style.display = 'block';
+      document.getElementById('formSpec').style.display = 'none';
+      CreateResourceViaYaml(
+        "createTemplate", `{{ .Response.CreateActionParams.Method }}`, `{{ .Response.CreateActionParams.Title }}`,
+        `{{ .GlobalContext.AccessTokenKey }}`, `{{ .Response.CreateActionParams.API }}`
+      );
+    });
+
+    document.getElementById('formSpecB').addEventListener('click', function () {
+      document.getElementById('yamlSpecB').classList.remove('border-orange-700', 'text-orange-700', 'font-semibold');
+      this.classList.add('border-orange-700', 'text-orange-700', 'font-semibold');
+      document.getElementById('yamlSpec').style.display = 'none';
+      document.getElementById('formSpec').style.display = 'block';
+    });
+    document.onload = function () {
+      document.getElementById('formSpec').style.display = 'block';
+      document.getElementById('formSpecB').classList.add('border-orange-700', 'text-orange-700', 'font-semibold');
+    }
+    document.getElementById('dataSourceSpec').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent default submission
+      const form = event.target;
+      const formData = new FormData(form);
+      let dataObj = getFormData(formData);
+      console.log(dataObj);
+      dataObj.netParams = GetNetworkParams();
+      dataObj = convertNumericStrings(dataObj);
+      dataObj = scanNetworkParams(dataObj);
+      dataObj = scanVapusSchedule(dataObj);
+      submitCreateForm(dataObj, `{{ .GlobalContext.AccessTokenKey }}`, `{{ .Response.CreateActionParams.API }}`,`{{ .Response.BackListingLink }}`);
+    });
+    document.getElementById('submitYaml').addEventListener('click', function () {
+      YamlCreateResourceAction({
+        tokenKey: `{{ .GlobalContext.AccessTokenKey }}`,
+        apiUrl: `{{ .Response.CreateActionParams.API }}`,
+        method: `POST`,
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,2299 @@
+{
+    "OPENAI": {
+      "llm_service_provider_name": "OPENAI",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "gpt-4o-audio-preview",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 7.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o4-mini-2025-04-16",
+          "inputPrice": { "Amount": 1.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.275, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-audio-preview-2024-10-01",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 7.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o4-mini",
+          "inputPrice": { "Amount": 1.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.275, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.1-nano",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.025, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.1-nano-2025-04-14",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.025, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-realtime-preview-2024-10-01",
+          "inputPrice": { "Amount": 5.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 20.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-realtime-preview-2024-12-17",
+          "inputPrice": { "Amount": 5.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 20.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-realtime-preview",
+          "inputPrice": { "Amount": 5.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 20.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4",
+          "inputPrice": { "Amount": 30.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4-0613",
+          "inputPrice": { "Amount": 30.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-2024-12-17",
+          "inputPrice": { "Amount": 15.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 7.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1",
+          "inputPrice": { "Amount": 15.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 7.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-preview-2024-09-12",
+          "inputPrice": { "Amount": 15.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 7.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-preview",
+          "inputPrice": { "Amount": 15.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 7.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 60.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-pro",
+          "inputPrice": { "Amount": 150.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 600.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-pro-2025-03-19",
+          "inputPrice": { "Amount": 150.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 600.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-audio-preview",
+          "inputPrice": { "Amount": 10.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 20.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-realtime-preview",
+          "inputPrice": { "Amount": 0.60, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.30, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 2.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-realtime-preview-2024-12-17",
+          "inputPrice": { "Amount": 0.60, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.30, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 2.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.1-mini",
+          "inputPrice": { "Amount": 0.40, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.60, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo-instruct-0914",
+          "inputPrice": { "Amount": 1.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 2.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo-instruct",
+          "inputPrice": { "Amount": 1.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 2.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-search-preview",
+          "inputPrice": { "Amount": 0.15, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.60, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-search-preview-2025-03-11",
+          "inputPrice": { "Amount": 0.15, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.60, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.1-mini-2025-04-14",
+          "inputPrice": { "Amount": 0.40, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.60, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "chatgpt-4o-latest",
+          "inputPrice": { "Amount": 5.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 15.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "davinci-002",
+          "inputPrice": { "Amount": 2.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 2.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo-1106",
+          "inputPrice": { "Amount": 0.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo",
+          "inputPrice": { "Amount": 0.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo-0125",
+          "inputPrice": { "Amount": 0.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo-16k-0613",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-3.5-turbo-16k",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-search-preview",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-search-preview-2025-03-11",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4-turbo",
+          "inputPrice": { "Amount": 10.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 30.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4-turbo-2024-04-09",
+          "inputPrice": { "Amount": 10.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 30.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-2024-11-20",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-2024-08-06",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-2024-05-13",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "computer-use-preview",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 12.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "computer-use-preview-2025-03-11",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 12.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.5-preview",
+          "inputPrice": { "Amount": 75.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 37.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 150.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.5-preview-2025-02-27",
+          "inputPrice": { "Amount": 75.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 37.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 150.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "omni-moderation-2024-09-26",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-tts",
+          "inputPrice": { "Amount": 0.60, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 12.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.1",
+          "inputPrice": { "Amount": 2.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 8.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4.1-2025-04-14",
+          "inputPrice": { "Amount": 2.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 8.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-mini",
+          "inputPrice": { "Amount": 1.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.55, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o1-mini-2024-09-12",
+          "inputPrice": { "Amount": 1.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.55, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini-audio-preview-2024-12-17",
+          "inputPrice": { "Amount": 0.15, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.60, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "text-embedding-3-large",
+          "inputPrice": { "Amount": 0.13, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "text-embedding-ada-002",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "text-embedding-3-small",
+          "inputPrice": { "Amount": 0.02, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o3-mini",
+          "inputPrice": { "Amount": 1.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.55, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "o3-mini-2025-01-31",
+          "inputPrice": { "Amount": 1.10, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.55, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini",
+          "inputPrice": { "Amount": 0.15, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.075, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.60, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gpt-4o-mini",
+          "inputPrice": { "Amount": 0.15, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.075, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.60, "TokenSize": 1000000 }
+        }
+      ]
+    },
+    
+    "ANTHROPIC": {
+      "llm_service_provider_name": "ANTHROPIC",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "claude-3-7-sonnet-20250219",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.30, "TokenSize": 1000000 },
+          "cachedOutputPrice": { "Amount": 3.75, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 15.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "claude-3-5-sonnet-20241022",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.30, "TokenSize": 1000000 },
+          "cachedOutputPrice": { "Amount": 3.75, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 15.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "claude-3-5-sonnet-20240620",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.30, "TokenSize": 1000000 },
+          "cachedOutputPrice": { "Amount": 3.75, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 15.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "claude-3-5-haiku-20241022",
+          "inputPrice": { "Amount": 0.80, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.08, "TokenSize": 1000000 },
+          "cachedOutputPrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 4.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "claude-3-opus-20240229",
+          "inputPrice": { "Amount": 2.50, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.08, "TokenSize": 1000000 },
+          "cachedOutputPrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        }
+      ]
+    },
+  
+    "DEEPSEEK": {
+      "llm_service_provider_name": "DEEPSEEK",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "deepseek-reasoner",
+          "inputPrice": { "Amount": 0.14, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.55, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 2.19, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "deepseek-chat",
+          "inputPrice": { "Amount": 0.27, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.07, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.10, "TokenSize": 1000000 }
+        }
+      ]
+    },
+  
+    "GEMINI": {
+      "llm_service_provider_name": "GEMINI",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "chat-bison-001",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "text-bison-001",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "embedding-gecko-001",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.0-pro-vision-latest",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-pro-vision",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-pro-latest",
+          "inputPrice": { "Amount": 3.50, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.3125, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-pro-001",
+          "inputPrice": { "Amount": 3.50, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.3125, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-pro-002",
+          "inputPrice": { "Amount": 3.50, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.3125, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-pro",
+         "inputPrice": { "Amount": 3.50, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.3125, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.50, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-latest",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-001",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-001-tuning",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-002",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-8b",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-8b-001",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-8b-latest",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-8b-exp-0827",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-1.5-flash-8b-exp-0924",
+          "inputPrice": { "Amount": 0.35, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.01875, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.05, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.5-pro-exp-03-25",
+          "inputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.31, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 4.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.5-pro-preview-03-25",
+          "inputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.31, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 4.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.5-flash-preview-04-17",
+          "inputPrice": { "Amount": 1.25, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.31, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 4.50, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 10.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-exp",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.025, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.025, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-001",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.025, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-exp-image-generation",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.025, "TokenSize": 1000000 },
+          "contextCachingStoragePrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-lite-001",
+          "inputPrice": { "Amount": 0.075, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.30, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-lite",
+          "inputPrice": { "Amount": 0.075, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.30, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-lite-preview-02-05",
+          "inputPrice": { "Amount": 0.075, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.30, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-lite-preview",
+          "inputPrice": { "Amount": 0.075, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.30, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-pro-exp",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-pro-exp-02-05",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-exp-1206",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.40, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-thinking-exp-01-21",
+          "inputPrice": { "Amount": 0.10, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.70, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-thinking-exp",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-thinking-exp-1219",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "learnlm-1.5-pro-experimental",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "learnlm-2.0-flash-experimental",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemma-3-1b-it",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemma-3-4b-it",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemma-3-12b-it",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "aqa",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "imagen-3.0-generate-002",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "gemini-2.0-flash-live-001",
+          "inputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.00, "TokenSize": 1000000 }
+        }
+      ]
+    },
+  
+    "AZURE_OPENAI": {
+      "llm_service_provider_name": "AZURE_OPENAI",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "o1-Global",
+          "inputPrice": {"Amount": 15.00, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 7.50, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 60.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "o1-Regional",
+          "inputPrice": {"Amount": 16.50, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 8.25, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 66.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "o3-mini-Global",
+          "inputPrice": {"Amount": 1.10, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 0.55, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 4.40, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "o3-mini-Regional",
+          "inputPrice": {"Amount": 1.21, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 0.605, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 4.48, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "4o-Global",
+          "inputPrice": {"Amount": 5.00, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 2.50, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 20.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "4o-Global",
+          "inputPrice": {"Amount": 5.50, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 2.75, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 22.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "4o-mini-Global",
+          "inputPrice": {"Amount": 0.60, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 0.30, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 2.64, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "4o-mini-Regional",
+          "inputPrice": {"Amount": 0.66, "TokenSize": 1000000},
+          "cachedInputPrice": {"Amount": 0.33, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 2.64, "TokenSize": 1000000}
+        }
+      ]
+    },
+  
+    "AZURE_PHI": {
+      "llm_service_provider_name": "AZURE_PHI",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "Phi-3-mini-4k-instruct",
+          "context": 4000,
+          "inputPrice": {"Amount": 0.00013, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00052, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3-mini-128k-instruct",
+          "context": 128000,
+          "inputPrice": {"Amount": 0.00013, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00052, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3.5-mini-instruct",
+          "context": 128000,
+          "inputPrice": {"Amount": 0.00013, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00052, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3-small-8k-instruct",
+          "context": 8000,
+          "inputPrice": {"Amount": 0.00015, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.0006, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3-small-128k-instruct",
+          "context": 128000,
+          "inputPrice": {"Amount": 0.00015, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.0006, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3-medium-4k-instruct",
+          "context": 4000,
+          "inputPrice": {"Amount": 0.00017, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00068, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3-medium-128k-instruct",
+          "context": 128000,
+          "inputPrice": {"Amount": 0.00017, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00068, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3.5-MoE-instruct",
+          "context": 128000,
+          "inputPrice": {"Amount": 0.00016, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00064, "TokenSize": 1000000}
+        }
+      ]
+    },
+  
+    "MISTRAL": {
+      "llm_service_provider_name": "MISTRAL",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "open-mistral-7b",
+          "apiName": "mistral-7b",
+          "inputPrice": {"Amount": 0.25, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.25, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "open-mixtral-8x7b",
+          "apiName": "mistral-7b",
+          "inputPrice": {"Amount": 0.7, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.7, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "open-mixtral-8x22b",
+          "apiName": "mistral-7b",
+          "inputPrice": {"Amount": 2.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 6.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "open-mistral-nemo",
+          "apiName": "mistral-nemo",
+          "inputPrice": {"Amount": 0.3, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.3, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-large-2411",
+          "apiName": "mistral-large-latest",
+          "inputPrice": {"Amount": 2.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 6.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-large-2402",
+          "apiName": "mistral-large-latest",
+          "inputPrice": {"Amount": 2.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 6.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-large-2407",
+          "apiName": "mistral-large-latest",
+          "inputPrice": {"Amount": 2.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 6.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "pixtral-large-2411",
+          "apiName": "pixtral-large-latest",
+          "inputPrice": {"Amount": 2.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 6.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "pixtral-12b-2409",
+          "apiName": "pixtral-large-latest",
+          "inputPrice": {"Amount": 0.15, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.15, "TokenSize": 1000000}
+        },
+
+
+        {
+          "modelName": "Mistral-Small",
+          "apiName": "mistral-small-latest",
+          "inputPrice": {"Amount": 0.2, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.6, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-small-2402",
+          "apiName": "mistral-small-latest",
+          "inputPrice": {"Amount": 0.2, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.6, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-small-2409",
+          "apiName": "mistral-small-latest",
+          "inputPrice": {"Amount": 0.2, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.6, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-small-2501",
+          "apiName": "mistral-small-latest",
+          "inputPrice": {"Amount": 0.2, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.6, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-small-2503",
+          "apiName": "mistral-small-latest",
+          "inputPrice": {"Amount": 0.2, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.6, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-saba-2502",
+          "apiName": "mistral-saba-latest",
+          "inputPrice": {"Amount": 0.2, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.6, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Phi-3-small-128k-instruct",
+          "context": 128000,
+          "inputPrice": {"Amount": 0.00015, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.0006, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-embed",
+          "inputPrice": {"Amount": 0.1, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "mistral-moderation-2411",
+          "inputPrice": {"Amount": 0.1, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00, "TokenSize": 1000000}
+        },
+
+        {
+          "modelName": "codestral-2405",
+          "apiName": "codestral-latest",
+          "inputPrice": {"Amount": 0.3, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.9, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "codestral-2501",
+          "apiName": "codestral-latest",
+          "inputPrice": {"Amount": 0.3, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.9, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "codestral-mamba-2407",
+          "apiName": "codestral-latest",
+          "inputPrice": {"Amount": 0.3, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.9, "TokenSize": 1000000}
+        },
+
+        {
+          "modelName": "ministral-8b-2410",
+          "apiName": "ministral-8b-latest",
+          "inputPrice": {"Amount": 0.1, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.1, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "ministral-3b-2410",
+          "apiName": "ministral-3b-latest",
+          "inputPrice": {"Amount": 0.04, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.04, "TokenSize": 1000000}
+        }
+      ]
+    },
+    
+    "GROQ": {
+      "llm_service_provider_name": "GROQ",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "playai-tts",
+          "inputPrice": {"Amount": 50.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "playai-tts-arabic",
+          "inputPrice": {"Amount": 50.00, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.00, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "meta-llama/llama-4-maverick-17b-128e-instruct",
+          "inputPrice": {"Amount": 0.20, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.60, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "qwen-qwq-32b",
+          "inputPrice": {"Amount": 0.29, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.39, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "meta-llama/llama-4-scout-17b-16e-instruct",
+          "inputPrice": {"Amount": 0.11, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.34, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "deepseek-r1-distill-llama-70b",
+          "inputPrice": {"Amount": 0.75, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.99, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "DeepSeek-R1-Distill-Qwen-32B-128k",
+          "promptCount": 128000,
+          "inputPrice": {"Amount": 0.69, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.69, "TokenSize": 1000000}
+        },
+        {
+          "modelName": "Qwen-2.5-32B-Instruct-128k",
+          "promptCount": 128000,
+          "inputPrice": {"Amount": 0.79, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.79, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "Qwen-2.5-Coder-32B-Instruct-128k",
+          "promptCount": 128000,
+          "inputPrice": {"Amount": 0.79, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.79, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "Llama-3.2-1B-(Preview)-8k",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.04, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.04, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "Llama-3.2-3B-(Preview)-8k",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.06, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.06, "TokenSize": 1000000}
+           
+        },
+        {
+          "modelName": "llama-3.3-70b-versatile",
+          "promptCount": 128000,
+          "inputPrice": {"Amount": 0.59, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.79, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "llama-3.1-8b-instant",
+          "promptCount": 128000,
+          "inputPrice": {"Amount": 0.05, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.08, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "llama3-70b-8192",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.59, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.79, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "llama3-8b-8192",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.05, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.08, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "mistral-saba-24b",
+          "promptCount": 32000,
+          "inputPrice": {"Amount": 0.79, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.79, "TokenSize": 1000000}
+           
+        },
+        {
+          "modelName": "gemma2-9b-it",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.20, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.20, "TokenSize": 1000000}
+            
+        },
+        {
+          "modelName": "llama-guard-3-8b",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.20, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.20, "TokenSize": 1000000}
+           
+        },
+        {
+          "modelName": "Llama-3.3-70B-SpecDec-8k",
+          "promptCount": 8000,
+          "inputPrice": {"Amount": 0.59, "TokenSize": 1000000},
+          "outputPrice": {"Amount": 0.99, "TokenSize": 1000000}
+        }
+      ]
+    },
+
+    "PERPLEXITY": {
+      "llm_service_provider_name": "PERPLEXITY",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "sonar",
+          "inputPrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 1.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "sonar-reasoning-pro",
+          "inputPrice": { "Amount": 2.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 8.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "sonar-reasoning",
+          "inputPrice": { "Amount": 1.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 5.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "sonar-pro",
+          "inputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 15.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "r1-1776",
+          "inputPrice": { "Amount": 2.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 0.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 8.00, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "sonar-deep-research",
+          "inputPrice": { "Amount": 2.00, "TokenSize": 1000000 },
+          "cachedInputPrice": { "Amount": 3.00, "TokenSize": 1000000 },
+          "outputPrice": { "Amount": 8.00, "TokenSize": 1000000 }
+        }
+      ]
+    },
+
+    "TOGETHER": {
+      "llm_service_provider_name": "TOGETHER",
+      "currency": "Dollars",
+      "model_prices": [
+        {
+          "modelName": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+          "inputPrice": { "Amount": 0.88, "TokenSize": 1000000 },
+          "contextCachingPrice": { "Amount": 0.0,"TokenSize": 1000000 },
+          "outputPrice": { "Amount": 0.0, "TokenSize": 1000000 }
+        },
+        {
+          "modelName": "Qwen/Qwen2.5-7B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 0.30,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
+          "inputPrice": {
+            "Amount": 2.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama-llama-2-70b-hf",
+          "inputPrice": {
+            "Amount": 0.90,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/Qwen2-VL-72B-Instruct",
+          "inputPrice": {
+            "Amount": 1.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/LlamaGuard-2-8b",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/Qwen3-235B-A22B-fp8-tput",
+          "inputPrice": {
+            "Amount": 0.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.60,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/QwQ-32B",
+          "inputPrice": {
+            "Amount": 1.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Meta-Llama-3-70B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 0.88,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Meta-Llama-Guard-3-8B",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-3-8b-chat-hf",
+          "inputPrice": {
+            "Amount": 0.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+          "inputPrice": {
+            "Amount": 2.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Meta-Llama-3-8B-Instruct-Lite",
+          "inputPrice": {
+            "Amount": 0.10,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 1.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 0.88,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 3.50,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-R1",
+          "inputPrice": {
+            "Amount": 3.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 7.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-V3-p-dp",
+          "inputPrice": {
+            "Amount": 1.25,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+          "inputPrice": {
+            "Amount": 1.60,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.59,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "deepseek-ai/DeepSeek-V3",
+          "inputPrice": {
+            "Amount": 1.25,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/Qwen2.5-Coder-32B-Instruct",
+          "inputPrice": {
+            "Amount": 0.80,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/Qwen2-72B-Instruct",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-3-70b-chat-hf",
+          "inputPrice": {
+            "Amount": 0.90,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-Vision-Free",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-Guard-3-11B-Vision-Turbo",
+          "inputPrice": {
+            "Amount": 0.18,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-3.2-3B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 0.06,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/Qwen2.5-72B-Instruct-Turbo",
+          "inputPrice": {
+            "Amount": 1.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-2-70b-hf",
+          "inputPrice": {
+            "Amount": 0.90,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+          "inputPrice": {
+            "Amount": 0.27,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.85,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Qwen/Qwen2.5-VL-72B-Instruct",
+          "inputPrice": {
+            "Amount": 1.20,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        
+        {
+          "modelName": "WhereIsAI/UAE-Large-V1",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "togethercomputer/m2-bert-80M-32k-retrieval",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "google/gemma-2-9b-it",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "cartesia/sonic",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "BAAI/bge-large-en-v1.5",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-schnell-Free",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1.1-pro",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "BAAI/bge-base-en-v1.5",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Gryphe/MythoMax-L2-13b",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "google/gemma-2-27b-it",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "cartesia/sonic-2",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "togethercomputer/m2-bert-80M-8k-retrieval",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "arcee-ai/maestro-reasoning",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "togethercomputer/MoA-1",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "mistralai/Mistral-7B-Instruct-v0.2",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "togethercomputer/m2-bert-80M-2k-retrieval",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "google/gemma-2b-it",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-pro",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "mistralai/Mistral-Small-24B-Instruct-2501",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Gryphe/MythoMax-L2-13b-Lite",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-redux",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-depth",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-canny",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "scb10x/scb10x-llama3-1-typhoon2-8b-instruct",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        
+        {
+          "modelName": "arcee-ai/caller",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "togethercomputer/MoA-1-Turbo",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "mistralai/Mistral-7B-Instruct-v0.1",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "scb10x/scb10x-llama3-1-typhoon2-70b-instruct",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "arcee-ai/virtuoso-medium-v2",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "arcee-ai/coder-large",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "arcee-ai/virtuoso-large",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "mistralai/Mixtral-8x7B-v0.1",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-dev-lora",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "arcee-ai/arcee-blitz",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-schnell",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "mistralai/Mistral-7B-Instruct-v0.3",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "Salesforce/Llama-Rank-V1",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "black-forest-labs/FLUX.1-dev",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        },
+        {
+          "modelName": "arcee_ai/arcee-spotlight",
+          "inputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "contextCachingPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          },
+          "outputPrice": {
+            "Amount": 0.0,
+            "TokenSize": 1000000
+          }
+        }
+      ]
+    }
+
+}

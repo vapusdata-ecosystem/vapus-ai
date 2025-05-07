@@ -1,0 +1,200 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/vapusai.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package aistudio.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha1";
+
+service AIModels {
+    /**
+     * Retrieves a data worker deployment.
+     * @param {Create} request - The request object containing the AI model node configurator.
+     * @returns {AIModelNodeResponse} The response object containing the AI model node configurator.
+     */
+    rpc Create(AIModelNodeManagerRequest) returns (models.v1alpha1.VapusCreateResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/models"
+            body: "*"
+        };
+    }
+
+    rpc Sync(AIModelNodeGetterRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/models/{ai_model_node_id}/sync"
+            body: "*"
+        };
+    }
+
+    rpc Update(AIModelNodeManagerRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            put: "/api/v1alpha1/aistudio/models"
+            body: "*"
+        };
+    }
+
+    rpc List(AIModelNodeGetterRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/models"
+        };
+    }
+
+    rpc Archive(AIModelNodeGetterRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            delete: "/api/v1alpha1/aistudio/models/{ai_model_node_id}"
+        };
+    }
+
+    rpc Get(AIModelNodeGetterRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/models/{ai_model_node_id}"
+        };
+    }
+
+    rpc ListInsights(AIModelNodeInsightsRequest) returns (AIModelNodeInsightsResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/insights/models"
+        };
+    }
+}
+
+service AIPrompts{
+    // Creates a new prompt.
+    // @param {PromptManagerRequest} request - The request object containing the prompt manager.
+    // @returns {PromptResponse} The response object containing the created prompt.
+    rpc Create(PromptManagerRequest) returns(models.v1alpha1.VapusCreateResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/prompts"
+            body: "*"
+        };
+    }
+
+    rpc Update(PromptManagerRequest) returns(PromptResponse) {
+        option (google.api.http) = {
+            put: "/api/v1alpha1/aistudio/prompts"
+            body: "*"
+        };
+    }
+
+    rpc List(PromptGetterRequest) returns(PromptResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/prompts"
+        };
+    }
+
+    rpc Archive(PromptGetterRequest) returns(PromptResponse) {
+        option (google.api.http) = {
+            delete: "/api/v1alpha1/aistudio/prompts/{prompt_id}"
+        };
+    }    
+
+    // Retrieves a prompt.
+    // @param {PromptGetterRequest} request - The request object containing the prompt getter.
+    // @returns {PromptResponse} The response object containing the retrieved prompt.
+    rpc Get(PromptGetterRequest) returns(PromptResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/prompts/{prompt_id}"
+        };
+    }
+}
+
+service AIGuardrails {
+    rpc Create(GuardrailsManagerRequest) returns(models.v1alpha1.VapusCreateResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/aistudio/guardrails"
+            body: "*"
+        };
+    }
+
+    rpc Update(GuardrailsManagerRequest) returns(GuardrailsResponse) {
+        option (google.api.http) = {
+            put: "/api/v1alpha1/aistudio/guardrails"
+            body: "*"
+        };
+    }
+
+    rpc List(GuardrailsGetterRequest) returns(GuardrailsResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/guardrails"
+        };
+    }
+
+    rpc Archive(GuardrailsGetterRequest) returns(GuardrailsResponse) {
+        option (google.api.http) = {
+            delete: "/api/v1alpha1/aistudio/guardrails/{guardrail_id}"
+        };
+    }    
+
+    rpc Get(GuardrailsGetterRequest) returns(GuardrailsResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/guardrails/{guardrail_id}"
+        };
+    }
+}
+
+
+enum AIAgentContextKeys {
+    TEXT_DATA = 0;
+    INPUT_DATASET = 1;
+    WEBSITE = 2;
+    FILE = 3;
+}
+
+message AIModelNodeManagerRequest {
+    models.v1alpha1.AIModelNode spec = 1; // @gotags: yaml:"spec"
+}
+
+message AIModelNodeResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    message AIModelNodeResponse {
+        repeated models.v1alpha1.AIModelNode ai_model_nodes = 1; // @gotags: yaml:"aiModelNodes"
+        repeated models.v1alpha1.MapList available_models_pool = 2; // @gotags: yaml:"availableModelsPool"
+    }
+    AIModelNodeResponse output = 2; // @gotags: yaml:"output"
+}
+
+message AIModelNodeGetterRequest {
+    string ai_model_node_id = 1; // @gotags: yaml:"aiModelNodeId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"searchParam"
+}
+
+message PromptManagerRequest {
+    models.v1alpha1.AIPrompt spec = 1; // @gotags: yaml:"spec"
+}
+
+message PromptGetterRequest {
+    string prompt_id = 1; // @gotags: yaml:"promptId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}
+
+message PromptResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.AIPrompt output = 2; // @gotags: yaml:"output"
+}
+
+message GuardrailsResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.AIGuardrails output = 2; // @gotags: yaml:"output"
+}
+
+message GuardrailsManagerRequest {
+    models.v1alpha1.AIGuardrails spec = 1; // @gotags: yaml:"spec"
+}
+
+message GuardrailsGetterRequest {
+    string guardrail_id = 1; // @gotags: yaml:"guardrailId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}
+
+message AIModelNodeInsightsRequest {
+    repeated string ai_model_node_id = 1; // @gotags: yaml:"aiModelNodeId"
+    repeated string model = 2; // @gotags: yaml:"model"
+}
+
+message AIModelNodeInsightsResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.ModelNodeObservability model_node_observability = 2;
+}

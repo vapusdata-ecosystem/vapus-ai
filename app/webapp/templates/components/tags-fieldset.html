@@ -1,0 +1,43 @@
+<div id="tagsContainer">
+  <div class="flex gap-4 p-2 tagRow">
+    <div>
+      <input type="text" name="spec.tags[0].key" placeholder="Key"
+        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+    </div>
+    <div>
+      <input type="text" name="spec.tags[0].value" placeholder="Value"
+        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+    </div>
+    <div>
+      <button type="button" id="addTagBtn"
+        class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900">
+        +
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tagsContainer = document.getElementById('tagsContainer');
+    const addTagBtn = document.getElementById('addTagBtn');
+    let tagIndex = 1; // Start from 1 since index 0 is already in the DOM
+
+    addTagBtn.addEventListener('click', function () {
+      const newRow = document.createElement('div');
+      newRow.className = 'flex gap-4 p-2 tagRow';
+      newRow.innerHTML = `
+        <div>
+        <input type="text" name="spec.tags[${tagIndex}].key" placeholder="key"
+          class="mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+        <input type="text" name="spec.tags[${tagIndex}].value" placeholder="value"
+          class="mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+      `;
+      tagsContainer.appendChild(newRow);
+      tagIndex++;
+    });
+  });
+</script>

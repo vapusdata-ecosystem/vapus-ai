@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ template "staticimports.html" . }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+  {{ template "header.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto scrollbar text-gray-100">
+      <div class="container mx-auto p-2 space-y-6">
+
+        <!-- Row 1: Two Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+          <!-- Card 1 -->
+          <div class="border border-zinc-500 rounded-lg shadow-lg p-2 flex items-center justify-center">
+            <div>
+              <h2 class="text-xl font-semibold text-center">Data Products</h2>
+              <div class="text-4xl font-bold text-blue-600 mt-2 text-center">{{ $.Response.Dashboard.Dataproducts }}</div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="border border-zinc-500 rounded-lg shadow-lg p-2 flex items-center justify-center">
+            <div>
+              <h2 class="text-xl font-semibold text-center">Data Sources</h2>
+              <div class="text-4xl font-bold text-green-600 mt-2 text-center">{{ $.Response.Dashboard.Datasources }}</div>
+            </div>
+          </div>
+          <div class="border border-zinc-500 rounded-lg shadow-lg p-2 flex items-center justify-center">
+            <div>
+              <h2 class="text-xl font-semibold text-center">Dataworkers</h2>
+              <div class="text-4xl font-bold text-blue-600 mt-2 text-center">{{ $.Response.Dashboard.Dataworkers }}</div>
+            </div>
+          </div>
+          <div class="border border-zinc-500 rounded-lg shadow-lg p-2 flex items-center justify-center">
+            <div>
+              <h2 class="text-xl font-semibold text-center">Users</h2>
+              <div class="text-4xl font-bold text-green-600 mt-2 text-center">{{ $.Response.Dashboard.Users }}</div>
+            </div>
+          </div>
+          <div class="border border-zinc-500 rounded-lg shadow-lg p-2 flex items-center justify-center col-span-2">
+            <div>
+              <h2 class="text-xl font-semibold text-center">Inbound Data Queries</h2>
+              <table class="table-auto w-full mt-2 text-xs border-2 border-zinc-500">
+                <thead class="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase">
+                  <tr>
+                    <th class="px-4 py-2">Failed</th>
+                    <th class="px-4 py-2">Successfull</th>
+                    <th class="px-4 py-2">Total</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-zinc-800 divide-y divide-zinc-900 text-sm">
+                  <tr>
+                    <td class="px-4 py-2 text-yellow-500">
+                      {{ if $.Response.Dashboard.InboundDataproductQueryMetrics }}
+                      {{ if $.Response.Dashboard.InboundDataproductQueryMetrics.PercentileMetrics }}
+                      {{index $.Response.Dashboard.InboundDataproductQueryMetrics.PercentileMetrics "failedRate" }}%
+                      {{ else }}
+                      0%
+                      {{ end }}
+                      {{ else }}
+                      0%
+                      {{ end }}
+                    </td>
+                    <td class="px-4 py-2 text-yellow-500">
+                      {{ if $.Response.Dashboard.InboundDataproductQueryMetrics }}
+                      {{ if $.Response.Dashboard.InboundDataproductQueryMetrics.PercentileMetrics }}
+                      {{index $.Response.Dashboard.InboundDataproductQueryMetrics.PercentileMetrics "successRate" }}%
+                      {{ else }}
+                      0%
+                      {{ end }}
+                      {{ else }}
+                      0%
+                      {{ end }}
+                    </td>
+                    <td class="px-4 py-2 text-yellow-500">{{ $.Response.Dashboard.TotalInboundQueries }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="border border-zinc-500 rounded-lg shadow-lg p-2 flex items-center justify-center col-span-2">
+            <div>
+              <h2 class="text-xl font-semibold text-center">Outbound Data Queries</h2>
+              <table class="table-auto w-full mt-2 text-xs border-2 border-zinc-500">
+                <thead class="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase">
+                  <tr>
+                    <th class="px-4 py-2">Failed</th>
+                    <th class="px-4 py-2">Successfull</th>
+                    <th class="px-4 py-2">Total</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-zinc-800 divide-y divide-zinc-900 text-sm">
+                  <tr>
+                    <td class="px-4 py-2 text-yellow-500">
+                      {{ if $.Response.Dashboard.OutboundDataproductQueryMetrics }}
+                      {{ if $.Response.Dashboard.OutboundDataproductQueryMetrics.PercentileMetrics }}
+                      {{index $.Response.Dashboard.OutboundDataproductQueryMetrics.PercentileMetrics "failedRate" }}%
+                      {{ else }}
+                      0%
+                      {{ end }}
+                      {{ else }}
+                      0%
+                      {{ end }}
+                    </td>
+                    <td class="px-4 py-2 text-yellow-500">
+                      {{ if $.Response.Dashboard.OutboundDataproductQueryMetrics }}
+                      {{ if $.Response.Dashboard.OutboundDataproductQueryMetrics.PercentileMetrics }}
+                      {{index $.Response.Dashboard.OutboundDataproductQueryMetrics.PercentileMetrics "successRate" }}%
+                      {{ else }}
+                      0%
+                      {{ end }}
+                      {{ else }}
+                      0%
+                      {{ end }}
+                    </td>
+                    <td class="px-4 py-2 text-yellow-500">{{ $.Response.Dashboard.TotalOutboundQueries }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+
+        </div>
+
+        <!-- Row 2: Graphs -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
+          <!-- Graph 1 -->
+          <!-- Graph 2 -->
+          <div class="rounded-lg shadow-lg p-2 border border-zinc-500">
+            <h3 class="text-lg font-semibold mb-4">Dataproducts Heat Map</h3>
+            <canvas id="dataproductMetrics" class="w-full"></canvas>
+          </div>
+          <div class="rounded-lg shadow-lg p-2 border border-zinc-500">
+            <h3 class="text-lg font-semibold mb-4">Data Sources Compliance Heat Map</h3>
+            <canvas id="dataSourceCompliances" class="w-full"></canvas>
+          </div>
+          <!-- Graph 3 -->
+          <div class="rounded-lg shadow-lg p-2 border border-zinc-500">
+            <h3 class="text-lg font-semibold mb-4">VDC Deployments </h3>
+            <canvas id="deploymentMetrics" class="w-full"></canvas>
+          </div>
+          <!-- <div class="rounded-lg shadow-lg p-2">
+        <h3 class="text-lg font-semibold mb-4">Users Growth</h3>
+        <canvas id="userMetrics" class="w-full"></canvas>
+      </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Chart.js Script -->
+  <script>
+    // D3 CHart - https://d3js.org/getting-started
+    // const userMetrics = document.getElementById('userMetrics').getContext('2d');
+    // new Chart(userMetrics, {
+    //   type: 'line',
+    //   data: {
+    //     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    //     datasets: [{
+    //       label: 'Users',
+    //       data: [30, 40, 50, 60, 70],
+    //       borderColor: 'rgba(75, 192, 192, 1)',
+    //       borderWidth: 2,
+    //       fill: false
+    //     }]
+    //   },
+    //   options: {
+    //     responsive: true,
+    //     plugins: {
+    //       legend: { position: 'top' },
+    //     },
+    //   }
+    // });
+
+    // Graph 3
+    const dataproductMetrics = document.getElementById('dataproductMetrics').getContext('2d');
+    let dataproductMetricsData = {}
+    {{ if $.Response.Dashboard.DataproductMetrics }}
+    dataproductMetricsData = {{ $.Response.Dashboard.DataproductMetrics.Metrics | toJSON }};
+    {{ else }}
+    dataproductMetricsData = { "No Data": 0 };
+    {{ end }}
+    const dataproductMetricsLabels = Object.keys(dataproductMetricsData);
+    const dataproductMetricsValues = Object.values(dataproductMetricsData);
+    colors = generateColorsWithBorder(dataproductMetricsValues.length, 0.4, 1);
+    new Chart(dataproductMetrics, {
+      type: 'doughnut',
+      data: {
+        labels: dataproductMetricsLabels,
+        datasets: [{
+          label: 'Tasks',
+          data: dataproductMetricsValues,
+          backgroundColor: colors.backgroundColors,
+          borderColor: colors.borderColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top',labels: {
+                      color: 'white'
+                    }
+                  },
+        },
+      }
+    });
+
+    const deploymentMetrics = document.getElementById('deploymentMetrics').getContext('2d');
+    let deploymentMetricsData = {}
+    {{ if $.Response.Dashboard.DeploymentMetrics }}
+    deploymentMetricsData = {{ $.Response.Dashboard.DeploymentMetrics.Metrics | toJSON }};
+    {{ else }}
+    deploymentMetricsData = { "No Data": 0 };
+    {{ end }}
+    const deploymentMetricsLabels = Object.keys(deploymentMetricsData);
+    const deploymentMetricsValues = Object.values(deploymentMetricsData);
+    console.log(deploymentMetricsLabels, deploymentMetricsValues);
+    colors = generateColorsWithBorder(deploymentMetricsValues.length, 0.4, 1);
+    new Chart(deploymentMetrics, {
+      type: 'doughnut',
+      data: {
+        labels: deploymentMetricsLabels,
+        datasets: [{
+          label: 'Deployments',
+          data: deploymentMetricsValues,
+          backgroundColor: colors.backgroundColors,
+          borderColor: colors.borderColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top',labels: {
+                      color: 'white'
+                    }
+                  },
+        },
+      }
+    });
+
+    const dataSourceCompliances = document.getElementById('dataSourceCompliances').getContext('2d');
+    let dataSourceCompliancesData = {}
+    {{ if $.Response.Dashboard.DatasourceComplianceMetrics }}
+    dataSourceCompliancesData = {{ $.Response.Dashboard.DatasourceComplianceMetrics.Metrics | toJSON }};
+    {{ else }}
+    dataSourceCompliancesData = { "No Data": 0 };
+    {{ end }}
+    console.log(dataSourceCompliancesData);
+    const dataSourceCompliancesMetricsLabels = Object.keys(dataSourceCompliancesData);
+    const dataSourceCompliancesMetricsValues = Object.values(dataSourceCompliancesData);
+    console.log(deploymentMetricsLabels, deploymentMetricsValues);
+    colors = generateColorsWithBorder(dataSourceCompliancesMetricsValues.length, 0.4, 1);
+    new Chart(dataSourceCompliances, {
+      type: 'pie',
+      data: {
+        labels: dataSourceCompliancesMetricsLabels,
+        datasets: [{
+          label: 'Data Sources',
+          data: dataSourceCompliancesMetricsValues,
+          backgroundColor: colors.backgroundColors,
+          borderColor: colors.borderColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top',labels: {
+                      color: 'white'
+                    }
+                  },
+        },
+      }
+    });
+  </script>
+</body>
+
+</html>

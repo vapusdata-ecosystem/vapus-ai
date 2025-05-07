@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+   <div class="flex-grow p-2 w-full text-gray-100">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between mb-2 items-center bg-[#1b1b1b] rounded-full shadow-md p-3 mb-4">
+        <div class="relative">
+          <input type="text" id="searchInput" class="rounded-full p-3 pl-10 pr-4 w-full focus:outline-none shadow-sm" placeholder="Search...">
+          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-100 w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+        <!-- Grid Container -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <!-- Card 1 -->
+          {{ range $enumName, $enums := .Response.Enums }}
+          <div id="{{ $enumName }}-div" class="random-card relative text-center p-2 rounded-lg shadow-md hover:shadow-lg transition duration-300 addEventListener  
+           bg-gray-500 text-gray-50">
+            <h3 class="text-sm font-semibold text-gray-100 mb-2 break-words enums">{{ $enumName }}</h3>
+            <button id="{{ $enumName }}" class="mt-2 px-2 py-2 bg-[#1b1b1b] rounded-lg border border-zinc-600"
+              onclick="togglePopup(this)">
+              Values
+            </button>
+            <div id="{{ $enumName }}-popup"
+              class="popup hidden absolute text-sm top-full mt-2 w-48 max-h-72 bg-[#1b1b1b] rounded-lg shadow-lg overflow-y-auto scrollbar  scrollbar scrollbar-thin z-50">
+              <ul class="divide-y divide-gray-200">
+                {{ range $val,$index := $enums }}
+                {{ if strContains $val "INVALID" }}
+                <li class="p-1 bg-red-800 text-gray-100 text-sm cursor-pointer hover:bg-pink-900"
+                  onclick="copyToClipboard(`{{ $val}}`)">{{ $val }}</li>
+                {{ else }}
+                <li class="p-1 text-gray-100 cursor-pointer text-sm hover:bg-pink-900" onclick="copyToClipboard(`{{ $val}}`)">{{ $val
+                  }}</li>
+                {{ end }}
+                {{ end }}
+              </ul>
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle the popup visibility
+    function togglePopup(button) {
+      const popup = document.getElementById(button.id + '-popup');
+      popup.classList.toggle('hidden'); // Show/hide the popup
+    }
+
+    // Close the popup when clicking outside
+    document.addEventListener('click', (event) => {
+      const popups = document.querySelectorAll('.popup');
+      popups.forEach(popup => {
+        if (!popup.contains(event.target) && !popup.previousElementSibling.contains(event.target)) {
+          popup.classList.add('hidden');
+        }
+      });
+    });
+    document.getElementById('searchInput').addEventListener('input', function() {
+        var filter = this.value.toLowerCase();
+        var items = document.querySelectorAll('.enums');
+        items.forEach(function(item) {
+            const enumVal = item.textContent;
+            if (enumVal.toLowerCase().includes(filter)) {
+                // console.log(enumVal);
+                console.log(enumVal+`-div`);
+                document.getElementById(enumVal+`-div`).classList.remove('hidden');
+            } else {
+              document.getElementById(enumVal+`-div`).classList.add('hidden');
+            }
+        });
+    });
+  </script>
+</body>
+
+</html>

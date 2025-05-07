@@ -1,0 +1,12 @@
+/**
+ * @fileoverview
+ * This file contains the protocol buffer definitions for the domain models used in the Vapus Data Platform system.
+ * It defines various enums and message types that represent different aspects of data sources and domain.
+ */
+
+syntax = "proto3";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+

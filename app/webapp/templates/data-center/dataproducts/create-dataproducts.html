@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {{ template "staticimports.html" . }} {{ template
+    "manage-platform-imports.html" . }}
+    <script src="/static/js/create-resource.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex flex-col h-screen">
+    {{ template "header.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }} {{ template "loading-overlay.html" .
+        }}
+       <div class="flex-grow p-2 w-full">
+            <section id="grids" class="space-y-2">
+                <div class="max-w-6xl mx-auto bg-zinc-800 shadow rounded-lg p-4">
+                    <div class="border-b border-gray-200 mb-2 flex justify-center">
+                        <button id="yamlSpecB"
+                            class="whitespace-nowrap text-gray-100 border-b-2 border-black py-2 px-2 text-md font-medium focus:outline-none">
+                            YAML
+                        </button>
+                        <button id="formSpecB"
+                            class="whitespace-nowrap text-gray-100 border-b-2 py-2 px-2 text-md font-medium focus:outline-none ml-4 order-orange-700 text-orange-700 font-semibold">
+                            Form
+                        </button>
+                    </div>
+
+                    <div id="yamlSpec" style="display: none">
+                        {{ template "yaml-editor.html" . }}
+                    </div>
+                    <div id="formSpec">
+                        <form id="dataSourceSpec" class="space-y-2">
+                            <fieldset class="shadow-md p-4 rounded">
+                                <legend class="text-xl font-bold text-gray-100">Spec</legend>
+
+                                <!-- Basic Data  -->
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                    <!-- Product Name -->
+                                    <div>
+                                        <input id="spec_name" name="spec.name" type="text" placeholder="Enter name"
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- Product ID -->
+                                    <div>
+                                        <input id="spec_name" name="spec.dataProductId" type="text"
+                                            placeholder="Product ID"
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- Product Type -->
+                                    <div>
+                                        <select name="spec.productType"
+                                            class="form-select-field p-2 mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                            <option value="INVALID_DS_SERVICE_TYPE">
+                                                Product Type
+                                            </option>
+                                            {{ range $key, $value := .Enums }} {{ if eq $key
+                                            "StorageEngine" }} {{ range $val := $value }}
+                                            <option value="{{ $val }}">
+                                                {{ strTitle "" $val }}
+                                            </option>
+                                            {{ end}} {{ end }} {{ end}}
+                                        </select>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div>
+                                        <input id="spec_name" name="spec.description" type="text"
+                                            placeholder="Description"
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- Organization -->
+                                    <div>
+                                        <input id="spec_name" name="spec.ResourceBase.Organization" type="text" placeholder="Enter Organization"
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- Catalog -->
+                                    <div>
+                                        <input id="spec_name" name="spec.catalog" type="text" placeholder="Catalog"
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- Product Owner -->
+                                    <div id="ProductOwnerContainer">
+                                        <div class="flex gap-4 m-1 p-2 productOwner-tab">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Product
+                                                    Owner</label>
+                                                <input type="text" name="spec.productOwner[0]"
+                                                    placeholder="Enter Product Owner" value="abcd@example.com"
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <div class="mt-2">
+                                                <button type="button" id="addProductOwner-TagBtn"
+                                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                    onclick="addProductOwnerTab()">
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Market Place Ids -->
+                                    <div id="MarketPlaceId">
+                                        <div class="flex gap-4 m-1 p-2 marketPlace-tab">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Market Place
+                                                    Id</label>
+                                                <input type="text" name="spec.marketPlaceId[0]"
+                                                    placeholder="Enter Market Place Id" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <div class="mt-2">
+                                                <button type="button" id="addMarketplaceId-TagBtn"
+                                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                    onclick="addMarketPlaceIdTab()">
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 class="text-md font-medium text-gray-900">
+                                    Access Policies
+                                </h2>
+
+                                <!-- User Rules -->
+                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                    <legend class="text-lg font-semibold text-gray-700">
+                                        User Rules
+                                    </legend>
+                                    <div id="UserRules">
+                                        <div class="flex gap-4 m-1 p-2 userRules-tab">
+                                            <!-- users -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Users
+                                                </label>
+                                                <input type="text" name="spec.accessPolicies.userRules[0].users"
+                                                    placeholder="Enter User" value="abc@example.com, xyz@example.com"
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Access -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Access
+                                                </label>
+                                                <input type="text" name="spec.accessPolicies.userRules[0].access"
+                                                    placeholder="Access" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Organization -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Organization
+                                                </label>
+                                                <input type="text" name="spec.accessPolicies.userRules[0].ResourceBase.Organization"
+                                                    placeholder="Enter Organization" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Selector Level -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Selector Lable
+                                                </label>
+                                                <input type="text"
+                                                    name="spec.accessPolicies.userRules[0].selectorLables"
+                                                    placeholder="Enter Selector Lable" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- (+) -->
+                                            <div class="mt-2">
+                                                <button type="button" id="adduserRules-TagBtn"
+                                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                    onclick="addUserRulesTab()">
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Role Rules -->
+                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                    <legend class="text-lg font-semibold text-gray-700">
+                                        Role Rules
+                                    </legend>
+                                    <div id="RoleRules">
+                                        <div class="flex gap-4 m-1 p-2 roleRules-tab">
+                                            <!-- Roles -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Roles
+                                                </label>
+                                                <input type="text" name="spec.accessPolicies.roleRules[0].roles"
+                                                    placeholder="Enter Roles" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Access -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Access
+                                                </label>
+                                                <input type="text" name="spec.accessPolicies.roleRules[0].access"
+                                                    placeholder="Access" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Selector Level -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Selector Lable
+                                                </label>
+                                                <input type="text"
+                                                    name="spec.accessPolicies.roleRules[0].selectorLables"
+                                                    placeholder="Enter Selector Lable" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Organization -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Organization
+                                                </label>
+                                                <input type="text" name="spec.accessPolicies.roleRules[0].ResourceBase.Organization"
+                                                    placeholder="Enter Organization" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- (+) -->
+                                            <div class="mt-2">
+                                                <button type="button" id="addRoleRules-TagBtn"
+                                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                    onclick="addRoleRulesTab()">
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Contract -->
+                                <h2 class="text-md font-medium text-gray-900">Contract</h2>
+                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                    <!-- Governance -->
+                                    <fieldset class="shadow-md p-4 rounded mb-4">
+                                        <legend class="text-lg font-semibold text-gray-700">
+                                            Governance
+                                        </legend>
+                                        <h3 class="text-md font-medium text-gray-900">Transformer Policies</h3>
+                                        <!-- Transformers -->
+                                        <div id="Transformers">
+                                            <div class="flex gap-4 m-1 p-2 transformers-tab">
+                                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                                    <legend class="text-lg font-semibold text-gray-700">
+                                                        Global
+                                                    </legend>
+                                                    <div id="Classified[0]">
+                                                        <div class="flex gap-4 m-1 p-2 classified-tab">
+                                                            <h4 class="text-md font-medium text-gray-900">
+                                                                Classified
+                                                            </h4>
+                                                            <!-- Entities -->
+                                                            <div>
+                                                                <label
+                                                                    class="block text-sm font-medium text-gray-700">Entities
+                                                                </label>
+                                                                <input type="text"
+                                                                    name="spec.contract.governance.transformerPolicies.transformers.types.classified[0][0].entities"
+                                                                    placeholder="Enter Entities" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+
+                                                            <!-- Action -->
+
+                                                            <div>
+                                                                <select
+                                                                    name="spec.contract.governance.transformerPolicies.transformers.types.classified[0][0].action"
+                                                                    class="form-select-field p-2 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                                                    <option value="INVALID_DS_SERVICE_TYPE">
+                                                                        Action
+                                                                    </option>
+                                                                    {{ range $key, $value := .Enums }}
+                                                                    {{ if eq $key "StorageEngine" }}
+                                                                    {{ range $val := $value }}
+                                                                    <option value="{{ $val }}">
+                                                                        {{ strTitle "" $val }}
+                                                                    </option>
+                                                                    {{ end }} {{ end }} {{ end }}
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- (+) -->
+                                                            <div class="mt-2">
+                                                                <button type="button" id="addEntities-TagBtn"
+                                                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                                    onclick="addClassifiedTab()">
+                                                                    +
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <!-- Use Declared -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700">Use
+                                                        Declared</label>
+                                                    <input type="text"
+                                                        name="spec.contract.governance.transformerPolicies.transformers[0].useDeclared"
+                                                        placeholder="Use Declared" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                                <!-- Selector Label -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700">Selctor
+                                                        Label</label>
+                                                    <input type="text"
+                                                        name="spec.contract.governance.transformerPolicies.transformers[0].selectorLabel"
+                                                        placeholder="Selector Label" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- (+) -->
+                                        <div class="mt-2">
+                                            <button type="button" id="addTransformer-TagBtn"
+                                                class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                onclick="addTransformerTab()">
+                                                +
+                                            </button>
+                                        </div>
+
+                                        <h3 class="text-md font-medium text-gray-900">Attribute Policies</h3>
+
+                                        <div id="AttributePolices">
+                                            <div class="flex gap-4 m-1 p-2 attributePolicies-tab">
+                                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                                    <legend class="text-lg font-semibold text-gray-700">
+                                                        Filters
+                                                    </legend>
+                                                    <div id="Filters[0]">
+                                                        <div class="flex gap-4 m-1 p-2 filter-tab">
+                                                            <!--Attribute Name  -->
+                                                            <div>
+                                                                <label
+                                                                    class="block text-sm font-medium text-gray-700">Attribute
+                                                                    Name</label>
+                                                                <input type="text"
+                                                                    name="spec.contract.governance.attributePolicies.filters[0][0].attributeName"
+                                                                    placeholder="Enter Attribute Name" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                            <!-- Filter Value -->
+                                                            <div>
+                                                                <label
+                                                                    class="block text-sm font-medium text-gray-700">Filter
+                                                                    Value</label>
+                                                                <input type="text"
+                                                                    name="spec.contract.governance.attributePolicies.filters[0][0].filterValue"
+                                                                    placeholder="Enter Filter Value" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                            <!-- Consumer Attribute Reference -->
+                                                            <div>
+                                                                <label
+                                                                    class="block text-sm font-medium text-gray-700">Consumer
+                                                                    Reference</label>
+                                                                <input type="text"
+                                                                    name="spec.contract.governance.attributePolicies.filters[0][0].consumerAttributeRef"
+                                                                    placeholder="Consumer Attribute Reference" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- (+) -->
+                                                    <div class="mt-2">
+                                                        <button type="button" id="addFilters-TagBtn"
+                                                            class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                            onclick="addFiltersTab()">
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                </fieldset>
+                                                <!-- Selector Label -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700">Selctor
+                                                        Label</label>
+                                                    <input type="text"
+                                                        name="spec.contract.governance.attributePolicies[0].selectorLabel"
+                                                        placeholder="Selector Label" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- (+) -->
+                                        <div class="mt-2">
+                                            <button type="button" id="addAttributePolicie-TagBtn"
+                                                class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                onclick="addAttributeTab()">
+                                                +
+                                            </button>
+                                        </div>
+
+                                    </fieldset>
+
+                                    <!-- Interface -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Interface </label>
+                                        <input type="number" name="spec.contract.interface"
+                                            placeholder="Enter Interface" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- I/O Ports -> Input Ports -->
+                                    <h3 class="text-md font-medium text-gray-900">I/O Ports</h3>
+                                    <fieldset class="shadow-md p-4 rounded mb-4">
+                                        <legend class="text-lg font-semibold text-gray-700"> Input Ports </legend>
+                                        <h4 class="text-md font-medium text-gray-900">Data Rules</h4>
+
+                                        <div id="TnputPort-DataRule">
+                                            <div class="flex gap-4 m-1 p-2 inputPort-DataRules-tab">
+                                                <!-- Database -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700"> Database
+                                                    </label>
+                                                    <input type="text"
+                                                        name="spec.contract.ioPorts.inputPorts.datarules[0].database"
+                                                        placeholder="Enter Interface" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                                <!-- Tables -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700"> Tables
+                                                    </label>
+                                                    <input type="text"
+                                                        name="spec.contract.ioPorts.inputPorts.datarules[0].tables"
+                                                        placeholder="Enter Interface" value="table_1, table_2"
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                                <!-- Schema -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700"> Schema
+                                                    </label>
+                                                    <input type="text"
+                                                        name="spec.contract.ioPorts.inputPorts.datarules[0].schema"
+                                                        placeholder="Enter Interface" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- (+) -->
+                                        <div class="mt-2">
+                                            <button type="button" id="addInputPortDataRules-TagBtn"
+                                                class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                onclick="addInputPortDataRulesTab()">
+                                                +
+                                            </button>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- I/O Ports -> Product Output Ports -->
+                                    <fieldset class="shadow-md p-4 rounded mb-4">
+                                        <legend class="text-lg font-semibold text-gray-700"> Output Ports </legend>
+                                        <div id="ProductOutputPort">
+                                            <div class="flex gap-4 m-1 p-2 outputPorts-tab">
+                                                <!-- Database -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700"> Name
+                                                    </label>
+                                                    <input type="text"
+                                                        name="spec.contract.ioPorts.productOutputPorts[0].name"
+                                                        placeholder="Enter Name" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+                                                <!-- Tables -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700"> Endpoint
+                                                    </label>
+                                                    <input type="text"
+                                                        name="spec.contract.ioPorts.productOutputPorts[0].endpoint"
+                                                        placeholder="Enter Endpoints" value=""
+                                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                </div>
+
+                                                <!-- Params -->
+                                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                                    <legend class="text-lg font-semibold text-gray-700"> Params
+                                                    </legend>
+                                                    <div id="ProductOutputPort-Params[0]">
+                                                        <div class="flex gap-4 m-1 p-2 outputPorts-params-tab">
+                                                            <!-- Key -->
+                                                            <div>
+                                                                <label class="block text-sm font-medium text-gray-700">
+                                                                    Key </label>
+                                                                <input type="text"
+                                                                    name="spec.contract.ioPorts.productOutputPorts.params[0][0].key"
+                                                                    placeholder="Enter Key" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                            <!-- Value -->
+                                                            <div>
+                                                                <label class="block text-sm font-medium text-gray-700">
+                                                                    Value </label>
+                                                                <input type="text"
+                                                                    name="spec.contract.ioPorts.productOutputPorts.parmas[0][0].value"
+                                                                    placeholder="Enter Value" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- (+) -->
+                                                    <div class="mt-2">
+                                                        <button type="button" id="addOutputPortParams-TagBtn"
+                                                            class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                            onclick="addOutputPortParamsTab()">
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                </fieldset>
+
+                                                <!-- Query Prompts -->
+                                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                                    <legend class="text-lg font-semibold text-gray-700"> Query Prompts
+                                                    </legend>
+                                                    <div id="ProductOutputPort-QueryPrompts[0]">
+                                                        <div class="flex gap-4 m-1 p-2 outputPorts-queryPrompts-tab">
+                                                            <!-- Query -->
+                                                            <div>
+                                                                <label class="block text-sm font-medium text-gray-700">
+                                                                    Query </label>
+                                                                <input type="text"
+                                                                    name="spec.contract.ioPorts.productOutputPorts.queryPrompts[0][0].query"
+                                                                    placeholder="Enter Query" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                            <!-- Schema -->
+                                                            <div>
+                                                                <label class="block text-sm font-medium text-gray-700">
+                                                                    Schema </label>
+                                                                <input type="text"
+                                                                    name="spec.contract.ioPorts.productOutputPorts.queryPrompts[0][0].schemas"
+                                                                    placeholder="Enter Schema" value=""
+                                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- (+) -->
+                                                    <div class="mt-2">
+                                                        <button type="button" id="addOutputPortQueryPrompts-TagBtn"
+                                                            class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                            onclick="addOutputPortQueryPromptsTab()">
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                </fieldset>
+
+                                            </div>
+                                        </div>
+                                        <!-- (+) -->
+                                        <div class="mt-2">
+                                            <button type="button" id="addOutputPort-TagBtn"
+                                                class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                onclick="addOutputPortTab()">
+                                                +
+                                            </button>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- I/O Ports -> Product Query Prompts -->
+                                    <fieldset class="shadow-md p-4 rounded mb-4">
+                                        <legend class="text-lg font-semibold text-gray-700"> Query Prompts </legend>
+                                        <!-- Query -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700"> Query </label>
+                                            <input type="text" name="spec.contract.ioPorts.queryPrompts[0].query"
+                                                placeholder="Enter Query" value=""
+                                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                        </div>
+                                        <!-- Schema -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700"> Schema </label>
+                                            <input type="text" name="spec.contract.ioPorts.queryPrompts[0].schemas"
+                                                placeholder="Enter Schema" value=""
+                                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- I/O Ports -> Artifacts -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Artifacts </label>
+                                        <input type="text" name="spec.contract.ioPorts[0].artifacts"
+                                            placeholder="Enter Artifacts" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- Lineage -> DataWorker -->
+                                    <fieldset class="shadow-md p-4 rounded mb-4">
+                                        <legend class="text-lg font-semibold text-gray-700"> Lineage </legend>
+                                        <!-- Data Worker -->
+                                        <h3 class="text-md font-medium text-gray-900">Data Worker</h3>
+                                        <div>
+                                            <select name="spec.contract.lineage.dataWorkers[0].workerId[]" multiple
+                                                class="form-select-field p-2 mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                                <option value="INVALID_DS_SERVICE_TYPE">
+                                                    Worker Id
+                                                </option>
+                                                {{ range $key, $value := .Enums }}
+                                                {{ if eq $key "StorageEngine" }}
+                                                {{ range $val := $value }}
+                                                <option value="{{ $val }}">
+                                                    {{ strTitle "" $val }}
+                                                </option>
+                                                {{ end }} {{ end }} {{ end }}
+                                            </select>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- compliances -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Compliance </label>
+                                        <input type="text" name="spec.contract.compliances"
+                                            placeholder="Enter Compliance" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- producers -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Producer </label>
+                                        <input type="text" name="spec.contract.producers" placeholder="Enter Producer"
+                                            value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- schemas -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Schemas </label>
+                                        <input type="text" name="spec.contract.schemas" placeholder="Enter Schemas"
+                                            value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+
+                                    <!-- version -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Version </label>
+                                        <input type="text" name="spec.contract.version" placeholder="Enter Version"
+                                            value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                </fieldset>
+
+                                <!-- status -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Status </label>
+                                    <input type="text"
+                                        name="spec.ResourceBase.Organization"
+                                        placeholder="Enter Status" value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+                                <!-- artifacts -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Artifacts </label>
+                                    <input type="text" name="spec.artifacts" placeholder="Enter Artifacts" value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+                                <!-- specDigest -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Digest </label>
+                                    <input type="text" name="spec.specDigest" placeholder="Enter Digest" value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+                                <!-- Labels -->
+                                <fieldset class="shadow-md p-4 rounded mb-4">
+                                    <legend class="text-lg font-semibold text-gray-700"> Labels </legend>
+                                    <div id="Labels">
+                                        <div class="flex gap-4 m-1 p-2 labels-tab">
+                                            <!-- Key -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700"> Key </label>
+                                                <input type="text" name="spec.labels[0].key" placeholder="Enter Key"
+                                                    value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                            <!-- Value -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700"> Value </label>
+                                                <input type="text" name="spec.labels[0].value" placeholder="Enter Value"
+                                                    value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- (+) -->
+                                    <div class="mt-2">
+                                        <button type="button" id="addLabels-TagBtn"
+                                            class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                            onclick="addLabelsTab()">
+                                            +
+                                        </button>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Tags -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Tags </label>
+                                    <input type="text" name="spec.tags" placeholder="Enter Tags" value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+                                <!-- Related Data Products -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Related Data Products
+                                    </label>
+                                    <input type="text" name="spec.relatedDataProducts" placeholder="Enter Value"
+                                        value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+                                <!-- Categories -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Categories </label>
+                                    <input type="text" name="spec.categories" placeholder="Enter Categories" value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+                                <!-- resources -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700"> Resources </label>
+                                    <input type="text" name="spec.resources" placeholder="Enter Resources" value=""
+                                        class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                </div>
+
+
+                            </fieldset>
+
+                            <!-- Data Rules -->
+                            <fieldset class="shadow-md p-4 rounded mb-4">
+                                <legend class="text-lg font-semibold text-gray-700"> Data Rules </legend>
+                                <div id="DataRules">
+                                    <div class="flex gap-4 m-1 p-2 dataRules-tab">
+                                        <!-- Database -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700"> Database </label>
+                                            <input type="text" name="datarules.database[0]" placeholder="Enter DataBase"
+                                                value=""
+                                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                        </div>
+                                        <!-- Data Tables -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700"> Data Tables </label>
+                                            <input type="text" name="datarules.dataTables[0]" placeholder="Enter Tables"
+                                                value=""
+                                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                        </div>
+                                        <!-- Data Source -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700"> Data Source </label>
+                                            <input type="text" name="datarules.dataSource[0]" placeholder="Enter Source"
+                                                value=""
+                                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                        </div>
+                                        <!-- schema -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700"> Schema </label>
+                                            <input type="text" name="datarules.schema[0]" placeholder="Enter Schema"
+                                                value=""
+                                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- (+) -->
+                                <div class="mt-2">
+                                    <button type="button" id="addDataRules-TagBtn"
+                                        class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                        onclick="addDataRulesTab()">
+                                        +
+                                    </button>
+                                </div>
+                            </fieldset>
+
+                            <!-- Backward Compatible Versions -->
+                            <fieldset class="shadow-md p-4 rounded mb-4">
+                                <legend class="text-lg font-semibold text-gray-700"> Backward Compatible Versions
+                                </legend>
+                                <div>
+                                    <select name="backwardCompatibleVersions"
+                                        class="form-select-field p-2 mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                        <option value="INVALID_DS_SERVICE_TYPE">
+                                            Compatible Version
+                                        </option>
+                                        {{ range $key, $value := .Enums }}
+                                        {{ if eq $key "StorageEngine" }}
+                                        {{ range $val := $value }}
+                                        <option value="{{ $val }}">
+                                            {{ strTitle "" $val }}
+                                        </option>
+                                        {{ end }} {{ end }} {{ end }}
+                                    </select>
+                                </div>
+                            </fieldset>
+                            <!-- Submit Button -->
+                            <div class="mt-4 flex justify-end space-x-2">
+                                <button type="submit"
+                                    class="px-6 py-2 bg-orange-700 text-white rounded-md shadow hover:bg-pink-900">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div hidden id="createTemplate">
+            {{ $.Response.CreateActionParams.YamlSpec }}
+        </div>
+    </div>
+    <script>
+        document.getElementById("yamlSpecB").addEventListener("click", function () {
+            document
+                .getElementById("formSpecB")
+                .classList.remove("border-orange-700", "text-orange-700", "font-semibold");
+            this.classList.add("border-orange-700", "text-orange-700", "font-semibold");
+            document.getElementById("yamlSpec").style.display = "block";
+            document.getElementById("formSpec").style.display = "none";
+            CreateResourceViaYaml(
+                "createTemplate",
+                `{{ .Response.CreateActionParams.Method }}`,
+                `{{ .Response.CreateActionParams.Title }}`,
+                `{{ .GlobalContext.AccessTokenKey }}`,
+                `{{ .Response.CreateActionParams.API }}`
+            );
+        });
+
+        document.getElementById("formSpecB").addEventListener("click", function () {
+            document
+                .getElementById("yamlSpecB")
+                .classList.remove("border-orange-700", "text-orange-700", "font-semibold");
+            this.classList.add("border-orange-700", "text-orange-700", "font-semibold");
+            document.getElementById("yamlSpec").style.display = "none";
+            document.getElementById("formSpec").style.display = "block";
+        });
+
+        document.onload = function () {
+            document.getElementById("formSpec").style.display = "block";
+            document
+                .getElementById("formSpecB")
+                .classList.add("border-orange-700", "text-orange-700", "font-semibold");
+        };
+
+        document
+            .getElementById("dataSourceSpec")
+            .addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent default submission
+                const form = event.target;
+                const formData = new FormData(form);
+                let dataObj = getFormData(formData);
+                dataObj = convertNumericStrings(dataObj);
+                dataObj = scanNetworkParams(dataObj);
+                dataObj = scanVapusSchedule(dataObj);
+                submitCreateForm(
+                    dataObj,
+                    `{{ .GlobalContext.AccessTokenKey }}`,
+                    `{{ .Response.CreateActionParams.API }}`
+                );
+            });
+
+        document.getElementById("submitYaml").addEventListener("click", function () {
+            YamlCreateResourceAction({
+                tokenKey: `{{ .GlobalContext.AccessTokenKey }}`,
+                apiUrl: `{{ .Response.CreateActionParams.API }}`,
+                method: `POST`,
+            });
+        });
+
+        function addProductOwnerTab() {
+            // Get the container and determine the current count of frequency tabs
+            const container = document.getElementById("ProductOwnerContainer");
+            const count = container.getElementsByClassName("productOwner-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 productOwner-tab";
+            newDiv.innerHTML = `
+        <div>
+            <input type="text"
+                name="spec.productOwner[${count}]" placeholder="Enter Product Owner" value="abcd@example.com"
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+    `;
+            container.appendChild(newDiv);
+        }
+
+        function addMarketPlaceIdTab() {
+            // Get the container and determine the current count of frequency tabs
+            const container = document.getElementById("MarketPlaceId");
+            const count = container.getElementsByClassName("marketPlace-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 marketPlace-tab";
+            newDiv.innerHTML = `
+        <div>
+            <input type="text"
+                name="spec.marketPlaceId[${count}]" placeholder="Enter Market Place Id" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+    `;
+            container.appendChild(newDiv);
+        }
+
+        function addUserRulesTab() {
+            // Get the container and determine the current count of frequency tabs
+            const container = document.getElementById("UserRules");
+            const count = container.getElementsByClassName("userRules-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 userRules-tab";
+            newDiv.innerHTML = `
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.userRules[${count}].users" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.userRules[${count}].access" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.userRules[${count}].domains" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.userRules[${count}].selectorLables" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addRoleRulesTab() {
+            // Get the container and determine the current count of frequency tabs
+            const container = document.getElementById("RoleRules");
+            const count = container.getElementsByClassName("roleRules-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 roleRules-tab";
+            newDiv.innerHTML = `
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.roleRules[${count}].roles" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="number"
+                name="spec.accessPolicies.roleRules[${count}].access" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.roleRules[${count}].selectorLables" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.accessPolicies.roleRules[${count}].domains" placeholder="" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addClassifiedTab(count_transformers = 0) {
+            let id = `Classified[${count_transformers}]`
+            const container = document.getElementById(id);
+            const count_classified = container.getElementsByClassName("classified-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 classified-tab";
+            newDiv.innerHTML = `
+        <div>
+            <input type="text"
+                name="spec.contract.governance.transformerPolicies.transformers.types.classified[${count_transformers}][${count_classified}].entities" placeholder="Enter Entities" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.contract.governance.transformerPolicies.transformers.types.classified[${count_transformers}][${count_classified}].action" placeholder="Enter Actions" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+            `;
+            container.appendChild(newDiv);
+        }
+
+        function addTransformerTab() {
+            const container = document.getElementById("Transformers");
+            const count_transformers = container.getElementsByClassName("transformers-tab").length;
+            console.log("count_transformers", count_transformers);
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 transformers-tab";
+            newDiv.innerHTML = `
+                                    <fieldset class="shadow-md p-4 rounded mb-4">
+                                        <legend class="text-lg font-semibold text-gray-700">Global</legend>
+                                        <div id="Classified[${count_transformers}]">
+                                            <div class="flex gap-4 m-1 p-2 classified-tab">
+
+                                            <h4 class="text-md font-medium text-gray-900">Classified</h4>
+
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Entities </label>
+                                                <input type="text" name="spec.contract.governance.transformerPolicies.transformers.types.classified[${count_transformers}][0].entities"
+                                                    placeholder="Enter Entities" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Action </label>
+                                                <input type="text" name="spec.contract.governance.transformerPolicies.transformers.types.classified[${count_transformers}][0].action"
+                                                    placeholder="Enter Action" value=""
+                                                    class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <button type="button" id="addTagBtn"
+                                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                                    onclick="addClassifiedTab(${count_transformers})">
+                                                    +
+                                                </button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Use Declared</label>
+                                        <input type="text" name="spec.contract.governance.transformerPolicies.transformers[${count_transformers}].useDeclared"
+                                            placeholder="Use Declared" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Selctor Label</label>
+                                        <input type="text" name="spec.contract.governance.transformerPolicies.transformers[${count_transformers}].selectorLabel"
+                                            placeholder="Selector Label" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                                    </div>
+            `;
+            container.appendChild(newDiv);
+        }
+
+        function addFiltersTab(count_attributes = 0) {
+            let id = `Filters[${count_attributes}]`;
+            const container = document.getElementById(id);
+            const count_classified = container.getElementsByClassName("filter-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 filter-tab";
+            newDiv.innerHTML = `
+        <div>
+            <input type="text"
+                name="spec.contract.governance.attributePolicies.filters[${count_attributes}][${count_classified}].attributeName" placeholder="Enter Attribute Name" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.contract.governance.attributePolicies.filters[${count_attributes}][${count_classified}].filterValue" placeholder="Enter Filter Value" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>
+        <div>
+            <input type="text"
+                name="spec.contract.governance.attributePolicies.filters[${count_attributes}][${count_classified}].consumerAttributeRef" placeholder="Consumer Attribute Reference" value=""
+                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+        </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addAttributeTab() {
+            const container = document.getElementById("AttributePolices");
+            const count_attributes = container.getElementsByClassName("attributePolicies-tab").length;
+            // console.log("count_transformers", count_transformers);
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 attributePolicies-tab";
+            newDiv.innerHTML = `<fieldset class="shadow-md p-4 rounded mb-4">
+                            <legend class="text-lg font-semibold text-gray-700">
+                                Filters
+                            </legend>
+                            <div id="Filters[${count_attributes}]">
+                                <div class="flex gap-4 m-1 p-2 filter-tab">
+                                    <!--Attribute Name  -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Attribute Name</label>
+                                        <input type="text"
+                                            name="spec.contract.governance.attributePolicies.filters[${count_attributes}][0].attributeName"
+                                            placeholder="Enter Attribute Name" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                    <!-- Filter Value -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Filter Value</label>
+                                        <input type="text"
+                                            name="spec.contract.governance.attributePolicies.filters[${count_attributes}][0].filterValue"
+                                            placeholder="Enter Filter Value" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                    <!-- Consumer Attribute Reference -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Consumer Reference</label>
+                                        <input type="text"
+                                            name="spec.contract.governance.attributePolicies.filters[${count_attributes}][0].consumerAttributeRef"
+                                            placeholder="Consumer Attribute Reference" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- (+) -->
+                        <div class="mt-2">
+                            <button type="button" id="addTagBtn"
+                                class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                onclick="addFiltersTab(${count_attributes})">
+                                +
+                            </button>
+                        </div>
+                        </fieldset>
+                        <!-- Selector Label -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Selctor Label</label>
+                            <input type="text"
+                                name="spec.contract.governance.attributePolicies[${count_attributes}].selectorLabel"
+                                placeholder="Selector Label" value=""
+                                class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                        </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addInputPortDataRulesTab() {
+            const container = document.getElementById("TnputPort-DataRule");
+            const count = container.getElementsByClassName("inputPort-DataRules-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 dataRules-tab";
+            newDiv.innerHTML = `<div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.inputPorts.datarules[${count}].database"
+                            placeholder="Enter Interface" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.inputPorts.datarules[${count}].tables"
+                            placeholder="Enter Interface" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.inputPorts.datarules[${count}].schema"
+                            placeholder="Enter Interface" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addOutputPortParamsTab(count_outputport = 0) {
+            let id = `ProductOutputPort-Params[${count_outputport}]`;
+            const container = document.getElementById(id);
+            const count = container.getElementsByClassName("outputPorts-params-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 outputPorts-params-tab";
+            newDiv.innerHTML = `<div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.productOutputPorts.params[${count_outputport}][${count}].key"
+                            placeholder="Enter Key" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.productOutputPorts.parmas[${count_outputport}][${count}].value"
+                            placeholder="Enter Value" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addOutputPortQueryPromptsTab(count_outputport = 0) {
+            let id = `ProductOutputPort-QueryPrompts[${count_outputport}]`;
+            const container = document.getElementById(id);
+            const count = container.getElementsByClassName("outputPorts-queryPrompts-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 outputPorts-queryPrompts-tab";
+            newDiv.innerHTML = `<div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.productOutputPorts.queryPrompts[${count_outputport}][${count}].query"
+                            placeholder="Enter Query" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="spec.contract.ioPorts.productOutputPorts.queryPrompts[${count_outputport}][${count}].schemas"
+                            placeholder="Enter Schema" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addOutputPortTab() {
+            const container = document.getElementById("ProductOutputPort");
+            const count_outputport = container.getElementsByClassName("outputPorts-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 outputPorts-tab";
+            newDiv.innerHTML = `<div>
+                        <label class="block text-sm font-medium text-gray-700"> Name </label>
+                        <input type="text"
+                            name="spec.contract.ioPorts.productOutputPorts[${count_outputport}].name"
+                            placeholder="Enter Name" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <!-- Tables -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700"> Endpoint </label>
+                        <input type="text"
+                            name="spec.contract.ioPorts.productOutputPorts[${count_outputport}].endpoint"
+                            placeholder="Enter Endpoints" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+
+                    <!-- Params -->
+                    <fieldset class="shadow-md p-4 rounded mb-4">
+                        <legend class="text-lg font-semibold text-gray-700"> Params </legend>
+                            <div id="ProductOutputPort-Params[${count_outputport}]">
+                                <div class="flex gap-4 m-1 p-2 outputPorts-params-tab">
+                                    <!-- Key -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Key </label>
+                                        <input type="text"
+                                            name="spec.contract.ioPorts.productOutputPorts.params[${count_outputport}][0].key"
+                                            placeholder="Enter Key" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                    <!-- Value -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Value </label>
+                                        <input type="text"
+                                            name="spec.contract.ioPorts.productOutputPorts.parmas[${count_outputport}][0].value"
+                                            placeholder="Enter Value" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- (+) -->
+                            <div class="mt-2">
+                                <button type="button" id="addTagBtn"
+                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                    onclick="addOutputPortParamsTab(${count_outputport})">
+                                    +
+                                </button>
+                            </div>
+                    </fieldset>
+
+                    <!-- Query Prompts -->
+                    <fieldset class="shadow-md p-4 rounded mb-4">
+                        <legend class="text-lg font-semibold text-gray-700"> Query Prompts </legend>
+                            <div id="ProductOutputPort-QueryPrompts[${count_outputport}]">
+                                <div class="flex gap-4 m-1 p-2 outputPorts-queryPrompts-tab">
+                                    <!-- Query -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Query </label>
+                                        <input type="text"
+                                            name="spec.contract.ioPorts.productOutputPorts.queryPrompts[${count_outputport}][0].query"
+                                            placeholder="Enter Query" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                    <!-- Schema -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700"> Schema </label>
+                                        <input type="text"
+                                            name="spec.contract.ioPorts.productOutputPorts.queryPrompts[${count_outputport}][0].schemas"
+                                            placeholder="Enter Schema" value=""
+                                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- (+) -->
+                            <div class="mt-2">
+                                <button type="button" id="addTagBtn"
+                                    class="px-2 py-1 bg-orange-700 text-white rounded-full shadow hover:bg-pink-900"
+                                    onclick="addOutputPortQueryPromptsTab(${count_outputport})">
+                                    +
+                                </button>
+                            </div>
+                    </fieldset>`;
+            container.appendChild(newDiv);
+        }
+
+        function addWorkerIdTab() {
+            const container = document.getElementById("WorkerID");
+            const count = container.getElementsByClassName("workerId-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 workerId-tab";
+            newDiv.innerHTML = `<div>
+                        <select name="spec.contract.lineage.dataWorkers[${count}].workerId"
+                            class="form-select-field p-2 mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                            <option value="INVALID_DS_SERVICE_TYPE">
+                                Worker Id
+                            </option>
+                            {{ range $key, $value := .Enums }} 
+                            {{ if eq $key "StorageEngine" }} 
+                            {{ range $val := $value }}
+                            <option value="{{ $val }}">
+                                {{ strTitle "" $val }}
+                            </option>
+                            {{ end }} {{ end }} {{ end }}
+                        </select>
+                    </div>`;
+            container.append(newDiv);
+        }
+
+        function addLabelsTab() {
+            const container = document.getElementById("Labels");
+            const count = container.getElementsByClassName("labels-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 labels-tab";
+            newDiv.innerHTML = `<div>
+                        <input type="text"
+                            name="spec.labels[${count}].key"
+                            placeholder="Enter Key" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="spec.labels[${count}].value"
+                            placeholder="Enter Value" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>`;
+            container.appendChild(newDiv);
+        }
+
+        function addDataRulesTab() {
+            const container = document.getElementById("DataRules");
+            const count = container.getElementsByClassName("dataRules-tab").length;
+
+            // Create a new div element with a unique index for the name attributes
+            const newDiv = document.createElement("div");
+            newDiv.className = "flex gap-4 m-2 p-2 dataRules-tab";
+            newDiv.innerHTML = `<div>
+                        <input type="text"
+                            name="datarules.database[${count}]"
+                            placeholder="Enter Database" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="datarules.dataTables[${count}]"
+                            placeholder="Enter Tables" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="datarules.dataSource[${count}]"
+                            placeholder="Enter Source" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>
+                    <div>
+                        <input type="text"
+                            name="datarules.schema[${count}]"
+                            placeholder="Enter Schema" value=""
+                            class="form-input-field mt-1 block text-sm p-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700" />
+                    </div>`;
+
+            container.append(newDiv);
+        }
+    </script>
+</body>
+
+</html>

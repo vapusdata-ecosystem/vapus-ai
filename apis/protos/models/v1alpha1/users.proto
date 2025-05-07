@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+import "protos/models/v1alpha1/profile.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+
+enum UserRoles {
+    ANONYMOUS = 0;
+    SERVICE_OWNER = 1;
+    SERVICE_OPERATOR = 2;
+    ORG_OWNER = 3;
+    ORG_USER = 4;
+    AI_GOVERNER = 5;
+}
+
+enum UserInviteType {
+    REQUEST_ACCESS = 0;
+    INVITE_ACCESS = 1;
+    PLATFORM_SETUP = 2;
+}
+message User {
+    string display_name = 1; // @gotags: yaml:"displayName"
+    string user_id = 2; // @gotags: yaml:"userId"
+    string email = 3; // @gotags: yaml:"email"
+    string invite_id = 5; // @gotags: yaml:"inviteId"
+    repeated UserOrganizationRole roles = 6; // @gotags: yaml:"userRoles"
+    string status = 7; // @gotags: yaml:"status"
+    int64 invited_on = 8; // @gotags: yaml:"invitedOn"
+    int64 invite_expires_on = 9; // @gotags: yaml:"inviteExpiresOn"
+    string first_name = 10; // @gotags: yaml:"firstName"
+    string last_name = 11; // @gotags: yaml:"lastName"
+    UserInviteType invited_type = 12; // @gotags: yaml:"invitedType"
+    repeated string platform_policies = 13; // @gotags: yaml:"platformPolicies"
+    UserProfile profile = 14; // @gotags: yaml:"profile"
+    VapusBase resource_base = 15; // @gotags: yaml:"resourceBase"
+}
+
+message UserProfile {
+    repeated Address addresses = 1; // @gotags: yaml:"addresses"
+    string avatar = 2; // @gotags: yaml:"avatar"
+    string description = 3; // @gotags: yaml:"description"
+}
+
+message UserShort {
+    string user_id = 1; // @gotags: yaml:"userId"
+    string role = 2; // @gotags: yaml:"role"
+}
+
+message UserValidT {
+    User user = 1; // @gotags: yaml:"user"
+    string valid_till = 2; // @gotags: yaml:"validTill"
+}
+
+message OrganizationUserOps {
+    string user_id = 1; // @gotags: yaml:"userId"
+    int64 valid_till = 2; // @gotags: yaml:"validTill"
+    repeated string role = 3; // @gotags: yaml:"role"
+    bool added = 4; // @gotags: yaml:"added"
+    bool invite_if_not_found = 5; // @gotags: yaml:"inviteIfNotfound"
+}
+
+message UserInvite {
+    string email = 1; // @gotags: yaml:"email"
+    int64 invited_on = 2; // @gotags: yaml:"invitedOn"
+    int64 invite_expires_on = 3; // @gotags: yaml:"inviteExpiresOn"
+    string invite_id = 4; // @gotags: yaml:"inviteId"
+    string role = 5; // @gotags: yaml:"role"
+    repeated UserOrganizationRole organization_roles = 6; // @gotags: yaml:"organizationRoles"
+    string name = 7; // @gotags: yaml:"name"
+}
+
+message Team {
+    string name = 1; // @gotags: yaml:"name"
+    repeated User users = 2; // @gotags: yaml:"users"
+    string description = 3; // @gotags: yaml:"description"
+    string team_id = 4; // @gotags: yaml:"teamId"
+}
+
+message UserOrganizationRole {
+    string organization_id = 1; // @gotags: yaml:"organizationId"
+    repeated string role = 2; // @gotags: yaml:"role"
+    int64 invited_on = 3; // @gotags: yaml:"invitedOn"
+    int64 valid_till = 4; // @gotags: yaml:"validTill"
+    repeated string policies = 5; // @gotags: yaml:"policies"
+    bool is_default = 6; // @gotags: yaml:"isDefault"
+}
+
+message VapusRoles {
+    string name = 1; // @gotags: yaml:"name"
+    string action = 2; // @gotags: yaml:"action"
+    string arn = 3; // @gotags: yaml:"arn"
+    string description = 4; // @gotags: yaml:"description"
+}
+
+message RefreshToken {
+    string jwt_id = 1; // @gotags: yaml:"jwtId"
+    string valid_till = 2; // @gotags: yaml:"validTill"
+    string status = 3; // @gotags: yaml:"status"
+    string user_id = 4; // @gotags: yaml:"userId"
+    string organization = 5; // @gotags: yaml:"organization"
+}
+
+message VapusResourceArn {
+    string resource_name = 1; // @gotags: yaml:"resourceName"
+    string resource_id = 2; // @gotags: yaml:"resourceId"
+    string resource_arn = 3; // @gotags: yaml:"resourceARN"
+    repeated ResourceAclMap allowed_rules = 4; // @gotags: yaml:"allowedRules"
+    repeated ResourceAclMap blocked_rules = 5; // @gotags: yaml:"blockedRules"
+    repeated string blocked_users = 6; // @gotags: yaml:"blockedUsers"
+}
+
+message ResourceAclMap {
+    string organization = 1; // @gotags: yaml:"organization"
+    repeated string users = 2; // @gotags: yaml:"users"
+}

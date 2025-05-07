@@ -1,0 +1,104 @@
+/**
+ * @fileoverview
+ * This file contains the protocol buffer definitions for the organization models used in the Vapus Data Platform system.
+ * It defines various enums and message types that represent different aspects of data sources and organization.
+ */
+
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/enums.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+enum OrganizationType {
+	SERVICE_ORGANIZATION = 0;
+	USER_ORGANIZATION = 1;
+	GOVERNANCE_ORGANIZATION = 2;
+}
+/**
+ * @message
+ * Represents a data source in the Vapus Data Platform system.
+ */
+message DataSource {
+	string name = 1; // @gotags: yaml:"name"
+	DataSourceNetParams net_params = 2; // @gotags: yaml:"netParams"
+	DataSourceAttributes attributes = 3; // @gotags: yaml:"attributes"
+	string data_source_id = 4; // @gotags: yaml:"dataSourceId"
+	repeated string owners = 6; // @gotags: yaml:"owners"
+	bool sharable = 7; // @gotags: yaml:"sharable"
+	DataSourceType data_source_type = 8; // @gotags: yaml:"dataSourceType"
+	string status = 9; // @gotags: yaml:"status"
+	repeated Mapper tags = 10; // @gotags: yaml:"tags"
+	DataSourceSharingParams sharing_params = 11; // @gotags: yaml:"sharingParams"
+	VapusBase resource_base = 18; // @gotags: yaml:"resourceBase"
+}
+
+/**
+ * @message
+ * Represents the sharing parameters for a data source.
+ */
+message DataSourceSharingParams {
+	string organization_id = 1; // @gotags: yaml:"organizationId"
+	DataSourceAccessScope access_scope = 2; // @gotags: yaml:"accessScope"
+	int32 valid_from = 3; // @gotags: yaml:"validFrom"
+	int32 valid_till = 4; // @gotags: yaml:"validTill"
+}
+
+message DataSourceCompliance {
+
+}
+
+/**
+ * @message
+ * Represents the attributes of a data source.
+ */
+message DataSourceAttributes {
+	string storage_engine = 1; // @gotags: yaml:"storageEngine"
+	DataSourceServices service_name = 2; // @gotags: yaml:"serviceName"
+	repeated ArtifactTypes supported_artifact_types = 3; // @gotags: yaml:"supportedArtifactTypes"
+	ServiceProvider service_provider = 4; // @gotags: yaml:"serviceProvider"
+}
+
+/**
+ * @message
+ * Represents a organization in the Vapus Data Platform system.
+ */
+message Organization {
+	string name = 1; // @gotags: yaml:"name"
+	string display_name = 2; // @gotags: yaml:"displayName"
+	string organization_id = 3; // @gotags: yaml:"organizationId"
+	repeated string users = 4; // @gotags: yaml:"users"
+	CredentialSalt secret_passcode = 5; // @gotags: yaml:"secretPasscode"
+	OrganizationAttributes attributes = 6; // @gotags: yaml:"attributes"
+	string status = 8; // @gotags: yaml:"status"
+	OrganizationType organization_type = 10; // @gotags: yaml:"organizationType"
+	BackendStorages backend_secret_storage = 13; // @gotags: yaml:"backendSecretStorage"
+	BackendStorages artifact_storage = 14; // @gotags: yaml:"artifactStorage"
+	repeated K8SInfraParams data_product_infra_platform = 17; // @gotags: yaml:"dataProductInfraPlatform"
+	VapusBase resource_base = 18; // @gotags: yaml:"resourceBase"
+}
+
+/**
+ * @message
+ * Represents the data rules of a organization.
+ */
+message OrganizationDataRules {
+	string name = 1; // @gotags: yaml:"name"
+}
+
+/**
+ * @message
+ * Represents the attributes of a organization.
+ */
+message OrganizationAttributes {
+	JWTParams authn_jwt_params = 1; // @gotags: yaml:"authnJwtParams"
+}
+
+message OrganizationDashboard {
+
+}

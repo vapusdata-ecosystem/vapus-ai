@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    <script src="/static/js/datamarketplace.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+       <div class="flex-grow p-2 w-full">
+            <div class="flex justify-end mb-2 items-center p-2">
+            </div>
+            <section id="charts" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {{ range $id, $val := .Response.DataCatalogs }}
+                    <a href="/ui/datamarketplace/data-catalogs/{{ $val.Name }}">
+                        <div class="relative p-6 bg-[#1b1b1b] rounded-lg shadow-md  border border-zinc-600">
+                            <div class="grid grid-cols-1 gap-2 text-sm text-gray-100">
+                                <h3 class="text-lg font-semibold text-gray-50 mb-3 break-words">{{ $val.DisplayName }}
+                                </h3>
+                                <div class="flex items-center justify-left">
+                                    <span class="font-semibold pr-2">Description:</span>
+                                    <span class="flex items-center">{{ limitWords $val.Description 50}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {{ end }}
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+            const buttons = sidebar.getElementsByTagName('button');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuitems = document.getElementById('menuitems');
+            const buttons = menuitems.getElementsByTagName('a');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

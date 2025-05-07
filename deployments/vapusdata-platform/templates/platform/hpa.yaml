@@ -1,0 +1,98 @@
+{{- if .Values.platform.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.platform.fullname }}
+  labels:
+    {{- include "vapusdata.platform.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.platform.fullname }}
+  minReplicas: {{ .Values.platform.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.platform.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.platform.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.platform.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.platform.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.platform.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+---
+{{- if .Values.webapp.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.webapp.fullname }}
+  labels:
+    {{- include "vapusdata.webapp.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.webapp.fullname }}
+  minReplicas: {{ .Values.webapp.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.webapp.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.webapp.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.webapp.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.webapp.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.webapp.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+---
+{{- if .Values.nabhikserver.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.nabhikserver.fullname }}
+  labels:
+    {{- include "vapusdata.nabhikserver.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.nabhikserver.fullname }}
+  minReplicas: {{ .Values.nabhikserver.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.nabhikserver.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.nabhikserver.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.nabhikserver.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.nabhikserver.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.nabhikserver.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

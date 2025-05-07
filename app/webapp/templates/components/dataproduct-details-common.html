@@ -1,0 +1,879 @@
+<!-- Overview -->
+<div id="overview" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4">
+    <h3 class="text-xl mb-4 detail-heading">Basic Information</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex items-center">
+            <p class="detail-sect-key font-medium">Name:</p>
+            <p class=" break-words p-2">{{ .Response.DataProduct.Name }}</p>
+        </div>
+        <div class="flex items-center">
+            <p class="detail-sect-key font-medium">Id:</p>
+            <p class=" break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.DataProduct.DataProductId }}`)">{{
+                .Response.DataProduct.DataProductId }}</p>
+        </div>
+        <div class="flex items-center">
+            <p class="detail-sect-key font-medium">Product Type:</p>
+            <p class=" break-words p-2">{{ .Response.DataProduct.ProductType }}</p>
+        </div>
+        <div class="flex items-center">
+            <p class="detail-sect-key font-medium">Status:</p>
+            <p class=" break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium 
+        {{ if inSlice .Response.DataProduct.ResourceBase.Status `DELETED` `FAILED_ARCHIVE` `FAILED_PUBLISH` `FAILED_CONFIGURATION` `FAILED_UNPUBLISH` }}
+            text-red-800 bg-red-100
+        {{ else }}
+            text-green-800 bg-green-100
+        {{ end }}
+        rounded-full">
+                    {{ .Response.DataProduct.ResourceBase.Status }}
+                </span>
+            </p>
+        </div>
+        <div class="flex items-center">
+            <p class="detail-sect-key font-medium">Catalog:</p>
+            <p class=" break-words p-2">{{ .Response.DataProduct.Catalog }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Description:</p>
+            <p class=" break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.DataProduct.Description }}`)">{{ limitWords
+                .Response.DataProduct.Description 20 }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Digest:</p>
+            <p class=" break-words p-2">
+                {{ if .Response.DataProduct.SpecDigest }}
+                {{ .Response.DataProduct.SpecDigest.Digest }}
+                {{ else }}
+                N/A
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Owners:</p>
+            <p class=" break-words p-2">
+                {{ range $obj := .Response.DataProduct.ProductOwners }}
+                <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Categories:</p>
+            <p class=" break-words p-2">
+                {{ range $obj := .Response.DataProduct.Categories }}
+                <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Marketplace Ids:</p>
+            <p class=" break-words p-2">
+            <ul class="list-disc ml-5 text-gray-100">
+                {{ range $obj := .Response.DataProduct.MarketplaceIds }}
+                <li>{{ $obj }}</li>
+                {{ end }}
+            </ul>
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Tags:</p>
+            <p class=" break-words p-2">
+                {{ range $obj := .Response.DataProduct.Tags }}
+                <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Related Data Products:</p>
+            <p class=" break-words p-2">
+            <ul class="list-disc ml-5 text-gray-100">
+                {{ range $obj := .Response.DataProduct.RelatedDataProducts }}
+                <li>{{ $obj }}</li>
+                {{ end }}
+            </ul>
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Labels:</p>
+            <p class=" break-words p-2">
+            <ul class="list-disc ml-5 text-gray-100">
+                {{ range $val := .Response.DataProduct.Labels }}
+                <li>{{ $val.Key }} - <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                        {{ $val.Value }}
+                    </span></li>
+                {{ end }}
+            </ul>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Schemas -->
+<div id="schemas" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+    <h3 class="text-xl mb-4 detail-heading">Schemas</h3>
+    {{ range $id,$schema := .Response.DataProduct.Contract.Schemas }}
+    <div class="mb-4">
+        <button onclick="toggleSection(`{{ $schema.TrinoCatalog }}-{{ $id }}`)"
+            class="px-4 py-2 mt-4 bg-orange-700 text-white font-semibold rounded-lg">
+            {{ $schema.Datastore }}
+        </button>
+    </div>
+    <div id="{{ $schema.TrinoCatalog }}-{{ $id }}" class="overflow-x-auto scrollbar rounded-lg shadow-md hidden">
+        <h4 class="text-lg font-medium"> Tables </h4>
+        <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs"  id="{{ $schema.TrinoCatalog }}-{{ $id }}-tables">
+            <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                
+            </thead>
+            <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+              
+            </tbody>
+        </table>
+        <h4 class="text-lg font-medium p-3"> Constraints </h4>
+        <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="{{ $schema.TrinoCatalog }}-{{ $id }}-constraints-table">
+            <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                
+            </thead>
+            <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+                
+            </tbody>
+        </table>
+
+    </div>
+    {{ end }}
+</div>
+
+<!-- Compliances -->
+<div id="compliances" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+    <h3 class="text-xl mb-4 detail-heading">Compliances</h3>
+    {{ if .Response.DataProduct.Contract.Compliances }}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <p class="detail-sect-key font-medium">Last Audited At:</p>
+            <p class=" break-words p-2">{{ epochConverter
+                .Response.DataProduct.Contract.Compliances.LastAuditedAt }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Compliance Owner:</p>
+            <p class=" break-words p-2">{{
+                .Response.DataProduct.Contract.Compliances.ComplianceOwner }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Status:</p>
+            <p class=" break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium 
+        {{ if eq .Response.DataProduct.Contract.Compliances.ComplianceStatus.String `NON_COMPLIANT` }}
+            text-red-800 bg-red-100
+        {{ else }}
+            text-green-800 bg-green-100
+        {{ end }}
+        rounded-full">
+                    {{ .Response.DataProduct.Contract.Compliances.ComplianceStatus.String }}
+                </span>
+
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Next Audit Due:</p>
+            <p class=" break-words p-2">{{ epochConverter
+                .Response.DataProduct.Contract.Compliances.NextAuditDue }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Requirement Details:</p>
+            <p class=" break-words p-2">{{
+                .Response.DataProduct.Contract.Compliances.RequirementDetails }}</p>
+        </div>
+    </div>
+    <div class="overflow-x-auto scrollbar  rounded-lg p-4 shadow-md">
+        <h3 class="text-lg font-medium p-2"> Fields </h3>
+        <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id = "dataProduct-compliances">
+            <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                
+            </thead>
+            <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+                
+            </tbody>
+        </table>
+    </div>
+    {{ else }}
+    <p class="text-gray-500 text-2xl break-words p-2">No Compliance Information Available</p>
+    {{ end }}
+</div>
+
+<!-- Lineage Attribute -->
+<div id="lineages" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+    <h3 class="text-xl mb-4 detail-heading">Version Lineage</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="dataProduct-lineage-version">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+           
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-5">Readiness</h3>
+    {{ if .Response.DataProduct.Contract.Readiness }}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <p class="detail-sect-key font-medium">Is Ready:</p>
+            <p class=" break-words p-2">{{
+                .Response.DataProduct.Contract.Readiness.IsReady }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Sla:</p>
+            <p class=" break-words p-2">
+                {{ if eq .Response.DataProduct.Contract.Readiness.Sla "" }}
+                N/A
+                {{ else }}
+                {{ .Response.DataProduct.Contract.Readiness.Sla }}%
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">End Of Support:</p>
+            <p class=" break-words p-2">{{ epochConverter
+                .Response.DataProduct.Contract.Readiness.EndOfSupport }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">End Of Life:</p>
+            <p class=" break-words p-2">{{
+                .Response.DataProduct.Contract.Readiness.EndOfLife }}</p>
+        </div>
+        <div>
+            <p class="detail-sect-key font-medium">Time Of Availability:</p>
+            <p class=" break-words p-2">{{
+                .Response.DataProduct.Contract.Readiness.TimeOfAvailability }}</p>
+        </div>
+    </div>
+    {{ else }}
+    <p class=" break-words p-2">No Readiness Information Available</p>
+    {{ end }}
+    <h3 class="text-xl font-semibold mb-4 mt-5">Data Workers</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="dataProduct-lineage-dataWorker">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            
+        </tbody>
+    </table>
+</div>
+
+<!-- Governance -->
+<div id="governance" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+    <h3 class="text-xl font-semibold mb-4 mt-3">Transformer Policies</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="dataProduct-governance-transformerPolicies">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-3">Attribute Policies</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id = "dataProduct-governance-attributePolicies">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+           
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-3">DataStore Policies</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id = "dataProduct-governance-dataStorePolicies">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+           
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            
+        </tbody>
+    </table>
+</div>
+
+<div id="ioports" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+    <h3 class="text-lg font-medium p-3">Input Ports</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            <tr>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Service</th>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Service Engine</th>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Source Id</th>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Database</th>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Data Tables</th>
+            </tr>
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            {{ range $iport := .Response.DataProduct.Contract.IoPorts.InputPorts }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer ">
+                <td class="px-3 py-3 whitespace-nowrap">{{ $iport.Service }}</td>
+                <td class="px-3 py-3 whitespace-nowrap">{{ $iport.ServiceEngine }}</td>
+                <td class="px-3 py-3 whitespace-nowrap">{{ $iport.SourceId }}</td>
+                <td class="px-3 py-3 whitespace-nowrap">{{ $iport.Datarules.Database }}</td>
+                <td class="px-3 py-3 whitespace-nowrap">
+                    <ul class="list-disc ml-5 text-gray-100">
+                        {{ range $p := $iport.Datarules.Tables }}
+                        <li>{{ $p }}</li>
+                        {{ end }}
+                    </ul>
+                </td>
+            </tr>
+            {{ end }}
+            <!-- Additional rows... -->
+        </tbody>
+    </table>
+
+    <h3 class="text-lg font-medium p-3">Output Ports</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            <tr>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Name</th>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    Endpoint</th>
+                <th class="px-3 py-3 text-left tracking-wider">
+                    QueryPrompts</th>
+            </tr>
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            {{ range $iport := .Response.DataProduct.Contract.IoPorts.ProductOutputPorts }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer ">
+                <td class="px-3 py-3 whitespace-nowrap">{{ $iport.Name }}</td>
+                <td class="px-3 py-3 whitespace-nowrap" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ $iport.Endpoint }}`)">{{ $iport.Endpoint }}</td>
+                <td class="px-3 py-3 whitespace-nowrap">
+                    <ul class="list-disc ml-5 text-gray-100">
+                        {{ range $p := $.Response.DataProduct.Contract.IoPorts.QueryPrompts }}
+                        <li>{{ $p }}</li>
+                        {{ end }}
+                    </ul>
+                </td>
+            </tr>
+            {{ end }}
+            <!-- Additional rows... -->
+        </tbody>
+    </table>
+
+    <h3 class="text-lg font-medium p-3">Artifacts</h3>
+    <div class="space-y-4">
+        {{ range $val := .Response.DataProduct.Contract.IoPorts.Artifacts }}
+        <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
+            <h4 class="text-lg font-semibold">Artifact: {{ $val.Artifact }}</h4>
+            <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
+                <div>
+                    <p class="detail-sect-key font-medium">Digest:</p>
+                    <p class=" break-words p-2">{{ $val.Digest }}</p>
+                </div>
+                <div>
+                    <p class="detail-sect-key font-medium">IsLatest:</p>
+                    <p class=" break-words p-2">{{ $val.IsLatest }}</p>
+                </div>
+                <div>
+                    <p class="detail-sect-key font-medium">AddedOn:</p>
+                    <p class=" break-words p-2">{{ epochConverter $val.AddedOn }}</p>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+<div id="accessPolicies" class="overflow-x-auto scrollbar  overflow-y-auto tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+    <h3 class="text-xl font-semibold mb-4 mt-3">User Policies</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="dataProduct-accessPolicies-userPolicies">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+           
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-3">Role Policies</h3>
+    <table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs" id="dataProduct-accessPolicies-RolePolicies">
+        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            
+        </thead>
+        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+            
+        </tbody>
+    </table>
+
+</div>
+
+<div id="view-diff" class="fixed inset-0 flex items-center justify-center  bg-zinc-600/90  hidden">
+    <div class="rounded-lg w-2/3 h-2/3 p-6 relative">
+        <!-- Close Button -->
+        
+
+        <!-- YAML Editor -->
+        <div class="overflow-x-auto scrollbar  overflow-y-auto bg-zinc-800 rounded-lg p-2">
+            <button onclick="closeModal()" class="absolute top-10 right-10 text-xl text-gray-100 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <pre id="modal-content" class="block w-full h-96 p-2 mt-4">
+        </pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(contentDiv) {
+        document.getElementById('view-diff').classList.remove('hidden');
+        const modelConent = document.getElementById('modal-content');
+        const content = document.getElementById(contentDiv).innerHTML;
+        const formatted = JSON.parse(content);
+        modelConent.innerHTML = `<code class="text-gray-100">${JSON.stringify(formatted, null, 4)}</code>`;
+    }
+    function closeModal() {
+        document.getElementById('view-diff').classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+            loadSchemaTables();
+            loadCompliances();
+            loadLineageAttribute();
+            loadLineageDataWorker();
+            loadUserPolicies();
+            loadRolePolicies();
+            loadTransformerPolicies();
+            loadAttributePolicies();
+            loadDataStorePolicies();
+        });
+
+        function loadSchemaTables(){
+            let schemaData = [];
+            let metadataMap = {};
+
+            {{ range $schema := .Response.DataProduct.Contract.Schemas }}
+                var schemaEntry = JSON.parse(`{{ protoToJSON $schema }}`);
+                schemaData.push(schemaEntry);
+                console.log("schemaEntry: ", schemaEntry)
+                metadataMap[`{{ $schema.TrinoCatalog }}`] = schemaEntry;
+            {{ end }}
+
+            schemaData.forEach((schemaEntry, index) => { 
+                let trinoCatalog = schemaEntry.trinoCatalog;
+                let tableID = `#${trinoCatalog}-${index}-tables`; 
+                console.log(`Initializing DataTable for: ${tableID}`);
+
+                if (!$(tableID).length) {
+                    console.warn(`Table with ID ${tableID} not found`);
+                    return;
+                }
+                var tableData = schemaEntry.dataTables?.map(table => ({
+                    table: table.name ?? 'N/A',
+                    totalRows: table.totalRows ?? 'N/A',
+                    dataLength: table.dataLength ?? 'N/A',
+                    avgRowLength: table.averageRowLength ?? 'N/A',
+                    schema: table.schema ?? 'N/A',
+                    createdAt: table.createdAt ?? 'N/A',
+                    totalSize: table.totalSize ?? 'N/A',
+                    details: table.fields.map(field => ({
+                        field: field.field ?? 'N/A',
+                        type: field.type ?? 'N/A',
+                        null: field.null ?? 'N/A',
+                        defaults: field.default ?? 'N/A'
+                    }))
+                })) || [];
+                
+                var mainTable = $(tableID).DataTable({
+                    createdRow: function (row, data, dataIndex) {
+                        $(row).addClass('cursor-pointer');
+                    },
+                    destroy: true,
+                    data: tableData,
+                    columns: [
+                        { data: 'table', title: 'Table' },
+                        { data: 'totalRows', title: 'Total Rows' },
+                        { data: 'dataLength', title: 'Data Length' },
+                        { data: 'avgRowLength', title: 'Average Row Length' },
+                        { data: 'schema', title: 'Schema' },
+                        { data: 'createdAt', title: 'Created At' },
+                        { data: 'totalSize', title: 'Total Size' }
+                    ],
+                    pageLength: 10,
+                    searching: true,
+                    ordering: true,
+                    responsive: true
+                });
+
+                console.log("Table Data: ", tableData);
+                console.log("Metadata Map: ", metadataMap);
+
+                $(tableID + " tbody").on('click', 'tr', function () {
+                    console.log("Looking for table:", tableID);
+                    var tr = $(this);
+                    var row = $(tableID).DataTable().row(tr);
+                    let rowData = row.data(); 
+
+                    console.log("Row Data: ", rowData); 
+
+                    if (!rowData) {
+                        console.warn("No row data found!");
+                        return;
+                    }
+
+                    if (!rowData.details) {
+                        console.warn("Row data exists, but 'details' field is missing!", rowData);
+                        return;
+                    }
+                    console.log("Rowdata", rowData)
+                    if (row.child.isShown()) {
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        var childTableHtml = `<h4 class='text-sm font-semibold mb-2'>Fields</h4>` +
+                            `<div class='overflow-x-auto scrollbar' style="width: 100%;"><table class="display text-sm divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 child-table" style="width: 100%">` +
+                            `<thead class='bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase'>
+                                <tr><th>Field</th><th>Type</th><th>Null</th><th>Default</th></tr></thead><tbody class='bg-zinc-800 divide-y divide-zinc-500 divide-y divide-gray-200'>`;
+
+                        rowData.details.forEach(detail => {
+                            childTableHtml += `<tr>
+                                <td>${detail.field}</td>
+                                <td>${detail.type}</td>
+                                <td>${detail.null}</td>
+                                <td>${detail.defaults}</td>
+                            </tr>`;
+                        });
+
+                        childTableHtml += '</tbody></table></div>';
+                        row.child(childTableHtml).show();
+                        tr.addClass('shown');
+
+                        row.child().find('table').DataTable({
+                            pageLength: 6,
+                            paging: true,
+                            searching: false,
+                            info: false,
+                            ordering: true,
+                            lengthChange: false,
+                            autoWidth: false,
+                        });
+
+                        $('.child-table').css({
+                            'width': '100%',
+                        });
+                    }
+                });
+
+
+                // Constraints 
+                let constraintsTableID = `#${trinoCatalog}-${index}-constraints-table`;
+                    console.log(`Initializing Constraints DataTable for: ${constraintsTableID}`);
+
+                    if (!$(constraintsTableID).length) {
+                        console.warn(`Constraints table with ID ${constraintsTableID} not found`);
+                        return;
+                    }
+
+                    var constraintsTableData = schemaEntry.constraints?.map(constraint => ({
+                        type: constraint.constraintType ?? 'N/A',
+                        name: constraint.constraintName ?? 'N/A',
+                        field: constraint.fieldName ?? 'N/A',
+                        table: constraint.tableName ?? 'N/A',
+                        enforced: constraint.enforced ?? 'N/A',
+                        schema: constraint.schema ?? 'N/A',
+                    })) || [];
+
+                    console.log("Constraints Table Data:", constraintsTableData);
+
+                    $(constraintsTableID).DataTable({
+                        destroy: true,
+                        data: constraintsTableData,
+                        columns: [
+                            { data: 'type', title: 'Type' },
+                            { data: 'name', title: 'Name' },
+                            { data: 'field', title: 'Field' },
+                            { data: 'table', title: 'Table' },
+                            { data: 'enforced', title: 'Enforced' },
+                            { data: 'schema', title: 'Schema' }
+                        ],
+                        pageLength: 6,
+                        searching: true,
+                        ordering: true,
+                        responsive: true
+                    });
+                
+            });
+        }
+
+        function loadCompliances(){
+            var headers = ["Name", "Schema", "Database", "Data Table", "Field Type", "Compliance Types"];
+            var dataTableArray = [];
+            {{ range $entity := .Response.DataProduct.Contract.Compliances.DataEntities }}
+            dataTableArray.push({"Name": "{{ $entity.Name }}", 
+            "Schema": "{{ $entity.Schema }}",
+            "Database": "{{ $entity.Database }}", 
+            "Data Table": "{{ $entity.DataTable }}",
+            "Field Type": `<span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                            {{ $entity.FieldType }}
+                        </span>`, 
+            "Compliance Types": `{{ range $obj := $entity.ComplianceTypes }}
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                            {{ $obj }}
+                        </span>
+                        {{ end }}`});
+            {{ end }}
+            renderDatatable("dataProduct-compliances", dataTableArray,headers, null);
+        }
+
+        function loadLineageAttribute(){
+            var headers = ["Version", "Added On", "Digest", "Diff", "Compatible Versions"];
+            var dataTableArray = [];
+            {{ range $val := .Response.DataProduct.Contract.Lineage.VersionLineage }}
+            console.log("VersionLineage: ", `{{ $val }}`);
+            console.log("")
+            dataTableArray.push({"Version": "{{ $val.Version }}", 
+            "Added On": "{{ epochConverter $val.AddedOn }}",
+            "Digest": `{{ $val.Digest }}`, 
+            "Diff": `{{ if $val.Diff }}
+                    <div id="{{ $val.Version }}" class="hidden">
+                        {{ $val.Diff }}
+                    </div>
+                    <button onclick="openModal(&quot;{{ $val.Version }}&quot;)"
+                        class="px-4 py-2 bg-black text-xs text-white rounded-lg hover:bg-yellow-600 cursor-pointer">View Diff</button>
+                        {{ else }}
+                        No Diff Available
+                        {{ end }}`,
+            "Compatible Versions": `{{ range $obj := $val.BackwardCompatibleVersions }}
+                    <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-black-100 text-white-900">
+                        {{ $obj }}
+                    </span>
+                    {{ end }}`});
+            {{ end }}
+            renderDatatable("dataProduct-lineage-version", dataTableArray,headers, null);
+        }
+        
+        function loadLineageDataWorker(){
+            var headers = ["Worker Id", "Worker Type", "Run", "View Details"];
+            var dataTableArray = [];
+            {{ range $val := $.Response.DataProduct.Contract.Lineage.DataWorkers }}
+            dataTableArray.push({"Worker Id": "{{ $val.WorkerId }}", 
+            "Worker Type": `{{ $val.WorkerType }}`, 
+            "Run": `{{ $val.Run }}`,
+            "View Details": `<a target="_blank"
+                        href="/ui/data/manage/data-workers/{{ $val.WorkerId }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24"
+                            viewBox="0 0 40 40">
+                            <path fill="#c2e8ff" d="M1.5 5.5H34.5V38.5H1.5z"></path>
+                            <path fill="#7496c4" d="M34,6v32H2V6H34 M35,5H1v34h34V5L35,5z"></path>
+                            <path fill="#c2e8ff" d="M30.611 13.611H37.055V15.944H30.611z"
+                                transform="rotate(90 33.833 14.778)"></path>
+                            <path fill="#c2e8ff" d="M22 5H28.444V7.333H22z"></path>
+                            <g>
+                                <path fill="#8bb7f0"
+                                    d="M18.707 16L28.707 6 24.207 1.5 38.5 1.5 38.5 15.793 34 11.293 24 21.293z">
+                                </path>
+                                <path fill="#4e7ab5"
+                                    d="M38,2v12.586l-3.293-3.293L34,10.586l-0.707,0.707L24,20.586L19.414,16l9.293-9.293L29.414,6 l-0.707-0.707L25.414,2H38 M39,1H23l5,5L18,16l6,6l10-10l5,5V1L39,1z">
+                                </path>
+                            </g>
+                        </svg>
+                    </a>`});
+            {{ end }}
+            renderDatatable("dataProduct-lineage-dataWorker", dataTableArray, headers, null);
+        }
+
+        function loadUserPolicies(){
+            var headers = ["Product Role", "Access Scope", "Organization", "Users"];
+            var dataTableArray = [];
+            {{ range $val := .Response.DataProduct.AccessPolicies.UserRules }}
+            dataTableArray.push({"Product Role": "{{ $val.SelectorLabel }}", 
+            "Access Scope": `{{ $val.Access }}`, 
+            "Organization": `{{ $val.Organization }}`,
+            "Users": `<ul class="list-disc ml-5 text-gray-100">
+                        {{ range $obj := $val.Users }}
+                        <li>{{ $obj }}</li>
+                        {{ end }}
+                    </ul>`});
+            {{ end }}
+            renderDatatable("dataProduct-accessPolicies-userPolicies", dataTableArray, headers, null);
+        }
+
+        function loadRolePolicies(){
+            var headers = ["Role", "Access Scope", "Selector Label", "Organization"];
+            var dataTableArray = [];
+            {{ range $val := .Response.DataProduct.AccessPolicies.RoleRules }}
+            // {{ $val.SelectorLabel }} selectorLabel getting 0
+            dataTableArray.push({"Role": ` <ul class="list-disc ml-5 text-gray-100">
+                        {{ range $obj := $val.Roles }}
+                        <li>{{ $obj }}</li>
+                        {{ end }}
+                    </ul>`, 
+            "Access Scope": `{{ $val.Access }}`, 
+            "Selector Label": `{{ $val.SelectorLabel }}`,
+            "Organization": `{{ $val.Organization }}`});
+            {{ end }}
+            renderDatatable("dataProduct-accessPolicies-RolePolicies", dataTableArray, headers, null);
+        }
+        
+        function loadTransformerPolicies() {
+            var headers = ["Product Role", "Transformers"]
+            var dataTableArray = [];
+            {{ range $obj := .Response.DataProduct.Contract.Governance.TransformerPolicies }}
+                dataTableArray.push({
+                    "Product Role": `{{ $obj.SelectorLabel }}`,
+                    "Transformers": `<table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">
+                        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                            <tr>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Entities</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+                            {{ if $obj.Transformers.Globals }}
+                            {{ range $val := $obj.Transformers.Globals.Classified }}
+                            <!-- Example Row -->
+                            <tr class="cursor-pointer ">
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <ul class="list-disc ml-5 text-gray-100">
+                                        {{ range $v := $val.Entities }}
+                                        <li>{{ $v }}</li>
+                                        {{ end }}
+                                    </ul>
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">{{ $val.Action }}</td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="5" class="px-3 py-3 whitespace-nowrap">No Classified
+                                    Transformer Rules Available</td>
+                            </tr>
+                            {{ end }}
+                            {{ else }}
+                            <tr>
+                                <td colspan="5" class="px-3 py-3 whitespace-nowrap">No Global Transformer Rules
+                                    Available</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>`
+                })
+            {{ end }}
+            renderDatatable("dataProduct-governance-transformerPolicies", dataTableArray, headers, null);  
+        }
+
+        function loadAttributePolicies(){
+            var headers = ["Product Role", "Policies"]
+            var dataTableArray = []
+            {{ range $obj := .Response.DataProduct.Contract.Governance.AttributePolicies }}
+            dataTableArray.push({"Product Role": `{{ $obj.SelectorLabel }}`,
+                "Policies": `<table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">
+                        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                            <tr>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Attribute Name</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Filter Value</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Consumer Attribute Ref</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+                            {{ range $val := $obj.Filters }}
+                            <tr class="cursor-pointer ">
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    {{ $val.AttributeName }}
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    {{ $val.FilterValue }}
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    {{ $val.ConsumerAttributeRef }}
+                                </td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="5" class="px-3 py-3 whitespace-nowrap">No Attribute policy available</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>`,
+                })
+            {{ end }}
+            renderDatatable("dataProduct-governance-attributePolicies", dataTableArray, headers, null);
+        }
+
+        function loadDataStorePolicies(){
+            var headers = ["Product Role", "Policies"]
+            var dataTableArray = []
+            {{ range $obj := .Response.DataProduct.Contract.Governance.DataStorePolicies }}
+                    dataTableArray.push({"Product Role": `{{ $obj.SelectorLabel }}`,
+                        "Policies": `<table class="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">
+                        <thead class="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+                            <tr>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Policy</th>
+                                <th
+                                    class="px-3 py-3 text-left tracking-wider">
+                                    Rule</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-xs">
+                            <tr class="cursor-pointer ">
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    Database
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">{{ $obj.Database }}</td>
+                            </tr>
+                            <tr class="cursor-pointer ">
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    DataTables
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    {{ range $p := $obj.DataTables }}
+                                    [{{ $p.TableName }}]
+                                    {{ end }}
+                                </td>
+                            </tr>
+                            <tr class="cursor-pointer ">
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    Schema
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">{{ $obj.Schema }}</td>
+                            </tr>
+                        </tbody>
+                    </table>`,
+                    })
+                    dataTableArray.push({"Product Role": `{{ $obj.SelectorLabel }}`,
+                        "Policies": `No Attribute policy available`
+                    })
+                {{ end }}
+            renderDatatable("dataProduct-governance-dataStorePolicies", dataTableArray, headers, null);
+        }
+
+
+</script>

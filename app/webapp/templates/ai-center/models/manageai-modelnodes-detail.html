@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-2 w-full text-gray-100">
+        {{ template "section-headers.html" . }}
+      <div class="overflow-x-auto scrollbar shadow-md p-8">
+        <div id="spec" class="tab-content mt-2 bg-[#1b1b1b] p-4 rounded-lg shadow-md">
+          <h3 class="text-xl mb-4 detail-heading">
+            Basic Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Name:</p>
+              <p class=" break-words p-2">{{ stringCheck .Response.AIModelNode.Name }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Id:</p>
+              <p class=" break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.AIModelNode.ModelNodeId }}`)">{{stringCheck
+                .Response.AIModelNode.ModelNodeId }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Status:</p>
+              <p class=" break-words p-2"><span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ if eq .Response.AIModelNode.ResourceBase.Status `ACTIVE` }}bg-green-100 text-green-800 {{ else }} bg-red-100 text-red-800 {{ end }}">
+                  {{ .Response.AIModelNode.ResourceBase.Status }}
+                </span></p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium mr-2">Link To:</p>
+              <div class="break-words p-2">
+                    <a href="{{ $.Response.CreateActionParams.AiStudioURL }}" target="_blank" class="inline-flex items-center text-orange-700 hover:text-orange-700 space-x-1">
+                      <span>AIStudio</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20" viewBox="0 0 24 24" class="mt-[1px]">
+                        <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3z"/>
+                        <path d="M5 5h9v2H7v10h10v-7h2v9H5V5z"/>
+                      </svg>
+                    </a>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Scope:</p>
+              <p class=" break-words p-2">{{ .Response.AIModelNode.Attributes.Scope }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Endpoint:</p>
+              <p class=" break-words p-2">{{stringCheck .Response.AIModelNode.Attributes.NetworkParams.Url }}
+              </p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">API Version:</p>
+              <p class=" break-words p-2">{{stringCheck
+                .Response.AIModelNode.Attributes.NetworkParams.ApiVersion }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Model Path:</p>
+              <p class=" break-words p-2">{{stringCheck
+                .Response.AIModelNode.Attributes.NetworkParams.LocalPath }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Model Discovery Enabled:</p>
+              <p class=" break-words p-2">{{ .Response.AIModelNode.Attributes.DiscoverModels }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Service Provider:</p>
+              <p class=" break-words p-2">{{ .Response.AIModelNode.Attributes.ServiceProvider }}</p>
+            </div>
+            <div class="flex items-center">
+              <p class="detail-sect-key font-medium">Hosting:</p>
+              <p class=" break-words p-2">{{ .Response.AIModelNode.Attributes.Hosting }}</p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Approved Organizations:</p>
+              <p class=" break-words p-2">
+              <ul class="list-disc ml-5 ">
+                {{ range $v := .Response.AIModelNode.Attributes.ApprovedOrganizations }}
+                <li>{{ $v }}</li>
+                {{ else }}
+                ALL
+                {{ end }}
+              </ul>
+              </p>
+            </div>
+            <div>
+              <p class="detail-sect-key font-medium">Node Owners:</p>
+              <p class=" break-words p-2">
+              <ul class="list-disc ml-5 ">
+                {{ range $v := .Response.AIModelNode.NodeOwners }}
+                <li>{{ $v }}</li>
+                {{ end }}
+              </ul>
+              </p>
+            </div>
+          </div>
+          {{ if .Response.AIModelNode.SecurityGuardrails }}
+          <h3 class="text-xl font-semibold mb-4 mt-3 detail-heading">Security</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-sect-key font-medium">Guardrails:</p>
+              <p class=" break-words p-2">
+              <ul class="list-disc ml-5 ">
+                {{ range $v := .Response.AIModelNode.SecurityGuardrails.Guardrails }}
+                <li>{{ $v }}</li>
+                {{ else }}
+                ALL
+                {{ end }}
+              </ul>
+              </p>
+            </div>
+          </div>
+          {{ end }}
+          <h3 class="text-xl font-semibold  mb-4 mt-3 detail-heading">Supported Models</h3>
+          <div class="relative overflow-hidden border border-gray-200 rounded-lg"></div>
+          <div class="bg-zinc-800 p-4 rounded-lg shadow-md overflow-y-auto scrollbar " style="max-height: 300px;">
+            <table class="min-w-full divide-y divide-zinc-500  border border-zinc-500">
+              <thead class="bg-zinc-900 top-0">
+                <tr>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Model Name
+                  </th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Model Id
+                  </th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Model Type
+                  </th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Native
+                    Model Owner</th>
+                </tr>
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500 ">
+                {{ range $v := .Response.AIModelNode.Attributes.GenerativeModels }}
+                <tr class="cursor-pointer hover:bg-zinc-600" onclick="copyToClipboard(`{{ $v.ModelName }}`)">
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $v.ModelName }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $v.ModelId }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $v.ModelType }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ stringCheck $v.OwnedBy }}</td>
+                </tr>
+                {{ end }}
+                {{ range $v := .Response.AIModelNode.Attributes.EmbeddingModels }}
+                <tr class="cursor-pointer hover:bg-zinc-600">
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $v.ModelName }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $v.ModelId }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ $v.ModelType }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ stringCheck $v.OwnedBy }}</td>
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+</body>
+</html>

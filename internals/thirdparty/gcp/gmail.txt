@@ -1,0 +1,189 @@
+package main
+
+import (
+	"context"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"google.golang.org/api/gmail/v1"
+	"google.golang.org/api/option"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+)
+
+const (
+	credentialsFile = "credentials.json"
+	tokenFile       = "token.json"
+)
+
+func main() {
+	ctx := context.Background()
+
+	// Initialize Gmail service
+	srv, err := initGmailService(ctx)
+	if err != nil {
+		log.Fatalf("Failed to initialize Gmail service: %v", err)
+	}
+
+	// List and process emails from last 24 hours
+	if err := processRecentEmails(srv); err != nil {
+		log.Fatalf("Error processing emails: %v", err)
+	}
+}
+
+// Initialize Gmail service with persistent token
+func initGmailService(ctx context.Context) (*gmail.Service, error) {
+	config, err := getOAuthConfig()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get OAuth config: %w", err)
+	}
+
+	token, err := getOrCreateToken(config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get token: %w", err)
+	}
+
+	return gmail.NewService(ctx, option.WithTokenSource(config.TokenSource(ctx, token)))
+}
+
+// Get or create OAuth token
+func getOrCreateToken(config *oauth2.Config) (*oauth2.Token, error) {
+	// Try to load existing token
+	if token, err := loadToken(tokenFile); err == nil {
+		return token, nil
+	}
+
+	// Create new token if none exists
+	token, err := createNewToken(config)
+	if err != nil {
+		return nil, err
+	}
+
+	// Save the new token
+	if err := saveToken(tokenFile, token); err != nil {
+		log.Printf("Warning: Couldn't save token: %v", err)
+	}
+
+	return token, nil
+}
+
+// Load token from file
+func loadToken(file string) (*oauth2.Token, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	token := &oauth2.Token{}
+	return token, json.NewDecoder(f).Decode(token)
+}
+
+// Create new token via browser auth
+func createNewToken(config *oauth2.Config) (*oauth2.Token, error) {
+	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
+	fmt.Printf("Go to this URL in your browser:\n\n%s\n\n", authURL)
+	fmt.Println("Enter authorization code:")
+
+	var authCode string
+	if _, err := fmt.Scan(&authCode); err != nil {
+		return nil, fmt.Errorf("failed to read authorization code: %w", err)
+	}
+
+	return config.Exchange(context.Background(), authCode)
+}
+
+// Process emails from last 24 hours
+func processRecentEmails(srv *gmail.Service) error {
+	// Calculate time range (last 24 hours)
+	last24Hours := time.Now().Add(-24 * time.Hour)
+	query := fmt.Sprintf("after:%d/%02d/%02d", 
+		last24Hours.Year(), last24Hours.Month(), last24Hours.Day())
+
+	// List messages
+	messages, err := listMessages(srv, query)
+	if err != nil {
+		return fmt.Errorf("failed to list messages: %w", err)
+	}
+
+	fmt.Printf("Found %d messages in last 24 hours\n", len(messages))
+
+	// Process each message
+	for _, msg := range messages {
+		if err := processMessage(srv, msg.Id); err != nil {
+			log.Printf("Error processing message %s: %v", msg.Id, err)
+			continue
+		}
+	}
+
+	return nil
+}
+
+// List messages matching query
+func listMessages(srv *gmail.Service, query string) ([]*gmail.Message, error) {
+	var messages []*gmail.Message
+
+	req := srv.Users.Messages.List("me").Q(query)
+	if err := req.Pages(context.Background(), func(page *gmail.ListMessagesResponse) error {
+		messages = append(messages, page.Messages...)
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return messages, nil
+}
+
+// Process individual message
+func processMessage(srv *gmail.Service, id string) error {
+	msg, err := srv.Users.Messages.Get("me", id).Format("full").Do()
+	if err != nil {
+		return err
+	}
+
+	printMessageInfo(msg)
+	return nil
+}
+
+// Print message information
+func printMessageInfo(msg *gmail.Message) {
+	// Extract headers
+	var from, to, subject, date string
+	for _, h := range msg.Payload.Headers {
+		switch h.Name {
+		case "From":
+			from = h.Value
+		case "To":
+			to = h.Value
+		case "Subject":
+			subject = h.Value
+		case "Date":
+			date = h.Value
+		}
+	}
+
+	fmt.Println("\n=== Email ===")
+	fmt.Printf("From: %s\n", from)
+	fmt.Printf("To: %s\n", to)
+	fmt.Printf("Subject: %s\n", subject)
+	fmt.Printf("Date: %s\n", date)
+
+	// Print message body
+	if msg.Payload.Parts != nil {
+		for _, part := range msg.Payload.Parts {
+			if part.MimeType == "text/plain" {
+				data, _ := base64.URLEncoding.DecodeString(part.Body.Data)
+				fmt.Printf("\nBody:\n%s\n", string(data))
+			}
+		}
+	} else if msg.Payload.Body != nil {
+		data, _ := base64.URLEncoding.DecodeString(msg.Payload.Body.Data)
+		fmt.Printf("\nBody:\n%s\n", string(data))
+	}
+}
+
+// Helper functions (getOAuthConfig, saveToken same as before)

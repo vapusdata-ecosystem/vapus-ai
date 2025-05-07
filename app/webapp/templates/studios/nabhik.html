@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  <script type="module" src="/static/js/nabhik.js"></script>
+  <script type="module" src="/static/js/indexdb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.5/dist/purify.min.js"></script>
+
+  <script>
+    // JavaScript function to toggle expand/collapse rows
+    function toggleRow(rowId) {
+      const expandedRow = document.getElementById(rowId);
+      expandedRow.classList.toggle("hidden");
+    }
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle("hidden");
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    .chartmodal {
+      position: fixed; 
+      z-index: 9999; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+    }
+
+    /* The modal content box */
+    .chartmodal-content {
+      background-color: #fff;
+      margin: 2% auto;  /* center in the page */
+      padding: 5px;
+      width: 95%;
+      height: 95%;
+      max-width: 99%; 
+      max-height: 99%;
+      position: relative;
+    }
+
+    /* Close button (X) */
+    .chartclose {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    table.dataTable {
+    border: 1px solid #71717a;
+    }
+
+    table.dataTable thead th,
+    table.dataTable tbody td {
+        border: 1px solid #71717a;
+        align-content: center;
+        text-align: center;
+    }
+
+    table.dataTable tbody tr:hover td {
+      background-color: #3f3f46; 
+    }
+  </style>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  <div class="h-screen w-full">
+    {{ template "header.html" . }}
+    <div id="nabhikCanvas" class="flex rounded-lg">
+      <div class="flex bg-zinc-800 p-2 flex-col w-full overflow-y-auto overflow-x-auto scrollbar" style="height: calc(100vh - 65px);">
+        <!-- Chat Area -->
+        <div id="nabhikCanvasBoard"
+          style="background: radial-gradient(circle, black -25%, transparent 10%) 0 0, radial-gradient(circle, black -25%, transparent 10%) 10px 10px; background-size: 20px 20px;"
+          class="flex-grow p-[25px] rounded-lg mb-2 bg-gray-50 overflow-y-auto overflow-x-auto scrollbar 
+          {{ if not .Response.CurrentNabhikChat }} hidden {{ end }} ">
+        </div>
+        <div id="nabhik-suggetion-generic"
+          class="space-y-6 mt-10 mb-10 px-20 justify-center {{ if .Response.CurrentNabhikChat }} hidden {{ end }}">
+          <h2 class="text-2xl font-bold text-gray-100">Suggestions</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {{ range $id, $val := .NabhikSuggestions }}
+            <div
+              class="relative w-auto h-auto break-words p-2 border-2 border-zinc-500 rounded-full shadow-lg text-gray-100 hover:bg-zinc-900 cursor-pointer flex items-center justify-center">
+              <div class="grid grid-cols-1 gap-2 text-xs">
+                <div class="flex items-center justify-center">
+                  <span class="font-semibold text-xs p-2" title="{{ $val }}" onclick="copyToClipboard(`{{ $val }}`)">
+                    {{ limitWords $val 8 }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </div>
+        <div
+          id="suggestionDiv"
+          class="relative -mt-2 z-50 pr-8 pl-8"
+        >
+          
+        </div>
+        <div id="userInputGround" class="mt-2 ml-8 mr-8 bg-[#1b1b1b] p-1 rounded-lg shadow-md border border-zinc-500">
+          <textarea id="input" onkeydown="EnterInput(event)" class="w-full h-16 p-1 rounded-lg focus:outline-none text-gray-100"
+            placeholder="Type your query here..."></textarea>
+
+          <div class="flex h-[40px] items-center justify-between pl-2 pr-2">
+            <div class="flex gap-x-1">
+              <button title="View selected dataproduct prompts" aria-label="prompts" data-testid="prompts"
+                class="flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:bg-zinc-900 hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 text-gray-100 disabled:bg-[#D7D7D7]"
+                onclick="showPrompts()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9.5 19h5a1.5 1.5 0 0 1 1.5 1.5v.5h-8v-.5A1.5 1.5 0 0 1 9.5 19zm.95-3.25a4 4 0 1 1 3.1 0M12 3v1m4 2-.5.5m-7 0L8 6M4 12h1m14 0h1m-4 5 .5.5m-7 0L8 17" />
+                </svg>
+              </button>
+              <button title="View selected dataproduct prompts" aria-label="datafiles" data-testid="datafiles"
+                class="flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:bg-zinc-900 hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 text-gray-100 disabled:bg-[#D7D7D7]"
+                onclick="attachDatafiles()">
+              <svg viewBox="0 0 24 24" class="h-6 w-6 shrink-0"><path fill="currentColor" d="M16.5 6v11.5a4 4 0 0 1-4 4a4 4 0 0 1-4-4V5A2.5 2.5 0 0 1 11 2.5A2.5 2.5 0 0 1 13.5 5v10.5a1 1 0 0 1-1 1a1 1 0 0 1-1-1V6H10v9.5a2.5 2.5 0 0 0 2.5 2.5a2.5 2.5 0 0 0 2.5-2.5V5a4 4 0 0 0-4-4a4 4 0 0 0-4 4v12.5a5.5 5.5 0 0 0 5.5 5.5a5.5 5.5 0 0 0 5.5-5.5V6z"></path></svg>
+              </button>
+            </div>
+            <button aria-label="Ask" data-testid="ask" id="ask"
+              class="flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 text-gray-100 disabled:bg-[#D7D7D7]"
+              onclick="sendNabhikMessage(`{{ .GlobalContext.AccessTokenKey }}`,`{{ .NabhikServer}}`,`{{ .CreateChatUrl }}`,`{{ .GlobalContext.UserInfo.DisplayName }}`,chId)">
+              <svg class="h-8 w-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+                class="icon-2xl">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M15.1918 8.90615C15.6381 8.45983 16.3618 8.45983 16.8081 8.90615L21.9509 14.049C22.3972 14.4953 22.3972 15.2189 21.9509 15.6652C21.5046 16.1116 20.781 16.1116 20.3347 15.6652L17.1428 12.4734V22.2857C17.1428 22.9169 16.6311 23.4286 15.9999 23.4286C15.3688 23.4286 14.8571 22.9169 14.8571 22.2857V12.4734L11.6652 15.6652C11.2189 16.1116 10.4953 16.1116 10.049 15.6652C9.60265 15.2189 9.60265 14.4953 10.049 14.049L15.1918 8.90615Z"
+                  fill="currentColor">
+                </path>
+              </svg>
+            </button>
+            <button aria-label="inprogressChat" data-testid="inprogressChat" id="inprogressChat"
+              class="hidden flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 text-gray-100 disabled:bg-[#D7D7D7]"
+              onclick="cancelStream()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Small square in the center -->
+                <rect x="9" y="9" width="6" height="6" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="endedChatMessage" class="border border-gray-300 p-2 rounded-lg shadow-md hidden bg-[#1b1b1b]">
+          <div class="flex items-center justify-center h-full">
+            <div class="flex flex-col items-center justify-center">
+              <div class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"
+                  aria-label="Chat Ended, Start a New One">
+                  <!-- Chat Bubble -->
+                  <path
+                    d="M4 8c0-2.21 1.79-4 4-4h36c2.21 0 4 1.79 4 4v28c0 2.21-1.79 4-4 4H20l-12 12V40H8c-2.21 0-4-1.79-4-4V8z"
+                    fill="#f5f5f5" stroke="#ccc" stroke-width="2" />
+
+                  <!-- Info Icon -->
+                  <circle cx="32" cy="32" r="12" fill="rgb(194 65 12)" stroke="rgb(194 65 12)" stroke-width="2" />
+                  <line x1="32" y1="26" x2="32" y2="34" stroke="#fff" stroke-width="2" />
+                  <circle cx="32" cy="38" r="1.5" fill="#fff" />
+
+                  <!-- Divider Line -->
+                  <line x1="8" y1="48" x2="56" y2="48" stroke="#888" stroke-width="2" stroke-dasharray="4 2" />
+                </svg>
+              </div>
+              <div class="text-center text-gray-100 text-sm mt-2">
+                Chat has ended, start a new by clicking <a
+                  href="{{ .Response.DataNabhikUiUrl }}?createNewChat=true" class="text-md underline text-orange-700"> here
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="w-[220px] min-w-[220px] bg-[#1b1b1b] p-2 overflow-y-auto scrollbar">
+        <div class="mb-2 mt-2">
+          <a class="flex p-2 bg-orange-700  hover:bg-zinc-900 items-center justify-between text-sm font-medium text-gray-100 transition-colors rounded-lg"
+            href="{{ .Response.DataNabhikUiUrl }}?createNewChat=true">
+            <span class="flex flex-row items-center justify-start">
+              <div slot="icon" class="w-4 text-neutral-white">
+                <svg viewBox="0 0 24 24" class="h-full w-6" stroke="currentColor">
+                  <path fill="currentColor"
+                    d="M5 3c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7H5V5h7V3zm12.78 1a.7.7 0 0 0-.48.2l-1.22 1.21l2.5 2.5L19.8 6.7c.26-.26.26-.7 0-.95L18.25 4.2c-.13-.13-.3-.2-.47-.2m-2.41 2.12L8 13.5V16h2.5l7.37-7.38z">
+                  </path>
+                </svg>
+              </div>
+              <span class="ml-2 pl-2 justify-center text-xs">
+                Start New Chat
+              </span>
+            </span>
+          </a>
+        </div>
+        <div class="mb-2">
+          {{ range $id, $val := .Response.DataProducts }}
+          <div id="prompts-{{ $val.DataProductId }}"
+            class="hidden dp-prompts fixed inset-0 bg-zinc-600/90 flex items-center justify-center z-10">
+            <!-- Modal Container -->
+            <div class="bg-white w-96 h-96 p-6 rounded-lg shadow-lg overflow-hidden flex flex-col">
+              <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-semibold">Prompts</h3>
+                <button onclick="closePrompts(`prompts-{{ $val.DataProductId }}`)"
+                  class="text-gray-100 hover:text-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <!-- Scrollable List -->
+               {{ if $val.Contract.IoPorts }}
+              <div class="mt-4 h-80 overflow-y-auto scrollbar">
+                {{ range $obj := $val.Contract.IoPorts.QueryPrompts }}
+                {{ if $obj.Query }}
+                <div
+                  class="border-2 border-orange-700 text-orange-700 bg-orange-100 cursor-pointer m-3 p-2 rounded-full hover:bg-zinc-900 hover:border-pink-900 hover:text-white"
+                  onclick="selectPromptIntoInput(`{{ $obj.Query }}`,'input',`prompts-{{ $val.DataProductId }}`)">{{
+                  $obj.Query }}</div>
+                {{ else }}
+                <div>
+                  No prompts available, please type your query.
+                </div>
+                {{ end }}
+                {{ else }}
+                <div>
+                  No prompts available, please type your query.
+                </div>
+                {{ end }}
+              </div>
+              {{ end }}
+            </div>
+          </div>
+
+          {{ end }}
+          <div class="vapus-dropdown-toggle rounded-lg bg-black text-xs text-gray-100 dataproduct-dropdown-toggle">
+            Data Products
+          </div>
+          <div class="vapus-dropdown-menu dataproduct-dropdown-menu rounded-lg h-20 overflow-y-auto scrollbar">
+            <!-- Parent Items -->
+            {{ range $id, $val := .Response.DataProducts }}
+            <div class="vapus-dropdown-item text-xs child rounded-lg m-2" data-value="{{ $val.DataProductId }}"
+              data-displayName="{{ $val.Name }}">{{ $val.Name }}</div>
+            {{ end }}
+          </div>
+        </div>
+        <input type="text" id="dataProduct" hidden value="">
+        <div class="mb-2">
+          <label for="chatHistory" class="block text-gray-100 font-semibold text-sm mb-1">Chat History</label>
+          <div class="w-full h-auto max-h-72 overflow-y-auto scrollbar p-2 rounded-md shadow-md">
+            <ul class="space-y-2">
+              {{ range $id, $val := .Response.NabhikChats }}
+              <li class="p-1 text-gray-100 hover:bg-zinc-900 hover:text-white border-zinc-500
+              {{ if $.Response.CurrentNabhikChat }}{{ if eq $val.ChatId $.Response.CurrentNabhikChat.ChatId }} text-orange-700 {{ end }}{{ end }}
+              ">
+                <p class="font-semibold text-xs break-words">
+                  <a href="{{ $.GlobalContext.CurrentUrl }}?chatId={{ $val.ChatId }}">{{ limitletters
+                    $val.LastInput 12}}</a>
+                </p>
+              </li>
+              {{ else }}
+              <li class="p-2 bg-black shadow-sm text-gray-100 rounded-md hover:bg-zinc-900 hover:text-white">
+                <p class="font-semibold text-xs break-words">
+                  No history available
+                </p>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="nabhikDataFiles" class="block text-gray-100 font-semibold text-sm mb-1">Attachments</label>
+          <div class="w-full h-auto max-h-72 overflow-y-auto scrollbar p-1 rounded-md shadow-md">
+            <ul class="space-y-1" id="nabhikDataFiles">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hidden" id="currFabChatId">
+    {{ if .Response.CurrentNabhikChat }}
+      {{ .Response.CurrentNabhikChat.ChatId }}
+    {{ end }}
+  </div>
+  <div class="hidden" id="currFabChatObject">
+    {{ if .Response.CurrentNabhikChat }}
+      {{ protoToJSON .Response.CurrentNabhikChat }}
+    {{ end }}
+  </div>
+  <!-- <div class="hidden" id="actionUris">{{ .Response.ActionUrisJson }}</div> -->
+  <script>
+    let chId = "";
+    document.addEventListener("DOMContentLoaded", function () {
+      {{ if .Response.CurrentNabhikChat }}
+      currChatObj = {{ protoToJSON .Response.CurrentNabhikChat }};
+      {{ else }}
+      currChatObj = null;
+      {{ end }}
+      loadNabhikChat(`{{ .GlobalContext.UserInfo.DisplayName }}`, `{{ .GlobalContext.AccessTokenKey }}`, `{{ .DownloadUrl}}`,"nabhikCanvasBoard",currChatObj,`{{ .TaskLogStreamUrl }}`);
+      let opCanvas = document.getElementById('nabhikCanvasBoard');
+      opCanvas.scrollTop = opCanvas.scrollHeight;
+    });
+    let cDpId = "{{ .Response.SelectedDataProductId }}";
+    if (cDpId !== "") {
+      document.getElementById('dataProduct').value = cDpId;
+    }
+    async function attachDatafiles(){
+      {{ if .Response.CurrentNabhikChat }}
+      currChatObj = {{ protoToJSON .Response.CurrentNabhikChat }};
+      chId = currChatObj.chatId;
+      {{ else }}
+      currChatObj = null;
+      {{ end }}
+      await uploadDataset(`{{ .FileUploadAPI }}`,`{{ .GlobalContext.AccessTokenKey }}`,`NabhikChat`,'nabhikDataFiles',chId);
+    }
+    setupDropdown({
+      dropdownToggleSelector: '.dataproduct-dropdown-toggle',
+      dropdownMenuSelector: '.dataproduct-dropdown-menu',
+      inputFieldSelector: '#dataProduct',// Optional, for updating a hidden input or text field
+      parentClass: 'parent',
+      childClass: 'child',
+      displayAttribute: 'data-displayName', // Default transform for display text,
+      valueTransform: (value) => value,
+    })
+    function EnterInput(event) {
+      if (event.key === "Enter") {
+        sendNabhikMessage(`{{ .GlobalContext.AccessTokenKey }}`, `{{ .NabhikServer}}`,`{{ .CreateChatUrl }}`, `{{ .GlobalContext.UserInfo.DisplayName }}`);
+      }
+    }
+    function sendNabhikMessage() {
+      {{ if .Response.CurrentNabhikChat }}
+      currChatObj = {{ protoToJSON .Response.CurrentNabhikChat }};
+      chId = currChatObj.chatId;
+      {{ else }}
+      currChatObj = null;
+      {{ end }}
+      dataNabhikAction(`{{ .GlobalContext.AccessTokenKey }}`, `{{ .NabhikServer}}`,`{{ .CreateChatUrl }}`, `{{ .GlobalContext.UserInfo.DisplayName }}`,`{{ .DownloadUrl}}`,chId,`{{ .TaskLogStreamUrl }}`);
+    }
+    TokenAccessKey = `{{ .GlobalContext.AccessTokenKey }}`;
+  </script>
+</body>
+
+</html>

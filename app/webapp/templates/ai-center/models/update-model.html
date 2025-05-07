@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  {{ template "staticimports.html" . }} {{ template
+  "manage-platform-imports.html" . }}
+  <script src="/static/js/create-resource.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "loading-overlay.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-full">
+      <section id="grids" class="space-y-2">
+        <div class="max-w-6xl mx-auto bg-[#1b1b1b] shadow rounded-lg p-2">
+          <div class=" text-gray-100 mb-2 flex justify-center">
+            <button id="yamlSpecB"
+              class="whitespace-nowrap border-b-2 border-black py-2 px-2 text-md font-medium focus:outline-none">
+              YAML
+            </button>
+            <button id="formSpecB"
+              class="whitespace-nowrap border-b-2 py-2 px-2 text-md font-medium focus:outline-none ml-4 order-orange-700 text-orange-700 font-semibold">
+              Form
+            </button>
+          </div>
+          <div id="yamlSpec" style="display: none">
+            {{ template "yaml-editor.html" . }}
+          </div>
+          <div id="formSpec">
+            <form id="aimodelSpec" class="space-y-2 border border-zinc-500 rounded-md text-gray-100 p-2">
+              <fieldset class="p-4 rounded">
+                <legend class="text-xl font-bold ">Spec</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <input id="spec_name" name="spec.name" type="text" placeholder="Enter name"
+                      value="{{.Response.AIModelNode.Name}}" class="form-input-field" />
+                  </div>
+                  <div>
+                    <input id="spec_nodeOwners" name="spec.nodeOwners" type="text"
+                      value="{{range $index, $element := .Response.AIModelNode.NodeOwners}}{{if $index}},{{end}}{{$element}}{{end}}"
+                      placeholder="Enter node owners (comma separated)" class="form-input-field" />
+                  </div>
+                </div>
+                <fieldset class="rounded mb-4">
+                  <legend class="text-lg font-semibold text-gray-100">
+                    Attributes
+                  </legend>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <select name="spec.attributes.serviceProvider" class="form-select-field">
+                        <option value="INVALID_SP">
+                          Select Service Provider
+                        </option>
+                        {{ range $key, $value := .Enums }} {{ if eq $key "SvcProvider" }} 
+                        {{ range $index, $val := $value }}
+                        <option value="{{ $val }}" {{ if eq (index $.KeyValueMap $key $val)
+                          $.Response.AIModelNode.Attributes.ServiceProvider }}selected{{ end }}>
+                          {{ strTitle "SSP" $val }}
+                        </option>
+                        {{ end}} {{ end }} {{ end}}
+                      </select>
+                    </div>
+                    <!-- <div>
+                      <select name="spec.attributes.hosting"
+                        class="mt-1 block text-sm p-2 w-full border-gray-300 rounded-md shadow-sm focus:ring-1 focus:ring-orange-700">
+                        <option value="INVALID_MODEL_HOSTING">
+                          Select Hosting
+                        </option>
+                        {{ range $key, $value := .Enums }}
+                        {{ if eq $key "AIModelNodeHosting" }} 
+                        {{ range $val := $value }}
+                        <option value="{{ $val }}">{{ strTitle "Hosting" $val }}</option>
+                        {{ end}}
+                        {{ end }}
+                        {{ end}}
+                      </select>
+                    </div> -->
+                    <div>
+                      <select id="select-scope-id" name="spec.attributes.scope" class="form-select-field"
+                      onchange="handleSelectOrganizations(this.value)">
+                        <option value="DOMAIN_SCOPE">Select Scope</option>
+                        {{ range $key, $value := .Enums }} {{ if eq $key
+                        "ResourceScope" }} {{ range $val := $value }}
+                        <option value="{{ $val }}" {{ if eq (index $.KeyValueMap $key $val)
+                          $.Response.AIModelNode.Attributes.Scope }}selected{{ end }}>
+                          {{ strTitle "Scope" $val }}
+                        </option>
+                        {{ end}} {{ end }} {{ end}}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+
+                    <div id="select-domain-id" class="relative inline-block text-left w-full hidden">
+                      <div>
+                        <button type="button" id="dropdownButtonOrganization"
+                          class="mt-1 w-full flex justify-between items-center rounded-md bg-zinc-800 shadow-sm py-2 text-sm focus:ring-1 focus:ring-orange-700">
+                          <span class="pl-1">Select Organizations</span>
+                          <svg class="form-svg-select-field" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <div id="dropdownMenuOrganization" class="absolute z-10 mt-2 w-full bg-zinc-800 rounded-md shadow-lg hidden">
+                        <div class="p-2 space-y-2 max-h-60 overflow-y-auto">
+                          {{ range $id, $val :=
+                          .GlobalContext.UserInfo.OrganizationRoles }}
+                          <div class="flex items-center">
+                            <input type="checkbox" name="spec.attributes.approvedOrganizations" value="{{ $val.OrganizationId }}"
+                              class="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700" {{ range
+                              $.Response.AIModelNode.Attributes.ApprovedOrganizations }} {{ if eq . $val.OrganizationId }}checked{{
+                              end }} {{ end }} />
+                            <label class="ml-2 text-sm ">
+                              {{ index $.GlobalContext.OrganizationMap $val.OrganizationId
+                              }}
+                            </label>
+                          </div>
+                          {{ end }}
+                        </div>
+                      </div>
+
+                    </div>
+                     <!-- Select Guardrails -->
+                     <div class="relative inline-block text-left w-full">
+                      <div>
+                        <button type="button" id="dropdownButtonGuardrails"
+                          class="mt-1 w-full flex justify-between items-center bg-zinc-800 rounded-md shadow-sm py-2 text-sm focus:ring-1 focus:ring-orange-700">
+                          <span class="pl-1">Select Guardrails</span>
+                          <svg class="form-svg-select-field" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <div id="dropdownMenuGuardrails"
+                        class="absolute z-10 mt-2 w-full bg-zinc-800 rounded-md shadow-lg hidden">
+                        <div class="p-2 space-y-2 max-h-60 overflow-y-auto">
+                          {{ range $val := .Response.AIGuardrails }} 
+                          <div class="flex items-center">
+                            <input type="checkbox" name="spec.securityGuardrails" value="{{ $val.GuardrailId }}"
+                            class="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700" 
+                              {{ if $.Response.AIModelNode.SecurityGuardrails }} 
+                                {{ if $.Response.AIModelNode.SecurityGuardrails.Guardrails }} 
+                                  {{ range $value := $.Response.AIModelNode.SecurityGuardrails.Guardrails }} 
+                                    {{ if eq $val.GuardrailId $value }}
+                                      checked
+                                    {{ end }} 
+                                  {{ end }}
+                                {{ end }}
+                              {{ end }}/>
+                              <label class="ml-2 text-sm ">{{ $val.Name }}</label>
+                            </div>
+                            
+                          {{ end }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <details class="border border-zinc-500 p-4 rounded mb-4">
+                  <summary class="text-lg font-semibold text-gray-100 cursor-pointer">Network Credentials</summary>
+                  {{ template "network-params.html" . }}
+                </details>
+              </fieldset>
+              <!-- Submit Button -->
+              <div class="mt-4 flex justify-end space-x-2">
+                <button type="submit" id="submit"
+                  class="px-6 py-2 bg-orange-700 text-white rounded-md shadow hover:bg-pink-900">
+                  Submit
+                </button>
+                <button type="button" id="loading"
+                  class="px-6 py-2 bg-orange-700 text-white rounded-md shadow hover:bg-pink-900 hidden">
+                  <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div hidden id="createTemplate">
+      {{ $.Response.CreateActionParams.YamlSpec }}
+    </div>
+  </div>
+  <script>
+
+   function setupDropdown(buttonId, menuId) {
+      const button = document.getElementById(buttonId);
+      const menu = document.getElementById(menuId);
+
+      // Toggle menu on button click
+      button.addEventListener("click", function (event) {
+        event.stopPropagation(); 
+        menu.classList.toggle("hidden");
+      });
+
+      // Close menu if clicked outside
+      document.addEventListener("click", function (event) {
+        if (!menu.contains(event.target) && !button.contains(event.target)) {
+          menu.classList.add("hidden");
+        }
+      });
+    }
+
+  setupDropdown("dropdownButtonOrganization", "dropdownMenuOrganization");
+  setupDropdown("dropdownButtonGuardrails", "dropdownMenuGuardrails");
+
+    document
+      .getElementById("yamlSpecB")
+      .addEventListener("click", function () {
+        document
+          .getElementById("formSpecB")
+          .classList.remove(
+            "border-orange-700",
+            "text-orange-700",
+            "font-semibold"
+          );
+        this.classList.add(
+          "border-orange-700",
+          "text-orange-700",
+          "font-semibold"
+        );
+        document.getElementById("yamlSpec").style.display = "block";
+        document.getElementById("formSpec").style.display = "none";
+        console.log("yamlSpecB--------------");
+        CreateResourceViaYaml(
+          "createTemplate",
+          `{{ .Response.CreateActionParams.Method }}`,
+          `{{ .Response.CreateActionParams.Title }}`,
+          `{{ .GlobalContext.AccessTokenKey }}`,
+          `{{ .Response.CreateActionParams.API }}`
+        );
+      });
+
+    document
+      .getElementById("formSpecB")
+      .addEventListener("click", function () {
+        document
+          .getElementById("yamlSpecB")
+          .classList.remove(
+            "border-orange-700",
+            "text-orange-700",
+            "font-semibold"
+          );
+        this.classList.add(
+          "border-orange-700",
+          "text-orange-700",
+          "font-semibold"
+        );
+        document.getElementById("yamlSpec").style.display = "none";
+        document.getElementById("formSpec").style.display = "block";
+      });
+
+    document.onload = function () {
+      document.getElementById("formSpec").style.display = "block";
+      document
+        .getElementById("formSpecB")
+        .classList.add(
+          "border-orange-700",
+          "text-orange-700",
+          "font-semibold"
+        );
+    };
+
+    // To handle Select Organizations
+    function handleSelectOrganizations(value) {
+      const selectOrganization = document.getElementById("select-domain-id")
+      if (value === "PLATFORM_SCOPE" || value === "Platform Scope"){
+        selectOrganization.classList.remove("hidden")
+      } else {
+        selectOrganization.classList.add("hidden")
+      }
+    }
+
+    // Secret Name 
+    function setSecretName() {
+      {{ if $.Response.AIModelNode.Attributes }}
+      {{ if $.Response.AIModelNode.Attributes.NetworkParams }}
+      secretName = JSON.parse(`{{ protoToJSON $.Response.AIModelNode.Attributes.NetworkParams.SecretName}}`)  
+      console.log("secretName")
+      console.log(secretName)
+      if(secretName) {
+        document.getElementById("network-params-secret-name").value = secretName
+      // Set isAlreadyInSecrets checkbox as checked
+      document.getElementById("isAlreadyInSecretBs").checked = true;
+      toggleSecretNameVisibility();
+      }
+      {{ end }}
+      {{ end }}
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("network-params-databases").classList.add("hidden");
+        document.getElementById("network-params-database-prefix").classList.add("hidden");
+        document.getElementById("generic-credentials-access-scope").classList.add("hidden");
+        document.getElementById("generic-credentials-database").classList.add("hidden");
+        setSecretName();
+        //
+        handleSelectOrganizations(document.getElementById("select-scope-id"));
+    });
+
+
+    document
+      .getElementById("aimodelSpec")
+      .addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default submission
+
+        const form = event.target;
+        const formData = new FormData(form);
+        let dataObj = getFormData(formData);
+
+        // To get the data of Select Organization
+        const domainCheckboxes = document.querySelectorAll(
+          'input[name="spec.attributes.approvedOrganizations"]:checked'
+        );
+        dataObj.attributes.approvedOrganizations = Array.from(domainCheckboxes).map(
+          (dcb) => dcb.value
+        );
+
+        // To get the data of Guardrails
+        const GuardrailCheckboxes = document.querySelectorAll(
+          'input[name="spec.securityGuardrails"]:checked'
+        );
+        guardrailsArray = Array.from(GuardrailCheckboxes).map(
+          (gcb) => gcb.value) 
+          console.log(guardrailsArray)
+        dataObj.securityGuardrails = {
+          guardrails: guardrailsArray,
+        }
+        console.log(dataObj.securityGuardrails)
+        alert("Hiiiii")
+
+        if (dataObj.nodeOwners !== "") {
+          dataObj.nodeOwners = dataObj.nodeOwners.split(",");
+        } else {
+          dataObj.nodeOwners = [];
+        }
+
+        const networkParams = GetNetworkParams();
+        dataObj.attributes.networkParams = {};
+        dataObj.attributes.discoverModels = true;
+        dataObj.attributes.networkParams.url = networkParams.address;
+        
+        console.log("Network Paramas===============>>>")
+        console.log(dataObj.networkParams);
+        
+        dataObj.attributes.networkParams.secretName = networkParams.dsCreds[0].secretName
+        dataObj.attributes.networkParams.apiVersion = networkParams.dsCreds[0].apiVersion
+
+        dataObj.attributes.networkParams.credentials = networkParams.dsCreds[0].credentials
+
+        console.log(dataObj)
+        
+        dataObj = convertNumericStrings(dataObj);
+
+        dataObj.modelNodeId = `{{.Response.AIModelNode.ModelNodeId}}`;
+        // To update List of models 
+        generativeModels = `{{protoToJSON .Response.AIModelNode.Attributes.GenerativeModels }}`
+        parsedGenerativeModels = JSON.parse(generativeModels)
+        dataObj.attributes.generativeModels = parsedGenerativeModels
+
+        submitUpdateForm(
+          dataObj,
+          `{{ .GlobalContext.AccessTokenKey }}`,
+          `{{ .Response.CreateActionParams.API }}`,
+          `{{ .Response.BackListingLink }}`
+        );
+      });
+
+
+    document
+      .getElementById("submitYaml")
+      .addEventListener("click", function () {
+        YamlCreateResourceAction({
+          tokenKey: `{{ .GlobalContext.AccessTokenKey }}`,
+          apiUrl: `{{ .Response.CreateActionParams.API }}`,
+          method: `PUT`,
+        });
+      });
+
+    
+  </script>
+</body>
+
+</html>

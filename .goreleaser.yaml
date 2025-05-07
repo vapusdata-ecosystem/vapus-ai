@@ -1,0 +1,55 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+# Define the pipeline for building and releasing your Go application
+version: 2
+project_name: VapusData
+env:
+  - CGO_ENABLED=0
+  - VAPUSDATA_VERSION={{ .Version }}
+  - VAPUSDATA_LDFLAGS=-s -w
+report_sizes: true
+# before:
+#   hooks:
+#     # - make lint
+#     - go mod tidy
+#     - go mod vendor
+#     - go mod download
+#     - go mod verify
+#     - go mod graph
+#     - go mod why
+#     - golangci-lint run
+#     - go sec ./...
+builds:
+  - binary: vapusdata-domain-plane
+    id: vapusdata-domain-plane
+    gobinary: "go1.23"
+    main: ./app/src/domains
+    hooks:
+      pre:
+        - go mod tidy
+        - go mod vendor
+        - golangci-lint run
+        - go sec ./...
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - "{{ .Env.VAPUSDATA_LDFLAGS }}"
+      - "-X github.com/anekam/vapusdata/vapusdata/app/src/domains/version.Version={{ .Env.VAPUSDATA_VERSION }}"
+      - "-X main.Version={{ .Env.VAPUSDATA_VERSION }}"
+    env:
+      - "{{ .Env.CGO_ENABLED }}"
+      - VAPUSDATA_VERSION={{.Env.VAPUSDATA_VERSION}}
+      - VAPUSDATA_LDFLAGS=-s -w
+
+checksum:
+  name_template: "checksums.txt"

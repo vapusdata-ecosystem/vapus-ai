@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    <script>
+        // JavaScript function to toggle expand/collapse rows
+        function toggleRow(rowId) {
+            const expandedRow = document.getElementById(rowId);
+            expandedRow.classList.toggle("hidden");
+        }
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            section.classList.toggle("hidden");
+        }
+    </script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+    
+      <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+       <div class="flex-grow p-2 w-full">
+            <div class="w-full mx-auto  rounded-lg shadow-lg p-6">
+                <div class="flex justify-between mb-2 items-center bg-[#1b1b1b]  border border-zinc-500 rounded-lg shadow-md p-2">
+                    <h2 class="text-xl text-gray-100 font-semibold mb-4">{{ .Response.DataProduct.Name }}</h2>
+                    <div class="space-x-4">
+                        <a href="{{ .Response.DataServerUrl }}" target="_blank"
+                            class="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-700">
+                            <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14.25L14.25 9m0 0h-3.75m3.75 0V12.75M12 21H5.25A2.25 2.25 0 013 18.75V7.25A2.25 2.25 0 015.25 5H12" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 3H18.75A2.25 2.25 0 0121 5.25V9" />
+                              </svg> -->
+                            Query Dataset
+                        </a>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
+                    <div class="flex border-b border-zinc-500">
+                        <button onclick="showTab('overview')"
+                            class="tab-button px-4 py-2 focus:outline-none">Overview</button>
+                        <button onclick="showTab('schemas')"
+                            class="tab-button px-4 py-2 focus:outline-none">Schemas</button>
+                        <button onclick="showTab('ioports')"
+                            class="tab-button px-4 py-2 focus:outline-none">I/O
+                            Ports</button>
+                        <button onclick="showTab('compliances')"
+                            class="tab-button px-4 py-2 focus:outline-none">Compliances</button>
+                        <button onclick="showTab('governance')"
+                            class="tab-button px-4 py-2 focus:outline-none">Governance</button>
+                        <button onclick="showTab('lineages')"
+                            class="tab-button px-4 py-2 focus:outline-none">Lineage
+                            Attributes</button>
+                        <button onclick="showTab('accessPolicies')"
+                            class="tab-button px-4 py-2 focus:outline-none">Access
+                            Policies</button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    {{ template "dataproduct-details-common.html" . }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScript for Tabs -->
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active-tab'));
+
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+        }
+
+        // Show the first tab by default
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUrl = window.location.href;
+
+            // Use URLSearchParams to parse the query string
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Get the value of the 'section' parameter
+            const section = urlParams.get('section');
+            if (section) {
+                showTab(section);
+            } else {
+                showTab('overview');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

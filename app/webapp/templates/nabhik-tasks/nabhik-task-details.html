@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.5/dist/purify.min.js"></script>
+</head>
+
+<body class="bg-zinc-800 flex h-screen">
+  {{ template "main-sidebar.html" . }}
+
+  <div class="overflow-y-auto scrollbar  h-screen w-full">
+    {{ template "header.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+   <div class="flex-grow p-2 w-full">
+        {{ template "section-headers.html" . }}
+       
+      <!-- Tabs -->
+      <div class="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md ">
+        <div class="flex border-b border-zinc-500">
+          <button onclick="showTab('spec')"
+            class="tab-button px-4 py-2 font-semibold  focus:outline-none">Spec</button>
+          <button onclick="showTab('logs')"
+            class="tab-button px-4 py-2 font-semibold  focus:outline-none ">Logs</button>
+          <button onclick="showTab('audit')"
+            class="tab-button px-4 py-2 font-semibold  focus:outline-none ">Audit</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="spec" class="tab-content mt-2 bg-[#1b1b1b] p-4">
+          <h3 class="text-xl mb-4 detail-heading">Basic Information</h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="">
+              <p class="detail-sect-key font-medium">Name:</p>
+              <p class=" break-words p-2">{{ stringCheck .Response.Task.Name }}</p>
+            </div>
+            <div class="">
+              <p class="detail-sect-key font-medium">Task Id:</p>
+              <p class=" break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ $.Response.Task.TaskId }}`)">{{stringCheck
+                .Response.Task.TaskId }}</p>
+            </div>
+            <div class="">
+              <p class="detail-sect-key font-medium">Instruction:</p>
+              <p class=" break-words p-2">{{ .Response.Task.Input.Instructions }}</p>
+            </div>
+
+            <div>
+              <p class="detail-sect-key font-medium">ParentTaskId:</p>
+              <p class=" break-words p-2">{{ .Response.Task.ParentTaskId }}</p>
+            </div>
+            
+            <div class="">
+              <p class="detail-sect-key font-medium">Status:</p>
+              <p class=" break-words p-2">
+                {{stringCheck .Response.Task.ResourceBase.Status }}
+              </p>
+            </div>
+            <div class="">
+              <p class="detail-sect-key font-medium">Organization :</p>
+              <p class=" break-words p-2">
+                {{stringCheck .Response.Task.ResourceBase.Organization }}
+              </p>
+            </div>
+
+            <div>
+              <p class="detail-sect-key font-medium">Input:</p>
+              {{ range  $val := $.Response.Task.Input.Inputs }}
+              <p class=" break-words p-2">{{ $val }}</p>
+              {{ end }}
+            </div>
+
+          </div>
+
+          <h3 class="text-xl mb-4 detail-heading">Assets</h3>
+          <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+            <table class="min-w-full divide-y divide-zinc-500 border border-zinc-500">
+              <thead class="bg-zinc-900">
+                <tr>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">File Name</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Description</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Asset Owner</th>
+                  <th class="px-3 py-3 text-left text-xs font-medium  uppercase tracking-wider">Asset Type</th>
+                </tr>
+              </thead>
+              <tbody class="bg-zinc-800 divide-y divide-zinc-500">
+                {{ range  $Asset := .Response.Task.Input.Assets }}
+                <tr class="cursor-pointer hover:bg-zinc-600">
+                  <td class="px-3 py-3 whitespace-nowrap">{{ .Asset.File.Name }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ .Asset.Description }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ .Asset.AssetOwner }}</td>
+                  <td class="px-3 py-3 whitespace-nowrap">{{ .Response.AssetType }}</td>
+                </tr>
+                {{ end }}
+              </tbody>
+            </table>
+          </div>
+        </div>
+       
+        <!-- logs -->
+        <div id="logs" class="tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+          {{ range $id, $taskLog := $.Response.TaskLogs }}
+            {{ range $ids, $log := $taskLog.Logs }}
+            <div class="mb-4">
+              <h3 class="text-xl mb-4 detail-heading">Step - {{ $ids }}</h3>
+              <div class="grid grid-cols-4 sm:grid-cols-4 gap-4">
+                <div class="col-span-4">
+                  <p class="detail-sect-key font-medium">Input:</p>
+                  <p class=" break-words p-2">{{ stringCheck $log.Input }}</p>
+                </div>
+                <div class="col-span-4">
+                  <p class="detail-sect-key font-medium">Output:</p>
+                  <p class=" break-words p-2 outputMess">{{ stringCheck $log.Output }}</p>
+                </div>
+                <div>
+                  <p class="detail-sect-key font-medium">Errors:</p>
+                  <p class=" break-words p-2">{{ stringCheck $log.Error }}</p>
+                </div>
+                <div>
+                  <p class="detail-sect-key font-medium">Agent:</p>
+                  <p class=" break-words p-2">{{ stringCheck $log.TeamMember }}</p>
+                </div>
+                {{ if $log.Reasonings }}
+                <div class="">
+                  <p class="detail-sect-key font-medium">Reasonings:</p>
+                  <p class=" break-words p-2">
+                  <ul class="list-disc pl-5">
+                    {{ range $reasoning := $log.Reasonings }}
+                    <li>{{ $reasoning }}</li>
+                    {{ end }}
+                  </ul>
+                  </p>
+                </div>
+                {{ end }}
+                <div class="">
+                  <p class="detail-sect-key font-medium">Start Time :</p>
+                  <p class=" break-words p-2">
+                    {{ epochConverterFullSeconds $log.StartTime }}
+                  </p>
+                </div>
+            
+                <div>
+                  <p class="detail-sect-key font-medium">End Time:</p>
+                  <p class=" break-words p-2">{{ epochConverterFullSeconds $log.EndTime }}</p>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          {{ end }}
+          <h3 class="text-xl mb-4 detail-heading">Assets</h3>
+          <table class="min-w-full divide-y divide-zinc-500 text-sm text-gray-100 border-2 border-zinc-500 scrollbar" id="taskLogsTable">
+            <thead class="bg-zinc-900 text-sm font-medium text-gray-500 uppercase tracking-wider">
+            </thead>
+            <tbody class="bg-zinc-800 divide-y divide-zinc-500 break-words text-sm">
+              <tr>
+                <td colspan="4" class="px-3 py-3 whitespace-nowrap text-center">
+                  No Output Assets for this task
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- audit -->
+        <div id="audit" class="tab-content mt-2 bg-[#1b1b1b] p-4 hidden">
+          <h3 class="text-xl mb-4 detail-heading">Audit Report</h3>
+         
+        </div>
+    </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("----------------------------2");
+      showTab('spec');
+      var OpAssetHeaders = ["Name", "Description", "Asset Owner", "Asset Type","Download"];
+      var OpAssetDataArray = [];
+      {{ range $id, $taskLog := $.Response.TaskLogs }}
+        {{ range $ids, $log := $taskLog.Logs }}
+         {{ range $val := $log.OutputAssets }}
+         OpAssetDataArray.push({"Name": "{{ $val.File.Name }}", "Description": `{{ $val.Description }}`, "Asset Owner": "{{ $val.AssetOwner }}", "Asset Type": "{{ $val.AssetType }}",
+          "Download": `<a title="Download" onclick='downloadNabhikFile("{{ $val.File.Path }}","{{ $.GlobalContext.AccessTokenKey }}","{{ $.FileDownloadUrl }}")' class="cursor-pointer">
+                      <svg class="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="currentColor" class="mr-2" stroke="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M5 20h14v2H5v-2zm7-2c-.28 0-.53-.11-.71-.29L8 13.41l1.41-1.41L11 14.17V4h2v10.17l1.59-1.59L16 13.41l-3.29 3.29c-.18.18-.43.29-.71.29z"
+                        fill="#000" />
+                    </svg>
+                      </a>`})
+          console.log("{{ $val.File.Name }}");
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      renderDatatable("taskLogsTable", OpAssetDataArray,OpAssetHeaders, null);
+      opMessages = document.querySelectorAll(".outputMess");
+      opMessages.forEach((message) => {
+        console.log("message", message.innerHTML);
+        message.innerHTML = renderMDContent(message.innerHTML);
+      });
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+async function downloadNabhikFile(fileName, accessTokenKey,downloadUrl) {
+  const myHeaders = new Headers();
+  myHeaders.append("Accept", "application/x-ndjson");
+  myHeaders.append("Content-Type", "application/json");
+  const apiToken = getCookie(accessTokenKey);
+  myHeaders.append(
+    "Authorization",
+    `Bearer ${apiToken}`);
+  const payload = JSON.stringify({ fileName: fileName });
+  downloadUrl = downloadUrl + "?fileName=" + fileName;
+  try {
+    const response = await fetch(downloadUrl, {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    });
+    if (!response.ok) {
+      showErrorMessage("Error", "Error downloading file, please try again");
+    }
+
+    const result = await response.json();
+    result.output.forEach(file => {
+      if (file.name !== undefined && file.name !== "") {
+        downloadFile(file);
+      }
+    });
+  } catch (error) {
+    showErrorMessage("Error", "Error downloading file, please try again");
+  }
+}
+  </script>
+
+</body>
+
+</html>
