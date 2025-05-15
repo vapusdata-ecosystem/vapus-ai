@@ -33,6 +33,12 @@ type VapusInstallerConfig struct {
 			Database string `yaml:"database"`
 		} `yaml:"auth"`
 	} `yaml:"postgresql"`
+	Redis struct {
+		FullnameOverride string `yaml:"fullnameOverride"`
+		Auth             struct {
+			Password string `yaml:"password"`
+		} `yaml:"auth"`
+	} `yaml:"postgresql"`
 	Vault   *Vault `yaml:"vault"`
 	TLSCert struct {
 		Cert string `yaml:"cert"`
