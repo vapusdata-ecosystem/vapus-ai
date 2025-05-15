@@ -18,6 +18,13 @@ spec:
                   number: 9013
             path: /
             pathType: Prefix
+          - backend:
+              service:
+                name: vapusaigateway
+                port:
+                  number: 9013
+            path: /api
+            pathType: Prefix  
   tls:
     - hosts:
         - {{ .Values.app.domain }}  # Ensure this matches the managed certificate

@@ -23,10 +23,6 @@ type VapusInstallerConfig struct {
 		PlatformAccountOrganization struct {
 			Name string `yaml:"name"`
 		} `yaml:"platformAccountOrganization"`
-		Datamarketplace struct {
-			Name    string `yaml:"name"`
-			Creator string `yaml:"creator"`
-		} `yaml:"datamarketplace"`
 	} `yaml:"accountBootstrap"`
 	Secrets    *VapusSecretsMap `yaml:"secrets"`
 	Postgresql struct {
@@ -38,7 +34,6 @@ type VapusInstallerConfig struct {
 		} `yaml:"auth"`
 	} `yaml:"postgresql"`
 	Vault   *Vault `yaml:"vault"`
-	Trino   *Trino `yaml:"trino"`
 	TLSCert struct {
 		Cert string `yaml:"cert"`
 		Key  string `yaml:"key"`
@@ -56,45 +51,6 @@ type Vault struct {
 	} `yaml:"server"`
 }
 
-type Trino struct {
-	FullnameOverride        string `yaml:"fullnameOverride"`
-	CoordinatorNameOverride string `yaml:"coordinatorNameOverride"`
-	WorkerNameOverride      string `yaml:"workerNameOverride"`
-	Service                 struct {
-		Port int `yaml:"port"`
-	} `yaml:"service"`
-	Coordinator struct {
-		Resources struct {
-			Requests struct {
-				CPU    string `yaml:"cpu"`
-				Memory string `yaml:"memory"`
-			} `yaml:"requests"`
-		} `yaml:"resources"`
-		Jvm struct {
-			MaxHeapSize string `yaml:"maxHeapSize"`
-			Gc          string `yaml:"gc"`
-		} `yaml:"jvm"`
-	} `yaml:"coordinator"`
-	Worker struct {
-		Replicas  int `yaml:"replicas"`
-		Resources struct {
-			Requests struct {
-				CPU    string `yaml:"cpu"`
-				Memory string `yaml:"memory"`
-			} `yaml:"requests"`
-		} `yaml:"resources"`
-	} `yaml:"worker"`
-	Config struct {
-		Coordinator struct {
-			LogLevel string `yaml:"logLevel"`
-		} `yaml:"coordinator"`
-		Properties struct {
-			QueryMaxMemory        string `yaml:"query.max-memory"`
-			QueryMaxMemoryPerNode string `yaml:"query.max-memory-per-node"`
-		} `yaml:"properties"`
-	} `yaml:"config"`
-}
-
 type VapusSecretInstallerConfig struct {
 	SecretStore       *models.DataSourceCredsParams `yaml:"secretStore"`
 	DevSecretStore    *models.DataSourceCredsParams `yaml:"devSecretStore"`
@@ -103,7 +59,6 @@ type VapusSecretInstallerConfig struct {
 	JWTAuthnSecrets   *encryption.JWTAuthn          `yaml:"JWTAuthnSecrets"`
 	FileStore         *models.DataSourceCredsParams `yaml:"fileStore"`
 	AuthnSecrets      *authn.AuthnSecrets           `yaml:"authnSecrets"`
-	ArtifactStore     *models.DataSourceCredsParams `yaml:"artifactStore"`
 	CreateDatabase    bool                          `yaml:"createDatabase"`
 }
 
@@ -123,9 +78,6 @@ type VapusSecretsMap struct {
 	AuthnSecrets struct {
 		Secret string `yaml:"secret"`
 	} `yaml:"authnSecrets"`
-	ArtifactStore struct {
-		Secret string `yaml:"secret"`
-	} `yaml:"artifactStore"`
 	FileStore struct {
 		Secret string `yaml:"secret"`
 	} `yaml:"fileStore"`
