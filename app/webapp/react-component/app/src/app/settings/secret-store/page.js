@@ -55,10 +55,23 @@ const SecretStoreClient = () => {
         "Created At": epochConverterFull(item.resourceBase?.createdAt),
         Description: limitLetters(item.description, 30),
         // Use a string with HTML instead of a React component for DataTable
-        Update: `<a href="secret-store/${item.name}" 
-                      class="cursor-pointer mt-2 mb-2 rounded-full bg-orange-700 px-5 py-2 font-medium text-white transition-colors duration-200 hover:bg-pink-900 active:bg-orange-900" role="button">
-                      Update
-                    </a>`,
+
+        "View Details": `<a href="secret-store/${item.name}" target="_blank" class="relative group inline-flex items-center justify-center">
+                          <!-- The Icon -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="90" stroke="rgb(207, 86, 46)" stroke-width="10" fill="none" />
+                            <g transform="rotate(315, 100, 100)">
+                              <line x1="60" y1="100" x2="140" y2="100" stroke="rgb(207, 86, 46)" stroke-width="10" stroke-linecap="round" />
+                              <path d="M120,80 L140,100 L120,120" stroke="rgb(207, 86, 46)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            </g>
+                          </svg>
+
+                          <!-- Tooltip: adjust position and spacing -->
+                          <div class="absolute -top-6 left-17 -translate-x-1/2 
+                                      hidden group-hover:block bg-gray-700 text-gray-100 text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
+                            View user detail
+                          </div>
+                      </a>`,
       };
     });
   };
@@ -84,7 +97,7 @@ const SecretStoreClient = () => {
     "Secret Type",
     "Created At",
     "Description",
-    "Update",
+    "View Details",
   ];
   const filteredColumns = ["Name", "Secret Type"];
 

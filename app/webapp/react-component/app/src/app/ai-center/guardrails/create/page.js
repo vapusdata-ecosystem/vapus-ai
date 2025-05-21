@@ -27,6 +27,11 @@ export default function CreateGuardrail() {
   const [modelOptions, setModelOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [aiModelNodes, setAiModelNodes] = useState([]);
+  const [selectedGuardrails, setSelectedGuardrails] = useState([]);
+  const [guardrailType, setGuardrailType] = useState("vapus");
+  const handleGuardrailChange = (e) => {
+    setGuardrailType(e.target.value);
+  };
   const [wordEntries, setWordEntries] = useState([
     { words: "", fileLocation: "" },
   ]);
@@ -41,6 +46,26 @@ export default function CreateGuardrail() {
     ResourceScope: [],
     GuardRailLevels: [],
   });
+
+  //  Sample data for bedrock,mistral,pangea
+  const guardrailOptions = {
+    x: "Option X",
+    y: "Option Y",
+    z: "Option Z",
+    a: "Option A",
+  };
+
+  const handleGuardrailSelection = (guardrail) => {
+    setSelectedGuardrails((prev) => {
+      if (prev.includes(guardrail)) {
+        // If already selected, remove it
+        return prev.filter((item) => item !== guardrail);
+      } else {
+        // Otherwise add it
+        return [...prev, guardrail];
+      }
+    });
+  };
 
   // Fetch enums data
   useEffect(() => {
@@ -440,26 +465,7 @@ export default function CreateGuardrail() {
                     onSubmit={submitCreateForm}
                   >
                     <fieldset className="p-4 rounded">
-                      <legend className="text-xl font-bold text-gray-100">
-                        Spec
-                      </legend>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        {/* Display Name */}
-                        <div>
-                          <label htmlFor="spec_displayName" className="labels">
-                            Display Name
-                          </label>
-                          <input
-                            id="spec_displayName"
-                            name="spec.displayName"
-                            type="text"
-                            placeholder="Enter Display name"
-                            className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                            required
-                            suppressHydrationWarning
-                          />
-                        </div>
                         {/* Name */}
                         <div>
                           <label htmlFor="spec_name" className="labels">
@@ -475,488 +481,724 @@ export default function CreateGuardrail() {
                             suppressHydrationWarning
                           />
                         </div>
-                        {/* Minimum Confidance */}
+
+                        {/* Guardrails Type */}
                         <div>
                           <label
-                            htmlFor="spec_minConfidence"
-                            className="labels"
+                            htmlFor="spec_scanMode"
+                            className="block text-sm font-medium mb-1"
                           >
-                            Minimum Confidence
-                          </label>
-                          <input
-                            id="spec_minConfidence"
-                            name="spec.minConfidence"
-                            type="number"
-                            step="0.001"
-                            placeholder="Enter Minimum Confidence"
-                            className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                            required
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        {/* Maximum Confidence */}
-                        <div>
-                          <label
-                            htmlFor="spec_maxConfidence"
-                            className="labels"
-                          >
-                            Maximum Confidence
-                          </label>
-                          <input
-                            id="spec_maxConfidence"
-                            name="spec.maxConfidence"
-                            type="number"
-                            step="0.001"
-                            placeholder="Enter Maximum Confidence"
-                            className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                            required
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        {/* DEscription */}
-                        <div>
-                          <label htmlFor="spec_Description" className="labels">
-                            Description
-                          </label>
-                          <textarea
-                            id="spec_Description"
-                            name="spec.description"
-                            placeholder="Enter Description"
-                            rows="3"
-                            className="form-textarea overflow-y-auto scrollbar text-sm rounded-md bg-zinc-700 placeholder-gray-300 p-2 shadow-sm w-full"
-                          />
-                        </div>
-                        {/* Failure Message */}
-                        <div>
-                          <label
-                            htmlFor="spec_failureMessage"
-                            className="labels"
-                          >
-                            Failure Message
-                          </label>
-                          <textarea
-                            id="spec_failureMessage"
-                            name="spec.failureMessage"
-                            placeholder="Enter failureMessage"
-                            rows="3"
-                            className="form-textarea overflow-y-auto scrollbar text-sm rounded-md bg-zinc-700 placeholder-gray-300 p-2 shadow-sm w-full"
-                          />
-                        </div>
-                        {/* Scan Mode*/}
-                        <div>
-                          <label htmlFor="spec_scanMode" className="labels">
-                            Scan Mode
+                            Guardrail Type
                           </label>
                           <select
-                            id="spec_scanMode"
-                            name="spec.scanMode"
-                            className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                            id="spec_guardrailType"
+                            name="spec.guardrailType"
+                            className="w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium rounded border border-zinc-700 focus:ring-1 focus:ring-orange-700 focus:outline-none"
+                            value={guardrailType}
+                            onChange={handleGuardrailChange}
                             suppressHydrationWarning
                           >
-                            <option value="">Select Scan Mode</option>
-                            {enums.AIGuardrailScanMode.map((scanMode) => (
-                              <option key={scanMode} value={scanMode}>
-                                {strTitle(scanMode)}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {/* Scope*/}
-                        <div>
-                          <label htmlFor="spec_scope" className="labels">
-                            Scope
-                          </label>
-                          <select
-                            id="spec_scope"
-                            name="spec.resourceBase.scope"
-                            className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
-                            suppressHydrationWarning
-                          >
-                            <option value="">Select Scope</option>
-                            {enums.ResourceScope.map((scope) => (
-                              <option key={scope} value={scope}>
-                                {strTitle(scope)}
-                              </option>
-                            ))}
+                            <option value="vapus">Vapus</option>
+                            <option value="Bedrock">Bedrock</option>
+                            <option value="Mistral">Mistral</option>
+                            <option value="Pangea">Pangea</option>
                           </select>
                         </div>
                       </div>
 
-                      {/* Contents Section  */}
-                      <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
-                        <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
-                          Contents
-                        </summary>
-                        <fieldset className="rounded mb-4">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Select Hate Speech Level */}
+                      {/* Vapus section */}
+
+                      {guardrailType === "vapus" && (
+                        <div className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                          <legend className="text-xl font-bold text-gray-100">
+                            Vapus Guardrails
+                          </legend>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            {/* Minimum Confidance */}
                             <div>
                               <label
-                                htmlFor="spec_ContentsHatespeech"
+                                htmlFor="spec_minConfidence"
                                 className="labels"
                               >
-                                Hate Speech Level
+                                Minimum Confidence
+                              </label>
+                              <input
+                                id="spec_minConfidence"
+                                name="spec.minConfidence"
+                                type="number"
+                                step="0.001"
+                                placeholder="Enter Minimum Confidence"
+                                className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                required
+                                suppressHydrationWarning
+                              />
+                            </div>
+                            {/* Maximum Confidence */}
+                            <div>
+                              <label
+                                htmlFor="spec_maxConfidence"
+                                className="labels"
+                              >
+                                Maximum Confidence
+                              </label>
+                              <input
+                                id="spec_maxConfidence"
+                                name="spec.maxConfidence"
+                                type="number"
+                                step="0.001"
+                                placeholder="Enter Maximum Confidence"
+                                className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                required
+                                suppressHydrationWarning
+                              />
+                            </div>
+                            {/* DEscription */}
+                            <div>
+                              <label
+                                htmlFor="spec_Description"
+                                className="labels"
+                              >
+                                Description
+                              </label>
+                              <textarea
+                                id="spec_Description"
+                                name="spec.description"
+                                placeholder="Enter Description"
+                                rows="3"
+                                className="form-textarea overflow-y-auto scrollbar text-sm rounded-md bg-zinc-700 placeholder-gray-300 p-2 shadow-sm w-full"
+                              />
+                            </div>
+                            {/* Failure Message */}
+                            <div>
+                              <label
+                                htmlFor="spec_failureMessage"
+                                className="labels"
+                              >
+                                Failure Message
+                              </label>
+                              <textarea
+                                id="spec_failureMessage"
+                                name="spec.failureMessage"
+                                placeholder="Enter failureMessage"
+                                rows="3"
+                                className="form-textarea overflow-y-auto scrollbar text-sm rounded-md bg-zinc-700 placeholder-gray-300 p-2 shadow-sm w-full"
+                              />
+                            </div>
+                            {/* Scan Mode*/}
+                            <div>
+                              <label htmlFor="spec_scanMode" className="labels">
+                                Scan Mode
                               </label>
                               <select
-                                id="spec_ContentsHatespeech"
-                                name="spec.contents.hateSpeech"
+                                id="spec_scanMode"
+                                name="spec.scanMode"
                                 className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
                                 suppressHydrationWarning
                               >
-                                <option value="">
-                                  Select Hate Speech Level
-                                </option>
-                                {enums.GuardRailLevels.map((level) => (
-                                  <option key={level} value={level}>
-                                    {strTitle(level)}
+                                <option value="">Select Scan Mode</option>
+                                {enums.AIGuardrailScanMode.map((scanMode) => (
+                                  <option key={scanMode} value={scanMode}>
+                                    {strTitle(scanMode)}
                                   </option>
                                 ))}
                               </select>
                             </div>
-                            {/*  Insults Level */}
+                            {/* Scope*/}
                             <div>
-                              <label
-                                htmlFor="spec_ContentsInsults"
-                                className="labels"
-                              >
-                                Insults Level
+                              <label htmlFor="spec_scope" className="labels">
+                                Scope
                               </label>
                               <select
-                                id="spec_ContentsInsults"
-                                name="spec.contents.insults"
+                                id="spec_scope"
+                                name="spec.resourceBase.scope"
                                 className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
                                 suppressHydrationWarning
                               >
-                                <option value="">Select Insults Level</option>
-                                {enums.GuardRailLevels.map((level) => (
-                                  <option key={level} value={level}>
-                                    {strTitle(level)}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            {/* Sexual Harassment Level */}
-                            <div>
-                              <label
-                                htmlFor="spec_ContentsSexual"
-                                className="labels"
-                              >
-                                Sexual Harassment Level
-                              </label>
-                              <select
-                                id="spec_ContentsSexual"
-                                name="spec.contents.sexual"
-                                className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
-                                suppressHydrationWarning
-                              >
-                                <option value="">
-                                  Select Sexual Harassment Level
-                                </option>
-                                {enums.GuardRailLevels.map((level) => (
-                                  <option key={level} value={level}>
-                                    {strTitle(level)}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            {/* Threats Level */}
-                            <div>
-                              <label
-                                htmlFor="spec_ContentsThreats"
-                                className="labels"
-                              >
-                                Threats Level
-                              </label>
-                              <select
-                                id="spec_ContentsThreats"
-                                name="spec.contents.threats"
-                                className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
-                                suppressHydrationWarning
-                              >
-                                <option value="">Select Threats Level</option>
-                                {enums.GuardRailLevels.map((level) => (
-                                  <option key={level} value={level}>
-                                    {strTitle(level)}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            {/* Misconduct Level */}
-                            <div>
-                              <label
-                                htmlFor="spec_ContentsMisconduct"
-                                className="labels"
-                              >
-                                Misconduct Level
-                              </label>
-                              <select
-                                id="spec_ContentsMisconduct"
-                                name="spec.contents.misconduct"
-                                className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
-                                suppressHydrationWarning
-                              >
-                                <option value="">
-                                  Select Misconduct Level
-                                </option>
-                                {enums.GuardRailLevels.map((level) => (
-                                  <option key={level} value={level}>
-                                    {strTitle(level)}
+                                <option value="">Select Scope</option>
+                                {enums.ResourceScope.map((scope) => (
+                                  <option key={scope} value={scope}>
+                                    {strTitle(scope)}
                                   </option>
                                 ))}
                               </select>
                             </div>
                           </div>
-                        </fieldset>
-                      </details>
 
-                      {/* Topics Section */}
-                      <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
-                        <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
-                          Topics
-                        </summary>
-                        <fieldset className="rounded mb-4">
-                          <div>
-                            {Array.from({ length: topicCount }).map(
-                              (_, index) => (
-                                <div
-                                  key={`topic-${index}`}
-                                  className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4"
-                                >
+                          {/* Contents Section  */}
+                          <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                            <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                              Contents
+                            </summary>
+                            <fieldset className="rounded mb-4">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Select Hate Speech Level */}
+                                <div>
                                   <label
-                                    htmlFor={`spec_Topics_${index}_topic`}
+                                    htmlFor="spec_ContentsHatespeech"
                                     className="labels"
                                   >
-                                    Topic Name
+                                    Hate Speech Level
                                   </label>
-                                  <input
-                                    id={`spec_Topics_${index}_topic`}
-                                    name={`spec.topics[${index}].topic`}
-                                    type="text"
-                                    placeholder="Enter topic name"
-                                    className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full mb-2"
+                                  <select
+                                    id="spec_ContentsHatespeech"
+                                    name="spec.contents.hateSpeech"
+                                    className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
                                     suppressHydrationWarning
-                                  />
-
-                                  <label
-                                    htmlFor={`spec_Topics_${index}_description`}
-                                    className="labels"
                                   >
-                                    Topic Description
-                                  </label>
-                                  <textarea
-                                    id={`spec_Topics_${index}_description`}
-                                    name={`spec.topics[${index}].description`}
-                                    placeholder="Enter description"
-                                    className="form-textarea overflow-y-auto scrollbar text-sm rounded-md bg-zinc-700 placeholder-gray-300 p-2 shadow-sm w-full"
-                                  />
-
-                                  <label
-                                    htmlFor={`spec_Topics_${index}_samples`}
-                                    className="labels"
-                                  >
-                                    Topic Samples
-                                  </label>
-                                  <input
-                                    id={`spec_Topics_${index}_samples`}
-                                    name={`spec.topics[${index}].samples`}
-                                    type="text"
-                                    placeholder="Enter samples (comma separated)"
-                                    className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                                    suppressHydrationWarning
-                                  />
-                                  {index > 0 && (
-                                    <RemoveButton
-                                      onClick={() => removeTopic(index)}
-                                    />
-                                  )}
+                                    <option value="">
+                                      Select Hate Speech Level
+                                    </option>
+                                    {enums.GuardRailLevels.map((level) => (
+                                      <option key={level} value={level}>
+                                        {strTitle(level)}
+                                      </option>
+                                    ))}
+                                  </select>
                                 </div>
-                              )
-                            )}
-                          </div>
+                                {/*  Insults Level */}
+                                <div>
+                                  <label
+                                    htmlFor="spec_ContentsInsults"
+                                    className="labels"
+                                  >
+                                    Insults Level
+                                  </label>
+                                  <select
+                                    id="spec_ContentsInsults"
+                                    name="spec.contents.insults"
+                                    className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                    suppressHydrationWarning
+                                  >
+                                    <option value="">
+                                      Select Insults Level
+                                    </option>
+                                    {enums.GuardRailLevels.map((level) => (
+                                      <option key={level} value={level}>
+                                        {strTitle(level)}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                {/* Sexual Harassment Level */}
+                                <div>
+                                  <label
+                                    htmlFor="spec_ContentsSexual"
+                                    className="labels"
+                                  >
+                                    Sexual Harassment Level
+                                  </label>
+                                  <select
+                                    id="spec_ContentsSexual"
+                                    name="spec.contents.sexual"
+                                    className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                    suppressHydrationWarning
+                                  >
+                                    <option value="">
+                                      Select Sexual Harassment Level
+                                    </option>
+                                    {enums.GuardRailLevels.map((level) => (
+                                      <option key={level} value={level}>
+                                        {strTitle(level)}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                {/* Threats Level */}
+                                <div>
+                                  <label
+                                    htmlFor="spec_ContentsThreats"
+                                    className="labels"
+                                  >
+                                    Threats Level
+                                  </label>
+                                  <select
+                                    id="spec_ContentsThreats"
+                                    name="spec.contents.threats"
+                                    className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                    suppressHydrationWarning
+                                  >
+                                    <option value="">
+                                      Select Threats Level
+                                    </option>
+                                    {enums.GuardRailLevels.map((level) => (
+                                      <option key={level} value={level}>
+                                        {strTitle(level)}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                {/* Misconduct Level */}
+                                <div>
+                                  <label
+                                    htmlFor="spec_ContentsMisconduct"
+                                    className="labels"
+                                  >
+                                    Misconduct Level
+                                  </label>
+                                  <select
+                                    id="spec_ContentsMisconduct"
+                                    name="spec.contents.misconduct"
+                                    className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                    suppressHydrationWarning
+                                  >
+                                    <option value="">
+                                      Select Misconduct Level
+                                    </option>
+                                    {enums.GuardRailLevels.map((level) => (
+                                      <option key={level} value={level}>
+                                        {strTitle(level)}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                            </fieldset>
+                          </details>
 
-                          <AddButton onClick={addTopic} name="+ Add Topic" />
-                        </fieldset>
-                      </details>
-
-                      {/* Words Section */}
-                      <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
-                        <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
-                          Words
-                        </summary>
-                        <fieldset className="rounded mb-4">
-                          <div id="wordsContainer">
-                            {Array.from({ length: wordEntryCount }).map(
-                              (_, index) => (
-                                <div
-                                  key={`word-${index}`}
-                                  className="word-entry border p-3 rounded mb-3"
-                                >
-                                  <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
-                                    <div>
-                                      <label className="labels">
-                                        Words (comma separated)
+                          {/* Topics Section */}
+                          <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                            <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                              Topics
+                            </summary>
+                            <fieldset className="rounded mb-4">
+                              <div>
+                                {Array.from({ length: topicCount }).map(
+                                  (_, index) => (
+                                    <div
+                                      key={`topic-${index}`}
+                                      className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4"
+                                    >
+                                      <label
+                                        htmlFor={`spec_Topics_${index}_topic`}
+                                        className="labels"
+                                      >
+                                        Topic Name
                                       </label>
                                       <input
+                                        id={`spec_Topics_${index}_topic`}
+                                        name={`spec.topics[${index}].topic`}
                                         type="text"
-                                        name={`spec.words[${index}].words`}
-                                        placeholder="Enter words (comma separated)"
+                                        placeholder="Enter topic name"
+                                        className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full mb-2"
+                                        suppressHydrationWarning
+                                      />
+
+                                      <label
+                                        htmlFor={`spec_Topics_${index}_description`}
+                                        className="labels"
+                                      >
+                                        Topic Description
+                                      </label>
+                                      <textarea
+                                        id={`spec_Topics_${index}_description`}
+                                        name={`spec.topics[${index}].description`}
+                                        placeholder="Enter description"
+                                        className="form-textarea overflow-y-auto scrollbar text-sm rounded-md bg-zinc-700 placeholder-gray-300 p-2 shadow-sm w-full"
+                                      />
+
+                                      <label
+                                        htmlFor={`spec_Topics_${index}_samples`}
+                                        className="labels"
+                                      >
+                                        Topic Samples
+                                      </label>
+                                      <input
+                                        id={`spec_Topics_${index}_samples`}
+                                        name={`spec.topics[${index}].samples`}
+                                        type="text"
+                                        placeholder="Enter samples (comma separated)"
                                         className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
                                         suppressHydrationWarning
                                       />
+                                      {index > 0 && (
+                                        <RemoveButton
+                                          onClick={() => removeTopic(index)}
+                                        />
+                                      )}
                                     </div>
-                                    <div>
-                                      <label className="labels">
-                                        File Location
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name={`spec.words[${index}].fileLocation`}
-                                        placeholder="Enter file location"
-                                        className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                                        suppressHydrationWarning
-                                      />
-                                    </div>
-                                  </div>
-                                  {index > 0 && (
-                                    <RemoveButton
-                                      onClick={() => removeWordEntry(index)}
-                                    />
-                                  )}
-                                </div>
-                              )
-                            )}
-                          </div>
-                          <AddButton
-                            name="+ Add Word Entry"
-                            onClick={addWordEntry}
-                          />
-                        </fieldset>
-                      </details>
-
-                      {/* Sensitive Dataset Section */}
-                      <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
-                        <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
-                          Sensitive Dataset
-                        </summary>
-                        <fieldset className="rounded mb-4">
-                          <div id="sensitiveDatasetContainer">
-                            {sensitiveEntries.map((entry, index) => (
-                              <div
-                                key={`sensitive-${index}`}
-                                className="sensitive-entry border p-3 rounded mb-3"
-                              >
-                                <div className="grid grid-cols-1  md:grid-cols-3 gap-4">
-                                  <div>
-                                    <label className="labels">PII Type</label>
-                                    <input
-                                      type="text"
-                                      name={`spec.sensitiveDataset[${index}].piiType`}
-                                      placeholder="Enter PII type"
-                                      className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                                      suppressHydrationWarning
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="labels">Action</label>
-                                    <input
-                                      type="text"
-                                      name={`spec.sensitiveDataset[${index}].action`}
-                                      placeholder="Enter action"
-                                      className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                                      suppressHydrationWarning
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="labels">Regex</label>
-                                    <input
-                                      type="text"
-                                      name={`spec.sensitiveDataset[${index}].regex`}
-                                      placeholder="Enter regex pattern"
-                                      className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
-                                      suppressHydrationWarning
-                                    />
-                                  </div>
-                                </div>
-                                {index > 0 && (
-                                  <RemoveButton
-                                    onClick={() => removeSensitiveEntry(index)}
-                                  />
+                                  )
                                 )}
                               </div>
-                            ))}
-                          </div>
-                          <AddButton
-                            name="+ Add Senstive Data Entry"
-                            onClick={addSensitiveEntry}
-                          />
-                        </fieldset>
-                      </details>
 
-                      {/* Guard Model Section */}
-                      <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
-                        <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
-                          Guard Model
-                        </summary>
-                        <fieldset className="rounded mb-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <label className="labels">Model Node ID</label>
-                              <div className="relative">
-                                <select
-                                  id="spec_guardModel_modelNodeId"
-                                  name="spec.guardModel.modelNodeId"
-                                  value={selectedModelNodeId}
-                                  onChange={(e) =>
-                                    populateModelDropdown(e.target.value)
-                                  }
-                                  className="mt-1 w-full flex justify-between items-center bg-zinc-800  px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
-                                  suppressHydrationWarning
-                                >
-                                  <option value="">Select Model Gateway</option>
-                                  {aiModelNodes.map((node) => (
-                                    <option
-                                      key={node.modelNodeId}
-                                      value={node.modelNodeId}
-                                      className="text-sm text-orange-700 hover:text-pink-900"
+                              <AddButton
+                                onClick={addTopic}
+                                name="+ Add Topic"
+                              />
+                            </fieldset>
+                          </details>
+
+                          {/* Words Section */}
+                          <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                            <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                              Words
+                            </summary>
+                            <fieldset className="rounded mb-4">
+                              <div id="wordsContainer">
+                                {Array.from({ length: wordEntryCount }).map(
+                                  (_, index) => (
+                                    <div
+                                      key={`word-${index}`}
+                                      className="word-entry border p-3 rounded mb-3"
                                     >
-                                      {node.name}
-                                    </option>
-                                  ))}
-                                </select>
+                                      <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
+                                        <div>
+                                          <label className="labels">
+                                            Words (comma separated)
+                                          </label>
+                                          <input
+                                            type="text"
+                                            name={`spec.words[${index}].words`}
+                                            placeholder="Enter words (comma separated)"
+                                            className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                            suppressHydrationWarning
+                                          />
+                                        </div>
+                                        <div>
+                                          <label className="labels">
+                                            File Location
+                                          </label>
+                                          <input
+                                            type="text"
+                                            name={`spec.words[${index}].fileLocation`}
+                                            placeholder="Enter file location"
+                                            className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                            suppressHydrationWarning
+                                          />
+                                        </div>
+                                      </div>
+                                      {index > 0 && (
+                                        <RemoveButton
+                                          onClick={() => removeWordEntry(index)}
+                                        />
+                                      )}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                              <AddButton
+                                name="+ Add Word Entry"
+                                onClick={addWordEntry}
+                              />
+                            </fieldset>
+                          </details>
+
+                          {/* Sensitive Dataset Section */}
+                          <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                            <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                              Sensitive Dataset
+                            </summary>
+                            <fieldset className="rounded mb-4">
+                              <div id="sensitiveDatasetContainer">
+                                {sensitiveEntries.map((entry, index) => (
+                                  <div
+                                    key={`sensitive-${index}`}
+                                    className="sensitive-entry border p-3 rounded mb-3"
+                                  >
+                                    <div className="grid grid-cols-1  md:grid-cols-3 gap-4">
+                                      <div>
+                                        <label className="labels">
+                                          PII Type
+                                        </label>
+                                        <input
+                                          type="text"
+                                          name={`spec.sensitiveDataset[${index}].piiType`}
+                                          placeholder="Enter PII type"
+                                          className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                          suppressHydrationWarning
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="labels">Action</label>
+                                        <input
+                                          type="text"
+                                          name={`spec.sensitiveDataset[${index}].action`}
+                                          placeholder="Enter action"
+                                          className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                          suppressHydrationWarning
+                                        />
+                                      </div>
+                                      <div>
+                                        <label className="labels">Regex</label>
+                                        <input
+                                          type="text"
+                                          name={`spec.sensitiveDataset[${index}].regex`}
+                                          placeholder="Enter regex pattern"
+                                          className="form-input-field p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm p-1 mt-2 w-full"
+                                          suppressHydrationWarning
+                                        />
+                                      </div>
+                                    </div>
+                                    {index > 0 && (
+                                      <RemoveButton
+                                        onClick={() =>
+                                          removeSensitiveEntry(index)
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                              <AddButton
+                                name="+ Add Senstive Data Entry"
+                                onClick={addSensitiveEntry}
+                              />
+                            </fieldset>
+                          </details>
+
+                          {/* Guard Model Section */}
+                          <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                            <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                              Guard Model
+                            </summary>
+                            <fieldset className="rounded mb-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <label className="labels">
+                                    Model Node ID
+                                  </label>
+                                  <div className="relative">
+                                    <select
+                                      id="spec_guardModel_modelNodeId"
+                                      name="spec.guardModel.modelNodeId"
+                                      value={selectedModelNodeId}
+                                      onChange={(e) =>
+                                        populateModelDropdown(e.target.value)
+                                      }
+                                      className="mt-1 w-full flex justify-between items-center bg-zinc-800  px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                      suppressHydrationWarning
+                                    >
+                                      <option value="">
+                                        Select Model Gateway
+                                      </option>
+                                      {aiModelNodes.map((node) => (
+                                        <option
+                                          key={node.modelNodeId}
+                                          value={node.modelNodeId}
+                                          className="text-sm text-orange-700 hover:text-pink-900"
+                                        >
+                                          {node.name}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                </div>
+                                <div>
+                                  <label className="labels">Model ID</label>
+                                  <div className="relative">
+                                    <select
+                                      id="spec_guardModel_modelId"
+                                      name="spec.guardModel.modelId"
+                                      className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                      suppressHydrationWarning
+                                    >
+                                      <option value="">Select Model</option>
+                                      {modelOptions.map((model, index) => (
+                                        <option
+                                          key={`${model.modelId}-${index}`}
+                                          value={model.modelId}
+                                          className="text-sm text-orange-700 hover:text-pink-900"
+                                        >
+                                          {model.modelName}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            </fieldset>
+                          </details>
+                        </div>
+                      )}
+                      {/* Bedrock section */}
+                      {guardrailType === "Bedrock" && (
+                        <div className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                          <legend className="text-xl font-bold text-gray-100">
+                            Bedrock Available Guardrails
+                          </legend>
+                          <label className="labels">Select Guardrails </label>
+
+                          <div className="mt-2">
+                            <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                                {Object.keys(guardrailOptions).map(
+                                  (guardrail) => (
+                                    <div
+                                      key={guardrail}
+                                      className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                        selectedGuardrails.includes(guardrail)
+                                          ? "border-orange-700 bg-zinc-700"
+                                          : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                      }`}
+                                      onClick={() =>
+                                        handleGuardrailSelection(guardrail)
+                                      }
+                                    >
+                                      <div className="text-sm font-medium">
+                                        {strTitle(guardrail)}
+                                      </div>
+                                      {selectedGuardrails.includes(
+                                        guardrail
+                                      ) && (
+                                        <div className="text-orange-500">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                          </svg>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                )}
                               </div>
                             </div>
-                            <div>
-                              <label className="labels">Model ID</label>
-                              <div className="relative">
-                                <select
-                                  id="spec_guardModel_modelId"
-                                  name="spec.guardModel.modelId"
-                                  className="mt-1 w-full flex justify-between items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
-                                  suppressHydrationWarning
-                                >
-                                  <option value="">Select Model</option>
-                                  {modelOptions.map((model, index) => (
-                                    <option
-                                      key={`${model.modelId}-${index}`}
-                                      value={model.modelId}
-                                      className="text-sm text-orange-700 hover:text-pink-900"
+
+                            {/* Hidden input to store selected guardrails for form submission */}
+                            <input
+                              type="hidden"
+                              name="selectedGuardrails"
+                              value={selectedGuardrails.join(",")}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {/* Mistral section */}
+                      {guardrailType === "Mistral" && (
+                        <div className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                          <legend className="text-xl font-bold text-gray-100">
+                            Mistral Available Guardrails
+                          </legend>
+                          <label className="labels">Select Guardrails </label>
+
+                          <div className="mt-2">
+                            <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                                {Object.keys(guardrailOptions).map(
+                                  (guardrail) => (
+                                    <div
+                                      key={guardrail}
+                                      className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                        selectedGuardrails.includes(guardrail)
+                                          ? "border-orange-700 bg-zinc-700"
+                                          : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                      }`}
+                                      onClick={() =>
+                                        handleGuardrailSelection(guardrail)
+                                      }
                                     >
-                                      {model.modelName}
-                                    </option>
-                                  ))}
-                                </select>
+                                      <div className="text-sm font-medium">
+                                        {strTitle(guardrail)}
+                                      </div>
+                                      {selectedGuardrails.includes(
+                                        guardrail
+                                      ) && (
+                                        <div className="text-orange-500">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                          </svg>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                )}
                               </div>
                             </div>
-                          </div>
-                        </fieldset>
-                      </details>
 
+                            {/* Hidden input to store selected guardrails for form submission */}
+                            <input
+                              type="hidden"
+                              name="selectedGuardrails"
+                              value={selectedGuardrails.join(",")}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {/* Pangea section */}
+                      {guardrailType === "Pangea" && (
+                        <div className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                          <legend className="text-xl font-bold text-gray-100">
+                            Pangea Available Guardrails
+                          </legend>
+                          <label className="labels">Select Guardrails </label>
+
+                          <div className="mt-2">
+                            <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                                {Object.keys(guardrailOptions).map(
+                                  (guardrail) => (
+                                    <div
+                                      key={guardrail}
+                                      className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                        selectedGuardrails.includes(guardrail)
+                                          ? "border-orange-700 bg-zinc-700"
+                                          : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                      }`}
+                                      onClick={() =>
+                                        handleGuardrailSelection(guardrail)
+                                      }
+                                    >
+                                      <div className="text-sm font-medium">
+                                        {strTitle(guardrail)}
+                                      </div>
+                                      {selectedGuardrails.includes(
+                                        guardrail
+                                      ) && (
+                                        <div className="text-orange-500">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                          </svg>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Hidden input to store selected guardrails for form submission */}
+                            <input
+                              type="hidden"
+                              name="selectedGuardrails"
+                              value={selectedGuardrails.join(",")}
+                            />
+                          </div>
+                        </div>
+                      )}
                       {/* Submit Button */}
                       <div className="mt-4 flex justify-end space-x-2">
                         <button
                           type="submit"
                           disabled={isLoading}
                           className="px-6 py-2 bg-orange-700 text-white rounded-md shadow hover:bg-pink-900"
+                          suppressHydrationWarning
                         >
                           {isLoading ? (
                             <svg

@@ -44,17 +44,22 @@ const UsersTable = () => {
       "Display Name":
         item.displayName || item.firstName + " " + item.lastName || "N/A",
       Status: item.status || item.resourceBase?.status || "N/A",
-      "View Details": `<a href="users/${item.userId}" target="_blank" title="Open in new tab">
-                      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class="h-5 w-5" viewBox="0 0 40 40">
-                        <path fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))" d="M1.5 5.5H34.5V38.5H1.5z"></path>
-                        <path fill="rgb(154 52 18 / var(--tw-bg-opacity, 1))" d="M34,6v32H2V6H34 M35,5H1v34h34V5L35,5z"></path>
-                        <path fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))" d="M30.611 13.611H37.055V15.944H30.611z" transform="rotate(90 33.833 14.778)"></path>
-                        <path fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))" d="M22 5H28.444V7.333H22z"></path>
-                        <g>
-                            <path fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))" d="M18.707 16L28.707 6 24.207 1.5 38.5 1.5 38.5 15.793 34 11.293 24 21.293z"></path>
-                            <path fill="rgb(154 52 18 / var(--tw-bg-opacity, 1))" d="M38,2v12.586l-3.293-3.293L34,10.586l-0.707,0.707L24,20.586L19.414,16l9.293-9.293L29.414,6 l-0.707-0.707L25.414,2H38 M39,1H23l5,5L18,16l6,6l10-10l5,5V1L39,1z"></path>
-                        </g>
-                      </svg>
+
+      "View Details": `<a href="users/${item.userId}" target="_blank" class="relative group inline-flex items-center justify-center">
+                          <!-- The Icon -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="90" stroke="rgb(207, 86, 46)" stroke-width="10" fill="none" />
+                            <g transform="rotate(315, 100, 100)">
+                              <line x1="60" y1="100" x2="140" y2="100" stroke="rgb(207, 86, 46)" stroke-width="10" stroke-linecap="round" />
+                              <path d="M120,80 L140,100 L120,120" stroke="rgb(207, 86, 46)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            </g>
+                          </svg>
+
+                          <!-- Tooltip: adjust position and spacing -->
+                          <div class="absolute -top-6 left-17 -translate-x-1/2 
+                                      hidden group-hover:block bg-gray-700 text-gray-100 text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
+                            View user detail
+                          </div>
                       </a>`,
     }));
   };

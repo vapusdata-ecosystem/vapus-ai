@@ -123,5 +123,4 @@ export function wordLimit(input, limit) {
     observer.disconnect();
   });
 })();
-
 //  TOOLTIP FUNCTION END HERE

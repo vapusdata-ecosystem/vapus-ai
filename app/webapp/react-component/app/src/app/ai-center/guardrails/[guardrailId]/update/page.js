@@ -420,9 +420,6 @@ export default function UpdateGuardrail({ params }) {
                     onSubmit={submitUpdateForm}
                   >
                     <fieldset className="p-4 rounded">
-                      <legend className="text-xl font-bold text-gray-100">
-                        Spec
-                      </legend>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         {/* Display Name */}
                         <div>

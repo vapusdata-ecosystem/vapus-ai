@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
+const Sidebar = ({ userInfo }) => {
   // Internal navigation data
   const navMenuMap = [
     // Dashboard
@@ -43,7 +43,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
           strokeLinejoin="round"
           className="h-6 w-6 m-1"
         >
-          <title>AI Chat Agent Icon 4</title>
+          {/* <title>AI Chat Agent Icon 4</title> */}
           {/* Chat bubble */}
           <path d="M20 14a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9"></path>
           {/* Gear 1 */}
@@ -77,7 +77,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
           strokeLinejoin="round"
           className="h-6 w-6 m-1"
         >
-          <title>SQL Query Editor (Window)</title>
+          {/* <title>SQL Query Editor (Window)</title> */}
           {/* Window Outline */}
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
           {/* Top Bar Decoration (Optional) */}
@@ -107,7 +107,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <title>Observability Icon 1</title>
+          {/* <title>Observability Icon 1</title> */}
           {/* Line graph element */}
           <polyline points="3 17 8 11 13 13 17 8 21 12" />
           {/* Bar elements (using fill) */}
@@ -280,7 +280,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
           strokeLinejoin="round"
           className="h-6 w-6 m-1"
         >
-          <title>Data Center Hybrid Icon</title>
+          {/* <title>Data Center Hybrid Icon</title> */}
           {/* Server Rack Outline (Partial/Simplified) */}
           <path d="M6 3h12v18H6z" />
           <line x1="6" y1="8" x2="18" y2="8" />
@@ -327,7 +327,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
     {
       itemId: "ai center",
       itemName: "AI Center",
-      url: "/ai-center/guardrails",
+      url: "/ai-center/models-registry",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -339,7 +339,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
           strokeLinejoin="round"
           className="h-6 w-6 m-1"
         >
-          <title>AI Studio Icon 5</title>
+          {/* <title>AI Studio Icon 5</title> */}
           {/* Code Brackets */}
           <polyline points="8 3 3 9 8 15" />
           <polyline points="16 3 21 9 16 15" />
@@ -463,10 +463,77 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
       ],
     },
   ];
+  // End
 
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
+  const [activeNav, setActiveNav] = useState("");
+  const [activeSideBar, setActiveSideBar] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+
+      // Find which nav item and sidebar item match the current path
+      let navFound = false;
+      let sidebarFound = false;
+
+      // Check all navigation items and their children
+      for (const item of navMenuMap) {
+        // Check if main nav item matches
+        if (path.includes(item.url)) {
+          setActiveNav(item.itemId);
+          navFound = true;
+        }
+
+        // Check if any children (sidebar items) match
+        if (item.children) {
+          for (const child of item.children) {
+            if (path.includes(child.url)) {
+              setActiveNav(item.itemId); // Highlight parent nav
+              setActiveSideBar(child.itemId); // Highlight sidebar item
+              navFound = true;
+              sidebarFound = true;
+              break;
+            }
+          }
+        }
+
+        if (navFound && sidebarFound) break;
+      }
+
+      // Also check bottom menu items
+      if (!navFound || !sidebarFound) {
+        for (const item of bottomMenuMap) {
+          // Check if main nav item matches
+          if (path.includes(item.url)) {
+            setActiveNav(item.itemId);
+            navFound = true;
+          }
+
+          // Check if any children (sidebar items) match
+          if (item.children) {
+            for (const child of item.children) {
+              if (path.includes(child.url)) {
+                setActiveNav(item.itemId); // Highlight parent nav
+                setActiveSideBar(child.itemId); // Highlight sidebar item
+                navFound = true;
+                sidebarFound = true;
+                break;
+              }
+            }
+          }
+
+          if (navFound && sidebarFound) break;
+        }
+      }
+
+      // If no matches found, clear the states
+      if (!navFound) setActiveNav("");
+      if (!sidebarFound) setActiveSideBar("");
+    }
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
@@ -558,7 +625,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
               <div key={main.itemId} className="main-item relative  ">
                 <div
                   className={`flex items-center justify-between w-full text-sm p-1 mb-1 cursor-pointer hover:bg-zinc-800 hover:text-gray-100 rounded-md relative ${
-                    currentNav === main.itemId
+                    activeNav === main.itemId
                       ? "bg-zinc-600 text-gray-100 "
                       : "text-gray-100"
                   }`}
@@ -601,7 +668,9 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
                         key={sub.itemId}
                         href={sub.url}
                         className={`block text-xs text-gray-100 p-2 mt-1 mb-1 hover:bg-zinc-800 shadow-sm shadow-zinc-700 ${
-                          currentSideBar === sub.itemId ? "bg-zinc-600" : ""
+                          activeSideBar === sub.itemId
+                            ? "bg-white !text-black font-bold"
+                            : ""
                         }`}
                       >
                         {sub.svg}
@@ -623,7 +692,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
                 <div key={main.itemId} className="main-item relative">
                   <div
                     className={`flex items-center justify-between w-full bottom-0 text-sm p-1 mb-1 cursor-pointer hover:bg-zinc-800 hover:text-gray-100 rounded-md relative ${
-                      currentNav === main.itemId
+                      activeNav === main.itemId
                         ? "bg-zinc-600 text-gray-100 font-semibold"
                         : "text-gray-100"
                     }`}
@@ -667,7 +736,9 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
                           key={sub.itemId}
                           href={sub.url}
                           className={`block text-xs text-gray-100 p-2 mt-1 mb-1 hover:bg-zinc-800 shadow-sm shadow-zinc-700 ${
-                            currentSideBar === sub.itemId ? "bg-zinc-600" : ""
+                            activeSideBar === sub.itemId
+                              ? "bg-white !text-black font-bold"
+                              : ""
                           }`}
                         >
                           {sub.svg}
@@ -812,16 +883,16 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
 
           <div className="h-px bg-zinc-500 mx-4 my-2"></div>
 
-          {/* Collapsed Main Navigation */}
+          {/* Collapsed Main Navigation with Tooltips */}
           <nav className="flex flex-col space-y-1 bg-[#1b1b1b]">
             {navMenuMap.map((main) => (
               <div
                 key={`collapsed-${main.itemId}`}
-                className="main-item relative"
+                className="main-item relative group"
               >
                 <div
                   className={`flex items-center justify-between w-full text-sm mb-1 cursor-pointer hover:bg-zinc-800 rounded-md relative text-gray-100 ${
-                    currentNav === main.itemId
+                    activeNav === main.itemId
                       ? "bg-orange-700 text-gray-100 font-semibold"
                       : "text-gray-100"
                   }`}
@@ -834,6 +905,11 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
                       <Link href={main.url}>{main.svg}</Link>
                     </span>
                   )}
+
+                  {/* Tooltip */}
+                  <div className="absolute hidden group-hover:flex bg-gray-700 text-gray-100 text-sm p-2 rounded shadow-lg left-full ml-2 whitespace-nowrap z-50">
+                    {main.itemName}
+                  </div>
                 </div>
 
                 {main.children && (
@@ -849,7 +925,9 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
                         key={sub.itemId}
                         href={sub.url}
                         className={`block text-xs text-gray-100 p-2 mt-1 mb-1 hover:bg-zinc-800 shadow-sm shadow-zinc-700 ${
-                          currentSideBar === sub.itemId ? "bg-zinc-600" : ""
+                          activeSideBar === sub.itemId
+                            ? "bg-white !text-black font-bold"
+                            : ""
                         }`}
                       >
                         {sub.svg}
@@ -862,7 +940,7 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
             ))}
           </nav>
 
-          {/* Collapsed Bottom Navigation */}
+          {/* Collapsed Bottom Navigation with Tooltips */}
           <div className="flex flex-col space-y-1 bg-[#1b1b1b] p-1 mt-auto">
             <div className="h-px bg-zinc-500 mx-4 my-2"></div>
 
@@ -870,17 +948,22 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
               {bottomMenuMap.map((main) => (
                 <div
                   key={`collapsed-${main.itemId}`}
-                  className="main-item relative"
+                  className="main-item relative group"
                 >
                   <div
                     className={`flex items-center justify-between w-full bottom-0 text-sm mb-1 cursor-pointer hover:bg-zinc-800 rounded-md text-gray-100 ${
-                      currentNav === main.itemId
+                      activeNav === main.itemId
                         ? "bg-orange-700 text-gray-100 font-semibold"
                         : "text-gray-100"
                     }`}
                     onClick={() => toggleSubmenu(`collapsed-${main.itemId}`)}
                   >
                     <span className="flex items-center pl-1">{main.svg}</span>
+
+                    {/* Tooltip */}
+                    <div className="absolute hidden group-hover:flex bg-gray-700 text-gray-100 text-sm p-2 rounded shadow-lg left-full ml-2 whitespace-nowrap z-50">
+                      {main.itemName}
+                    </div>
                   </div>
 
                   <div
@@ -896,7 +979,9 @@ const Sidebar = ({ currentNav, currentSideBar, userInfo }) => {
                         key={sub.itemId}
                         href={sub.url}
                         className={`block text-xs text-gray-100 p-2 mt-1 mb-1 hover:bg-zinc-800 shadow-sm shadow-zinc-700 ${
-                          currentSideBar === sub.itemId ? "bg-zinc-600" : ""
+                          activeSideBar === sub.itemId
+                            ? "bg-white !text-black font-bold"
+                            : ""
                         }`}
                       >
                         {sub.svg}

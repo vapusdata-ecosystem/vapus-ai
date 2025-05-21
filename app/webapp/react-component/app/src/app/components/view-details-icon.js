@@ -1,40 +1,49 @@
-// ViewDetailsSvg.jsx
 export default function ViewDetailsSvg() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      x="0px"
-      y="0px"
-      className="h-6 w-6"
-      viewBox="0 0 40 40"
-    >
-      <path
-        fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))"
-        d="M1.5 5.5H34.5V38.5H1.5z"
-      ></path>
-      <path
-        fill="rgb(154 52 18 / var(--tw-bg-opacity, 1))"
-        d="M34,6v32H2V6H34 M35,5H1v34h34V5L35,5z"
-      ></path>
-      <path
-        fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))"
-        d="M30.611 13.611H37.055V15.944H30.611z"
-        transform="rotate(90 33.833 14.778)"
-      ></path>
-      <path
-        fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))"
-        d="M22 5H28.444V7.333H22z"
-      ></path>
-      <g>
-        <path
-          fill="rgb(251 146 60 / var(--tw-bg-opacity, 1))"
-          d="M18.707 16L28.707 6 24.207 1.5 38.5 1.5 38.5 15.793 34 11.293 24 21.293z"
-        ></path>
-        <path
-          fill="rgb(154 52 18 / var(--tw-bg-opacity, 1))"
-          d="M38,2v12.586l-3.293-3.293L34,10.586l-0.707,0.707L24,20.586L19.414,16l9.293-9.293L29.414,6 l-0.707-0.707L25.414,2H38 M39,1H23l5,5L18,16l6,6l10-10l5,5V1L39,1z"
-        ></path>
-      </g>
-    </svg>
+    <div className="group inline-block">
+      <svg
+        viewBox="0 0 200 200"
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-8 w-8"
+      >
+        {/* Circle */}
+        <circle
+          cx="100"
+          cy="100"
+          r="90"
+          className="stroke-orange-700 group-hover:stroke-orange-500 transition duration-200"
+          strokeWidth="10"
+          fill="none"
+        />
+
+        {/* Arrow */}
+        <g transform="rotate(315, 100, 100)">
+          <line
+            x1="60"
+            y1="100"
+            x2="140"
+            y2="100"
+            className="stroke-orange-700 group-hover:stroke-orange-500 transition duration-200"
+            strokeWidth="10"
+            strokeLinecap="round"
+          />
+          <path
+            d="M120,80 L140,100 L120,120"
+            className="stroke-orange-700 group-hover:stroke-orange-500 transition duration-200"
+            strokeWidth="10"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+        </g>
+      </svg>
+      {/* <!-- Custom Tooltip --> */}
+      <div
+        className="absolute bottom-full right-1/2 transform-translate-y-1/2  
+              hidden group-hover:block bg-gray-700 text-gray-100 text-xs rounded px-2 py-1 z-50 whitespace-nowrap"
+      >
+        View prompts detail
+      </div>
+    </div>
   );
 }

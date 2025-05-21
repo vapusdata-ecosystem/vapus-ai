@@ -267,9 +267,6 @@ const CreatePluginsForm = () => {
                     onSubmit={handleSubmit}
                   >
                     <fieldset className="p-4 rounded">
-                      <legend className="text-xl font-bold text-gray-100">
-                        Plugin Details
-                      </legend>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         {/* Name */}
                         <div>

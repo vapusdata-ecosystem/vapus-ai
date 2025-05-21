@@ -376,7 +376,7 @@ export default function PromptForm() {
         <div className="flex-grow p-4 overflow-y-auto w-full">
           <section id="grids" className="space-y-2">
             <div className="max-w-6xl mx-auto bg-[#1b1b1b] shadow rounded-lg p-2">
-              <div className="border-b border-zinc-500 mb-2 flex justify-center">
+              <div className=" mb-2 flex justify-center">
                 {/* <button
                   onClick={() => setActiveTab("yaml")}
                   className={`whitespace-nowrap text-gray-100 border-b-2 py-2 px-2 text-md font-medium focus:outline-none ${
@@ -470,10 +470,6 @@ export default function PromptForm() {
                       </div>
 
                       <fieldset className="rounded mb-4 border border-zinc-600 rounded-md shadow-sm p-4">
-                        <legend className="text-lg font-semibold text-gray-100">
-                          Spec
-                        </legend>
-
                         {/* Variables */}
                         <div className="col-span-2">
                           <label className="labels">Variable</label>

@@ -15,13 +15,10 @@ const AWSCredentials = ({ formData, handleInputChange }) => {
           <input
             id="aws_access_key_id"
             type="text"
-            name="spec.attributes.network_params.credentials.aws_creds.access_key_id"
+            name="spec.credentials.aws_creds.access_key_id"
             placeholder="Access Key ID"
             className="w-full p-2 base-input-field placeholder-gray-300 placeholder:text-sm rounded-sm bg-[#3f3f46]"
-            value={
-              formData.attributes.network_params.credentials.aws_creds
-                .access_key_id
-            }
+            value={formData.credentials.aws_creds.access_key_id}
             onChange={handleInputChange}
           />
         </div>
@@ -32,13 +29,10 @@ const AWSCredentials = ({ formData, handleInputChange }) => {
           <input
             id="aws_secret_access_key"
             type="text"
-            name="spec.attributes.network_params.credentials.aws_creds.secret_access_key"
+            name="spec.credentials.aws_creds.secret_access_key"
             placeholder="Secret Access Key"
             className="w-full p-2 base-input-field placeholder-gray-300 placeholder:text-sm rounded-sm bg-[#3f3f46]"
-            value={
-              formData.attributes.network_params.credentials.aws_creds
-                .secret_access_key
-            }
+            value={formData.credentials.aws_creds.secret_access_key}
             onChange={handleInputChange}
           />
         </div>
@@ -51,12 +45,10 @@ const AWSCredentials = ({ formData, handleInputChange }) => {
           <input
             id="aws_region"
             type="text"
-            name="spec.attributes.network_params.credentials.aws_creds.region"
+            name="spec.credentials.aws_creds.region"
             placeholder="Region"
             className="w-full p-2 base-input-field placeholder-gray-300 placeholder:text-sm rounded-sm bg-[#3f3f46]"
-            value={
-              formData.attributes.network_params.credentials.aws_creds.region
-            }
+            value={formData.credentials.aws_creds.region}
             onChange={handleInputChange}
           />
         </div>
@@ -67,13 +59,10 @@ const AWSCredentials = ({ formData, handleInputChange }) => {
           <input
             id="aws_session_token"
             type="text"
-            name="spec.attributes.network_params.credentials.aws_creds.session_token"
+            name="spec.credentials.aws_creds.session_token"
             placeholder="Session Token"
             className="w-full p-2 base-input-field placeholder-gray-300 placeholder:text-sm rounded-sm bg-[#3f3f46]"
-            value={
-              formData.attributes.network_params.credentials.aws_creds
-                .session_token
-            }
+            value={formData.credentials.aws_creds.session_token}
             onChange={handleInputChange}
           />
         </div>
@@ -85,12 +74,10 @@ const AWSCredentials = ({ formData, handleInputChange }) => {
         <input
           id="aws_role_arn"
           type="text"
-          name="spec.attributes.network_params.credentials.aws_creds.role_arn"
+          name="spec.credentials.aws_creds.role_arn"
           placeholder="Role Arn"
           className="w-full p-2 base-input-field placeholder-gray-300 placeholder:text-sm rounded-sm bg-[#3f3f46]"
-          value={
-            formData.attributes.network_params.credentials.aws_creds.role_arn
-          }
+          value={formData.credentials.aws_creds.role_arn}
           onChange={handleInputChange}
         />
       </div>

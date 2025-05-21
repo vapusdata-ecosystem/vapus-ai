@@ -515,7 +515,7 @@ export default function PromptDetailsUpdate({ params }) {
               >
                 <form
                   id="vapusPromptSpec"
-                  className="space-y-2"
+                  className="space-y-2 border border-zinc-500 rounded-md text-gray-100 p-2"
                   onSubmit={handleSubmit}
                 >
                   <fieldset className="p-4 rounded">
@@ -584,10 +584,6 @@ export default function PromptDetailsUpdate({ params }) {
                     </div>
 
                     <fieldset className="rounded mb-4 border border-zinc-600 rounded-md shadow-sm p-4">
-                      <legend className="text-lg font-semibold text-gray-100">
-                        Spec
-                      </legend>
-
                       {/* variables */}
                       <div className="col-span-2">
                         <label htmlFor="variable-input-tag" className="labels">
