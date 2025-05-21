@@ -61,6 +61,8 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/openai/openai-go v0.1.0-beta.10
 	github.com/opensearch-project/opensearch-go/v4 v4.3.0
+	github.com/pangeacyber/pangea-go/pangea-sdk v1.10.0
+	github.com/pangeacyber/pangea-go/pangea-sdk/v5 v5.2.0
 	github.com/pelletier/go-toml/v2 v2.2.3
 	github.com/pgvector/pgvector-go v0.2.2
 	github.com/phpdave11/gofpdf v1.4.2
@@ -69,7 +71,7 @@ require (
 	github.com/qdrant/go-client v1.13.0
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/sashabaranov/go-openai v1.36.1
 	github.com/sendgrid/sendgrid-go v3.16.0+incompatible
 	github.com/serpapi/google-search-results-golang v0.0.0-20240325113416-ec93f510648e

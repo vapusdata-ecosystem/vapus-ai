@@ -53,6 +53,7 @@ type GenerativeImagePayload struct {
 	RequestBody map[string]any
 	Response    []byte
 }
+
 type GenerativePrompterPayload struct {
 	Params           *pb.ChatRequest
 	Prompt           *models.AIPrompt
