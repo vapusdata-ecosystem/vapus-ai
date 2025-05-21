@@ -44,7 +44,7 @@ const (
 	OperatorOps               = "operator"
 	InstallerOps              = "install"
 	SetupCmd                  = "setup"
-	InstallerSecretSpecGenOps = "gen-secret-spec"
+	InstallerSecretSpecGenOps = "gen-templ"
 	InstallerUpgradeOps       = "upgrade"
 	BuildOps                  = "build"
 	UpgradeOps                = "upgrade"

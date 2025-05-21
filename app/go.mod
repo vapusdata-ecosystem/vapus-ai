@@ -9,7 +9,7 @@ replace github.com/vapusdata-ecosystem/apis => ../apis/gen-go
 require (
 	buf.build/go/protoyaml v0.3.1
 	github.com/briandowns/spinner v1.23.2
-	github.com/bytedance/sonic v1.12.9
+	github.com/bytedance/sonic v1.13.2
 	github.com/databricks/databricks-sql-go v1.6.1
 	github.com/go-faker/faker/v4 v4.5.0
 	github.com/go-playground/validator/v10 v10.24.0
@@ -117,7 +117,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/bufbuild/protovalidate-go v0.8.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
-	github.com/bytedance/sonic/loader v0.2.2 // indirect
+	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cenkalti/backoff/v3 v3.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/chai2010/gettext-go v1.0.2 // indirect
