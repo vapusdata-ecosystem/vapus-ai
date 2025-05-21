@@ -9,6 +9,7 @@ import (
 	dmstores "github.com/vapusdata-ecosystem/vapusai/aistudio/datastoreops"
 	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
 	services "github.com/vapusdata-ecosystem/vapusai/aistudio/services"
+	appBooter "github.com/vapusdata-ecosystem/vapusai/core/app/booter"
 	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
 	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
 	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
@@ -79,6 +80,9 @@ func bootStores(ctx context.Context, conf *appconfigs.VapusAISvcConfig) {
 	}
 
 	services.InitAIStudioServices(dmstores.DMStoreManager)
+	// TO activate the Postgres
+	dmstores.DMStoreManager.ActivatePostgresExtension(ctx, logger)
+	appBooter.BootDataTables(ctx, dmstores.DMStoreManager.VapusStore, logger)
 }
 
 func bootConnectionPool() {

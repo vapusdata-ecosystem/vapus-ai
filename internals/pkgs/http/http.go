@@ -158,6 +158,7 @@ func (r *RestHttp) Post(ctx context.Context, subPath string, inputPayload []byte
 		Path:   r.urlParsed.Path,
 	}
 	api.Path = path.Join(r.basePath, subPath)
+	fmt.Println("Path: ----->", api.Path)
 	req, err := http.NewRequest(types.POST, api.String(), bytes.NewBuffer(inputPayload))
 	if err != nil {
 		r.logger.Error().Err(err).Msg("Error creating request for POST")
