@@ -418,6 +418,8 @@ enum ServiceProvider {
     DEEPSEEK = 25;
     PERPLEXITY = 26;
     GROK = 27;
+    PANGEA = 28; 
+    NEMO = 29;
 }
 
 enum LLMQueryType {
@@ -542,6 +544,7 @@ enum IntegrationPluginTypes {
   SEARCHAPI = 4;
   CODE_REPOSITORIES = 5;
   MESSAGING_CHANNELS = 6;
+  GUARDRAILS = 7;
 }
 
 enum VapusStreamEvents {
