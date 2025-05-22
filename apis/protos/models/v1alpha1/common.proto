@@ -274,6 +274,11 @@ message QueryPrompts {
   repeated string schemas = 2; //  @gotags: yaml:"schemas"
 }
 
+message DomainArtifacts {
+	string artifact_type = 1; // @gotags: yaml:"artifactType"
+	repeated models.v1alpha1.PlatformArtifact artifacts = 2; // @gotags: yaml:"artifacts"
+}
+
 message SearchResult {
   string name = 1; // @gotags: yaml:"name"
   string resource = 2; // @gotags: yaml:"resource"

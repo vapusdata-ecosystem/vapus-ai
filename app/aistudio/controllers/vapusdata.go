@@ -2,6 +2,7 @@ package dmcontrollers
 
 import (
 	"context"
+	"fmt"
 	"maps"
 	"slices"
 
@@ -55,6 +56,7 @@ func InitVapusDataController() {
 
 func (dmc *VapusDataController) PlatformPublicInfo(ctx context.Context, request *mpb.EmptyRequest) (*pb.PlatformPublicInfoResponse, error) {
 	accountInfo := dmstores.DMStoreManager.Account
+	fmt.Println("Account Info", dmstores.DMStoreManager.Account.Name)
 	if accountInfo == nil {
 		return &pb.PlatformPublicInfoResponse{}, grpcstatus.Error(grpccodes.NotFound, "Account details not found")
 	}

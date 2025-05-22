@@ -6,6 +6,10 @@ import (
 	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
 )
 
+type DMStore struct {
+	*aidmstore.AIStudioDMStore
+}
+
 // GLobal var for DM store, it can accessed across the service
 var (
 	DMStoreManager *aidmstore.AIStudioDMStore

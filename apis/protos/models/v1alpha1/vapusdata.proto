@@ -59,6 +59,7 @@ message Account {
 	AuthnOIDC oidc_params = 9; // @gotags: yaml:"oidcParams"
 	AccountProfile profile = 11; // @gotags: yaml:"profile"
 	AIAttributes ai_attributes = 12; // @gotags: yaml:"aiAttributes"
+	repeated DomainArtifacts base_os_artifacts = 16; // @gotags: yaml:"baseOSArtifacts"
 	AccountSettings settings = 17; // @gotags: yaml:"settings"
 }
 
