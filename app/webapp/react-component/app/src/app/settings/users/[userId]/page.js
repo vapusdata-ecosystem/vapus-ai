@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import SectionHeaders from "@/app/components/section-headers";
 import { userApi } from "@/app/utils/settings-endpoint/user-api";
@@ -71,8 +70,6 @@ const UserDetails = () => {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
-
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="User Details"

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import NetworkCredentials from "@/app/components/formcomponets/NetworkCredentials";
 import ToastContainerMessage from "@/app/components/notification/customToast";
@@ -222,7 +221,6 @@ const CreatePluginsForm = () => {
   };
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Create Plugins"

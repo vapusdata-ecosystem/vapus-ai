@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { use } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import {
   pluginsApi,
@@ -86,7 +85,6 @@ export default function PluginDetailsPage({ params }) {
   if (loading) {
     return (
       <div className="bg-zinc-800 flex h-screen">
-        <Sidebar />
         <div className="overflow-y-auto scrollbar h-screen w-full">
           <Header
             sectionHeader="Plugin Details"
@@ -103,7 +101,6 @@ export default function PluginDetailsPage({ params }) {
   if (error || !pluginData) {
     return (
       <div className="bg-zinc-800 flex h-screen">
-        <Sidebar />
         <div className="overflow-y-auto scrollbar h-screen w-full">
           <Header
             sectionHeader="Plugin Details"
@@ -142,8 +139,6 @@ export default function PluginDetailsPage({ params }) {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
-
       <div className="overflow-y-auto h-screen w-full">
         <Header
           sectionHeader="Plugin Details"

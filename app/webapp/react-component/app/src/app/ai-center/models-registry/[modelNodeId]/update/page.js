@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { use } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import { modelsRegistryUpdateFormApi } from "@/app/utils/ai-studio-endpoint/models-registry-api";
 import { modelsRegistryApi } from "@/app/utils/ai-studio-endpoint/models-registry-api";
@@ -398,7 +397,6 @@ const CreateModelsNodesUpdate = ({ params }) => {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Update AI Model Node"

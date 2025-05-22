@@ -274,15 +274,17 @@ const SectionHeaders = ({
           </span>
 
           {resource.status && (
-            <span
-              className={`px-3 py-1 ml-2 text-sm font-medium ${
-                resource.status === "ACTIVE"
-                  ? "text-green-800 bg-green-100"
-                  : "text-red-800 bg-red-100"
-              } rounded-full`}
-            >
-              {resource.status}
-            </span>
+            <p>
+              <span
+                className={`px-3 py-2 ml-2 text-sm font-medium ${
+                  resource.status === "ACTIVE"
+                    ? "text-green-800 bg-green-100"
+                    : "text-red-800 bg-red-100"
+                } rounded-full`}
+              >
+                {resource.status}
+              </span>
+            </p>
           )}
         </div>
       </div>

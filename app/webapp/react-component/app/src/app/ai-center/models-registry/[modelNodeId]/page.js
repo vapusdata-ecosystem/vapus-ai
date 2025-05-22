@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, use } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import SectionHeaders from "@/app/components/section-headers";
 import {
@@ -152,7 +151,6 @@ export default function AIModelDetailsPage({ params }) {
 
   return (
     <div className="bg-zinc-800 flex h-screen ">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full ">
         <Header
           sectionHeader="AI Model Details"

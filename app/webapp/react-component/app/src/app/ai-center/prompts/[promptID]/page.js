@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { use } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import SectionHeaders from "@/app/components/section-headers";
 import {
@@ -192,7 +191,6 @@ export default function PromptDetailsPage({ params }) {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="AI Model Prompt Details"
@@ -279,24 +277,24 @@ export default function PromptDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block  ">
                     Preferred Models:
                   </p>
-                  <p className="s p-2">
+                  <div className="grid grid-cols-2 grid-rows-2 md:grid-cols-2 md:grid-rows-2 lg:grid-cols-4 lg:grid-rows-1 gap-2 p-2 text-center">
                     {promptDetails.preferredModels &&
                       Array.isArray(promptDetails.preferredModels) &&
                       promptDetails.preferredModels.map((model, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 text-sm font-medium rounded-full text-gray-800 bg-gray-100 mr-2"
+                          className="px-3 py-1 text-sm font-medium rounded-full text-gray-800 bg-gray-100 mr-2 mb-1"
                         >
                           {model}
                         </span>
                       ))}
-                  </p>
+                  </div>
                 </div>
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block  ">
                     Labels:
                   </p>
-                  <p className="p-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 lg:grid-cols-4 lg:grid-rows-1 gap-2 p-2 text-center">
                     {promptDetails.labels &&
                       Array.isArray(promptDetails.labels) &&
                       promptDetails.labels.map((label, index) => (
@@ -307,7 +305,7 @@ export default function PromptDetailsPage({ params }) {
                           {label}
                         </span>
                       ))}
-                  </p>
+                  </div>
                 </div>
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block  ">

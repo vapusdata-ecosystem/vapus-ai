@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Head from "next/head";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import YamlEditorClient from "@/app/components/formcomponets/ymal";
 import { modelsRegistryApi } from "@/app/utils/ai-studio-endpoint/models-registry-api";
@@ -412,7 +411,6 @@ export default function CreateGuardrail() {
         <title>Create AI Guardrail</title>
         <meta name="description" content="Create a new AI guardrail" />
       </Head>
-      <Sidebar />
 
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header

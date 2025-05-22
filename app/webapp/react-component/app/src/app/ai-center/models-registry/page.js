@@ -1,10 +1,8 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Header from "@/app/components/platform/header";
 import CreateNewButton from "@/app/components/add-new-button";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import { modelsRegistryApi } from "@/app/utils/ai-studio-endpoint/models-registry-api";
 
 //  DataTable component with dynamic import
@@ -81,9 +79,6 @@ const ModelNodesTable = () => {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      {/* Sidebar Component */}
-      <Sidebar />
-
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="AI Models"

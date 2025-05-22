@@ -1,7 +1,6 @@
 // AIPromptsPage.jsx
 "use client";
 import { useState, useEffect } from "react";
-import Sidebar from "../../components/platform/main-sidebar";
 import Header from "../../components/platform/header";
 import CreateNewButton from "@/app/components/add-new-button";
 import Card from "@/app/components/card";
@@ -47,7 +46,6 @@ export default function AIPromptsPage({ backListingLink = "./" }) {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="AI Model Prompts"

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import { platformDomainApi } from "@/app/utils/settings-endpoint/platform-domain";
 import CreateNewButton from "@/app/components/add-new-button";
@@ -78,9 +77,6 @@ const PlatformDomains = () => {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      {/* Sidebar Component */}
-      <Sidebar />
-
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Domains"

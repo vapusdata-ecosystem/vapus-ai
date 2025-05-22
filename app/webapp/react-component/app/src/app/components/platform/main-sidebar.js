@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Sidebar = ({ userInfo }) => {
   // Internal navigation data
@@ -418,7 +419,7 @@ const Sidebar = ({ userInfo }) => {
           url: "/settings/plugins",
         },
         {
-          itemId: "platform domain",
+          itemId: "platform-Domain",
           itemName: "Platform Domain",
           url: "/settings/platform-domain",
         },
@@ -471,67 +472,67 @@ const Sidebar = ({ userInfo }) => {
   const [activeNav, setActiveNav] = useState("");
   const [activeSideBar, setActiveSideBar] = useState("");
 
+  const pathname = usePathname();
+
+  const updateActiveStates = (currentPath) => {
+    let navFound = false;
+    let sidebarFound = false;
+    let exactMatches = [];
+
+    // Collect all possible matches
+    const allMenuItems = [...navMenuMap, ...bottomMenuMap];
+
+    // Then, collect all exact child matches
+    for (const item of allMenuItems) {
+      if (item.children) {
+        for (const child of item.children) {
+          if (
+            currentPath === child.url ||
+            currentPath.startsWith(child.url + "/")
+          ) {
+            exactMatches.push({
+              parentId: item.itemId,
+              childId: child.itemId,
+              url: child.url,
+              isChild: true,
+            });
+          }
+        }
+      }
+    }
+
+    if (exactMatches.length > 0) {
+      exactMatches.sort((a, b) => b.url.length - a.url.length);
+      const bestMatch = exactMatches[0];
+
+      setActiveNav(bestMatch.parentId);
+      setActiveSideBar(bestMatch.childId);
+      navFound = true;
+      sidebarFound = true;
+    } else {
+      // back to parent matches if no child matches
+      for (const item of allMenuItems) {
+        if (
+          currentPath === item.url ||
+          currentPath.startsWith(item.url + "/")
+        ) {
+          setActiveNav(item.itemId);
+          navFound = true;
+          break;
+        }
+      }
+    }
+    if (!navFound) setActiveNav("");
+    if (!sidebarFound) setActiveSideBar("");
+  };
+  useEffect(() => {
+    updateActiveStates(pathname);
+  }, [pathname]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
-
-      // Find which nav item and sidebar item match the current path
-      let navFound = false;
-      let sidebarFound = false;
-
-      // Check all navigation items and their children
-      for (const item of navMenuMap) {
-        // Check if main nav item matches
-        if (path.includes(item.url)) {
-          setActiveNav(item.itemId);
-          navFound = true;
-        }
-
-        // Check if any children (sidebar items) match
-        if (item.children) {
-          for (const child of item.children) {
-            if (path.includes(child.url)) {
-              setActiveNav(item.itemId); // Highlight parent nav
-              setActiveSideBar(child.itemId); // Highlight sidebar item
-              navFound = true;
-              sidebarFound = true;
-              break;
-            }
-          }
-        }
-
-        if (navFound && sidebarFound) break;
-      }
-
-      // Also check bottom menu items
-      if (!navFound || !sidebarFound) {
-        for (const item of bottomMenuMap) {
-          // Check if main nav item matches
-          if (path.includes(item.url)) {
-            setActiveNav(item.itemId);
-            navFound = true;
-          }
-
-          // Check if any children (sidebar items) match
-          if (item.children) {
-            for (const child of item.children) {
-              if (path.includes(child.url)) {
-                setActiveNav(item.itemId); // Highlight parent nav
-                setActiveSideBar(child.itemId); // Highlight sidebar item
-                navFound = true;
-                sidebarFound = true;
-                break;
-              }
-            }
-          }
-
-          if (navFound && sidebarFound) break;
-        }
-      }
-
-      // If no matches found, clear the states
-      if (!navFound) setActiveNav("");
-      if (!sidebarFound) setActiveSideBar("");
+      updateActiveStates(path);
     }
   }, []);
 
@@ -573,7 +574,6 @@ const Sidebar = ({ userInfo }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
   return (
     <>
       <div className="bg-zinc-800 flex h-screen">

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import YamlEditor from "../../../components/formcomponets/ymal";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import { modelsRegistryFormApi } from "@/app/utils/ai-studio-endpoint/models-registry-api";
 import NetworkCredentials from "@/app/components/formcomponets/NetworkCredentials";
@@ -308,7 +307,6 @@ const CreateModelsNodes = () => {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Build Your Models"

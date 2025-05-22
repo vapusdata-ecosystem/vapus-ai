@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { use } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import SectionHeaders from "@/app/components/section-headers";
 import {
@@ -135,8 +134,6 @@ export default function SecretDetailsPage({ params }) {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
-
       <div className="overflow-y-auto h-screen w-full">
         <Header
           sectionHeader="Secret Service Details"

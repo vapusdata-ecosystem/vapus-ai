@@ -3,7 +3,7 @@ import Header from "./components/platform/header";
 
 export default function Error404() {
   return (
-    <div className="bg-gray-200 flex flex-col h-screen">
+    <div id="not-found-page" className="bg-gray-200 flex flex-col h-screen">
       <Header hideBackListingLink={false} backListingLink="./" />
 
       <div className="flex justify-center items-center h-screen">

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import { format } from "date-fns";
 import { platformApi } from "@/app/utils/settings-endpoint/platform-api";
@@ -86,8 +85,6 @@ export default function PlatformSettings() {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
-
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Platform Settings"

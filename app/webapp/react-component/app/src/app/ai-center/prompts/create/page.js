@@ -1,7 +1,6 @@
 "use client";
 import Header from "@/app/components/platform/header";
 import LoadingOverlay from "@/app/components/loading/loading";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import AIToolCallPopup from "@/app/studios/aitoolcallpoppup";
 import { promptsFormApi } from "@/app/utils/ai-studio-endpoint/prompts-api";
@@ -363,7 +362,6 @@ export default function PromptForm() {
   return (
     <div className="bg-zinc-800 flex h-screen">
       {/* Notification component */}
-      <Sidebar />
       {/* Main content */}
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header

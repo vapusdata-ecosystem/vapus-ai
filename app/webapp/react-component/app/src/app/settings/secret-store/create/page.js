@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import CredentialsForm from "@/app/components/generic-credentials";
 import { secretStoreFormApi } from "@/app/utils/settings-endpoint/secret-store-api";
@@ -184,7 +183,6 @@ export default function SecretServiceForm({
 
   return (
     <div className="bg-zinc-800 flex h-screen ">
-      <Sidebar />
       <div className="overflow-y-auto h-screen w-full overflow-y-auto scrollbar">
         <Header
           sectionHeader="Create Secret"

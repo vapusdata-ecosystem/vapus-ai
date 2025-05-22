@@ -137,7 +137,7 @@ export default function AddUserModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 bg-zinc-600/80 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <ToastContainerMessage />
-      <div className="bg-[#1b1b1b] rounded-lg shadow-lg w-3/4 h-3/4 md:w-1/2 overflow-y-auto scrollbar text-gray-100">
+      <div className="bg-[#1b1b1b] rounded-lg shadow-lg w-3/4 h-1/2.5 md:w-1/2 overflow-y-auto scrollbar text-gray-100">
         <div className="bg-zinc-900 px-4 py-2 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-white">Add User</h2>
           <button

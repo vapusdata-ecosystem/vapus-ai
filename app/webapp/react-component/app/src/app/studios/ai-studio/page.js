@@ -2,7 +2,6 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import Script from "next/script";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import AIToolCallPopup from "../aitoolcallpoppup";
 import NestedDropdown from "@/app/components/nestedDropdown";
@@ -299,8 +298,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" />
 
       <div className="bg-zinc-800 flex h-screen">
-        <Sidebar />
-
         <div className="h-screen w-full">
           <Header
             sectionHeader="AI Studio Interface"

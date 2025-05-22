@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Sidebar from "@/app/components/platform/main-sidebar";
 import Header from "@/app/components/platform/header";
 import YamlEditorClient from "@/app/components/formcomponets/ymal";
 import ToastContainerMessage from "@/app/components/notification/customToast";
@@ -65,7 +64,6 @@ export default function CreatePlatform() {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      <Sidebar />
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Create Platform"
