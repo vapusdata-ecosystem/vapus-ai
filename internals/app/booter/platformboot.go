@@ -34,9 +34,13 @@ type PlatformSetup struct {
 func NewPlatformSetup(bc *appconfigs.PlatformBootConfig, dbm *apppkgs.VapusStore, svcPkgs *apppkgs.VapusSvcPackages, svcPkgsParams *apppkgs.VapusSvcPackageParams, logger zerolog.Logger) *PlatformSetup {
 	return &PlatformSetup{
 		ownerPolicies: func() []string {
-			for _, role := range svcPkgs.PlatformRBACManager.Roles {
-				if role.Name == "platformOwners" {
-					return role.Policies
+			if svcPkgs != nil {
+				if svcPkgs.PlatformRBACManager != nil {
+					for _, role := range svcPkgs.PlatformRBACManager.Roles {
+						if role.Name == "platformOwners" {
+							return role.Policies
+						}
+					}
 				}
 			}
 			return []string{}
@@ -100,7 +104,7 @@ func (p *PlatformSetup) AddVapusDataPlatformAccount(ctx context.Context) error {
 		account.PreSaveCreate(p.bootConfig.PlatformAccount.Creator)
 		account.BackendDataStorage = p.getBeDbStorage(ctx, account.Name)
 		account.BackendSecretStorage = p.getBeSecretStorage(ctx, account.Name)
-		account.ArtifactStorage = p.getArtifactStorage(ctx, account.Name)
+		// account.ArtifactStorage = p.getArtifactStorage(ctx, account.Name)
 		account.DmAccessJwtKeys = p.getJwtAccessKeys(ctx, account.Name)
 
 		_, err := apppdrepo.CreateAccount(ctx, account, p.dbManager, p.logger)

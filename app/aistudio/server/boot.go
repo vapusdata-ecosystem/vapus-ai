@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"path/filepath"
 
 	dmstores "github.com/vapusdata-ecosystem/vapusai/aistudio/datastoreops"
@@ -12,7 +13,9 @@ import (
 	appBooter "github.com/vapusdata-ecosystem/vapusai/core/app/booter"
 	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
 	appdrepo "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo"
+	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
 	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
+	authn "github.com/vapusdata-ecosystem/vapusai/core/pkgs/authn"
 	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
@@ -42,18 +45,24 @@ func packagesInit() {
 	logger.Info().Msg("Service config loaded successfully")
 	// Initialize the jwt authn validator
 	logger.Info().Msgf("Loading JWT authn with secret path: %s", pkgs.ServiceConfigManager.GetJwtAuthSecretPath())
+	logger.Info().Msgf("Loading authn with secret path: %s", pkgs.ServiceConfigManager.GetAuthnSecrets())
 
-	err := pkgs.InitPlatformSvcPackages(logger, apppkgs.WithJwtParams(pkgs.JwtParams))
+	err := pkgs.InitPlatformSvcPackages(logger, apppkgs.WithJwtParams(pkgs.JwtParams), apppkgs.WithAuthnParams(pkgs.AuthnParams))
 	if err != nil {
 		if !errors.Is(err, apppkgs.ErrPbacConfigInitFailed) {
 			logger.Fatal().Err(err).Msg("error while initializing platform service packages")
 		}
 	}
+
+	pkgs.InitAuthnManager(pkgs.SvcPackageParams.AuthnParams)
+	bootPlatform(ctx, pkgs.ServiceConfigManager.PlatformBaseAccount)
+
 	pkgs.InitVapusSvcInternalClients()
-	err = pkgs.InitTrinoClient()
-	if err != nil {
-		logger.Fatal().Err(err).Msg("Failed to initialize Trino client")
-	}
+
+	// err = pkgs.InitTrinoClient()
+	// if err != nil {
+	// 	logger.Fatal().Err(err).Msg("Failed to initialize Trino client")
+	// }
 	err = pkgs.InitSqlOps()
 	if err != nil {
 		logger.Fatal().Err(err).Msg("Failed to initialize SQL operator")
@@ -65,6 +74,9 @@ func packagesInit() {
 func initStoreDependencies(ctx context.Context, conf *appconfigs.VapusAISvcConfig) {
 	if pkgs.JwtParams == nil {
 		bootJwtAuthn(ctx, conf.GetJwtAuthSecretPath())
+	}
+	if pkgs.AuthnParams == nil {
+		bootAuthn(ctx, conf.GetAuthnSecrets())
 	}
 }
 
@@ -80,7 +92,7 @@ func bootStores(ctx context.Context, conf *appconfigs.VapusAISvcConfig) {
 	}
 
 	services.InitAIStudioServices(dmstores.DMStoreManager)
-	// TO activate the Postgres
+	// TO activate the Postgres vector and btree_gin
 	dmstores.DMStoreManager.ActivatePostgresExtension(ctx, logger)
 	appBooter.BootDataTables(ctx, dmstores.DMStoreManager.VapusStore, logger)
 }
@@ -119,4 +131,35 @@ func bootJwtAuthn(ctx context.Context, secName string) {
 		logger.Fatal().Err(err).Msgf("error while unmarshalling Jwt secret %s", secName)
 	}
 	pkgs.JwtParams = tmp
+}
+
+func bootAuthn(ctx context.Context, secName string) {
+	logger.Info().Msgf("Boot Authn with secret path: %s", secName)
+	secretStr, err := dmstores.DMStoreManager.SecretStore.ReadSecret(ctx, secName)
+	if err != nil {
+		logger.Fatal().Err(err).Msgf("error while reading authn secret %s", secName)
+	}
+	tmp := &authn.AuthnSecrets{}
+	err = json.Unmarshal([]byte(dmutils.AnyToStr(secretStr)), tmp)
+	if err != nil {
+		logger.Fatal().Err(err).Msgf("error while unmarshalling authn secret %s", secName)
+	}
+	pkgs.AuthnParams = tmp
+}
+
+func bootPlatform(ctx context.Context, conf *appconfigs.PlatformBootConfig) {
+	fmt.Println("I am in bootPlatform")
+	var err error
+	if dmstores.DMStoreManager.Db == nil {
+		logger.Fatal().Msg("error while booting VapusData platform")
+	}
+	logger.Info().Msgf("Platform Boot Config - %v", conf)
+	err = appBooter.BootPlatform(ctx, conf, dmstores.DMStoreManager.VapusStore, pkgs.SvcPackageManager, pkgs.SvcPackageParams, logger)
+
+	if err != nil {
+		logger.Fatal().Msgf("error while booting platform account. error: %v", err)
+	}
+	// dmstores.InitAccountPool(context.Background(), dmstores.DMStoreManager)
+	dmstores.InitPluginPool(context.Background(), dmstores.DMStoreManager)
+	aidmstore.BootChache(dmstores.DMStoreManager, logger)
 }
