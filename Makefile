@@ -12,20 +12,18 @@ api:
 .PHONY: build_dev
 # build for development 
 build-dev:
-	make -C ./app/src/platform build
+	make -C ./app/src/aigateway build
+	make -C ./app/src/aistudio build
 	make -C ./app/src/cli build
-	make -C ./app/src/dataworker build
-	make -C ./app/src/vapus-containers build
-	make -C ./app/src/dataproductserver build
+	make -C ./app/src/webapp build
+	make -C ./app/src/aitools build
 .PHONY: release_dev
 # release worker images for development testing
 release-dev:
-	# make -C ./app/src/cli releaseoci
-	make -C ./app/src/platform release
-	make -C ./app/src/dataworker release
-	make -C ./app/src/vapus-containers release
+	make -C ./app/src/cli releaseoci
+	make -C ./app/src/aigateway release
+	make -C ./app/src/webapp release
 	make -C ./app/src/aistudio release
-	make -C ./app/src/dataproductserver release
 	make -C ./app/src/webapp release
 # show help for managing the project in your local environment
 help:

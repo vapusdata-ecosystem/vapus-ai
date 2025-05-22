@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"encoding/base64"
-	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -15,7 +14,6 @@ import (
 	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/databases"
 	secretstore "github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/secrets-stores"
 	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
-	"gopkg.in/yaml.v3"
 )
 
 var secretsFile, valuesFile, tlsCert, tlsKey string
@@ -54,7 +52,6 @@ func addStores() {
 	}
 	log.Println(result.SecretStore.DataSourceEngine, result.SecretStore.DataSourceSvcProvider, "========================")
 	log.Println(result.BackendDataStore.DataSourceEngine, result.BackendDataStore.DataSourceSvcProvider, "========================")
-	log.Println(result.ArtifactStore.DataSourceEngine, result.ArtifactStore.DataSourceSvcProvider, "========================")
 	installerValue := &setup.VapusInstallerConfig{}
 	if valuesFile != "" {
 		installerValueBytes, err = os.ReadFile(valuesFile)
@@ -122,15 +119,6 @@ func addStores() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		secretResult.ArtifactStore.Secret = plclient.GetSecretName("")
-		err = secretClient.WriteSecret(ctx, result.ArtifactStore, secretResult.ArtifactStore.Secret)
-		if err != nil {
-			cobra.CheckErr(err)
-		}
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
 		secretResult.FileStore.Secret = plclient.GetSecretName("")
 		err = secretClient.WriteSecret(ctx, result.FileStore, secretResult.FileStore.Secret)
 		if err != nil {
@@ -158,13 +146,6 @@ func addStores() {
 	wg.Wait()
 
 	plclient.MasterGlobals.Logger.Info().Msgf("Secrets added successfully, mapped in the config file")
-
-	trinoConfig := &setup.Trino{}
-	err = yaml.Unmarshal([]byte(setup.TrinoSetup), trinoConfig)
-	if err != nil {
-		cobra.CheckErr(fmt.Errorf("error in unmarshalling trino config: %v", err))
-	}
-	installerValue.Trino = trinoConfig
 
 	tlsKeyBytes, err := os.ReadFile(tlsKey)
 	if err != nil {
