@@ -18,7 +18,7 @@ func NewAuthCmd() *cobra.Command {
 			fmt.Println("auth called")
 		},
 	}
-	authCmd.AddCommand(NewAuthLoginCmd(), NewOrganizationAuthCmd(), NewDataProductAuthCmd())
+	authCmd.AddCommand(NewAuthLoginCmd(), NewOrganizationAuthCmd())
 	return authCmd
 }
 

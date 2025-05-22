@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.webapp.fullname | default .Values.webapp.name }}
+  labels:
+    {{- include "vapusdata.webapp.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.webapp.service.type }}
+  selector:
+    {{- include "vapusdata.webapp.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: {{ .Values.webapp.service.http.name }}
+    port: {{ .Values.webapp.service.http.port }}
+    targetPort: {{ .Values.webapp.service.http.port }}
+    protocol: TCP

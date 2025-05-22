@@ -151,6 +151,7 @@ func (dmc *VapusDataUsers) LoginHandler(ctx context.Context, request *mpb.EmptyR
 	return &pb.LoginHandlerResponse{
 		LoginUrl:    pkgs.AuthnManager.Authenticator.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "login")),
 		CallbackUrl: pkgs.AuthnManager.RedirectURL,
+
 		RedirectUri: pkgs.AuthnManager.Authenticator.Organization,
 	}, nil
 

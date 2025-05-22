@@ -23,7 +23,7 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.6.5
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/manifoldco/promptui v0.9.0
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/samber/lo v1.49.1
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0

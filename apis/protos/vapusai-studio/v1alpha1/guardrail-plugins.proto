@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package aistudio.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha1";
+
+
+service GuardrailPlugins {
+    rpc ListBedrock(GuardrailsTypeGetterRequest) returns(GuardrailsTypeResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/aistudio/guardrails/bedrock"
+        };
+    }
+}
+
+message GuardrailsTypeGetterRequest {
+    models.v1alpha1.AWSCreds aws_creds = 1; //  @gotags: yaml:"awsCreds";
+}
+
+message BedrockGuardrailList {
+    string id = 1; // @gotags: yaml:"id"
+    string Name = 2; // @gotags: yaml:"name"
+    string arn = 3; // @gotags: yaml:"arn"
+}
+
+message GuardrailsTypeResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated BedrockGuardrailList output = 2; // @gotags: yaml:"output"
+}
