@@ -31,14 +31,7 @@ func newDMStore(conf *appconfigs.VapusAISvcConfig, logger zerolog.Logger) *AIStu
 		logger.Fatal().Err(err).Msg("error while creating VapusStore")
 	}
 	var account *models.Account
-	res := appdrepo.BootAccountCache(vapusStore, logger)
-	if res == nil {
-		logger.Fatal().Msg("error while booting account cache")
-	}
-	for _, acc := range res {
-		account = acc
-		break
-	}
+
 	return &AIStudioDMStore{
 		VapusStore: vapusStore,
 		logger:     logger,
@@ -53,4 +46,16 @@ func InitDMStore(conf *appconfigs.VapusAISvcConfig, logger zerolog.Logger) *AISt
 
 func (ds *AIStudioDMStore) GetDbStoreParams() *models.DataSourceCredsParams {
 	return ds.BeDataStore.Db.DataStoreParams
+}
+
+func BootChache(dmStore *AIStudioDMStore, logger zerolog.Logger) {
+	// Here we are caching boot
+	res := appdrepo.BootAccountCache(dmStore.VapusStore, logger)
+	if res == nil {
+		logger.Fatal().Msg("error while booting account cache")
+	}
+	for _, acc := range res {
+		dmStore.Account = acc
+		break
+	}
 }

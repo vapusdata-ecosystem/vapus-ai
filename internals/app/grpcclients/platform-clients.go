@@ -17,7 +17,7 @@ func (x *VapusSvcInternalClients) GetUser(ctx context.Context, userId string, lo
 		return nil, ErrUserConnNotInitialized
 	}
 	if x.UserConn == nil {
-		err := x.PingTestAndReconnect(ctx, x.PlDns, logger)
+		err := x.PingTestAndReconnect(ctx, x.AIStudioDns, logger)
 		if err != nil {
 			return nil, ErrUserConnNotInitialized
 		}

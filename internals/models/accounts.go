@@ -40,7 +40,14 @@ func (a *Account) ConvertToPb() *mpb.Account {
 		AccountId:            a.VapusID,
 		AiAttributes:         a.AIAttributes.ConvertToPb(),
 		Profile:              a.Profile.ConvertToPb(),
-		Settings:             a.Settings.ConvertToPb(),
+		// BaseOsArtifacts: func() []*mpb.DomainArtifacts {
+		// 	var artifacts []*mpb.DomainArtifacts
+		// 	for _, d := range a.BaseOsArtifacts {
+		// 		artifacts = append(artifacts, d.ConvertToPb())
+		// 	}
+		// 	return artifacts
+		// }(),
+		Settings: a.Settings.ConvertToPb(),
 	}
 	return obj
 }
@@ -60,7 +67,14 @@ func (a *Account) ConvertFromPb(pb *mpb.Account) *Account {
 		AuthnParams:          (&AuthnOIDC{}).ConvertFromPb(pb.GetOidcParams()),
 		AIAttributes:         (&AccountAIAttributes{}).ConvertFromPb(pb.GetAiAttributes()),
 		Profile:              (&AccountProfile{}).ConvertFromPb(pb.Profile),
-		Settings:             (&AccountSettings{}).ConvertFromPb(pb.Settings),
+		// BaseOsArtifacts: func() []*DomainArtifacts {
+		// 	var artifacts []*DomainArtifacts
+		// 	for _, d := range pb.GetBaseOsArtifacts() {
+		// 		artifacts = append(artifacts, (&DomainArtifacts{}).ConvertFromPb(d))
+		// 	}
+		// 	return artifacts
+		// }(),
+		Settings: (&AccountSettings{}).ConvertFromPb(pb.Settings),
 	}
 	return obj
 }
@@ -302,4 +316,35 @@ func (a *AccountSettings) ConvertToPb() *mpb.AccountSettings {
 		GoogleAnalyticsTagId: a.GoogleAnalyticsTagId,
 	}
 	return obj
+}
+
+type DomainArtifacts struct {
+	ArtifactType string              `json:"artifactType,omitempty" yaml:"artifactType"`
+	Artifacts    []*PlatformArtifact `json:"artifacts,omitempty" yaml:"artifacts"`
+}
+
+func (da *DomainArtifacts) ConvertToPb() *mpb.DomainArtifacts {
+	if da != nil {
+		obj := &mpb.DomainArtifacts{
+			ArtifactType: da.ArtifactType,
+			Artifacts:    make([]*mpb.PlatformArtifact, 0),
+		}
+		for _, a := range da.Artifacts {
+			obj.Artifacts = append(obj.Artifacts, a.ConvertToPb())
+		}
+		return obj
+	}
+	return nil
+}
+
+func (da *DomainArtifacts) ConvertFromPb(pb *mpb.DomainArtifacts) *DomainArtifacts {
+	if pb == nil {
+		return nil
+	}
+	da.ArtifactType = pb.GetArtifactType()
+	da.Artifacts = make([]*PlatformArtifact, 0)
+	for _, a := range pb.GetArtifacts() {
+		da.Artifacts = append(da.Artifacts, (&PlatformArtifact{}).ConvertFromPb(a))
+	}
+	return da
 }

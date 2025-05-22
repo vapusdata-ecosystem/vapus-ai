@@ -49,6 +49,7 @@ type LocalFSPaths struct {
 	DataSourceFiles   string `yaml:"dataSourceFiles"`
 }
 
+// To get Secret Storage Path
 func (sc *PlatformServiceConfig) GetSecretStoragePath() string {
 	log.Println("Secret storage path: ", filepath.Join(sc.Path, sc.VapusBESecretStorage.FilePath))
 	log.Println("Secret storage path: ", sc.VapusBESecretStorage.FilePath)
@@ -192,9 +193,12 @@ type VapusAISvcConfig struct {
 	VapusFileStorage     *SecretMap           `yaml:"vapusFileStorage"`
 	NetworkConfigFile    string               `yaml:"networkConfigFile"`
 	JWTAuthnSecrets      *SecretMap           `yaml:"JWTAuthnSecrets"`
+	AuthnSecrets         *SecretMap           `yaml:"authnSecrets"`
 	ArtifactStore        *SecretMap           `yaml:"artifactStore"`
 	ServerCerts          *TlsCertConfig       `yaml:"serverCerts"`
 	TrinoSpecs           *TrinoDeploymentSpec `yaml:"trinoSpecs"`
+	BaseOs               []*BaseOs            `yaml:"baseOs"`
+	PlatformBaseAccount  *PlatformBootConfig  `yaml:"platformBaseAccount"`
 }
 
 func (sc *VapusAISvcConfig) GetFileStorePath() string {
@@ -215,6 +219,10 @@ func (sc *VapusAISvcConfig) GetCachStoragePath() string {
 
 func (sc *VapusAISvcConfig) GetJwtAuthSecretPath() string {
 	return sc.JWTAuthnSecrets.Secret
+}
+
+func (sc *VapusAISvcConfig) GetAuthnSecrets() string {
+	return sc.AuthnSecrets.Secret
 }
 
 func (sc *VapusAISvcConfig) GetArtifactStorePath() string {
@@ -245,6 +253,14 @@ func (sc *VapusAISvcConfig) GetClientMtlsCerts() (string, string, string) {
 func (sc *VapusAISvcConfig) GetClientPlainTlsCerts() (string, string) {
 	return sc.ServerCerts.ClientCertFile,
 		sc.ServerCerts.ClientCertFile
+}
+
+func (sc *VapusAISvcConfig) GetBaseOs() []*BaseOs {
+	return sc.BaseOs
+}
+
+func (sc *VapusAISvcConfig) GetPlatformBaseAccount() *PlatformBootConfig {
+	return sc.PlatformBaseAccount
 }
 
 type NabrunnerConfig struct {

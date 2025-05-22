@@ -16,25 +16,25 @@ import (
 )
 
 type VapusSvcInternalClients struct {
-	Host                  string
-	PlConn                pb.VapusdataServiceClient
-	DatasourceConn        pb.DatasourceServiceClient
-	UserConn              pb.UserManagementServiceClient
-	OrganizationConn      pb.OrganizationServiceClient
-	UtilityConn           pb.UtilityServiceClient
-	AIStudioConn          pb.AIStudioClient
-	AgentServiceClient    pb.AgentServiceClient
-	AgentStudioClient     pb.AgentStudioClient
-	AIPromptClient        pb.AIPromptsClient
-	AIModelClient         pb.AIModelsClient
-	AIGurdrailsClient     pb.AIGuardrailsClient
-	platformGrpcClient    *pbtools.GrpcClient
-	aiStudioGrpcClient    *pbtools.GrpcClient
-	PluginServiceClient   pb.PluginServiceClient
-	NetworkConfig         *svcconfig.NetworkConfig
-	PlDns                 string
+	Host                string
+	PlConn              pb.VapusdataServiceClient
+	DatasourceConn      pb.DatasourceServiceClient
+	UserConn            pb.UserManagementServiceClient
+	OrganizationConn    pb.OrganizationServiceClient
+	UtilityConn         pb.UtilityServiceClient
+	AIStudioConn        pb.AIStudioClient
+	AgentServiceClient  pb.AgentServiceClient
+	AgentStudioClient   pb.AgentStudioClient
+	AIPromptClient      pb.AIPromptsClient
+	AIModelClient       pb.AIModelsClient
+	AIGurdrailsClient   pb.AIGuardrailsClient
+	platformGrpcClient  *pbtools.GrpcClient
+	aiStudioGrpcClient  *pbtools.GrpcClient
+	PluginServiceClient pb.PluginServiceClient
+	NetworkConfig       *svcconfig.NetworkConfig
+	// PlDns                 string
+	// NabhikServerDns       string
 	AIStudioDns           string
-	NabhikServerDns       string
 	DataServerClient      *pbtools.GrpcClient
 	SecretServiceClient   pb.SecretServiceClient
 	AIUtilityServerClient atpb.AIUtilityClient
@@ -48,20 +48,10 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 	}
 	counter++
 	logger.Info().Msg("Checking if all services are up........")
-	platformSvcDns := fmt.Sprintf("%s:%d", networkConfig.PlatformSvc.ServiceName, networkConfig.PlatformSvc.ServicePort)
 	aiStudioSvcDns := fmt.Sprintf("%s:%d", networkConfig.AIStudioSvc.ServiceName, networkConfig.AIStudioSvc.ServicePort)
-	nabhikServerDns := fmt.Sprintf("%s:%d", networkConfig.NabhikServer.ServiceName, networkConfig.NabhikServer.ServicePort)
 	aiUtilityDns := fmt.Sprintf("%s:%d", networkConfig.NabhikServer.ServiceName, networkConfig.AIUtility.ServicePort)
-	err := dmutils.Telnet("tcp", platformSvcDns)
-	if err != nil {
-		logger.Error().Err(err).Msg("Platform service is not up yet")
-		if counter > 6 {
-			return err
-		} else {
-			return SvcUpTimeCheck(ctx, networkConfig, self, logger, counter)
-		}
-	}
-	err = dmutils.Telnet("tcp", aiStudioSvcDns)
+
+	err := dmutils.Telnet("tcp", aiStudioSvcDns)
 	if err != nil {
 		logger.Error().Err(err).Msg("AI Studio service is not up yet")
 		if counter > 6 {
@@ -70,15 +60,7 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 			return SvcUpTimeCheck(ctx, networkConfig, self, logger, counter)
 		}
 	}
-	err = dmutils.Telnet("tcp", nabhikServerDns)
-	if err != nil {
-		logger.Error().Err(err).Msg("Data Product Server service is not up yet")
-		if counter > 6 {
-			return err
-		} else {
-			return SvcUpTimeCheck(ctx, networkConfig, self, logger, counter)
-		}
-	}
+
 	err = dmutils.Telnet("tcp", aiUtilityDns)
 	if err != nil {
 		logger.Error().Err(err).Msg("Ai Utility Server service is not up yet")
@@ -94,35 +76,30 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.NetworkConfig, self string, logger zerolog.Logger) (*VapusSvcInternalClients, error) {
 	var err error
 	client := &VapusSvcInternalClients{
-		AIStudioDns:        fmt.Sprintf("%s:%d", networkConfig.AIStudioSvc.ServiceName, networkConfig.AIStudioSvc.ServicePort),
-		PlDns:              fmt.Sprintf("%s:%d", networkConfig.PlatformSvc.ServiceName, networkConfig.PlatformSvc.ServicePort),
-		NabhikServerDns:    fmt.Sprintf("%s:%d", networkConfig.NabhikServer.ServiceName, networkConfig.NabhikServer.ServicePort),
+		AIStudioDns: fmt.Sprintf("%s:%d", networkConfig.AIStudioSvc.ServiceName, networkConfig.AIStudioSvc.ServicePort),
+		//  here I need to do something
+		// PlDns: fmt.Sprintf("%s:%d", networkConfig.PlatformSvc.ServiceName, networkConfig.PlatformSvc.ServicePort),
+		// NabhikServerDns:    fmt.Sprintf("%s:%d", networkConfig.NabhikServer.ServiceName, networkConfig.NabhikServer.ServicePort),
 		AiUtilityServerDns: fmt.Sprintf("%s:%d", networkConfig.AIUtility.ServiceName, networkConfig.AIUtility.ServicePort),
 	}
 	logger.Info().Msg("Setting up VapusSvcInternalClients........")
-	logger.Info().Msgf("PlatformSvcDns: %s", client.PlDns)
+	// logger.Info().Msgf("PlatformSvcDns: %s", client.PlDns)
 	logger.Info().Msgf("AIStudioSvcDns: %s", client.AIStudioDns)
-	logger.Info().Msgf("DataproductServerDns: %s", client.NabhikServerDns)
+	// logger.Info().Msgf("DataproductServerDns: %s", client.NabhikServerDns)
 	logger.Info().Msgf("AiutilityServerDns: %s", client.AiUtilityServerDns)
-	err = dmutils.Telnet("tcp", client.PlDns)
-	if err != nil && self != "" && self != networkConfig.PlatformSvc.ServiceName {
-		logger.Error().Err(err).Msg("Platform service is not up yet")
-		client.platformGrpcClient = nil
-	}
+	// err = dmutils.Telnet("tcp", client.PlDns)
+	// if err != nil && self != "" && self != networkConfig.PlatformSvc.ServiceName {
+	// 	logger.Error().Err(err).Msg("Platform service is not up yet")
+	// 	client.platformGrpcClient = nil
+	// }
 	logger.Info().Msg("Setting up VapusSvcInternalClients........")
 	log.Println("client.platformGrpcClient: ", client.platformGrpcClient)
-	if client.platformGrpcClient == nil {
-		client.platformGrpcClient = pbtools.NewGrpcClient(logger,
-			pbtools.ClientWithInsecure(true),
-			pbtools.ClientWithServiceAddress(client.PlDns))
-		client.OrganizationConn = pb.NewOrganizationServiceClient(client.platformGrpcClient.Connection)
-		client.PlConn = pb.NewVapusdataServiceClient(client.platformGrpcClient.Connection)
-		client.UserConn = pb.NewUserManagementServiceClient(client.platformGrpcClient.Connection)
-		client.PluginServiceClient = pb.NewPluginServiceClient(client.platformGrpcClient.Connection)
-		client.UtilityConn = pb.NewUtilityServiceClient(client.platformGrpcClient.Connection)
-		client.DatasourceConn = pb.NewDatasourceServiceClient(client.platformGrpcClient.Connection)
-		client.SecretServiceClient = pb.NewSecretServiceClient(client.platformGrpcClient.Connection)
-	}
+	// if client.platformGrpcClient == nil {
+	// 	client.platformGrpcClient = pbtools.NewGrpcClient(logger,
+	// 		pbtools.ClientWithInsecure(true),
+	// 		pbtools.ClientWithServiceAddress(client.PlDns))
+	// 	// platformGrpcClient => removed
+	// }
 
 	err = dmutils.Telnet("tcp", client.AIStudioDns)
 	if err != nil && self != "" && self != networkConfig.AIStudioSvc.ServiceName {
@@ -140,20 +117,27 @@ func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.
 		client.AIGurdrailsClient = pb.NewAIGuardrailsClient(client.aiStudioGrpcClient.Connection)
 		client.AgentServiceClient = pb.NewAgentServiceClient(client.aiStudioGrpcClient.Connection)
 		client.AgentStudioClient = pb.NewAgentStudioClient(client.aiStudioGrpcClient.Connection)
+		client.OrganizationConn = pb.NewOrganizationServiceClient(client.aiStudioGrpcClient.Connection)
+		client.PlConn = pb.NewVapusdataServiceClient(client.aiStudioGrpcClient.Connection)
+		client.UserConn = pb.NewUserManagementServiceClient(client.aiStudioGrpcClient.Connection)
+		client.PluginServiceClient = pb.NewPluginServiceClient(client.aiStudioGrpcClient.Connection)
+		client.UtilityConn = pb.NewUtilityServiceClient(client.aiStudioGrpcClient.Connection)
+		client.DatasourceConn = pb.NewDatasourceServiceClient(client.aiStudioGrpcClient.Connection)
+		client.SecretServiceClient = pb.NewSecretServiceClient(client.aiStudioGrpcClient.Connection)
 	}
 	client.NetworkConfig = networkConfig
 
-	err = dmutils.Telnet("tcp", client.NabhikServerDns)
-	if err != nil && self != "" && self != networkConfig.NabhikServer.ServiceName {
-		logger.Error().Err(err).Msg("NabhikServer service is not up yet")
-		client.DataServerClient = nil
-	}
+	// err = dmutils.Telnet("tcp", client.NabhikServerDns)
+	// if err != nil && self != "" && self != networkConfig.NabhikServer.ServiceName {
+	// 	logger.Error().Err(err).Msg("NabhikServer service is not up yet")
+	// 	client.DataServerClient = nil
+	// }
 	log.Println("client.NewDataServerClient: ", client.DataServerClient)
-	if client.DataServerClient == nil {
-		client.DataServerClient = pbtools.NewGrpcClient(logger,
-			pbtools.ClientWithInsecure(true),
-			pbtools.ClientWithServiceAddress(client.NabhikServerDns))
-	}
+	// if client.DataServerClient == nil {
+	// 	client.DataServerClient = pbtools.NewGrpcClient(logger,
+	// 		pbtools.ClientWithInsecure(true),
+	// 		pbtools.ClientWithServiceAddress(client.NabhikServerDns))
+	// }
 	if client.AiUtilityGrpcClient == nil {
 		client.AiUtilityGrpcClient = pbtools.NewGrpcClient(logger,
 			pbtools.ClientWithInsecure(true),

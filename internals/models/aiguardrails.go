@@ -26,7 +26,7 @@ type AIGuardrails struct {
 	ScanMode           string                     `bun:"scan_mode" json:"scanMode,omitempty" yaml:"scanMode,omitempty" toml:"scanMode,omitempty"`
 	GuardModel         *GuardModels               `bun:"guard_model,type:jsonb" json:"guardModel,omitempty" yaml:"guardModel,omitempty" toml:"guardModel,omitempty"`
 	EligibleModelNodes []string                   `bun:"eligible_model_nodes,array" json:"eligibleModelNodes,omitempty" yaml:"eligibleModelNodes,omitempty" toml:"eligibleModelNodes,omitempty"`
-	Partner            []*ThirdParty              `bun:"partner,array" json:"partner,omitempty" yaml:"partner,omitempty" toml:"partner,omitempty"`
+	Partner            []*ThirdParty              `bun:"partner,type:jsonb" json:"partner,omitempty" yaml:"partner,omitempty" toml:"partner,omitempty"`
 }
 
 func (dm *AIGuardrails) PreSaveCreate(authzClaim map[string]string) {
@@ -222,16 +222,21 @@ func (s *SensitiveDataGuardrails) ConvertFromPb(pb *mpb.SensitiveDataGuardrails)
 }
 
 type ThirdParty struct {
-	Bedrock *Bedrock  `json:"bedrock,omitempty" yaml:"bedrock,omitempty" toml:"bedrock,omitempty"`
-	Nemo    *FileData `json:"nemo,omitempty" yaml:"nemo,omitempty" toml:"nemo,omitempty"`
-	Mistral string    `json:"mistral,omitempty" yaml:"mistral,omitempty" toml:"mistral,omitempty"`
-	Pangea  string    `json:"pangea,omitempty" yaml:"pangea,omitempty" toml:"pangea,omitempty"`
+	Bedrock []*Bedrock                  `json:"bedrock,omitempty" yaml:"bedrock,omitempty" toml:"bedrock,omitempty"`
+	Nemo    []*FileData                 `json:"nemo,omitempty" yaml:"nemo,omitempty" toml:"nemo,omitempty"`
+	Mistral []*ThirdPartyGuardrailModel `json:"mistral,omitempty" yaml:"mistral,omitempty" toml:"mistral,omitempty"`
+	Pangea  []*ThirdPartyGuardrailModel `json:"pangea,omitempty" yaml:"pangea,omitempty" toml:"pangea,omitempty"`
 }
 
 type Bedrock struct {
 	Arn  string `json:"arn,omitempty" yaml:"arn,omitempty" toml:"arn,omitempty"`
 	Id   string `json:"id,omitempty" yaml:"id,omitempty" toml:"id,omitempty"`
 	Name string `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
+}
+
+type ThirdPartyGuardrailModel struct {
+	Name string `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
+	Id   string `json:"id,omitempty" yaml:"id,omitempty" toml:"id,omitempty"`
 }
 
 type FileData struct {
