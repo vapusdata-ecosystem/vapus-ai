@@ -148,7 +148,7 @@ func (o *OpenAI) buildRequest(payload *prompts.GenerativePrompterPayload) openai
 			if c.Content != "" {
 				messages = append(messages, openai.AssistantMessage(ConvertToCompletionAssistantPart[string](c)))
 			} else {
-				messages = append(messages, openai.AssistantMessage(ConvertToCompletionAssistantPart[[]openai.ChatCompletionAssistantMessageParamContentArrayOfContentPartUnion](c)))
+				messages = append(messages, openai.AssistantMessage(ConvertToCompletionAssistantPart[[]openai.ChatCompletionAssistantMessagePartUnion](c)))
 			}
 		}
 		if c.Role == aicore.USER {

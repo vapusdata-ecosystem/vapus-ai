@@ -624,3 +624,10 @@ enum GuardRailLevels {
 enum ObservabilityActions {
   OBSERVER_DATAPRODUCT_QUERY = 0;
 }
+
+enum SearchParameterSources{
+  WEB = 0;
+  X = 1;
+  NEWS = 2;
+  RES = 3;
+}
