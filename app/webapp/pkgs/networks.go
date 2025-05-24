@@ -1,13 +1,9 @@
 package pkgs
 
 import (
-	"context"
-	"log"
 	"path/filepath"
 
-	"github.com/rs/zerolog"
 	appconfigs "github.com/vapusdata-ecosystem/vapusai/core/app/configs"
-	appcl "github.com/vapusdata-ecosystem/vapusai/core/app/grpcclients"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
@@ -17,8 +13,6 @@ import (
 type VapusArtifactStorage struct {
 	Spec *models.DataSourceCredsParams `yaml:"spec"`
 }
-
-var VapusSvcInternalClientManager *appcl.VapusSvcInternalClients
 
 func InitNetworkConfig(configRoot, fileName string) error {
 	DmLogger.Info().Msgf("Reading network configuration with path - %v ", filepath.Join(configRoot, fileName))
@@ -37,21 +31,4 @@ func InitNetworkConfig(configRoot, fileName string) error {
 		NetworkConfigManager = svcnetConf
 	}
 	return nil
-}
-
-func InitVapusSvcInternalClients(hostSvc string, logger zerolog.Logger) {
-	// TODO: Handle error
-	log.Println("here--------------------------------------------")
-	err := appcl.SvcUpTimeCheck(context.Background(), NetworkConfigManager, "", logger, 0)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("error while checking service uptime.")
-	} else {
-		logger.Info().Msg("service is up and running.")
-	}
-	log.Println("Services are up & running")
-	res, err := appcl.SetupVapusSvcInternalClients(context.Background(), NetworkConfigManager, "", logger)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("error while initializing vapus svc internal clients.")
-	}
-	VapusSvcInternalClientManager = res
 }

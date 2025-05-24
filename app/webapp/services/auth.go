@@ -12,6 +12,7 @@ import (
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	"github.com/vapusdata-ecosystem/vapusai/core/types"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/clients"
 	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 )
@@ -48,7 +49,7 @@ func InitAuthnService(configPath string) {
 }
 
 func (au *AuthnService) LoginHandler(c echo.Context) error {
-	publicInfo, err := pkgs.VapusSvcInternalClientManager.PlConn.PlatformPublicInfo(c.Request().Context(), &mpb.EmptyRequest{})
+	publicInfo, err := clients.GrpcClientManager.PlConn.PlatformPublicInfo(c.Request().Context(), &mpb.EmptyRequest{})
 	if err != nil {
 		au.logger.Err(err).Msg("error while getting platform public info")
 	}
@@ -62,7 +63,7 @@ func (au *AuthnService) LoginHandler(c echo.Context) error {
 }
 
 func (au *AuthnService) LoginRedirect(c echo.Context) error {
-	result, err := pkgs.VapusSvcInternalClientManager.UserConn.LoginHandler(c.Request().Context(), &mpb.EmptyRequest{})
+	result, err := clients.GrpcClientManager.UserConn.LoginHandler(c.Request().Context(), &mpb.EmptyRequest{})
 	if err != nil {
 		au.logger.Err(err).Msg("error while getting login url")
 		c.Redirect(http.StatusTemporaryRedirect, pkgs.WebAppConfigManager.URIs.Login)
@@ -88,7 +89,7 @@ func (au *AuthnService) CallbackHandler(c echo.Context) error {
 	code := c.QueryParam("code")
 
 	au.logger.Info().Msgf("Callback received with code: %v", code)
-	result, err := pkgs.VapusSvcInternalClientManager.UserConn.LoginCallback(c.Request().Context(), &pb.LoginCallBackRequest{
+	result, err := clients.GrpcClientManager.UserConn.LoginCallback(c.Request().Context(), &pb.LoginCallBackRequest{
 		Code: code,
 		Host: pkgs.NetworkConfigManager.ExternalURL + routes.LoginCallBack,
 	})
