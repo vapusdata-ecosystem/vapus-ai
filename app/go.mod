@@ -262,7 +262,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
 	github.com/oapi-codegen/runtime v1.1.1 // indirect
-	github.com/openai/openai-go v0.1.0-beta.10 // indirect
+	github.com/openai/openai-go v1.0.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opensearch-project/opensearch-go/v4 v4.3.0 // indirect

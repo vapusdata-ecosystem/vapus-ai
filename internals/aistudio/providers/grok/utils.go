@@ -54,3 +54,11 @@ func (o *Grok) CrawlModels(ctx context.Context) (result []*models.AIModelBase, e
 	}
 	return result, nil
 }
+
+func getToolType(t string) string {
+	val, ok := ToolTypeMap[t]
+	if !ok {
+		return ToolTypeFunction.String()
+	}
+	return val.String()
+}
