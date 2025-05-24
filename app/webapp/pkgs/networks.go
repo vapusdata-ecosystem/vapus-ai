@@ -2,6 +2,7 @@ package pkgs
 
 import (
 	"context"
+	"log"
 	"path/filepath"
 
 	"github.com/rs/zerolog"
@@ -40,12 +41,14 @@ func InitNetworkConfig(configRoot, fileName string) error {
 
 func InitVapusSvcInternalClients(hostSvc string, logger zerolog.Logger) {
 	// TODO: Handle error
+	log.Println("here--------------------------------------------")
 	err := appcl.SvcUpTimeCheck(context.Background(), NetworkConfigManager, "", logger, 0)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("error while checking service uptime.")
 	} else {
 		logger.Info().Msg("service is up and running.")
 	}
+	log.Println("Services are up & running")
 	res, err := appcl.SetupVapusSvcInternalClients(context.Background(), NetworkConfigManager, "", logger)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("error while initializing vapus svc internal clients.")

@@ -16,26 +16,22 @@ import (
 )
 
 type VapusSvcInternalClients struct {
-	Host                string
-	PlConn              pb.VapusdataServiceClient
-	DatasourceConn      pb.DatasourceServiceClient
-	UserConn            pb.UserManagementServiceClient
-	OrganizationConn    pb.OrganizationServiceClient
-	UtilityConn         pb.UtilityServiceClient
-	AIStudioConn        pb.AIStudioClient
-	AgentServiceClient  pb.AgentServiceClient
-	AgentStudioClient   pb.AgentStudioClient
-	AIPromptClient      pb.AIPromptsClient
-	AIModelClient       pb.AIModelsClient
-	AIGurdrailsClient   pb.AIGuardrailsClient
-	platformGrpcClient  *pbtools.GrpcClient
-	aiStudioGrpcClient  *pbtools.GrpcClient
-	PluginServiceClient pb.PluginServiceClient
-	NetworkConfig       *svcconfig.NetworkConfig
-	// PlDns                 string
-	// NabhikServerDns       string
+	Host                  string
+	PlConn                pb.VapusdataServiceClient
+	DatasourceConn        pb.DatasourceServiceClient
+	UserConn              pb.UserManagementServiceClient
+	OrganizationConn      pb.OrganizationServiceClient
+	UtilityConn           pb.UtilityServiceClient
+	AIStudioConn          pb.AIStudioClient
+	AgentServiceClient    pb.AgentServiceClient
+	AgentStudioClient     pb.AgentStudioClient
+	AIPromptClient        pb.AIPromptsClient
+	AIModelClient         pb.AIModelsClient
+	AIGurdrailsClient     pb.AIGuardrailsClient
+	aiStudioGrpcClient    *pbtools.GrpcClient
+	PluginServiceClient   pb.PluginServiceClient
+	NetworkConfig         *svcconfig.NetworkConfig
 	AIStudioDns           string
-	DataServerClient      *pbtools.GrpcClient
 	SecretServiceClient   pb.SecretServiceClient
 	AIUtilityServerClient atpb.AIUtilityClient
 	AiUtilityGrpcClient   *pbtools.GrpcClient
@@ -49,7 +45,7 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 	counter++
 	logger.Info().Msg("Checking if all services are up........")
 	aiStudioSvcDns := fmt.Sprintf("%s:%d", networkConfig.AIStudioSvc.ServiceName, networkConfig.AIStudioSvc.ServicePort)
-	aiUtilityDns := fmt.Sprintf("%s:%d", networkConfig.NabhikServer.ServiceName, networkConfig.AIUtility.ServicePort)
+	aiUtilityDns := fmt.Sprintf("%s:%d", networkConfig.AIUtility.ServiceName, networkConfig.AIUtility.ServicePort)
 
 	err := dmutils.Telnet("tcp", aiStudioSvcDns)
 	if err != nil {
@@ -75,6 +71,7 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 
 func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.NetworkConfig, self string, logger zerolog.Logger) (*VapusSvcInternalClients, error) {
 	var err error
+	log.Println("---------------------------------------------------------")
 	client := &VapusSvcInternalClients{
 		AIStudioDns: fmt.Sprintf("%s:%d", networkConfig.AIStudioSvc.ServiceName, networkConfig.AIStudioSvc.ServicePort),
 		//  here I need to do something
@@ -93,7 +90,6 @@ func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.
 	// 	client.platformGrpcClient = nil
 	// }
 	logger.Info().Msg("Setting up VapusSvcInternalClients........")
-	log.Println("client.platformGrpcClient: ", client.platformGrpcClient)
 	// if client.platformGrpcClient == nil {
 	// 	client.platformGrpcClient = pbtools.NewGrpcClient(logger,
 	// 		pbtools.ClientWithInsecure(true),
@@ -125,19 +121,9 @@ func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.
 		client.DatasourceConn = pb.NewDatasourceServiceClient(client.aiStudioGrpcClient.Connection)
 		client.SecretServiceClient = pb.NewSecretServiceClient(client.aiStudioGrpcClient.Connection)
 	}
+	log.Println("=====================================", client.UserConn)
 	client.NetworkConfig = networkConfig
 
-	// err = dmutils.Telnet("tcp", client.NabhikServerDns)
-	// if err != nil && self != "" && self != networkConfig.NabhikServer.ServiceName {
-	// 	logger.Error().Err(err).Msg("NabhikServer service is not up yet")
-	// 	client.DataServerClient = nil
-	// }
-	log.Println("client.NewDataServerClient: ", client.DataServerClient)
-	// if client.DataServerClient == nil {
-	// 	client.DataServerClient = pbtools.NewGrpcClient(logger,
-	// 		pbtools.ClientWithInsecure(true),
-	// 		pbtools.ClientWithServiceAddress(client.NabhikServerDns))
-	// }
 	if client.AiUtilityGrpcClient == nil {
 		client.AiUtilityGrpcClient = pbtools.NewGrpcClient(logger,
 			pbtools.ClientWithInsecure(true),
@@ -145,10 +131,6 @@ func SetupVapusSvcInternalClients(ctx context.Context, networkConfig *svcconfig.
 		client.AIUtilityServerClient = atpb.NewAIUtilityClient(client.AiUtilityGrpcClient.Connection)
 	}
 	client.NetworkConfig = networkConfig
-	log.Println("platformGrpcClient: ", client.platformGrpcClient)
-	log.Println("aiStudioGrpcClient: ", client.aiStudioGrpcClient)
-	log.Println("NabhikServer: ", client.DataServerClient)
-	log.Println("AiUtilityServerClient: ", client.AIUtilityServerClient)
 	return client, nil
 }
 
@@ -175,8 +157,6 @@ func (x *VapusSvcInternalClients) Close() {
 	x.OrganizationConn = nil
 	x.AIStudioConn = nil
 	x.aiStudioGrpcClient = nil
-	x.platformGrpcClient = nil
-	x.DataServerClient = nil
 	x.AgentServiceClient = nil
 	x.AgentStudioClient = nil
 }
