@@ -222,13 +222,13 @@ func (s *SensitiveDataGuardrails) ConvertFromPb(pb *mpb.SensitiveDataGuardrails)
 }
 
 type ThirdParty struct {
-	Bedrock []*Bedrock                  `json:"bedrock,omitempty" yaml:"bedrock,omitempty" toml:"bedrock,omitempty"`
-	Nemo    []*FileData                 `json:"nemo,omitempty" yaml:"nemo,omitempty" toml:"nemo,omitempty"`
+	Bedrock []*BedrockGuardrailModel    `json:"bedrock,omitempty" yaml:"bedrock,omitempty" toml:"bedrock,omitempty"`
 	Mistral []*ThirdPartyGuardrailModel `json:"mistral,omitempty" yaml:"mistral,omitempty" toml:"mistral,omitempty"`
 	Pangea  []*ThirdPartyGuardrailModel `json:"pangea,omitempty" yaml:"pangea,omitempty" toml:"pangea,omitempty"`
+	// Nemo    []*FileData                 `json:"nemo,omitempty" yaml:"nemo,omitempty" toml:"nemo,omitempty"`
 }
 
-type Bedrock struct {
+type BedrockGuardrailModel struct {
 	Arn  string `json:"arn,omitempty" yaml:"arn,omitempty" toml:"arn,omitempty"`
 	Id   string `json:"id,omitempty" yaml:"id,omitempty" toml:"id,omitempty"`
 	Name string `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
@@ -239,13 +239,13 @@ type ThirdPartyGuardrailModel struct {
 	Id   string `json:"id,omitempty" yaml:"id,omitempty" toml:"id,omitempty"`
 }
 
-type FileData struct {
-	Name          string            `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
-	Data          []byte            `json:"data,omitempty" yaml:"data,omitempty" toml:"data,omitempty"`
-	ContentFormat string            `json:"contentFormat,omitempty" yaml:"contentFormat,omitempty" toml:"contentFormat,omitempty"`
-	Path          string            `json:"path,omitempty" yaml:"path,omitempty" toml:"path,omitempty"`
-	Eof           bool              `json:"eof,omitempty" yaml:"eof,omitempty" toml:"eof,omitempty"`
-	Params        map[string]string `json:"params,omitempty" yaml:"params,omitempty" toml:"params,omitempty"`
-	Description   string            `json:"nadescriptionme,omitempty" yaml:"description,omitempty" toml:"description,omitempty"`
-	RedirectUrl   string            `json:"redirectUrl,omitempty" yaml:"redirectUrl,omitempty" toml:"redirectUrl,omitempty"`
-}
+// type FileData struct {
+// 	Name          string            `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
+// 	Data          []byte            `json:"data,omitempty" yaml:"data,omitempty" toml:"data,omitempty"`
+// 	ContentFormat string            `json:"contentFormat,omitempty" yaml:"contentFormat,omitempty" toml:"contentFormat,omitempty"`
+// 	Path          string            `json:"path,omitempty" yaml:"path,omitempty" toml:"path,omitempty"`
+// 	Eof           bool              `json:"eof,omitempty" yaml:"eof,omitempty" toml:"eof,omitempty"`
+// 	Params        map[string]string `json:"params,omitempty" yaml:"params,omitempty" toml:"params,omitempty"`
+// 	Description   string            `json:"nadescriptionme,omitempty" yaml:"description,omitempty" toml:"description,omitempty"`
+// 	RedirectUrl   string            `json:"redirectUrl,omitempty" yaml:"redirectUrl,omitempty" toml:"redirectUrl,omitempty"`
+// }
