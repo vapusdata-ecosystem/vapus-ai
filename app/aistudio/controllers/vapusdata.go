@@ -97,25 +97,6 @@ func (dmc *VapusDataController) AccountGetter(ctx context.Context, request *mpb.
 	}, nil
 }
 
-func (x *VapusDataController) PlatformServicesInfo(ctx context.Context, request *pb.VapusdataServicesRequest) (*pb.VapusdataServicesResponse, error) {
-	resp := &pb.VapusdataServicesResponse{
-		NetworkParams: []*mpb.SvcNetworkParams{},
-	}
-	resp.NetworkParams = append(resp.NetworkParams, &mpb.SvcNetworkParams{
-		Port:    int64(pkgs.NetworkConfigManager.AIStudioSvc.Port),
-		SvcAddr: pkgs.NetworkConfigManager.AIStudioSvc.ServiceName,
-		SvcName: pkgs.NetworkConfigManager.AIStudioSvc.ServiceName,
-		SvcTag:  mpb.VapusSvcs_AISTUDIO,
-	})
-	resp.NetworkParams = append(resp.NetworkParams, &mpb.SvcNetworkParams{
-		Port:    int64(pkgs.NetworkConfigManager.PlatformSvc.Port),
-		SvcAddr: pkgs.NetworkConfigManager.PlatformSvc.ServiceName,
-		SvcName: pkgs.NetworkConfigManager.PlatformSvc.ServiceName,
-		SvcTag:  mpb.VapusSvcs_PLATFORM,
-	})
-	return resp, nil
-}
-
 func (x *VapusDataController) ResourceGetter(ctx context.Context, request *pb.ResourceGetterRequest) (*pb.ResourceGetterResponse, error) {
 	// Not required to call the services
 	specMap := appconfigs.SpecMap

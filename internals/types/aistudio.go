@@ -7,9 +7,9 @@ type GuardrailsProvider string
 const (
 	Bedrock GuardrailsProvider = "bedrock"
 	Mistral GuardrailsProvider = "mistral"
-	Nemo    GuardrailsProvider = "nemo"
 	Pangea  GuardrailsProvider = "pangea"
 	Vapus   GuardrailsProvider = "vapus"
+	// Nemo    GuardrailsProvider = "nemo"
 )
 
 func (x GuardrailsProvider) String() string {
@@ -31,3 +31,9 @@ var GrokSearchParameterSourceType = map[mpb.SearchParameterSources][]string{
 		"links",
 	},
 }
+
+// type PangeaGuardrailModels string
+
+// const (
+
+// )
