@@ -3,6 +3,7 @@ package dmcontrollers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -142,6 +143,7 @@ func (dmc *VapusDataUsers) AuthzGetter(ctx context.Context, request *pb.AuthzGet
 }
 
 func (dmc *VapusDataUsers) LoginHandler(ctx context.Context, request *mpb.EmptyRequest) (*pb.LoginHandlerResponse, error) {
+	fmt.Println("I am in Login Handlerrrrrrrr")
 	state, err := dmutils.GenerateRandomState()
 
 	if err != nil {

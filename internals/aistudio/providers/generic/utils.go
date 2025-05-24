@@ -78,12 +78,12 @@ func ConvertToCompletionUserPart[T string | []openai.ChatCompletionContentPartUn
 					Detail: value.ImageUrl.Detail,
 				}))
 			case aicore.AIResponseFormatInputAudio.String():
-				res = append(res, openai.InputAudioContentPart(openai.ChatCompletionContentPartInputAudioInputAudioParam{
+				res = append(res, openai.InputAudioContentPart(openai.ChatCompletionInputAudioDataParam{
 					Data:   value.InputAudio.Data,
 					Format: strings.ToLower(value.InputAudio.Format.String()),
 				}))
 			case aicore.AIResponseFormatInputFile.String():
-				res = append(res, openai.FileContentPart(openai.ChatCompletionContentPartFileFileParam{
+				res = append(res, openai.FileContentPart(openai.ChatCompletionFileContentPartParam{
 					FileData: param.NewOpt(value.File.FileData),
 					FileID:   param.NewOpt(value.File.FileId),
 					Filename: param.NewOpt(value.File.Filename),
@@ -99,7 +99,7 @@ func ConvertToCompletionUserPart[T string | []openai.ChatCompletionContentPartUn
 	return response
 }
 
-func ConvertToCompletionAssistantPart[T string | []openai.ChatCompletionAssistantMessageParamContentArrayOfContentPartUnion](obj *pb.ChatMessageObject) (response T) {
+func ConvertToCompletionAssistantPart[T string | []openai.ChatCompletionAssistantMessagePartUnion](obj *pb.ChatMessageObject) (response T) {
 	if obj == nil {
 		return response
 	}
@@ -108,23 +108,23 @@ func ConvertToCompletionAssistantPart[T string | []openai.ChatCompletionAssistan
 		return response
 	}
 	if obj.StructuredContent != nil {
-		res := []openai.ChatCompletionAssistantMessageParamContentArrayOfContentPartUnion{}
+		res := []openai.ChatCompletionAssistantMessagePartUnion{}
 		for _, value := range obj.StructuredContent {
 			switch value.Type {
 			case aicore.AIResponseFormatText.String():
-				res = append(res, openai.ChatCompletionAssistantMessageParamContentArrayOfContentPartUnion{
+				res = append(res, openai.ChatCompletionAssistantMessagePartUnion{
 					OfText: &openai.ChatCompletionContentPartTextParam{
 						Text: value.Text,
 					},
 				})
 			case aicore.AIResponseFormatRefusal.String():
-				res = append(res, openai.ChatCompletionAssistantMessageParamContentArrayOfContentPartUnion{
+				res = append(res, openai.ChatCompletionAssistantMessagePartUnion{
 					OfRefusal: &openai.ChatCompletionContentPartRefusalParam{
 						Refusal: value.Text,
 					},
 				})
 			default:
-				res = append(res, openai.ChatCompletionAssistantMessageParamContentArrayOfContentPartUnion{
+				res = append(res, openai.ChatCompletionAssistantMessagePartUnion{
 					OfText: &openai.ChatCompletionContentPartTextParam{
 						Text: value.Text,
 					},

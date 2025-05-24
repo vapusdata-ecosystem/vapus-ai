@@ -17,7 +17,7 @@ func (x *VapusSvcInternalClients) PluginAction(ctx context.Context, spec any, re
 		return ErrUserConnNotInitialized
 	}
 	if x.PlConn == nil {
-		err := x.PingTestAndReconnect(ctx, x.PlDns, logger)
+		err := x.PingTestAndReconnect(ctx, x.AIStudioDns, logger)
 		if err != nil {
 			return ErrUserConnNotInitialized
 		}

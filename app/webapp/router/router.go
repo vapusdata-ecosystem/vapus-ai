@@ -138,30 +138,30 @@ func GetNewRouter() *echo.Echo {
 			grpc.MaxCallSendMsgSize(100*1024*1024),
 		),
 	}
-	err = pb.RegisterVapusdataServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterVapusdataServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering VapusdataService handler from endpoint")
 	}
 
-	err = pb.RegisterDatasourceServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterDatasourceServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering DataProduct service handler from endpoint")
 	}
 
-	err = pb.RegisterPluginServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterPluginServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering PluginService handler from endpoint")
 	}
-	err = pb.RegisterOrganizationServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterOrganizationServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering OrganizationService handler from endpoint")
 	}
-	err = pb.RegisterUserManagementServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterUserManagementServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering UserManagementService handler from endpoint")
 	}
 
-	err = pb.RegisterUtilityServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterUtilityServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering UtilityService handler from endpoint")
 	}
@@ -195,7 +195,7 @@ func GetNewRouter() *echo.Echo {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
 	}
 
-	err = pb.RegisterSecretServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.PlDns, opts)
+	err = pb.RegisterSecretServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering SecretService handler from endpoint")
 	}

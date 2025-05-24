@@ -119,6 +119,7 @@ type SessionMessage struct {
 	Message           string
 	Role              string
 	StructuredMessage []*pb.RequestContentPart
+	SearchParameters  *pb.SearchParameters
 }
 
 func NewPrompter(params *pb.ChatRequest, prompt *models.AIPrompt, stream pb.AIStudio_ChatServer, agentStream pb.AIStudio_BidiChatServer, logger zerolog.Logger) *GenerativePrompterPayload {
