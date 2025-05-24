@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { getAuthService } from "../../../../lib/auth";
 
 const Sidebar = ({ userInfo }) => {
   // Internal navigation data
@@ -472,6 +473,12 @@ const Sidebar = ({ userInfo }) => {
   const [activeNav, setActiveNav] = useState("");
   const [activeSideBar, setActiveSideBar] = useState("");
 
+  // clear cookies and redirect to login
+  const handleLogout = () => {
+    const authService = getAuthService();
+    authService.logout();
+  };
+
   const pathname = usePathname();
 
   const updateActiveStates = (currentPath) => {
@@ -797,8 +804,9 @@ const Sidebar = ({ userInfo }) => {
                 <ul className="py-2 text-sm text-gray-100">
                   <li>
                     <Link
-                      href="/ui/settings"
+                      href="/settings"
                       className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100 "
+                      suppressHydrationWarning
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -818,9 +826,10 @@ const Sidebar = ({ userInfo }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/logout"
+                    <button
+                      onClick={handleLogout}
                       className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100"
+                      suppressHydrationWarning
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -837,7 +846,7 @@ const Sidebar = ({ userInfo }) => {
                         />
                       </svg>
                       Logout
-                    </Link>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -1031,8 +1040,9 @@ const Sidebar = ({ userInfo }) => {
                 <ul className="py-2 text-sm text-gray-100">
                   <li>
                     <Link
-                      href="/ui/settings"
+                      href="/settings"
                       className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100"
+                      suppressHydrationWarning
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1052,9 +1062,10 @@ const Sidebar = ({ userInfo }) => {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/logout"
+                    <button
+                      onClick={handleLogout}
                       className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100"
+                      suppressHydrationWarning
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -1071,7 +1082,7 @@ const Sidebar = ({ userInfo }) => {
                         />
                       </svg>
                       Logout
-                    </Link>
+                    </button>
                   </li>
                 </ul>
               </div>

@@ -11,10 +11,9 @@ export default function DomainDetails() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("basic-info");
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentDomainId, setCurrentDomainId] = useState(null);
 
-  const addUserHandler = (domainId) => {
-    setCurrentDomainId(domainId);
+  // Simplified - we don't need currentDomainId state since we can get it from domains
+  const addUserHandler = () => {
     setModalOpen(true);
   };
 
@@ -112,7 +111,7 @@ export default function DomainDetails() {
           <AddUserModal
             isOpen={modalOpen}
             onClose={closeModal}
-            domainId={currentDomainId}
+            domainId={domainId}
           />
 
           <div className="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">

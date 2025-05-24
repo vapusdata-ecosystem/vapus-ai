@@ -42,7 +42,7 @@ const PlatformDomains = () => {
         "Display Name": item.displayName || "N/A",
         Status: item.status || "N/A",
         Id: domainId || "N/A",
-        "Domain Type": item.resourceBase?.scope || "N/A",
+        "Domain Type": item.domainType || "N/A",
         "Has Access": `<span class="px-3 py-1 text-sm font-medium ${
           hasAccess ? "text-green-800 bg-green-100" : "text-red-800 bg-red-100"
         } rounded-full">${hasAccess ? tickSvg : "No"}</span>`,

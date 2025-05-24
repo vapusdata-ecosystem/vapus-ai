@@ -1,74 +1,45 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "@/app/components/platform/header";
-import { userApi } from "@/app/utils/settings-endpoint/user-api";
-import ActionDropdown from "@/app/components/action-dropdown";
+import { userGlobalData } from "@/context/GlobalContext";
+import { userProfileApi } from "../utils/settings-endpoint/profile-api";
+import ActionDropdown from "../components/action-dropdown";
 
-const UserDetails = ({ params }) => {
-  console.log("my params", params);
-  const unwrappedParams = use(params);
-  const userID = unwrappedParams?.userId
-    ? String(unwrappedParams.userId).trim()
-    : "";
-  console.log("userID", userID);
-
+const UserDetails = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [domainMap, setDomainMap] = useState({});
-
+  const [contextData, setContextData] = useState(null);
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await userApi.getuserId(userID);
+        // Get user data from global context
+        const globalContext = await userGlobalData();
+        setContextData(globalContext);
+        console.log("my data", globalContext);
 
-        if (!response) {
-          console.error("No response received from server");
-          setError("No response received from server");
-          setLoading(false);
-          return;
-        }
+        // Check if userId exists
+        if (globalContext?.userInfo?.userId) {
+          const userId = globalContext.userInfo.userId;
+          console.log("User ID:", userId);
 
-        // Handle different response formats
-        if (
-          response.output &&
-          response.output.users &&
-          Array.isArray(response.output.users) &&
-          response.output.users.length > 0
-        ) {
-          setUserData(response.output.users[0]);
-          setDomainMap(response.domainMap || {});
-        } else if (
-          response.output &&
-          response.output.users &&
-          !Array.isArray(response.output.users)
-        ) {
-          // Handle case where users is not an array
-          setUserData(response.output.users);
-          setDomainMap(response.domainMap || {});
+          // Make API call to get user profile with userId
+          const data = await userProfileApi.getuserProfile(userId);
+          console.log("data", data);
+          setUserData(data.output.users[0]);
+          setDomainMap(data.domainMap);
         } else {
-          console.error(
-            "Data does not contain expected output format:",
-            response
-          );
-          setError("Unexpected data format received from server");
+          console.error("User ID not found in global context");
         }
-
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        setError(err.message);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
         setLoading(false);
       }
     };
 
-    if (userID) {
-      fetchUserData();
-    } else {
-      setError("No user ID provided");
-      setLoading(false);
-    }
-  }, [userID]);
+    fetchData();
+  }, []);
 
   const formatEpochTime = (epoch) => {
     if (!epoch || epoch === "0") return "N/A";
@@ -83,25 +54,19 @@ const UserDetails = ({ params }) => {
     );
   }
 
-  // Create header resource data structure to match DomainDetails
-
+  // Action button for update
   const responseData = {
     resourceId: "resource-123",
-    // createActionParams: userData.createActionParams || {
-    //   weblink: "./platform/update",
-    // },
-    yamlSpec: userData.yamlSpec || JSON.stringify(userData, null, 2),
-  };
-
-  const globalContextData = {
-    AccessTokenKey: "your-access-token-here",
+    createActionParams: userData.createActionParams || {
+      weblink: "./settings/update",
+    },
   };
 
   return (
     <div className="bg-zinc-800 flex h-screen">
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
-          sectionHeader="User Details"
+          sectionHeader="Your profile"
           hideBackListingLink={false}
           backListingLink="./"
         />
@@ -112,18 +77,14 @@ const UserDetails = ({ params }) => {
             </div>
           )}
 
-          {/* Section Headers */}
-
+          {/* Action Dropdown */}
           <div className="flex justify-end">
-            <ActionDropdown
-              response={responseData}
-              globalContext={globalContextData}
-            />
+            <ActionDropdown response={responseData} />
           </div>
 
           {/* User Information */}
           <div className="overflow-x-auto text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
-            <div className="tab-content mt-2 bg-[#1b1b1b] p-4">
+            <div className="tab-content mt-2 bg-[#1b1b1b] rounded-lg p-4">
               {/* User Overview Section */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 ">
                 <div className=" lg:flex items-center">

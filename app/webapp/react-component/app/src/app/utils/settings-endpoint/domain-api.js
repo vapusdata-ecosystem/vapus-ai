@@ -10,5 +10,5 @@ export const domainApi = {
 };
 
 export const addUsersApi = {
-  getAddUsers: (payload) => fetchApi(API_ENDPOINTS.ADD_USERS, "POST", payload),
+  getAddUsers: (payload) => fetchApi(API_ENDPOINTS.ADD_USERS, "PUT", payload),
 };

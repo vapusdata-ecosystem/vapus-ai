@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Header from "@/app/components/platform/header";
 import { userApi } from "@/app/utils/settings-endpoint/user-api";
+import { getGlobalData } from "@/context/GlobalContext";
 
 // DataTable component with dynamic import
 const DataTable = dynamic(() => import("@/app/components/table"), {
@@ -15,6 +16,22 @@ const UsersTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [globalData, setGlobalData] = useState({
+    currentDomain: null,
+  });
+
+  // take data from globleContext
+  useEffect(() => {
+    const fetchGlobalData = async () => {
+      const data = await getGlobalData();
+      setGlobalData(data);
+      console.log("Global data loaded:", data);
+      console.log("current DomainType", data.currentDomain.domainType);
+    };
+
+    fetchGlobalData();
+  }, []);
+
   // Function to convert epoch time to readable date
   const epochConverter = (epochTime) => {
     if (!epochTime) return "N/A";
@@ -25,10 +42,19 @@ const UsersTable = () => {
 
     return `${year}-${month}-${day}`;
   };
-  // Function to fetch the users data
+
+  // Function to fetch the users data with conditional API call
   const fetchUsersData = async () => {
     try {
-      const data = await userApi.getuser();
+      let data;
+
+      // Check domainType and call API endpoint
+      if (globalData.currentDomain?.domainType === "SERVICE_DOMAIN") {
+        data = await userApi.getuser("LIST_PLATFORM_USERS");
+      } else {
+        data = await userApi.getuser("LIST_USERS");
+      }
+
       return data.output?.users || [];
     } catch (error) {
       console.error("Error fetching model nodes data:", error);
@@ -44,7 +70,7 @@ const UsersTable = () => {
         item.displayName || item.firstName + " " + item.lastName || "N/A",
       Status: item.status || item.resourceBase?.status || "N/A",
 
-      "View Details": `<a href="users/${item.userId}" target="_blank" class="relative group inline-flex items-center justify-center">
+      "View Details": `<a href="/settings/users/${item.userId}" target="_blank" class="relative group inline-flex items-center justify-center">
                           <!-- The Icon -->
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 200 200">
                             <circle cx="100" cy="100" r="90" stroke="rgb(207, 86, 46)" stroke-width="10" fill="none" />
@@ -63,9 +89,12 @@ const UsersTable = () => {
     }));
   };
 
-  // For loading data
+  // For loading data - now depends on globalData being loaded
   useEffect(() => {
     const loadData = async () => {
+      // Only load data if globalData is available
+      if (!globalData.currentDomain) return;
+
       setIsLoading(true);
       const usersData = await fetchUsersData();
       console.log("Users data fetched:", usersData);
@@ -76,7 +105,7 @@ const UsersTable = () => {
     };
 
     loadData();
-  }, []);
+  }, [globalData]); // Add globalData as dependency
 
   // Define columns for the DataTable
   const columns = [

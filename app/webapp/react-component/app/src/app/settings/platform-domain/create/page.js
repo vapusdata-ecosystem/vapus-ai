@@ -7,7 +7,7 @@ import Header from "@/app/components/platform/header";
 import YamlEditorClient from "@/app/components/formcomponets/ymal";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import LoadingOverlay from "@/app/components/loading/loading";
-import { platformCreateApi } from "@/app/utils/settings-endpoint/platform-domain";
+import { platformDomainCreateApi } from "@/app/utils/settings-endpoint/platform-domain";
 
 export default function CreatePlatform() {
   const router = useRouter();
@@ -49,7 +49,9 @@ export default function CreatePlatform() {
 
       console.log("Submitting platform data:", payload);
       // Call API
-      const response = await platformCreateApi.getplatformCreate(payload);
+      const response = await platformDomainCreateApi.getplatformDomainCreate(
+        payload
+      );
 
       console.log("Platform created:", response);
       toast.success("Platform created successfully!");

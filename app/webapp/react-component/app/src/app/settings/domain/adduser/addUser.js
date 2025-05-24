@@ -26,15 +26,16 @@ const XIcon = () => (
   </svg>
 );
 
-export default function AddUserModal({ isOpen, onClose }) {
+// Add domainId as a prop
+export default function AddUserModal({ isOpen, onClose, domainId }) {
   const [users, setUsers] = useState([
-    { userId: "", roles: [], inviteIfNotFound: false },
+    { userId: "", roles: [], inviteIfNotFound: true }, // Changed default to true
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [roleOptions, setRoleOptions] = useState([]);
   const [loadingRoles, setLoadingRoles] = useState(false);
 
-  //  Fetch the PlatformUserRoles data
+  // Fetch the PlatformUserRoles data
   useEffect(() => {
     const fetchEnumsData = async () => {
       try {
@@ -63,7 +64,7 @@ export default function AddUserModal({ isOpen, onClose }) {
   }, []);
 
   const addUserParams = () => {
-    setUsers([...users, { userId: "", roles: [], inviteIfNotFound: false }]);
+    setUsers([...users, { userId: "", roles: [], inviteIfNotFound: true }]); // Changed default to true
   };
 
   const removeUserParams = (index) => {
@@ -85,6 +86,12 @@ export default function AddUserModal({ isOpen, onClose }) {
   };
 
   const handleSubmit = async () => {
+    // Add validation for domainId
+    if (!domainId) {
+      toast.error("Domain ID is required");
+      return;
+    }
+
     // Validate users data before submission
     const validUsers = users.filter(
       (user) => user.userId.trim() !== "" && user.roles.length > 0
@@ -102,7 +109,9 @@ export default function AddUserModal({ isOpen, onClose }) {
         domainId: domainId,
         users: validUsers.map((user) => ({
           userId: user.userId,
-          roles: user.roles,
+          validTill: "0", // Added required field
+          role: user.roles, // Changed from 'roles' to 'role'
+          added: false, // Added required field
           inviteIfNotFound: user.inviteIfNotFound,
         })),
       };
@@ -122,8 +131,8 @@ export default function AddUserModal({ isOpen, onClose }) {
         `${resourceInfo.count} ${resourceInfo.resource} User(s) added successfully.`
       );
 
-      // Close modal after successful submission
-      onClose();
+      // Don't close modal automatically to allow success toast to be visible
+      // User can manually close the modal after seeing the success message
     } catch (error) {
       console.error("Error adding users:", error);
       toast.error("Failed to add users");
@@ -133,7 +142,6 @@ export default function AddUserModal({ isOpen, onClose }) {
   };
 
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 bg-zinc-600/80 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <ToastContainerMessage />
@@ -200,7 +208,7 @@ export default function AddUserModal({ isOpen, onClose }) {
                   }
                 />
                 <label htmlFor={`invite-${index}`} className="text-sm">
-                  Invite if not found
+                  Invite if not registered
                 </label>
               </div>
 

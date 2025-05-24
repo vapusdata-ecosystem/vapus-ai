@@ -9,7 +9,7 @@ const AUTH_CONFIG = {
   loginPath: "/login",
   loginRedirectPath: "/login",
   callbackPath: "/api/callback",
-  logoutPath: "/logout",
+  logoutPath: "/login",
   homePath: "/settings/domain",
   accessTokenCookieName: "access_token",
   idTokenCookieName: "id_token",
