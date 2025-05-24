@@ -4,12 +4,10 @@ import (
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-
-	"github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 )
 
 func (s *GrpcClient) GetAccountInfo(eCtx echo.Context) (*pb.AccountResponse, error) {
-	return pkgs.VapusSvcInternalClientManager.PlConn.AccountGetter(s.SetAuthCtx(eCtx), &mpb.EmptyRequest{})
+	return GrpcClientManager.PlConn.AccountGetter(s.SetAuthCtx(eCtx), &mpb.EmptyRequest{})
 }
 
 func (x *GrpcClient) GetUserInfo(eCtx echo.Context, userId string) (*mpb.User, map[string]string, error) {

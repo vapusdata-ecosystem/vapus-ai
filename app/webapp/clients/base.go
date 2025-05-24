@@ -21,6 +21,12 @@ var GrpcClientManager *GrpcClient
 
 func NewGrpcClient() *GrpcClient {
 	logger := pkgs.GetSubDMLogger("webapp", "grpcClients")
+	err := appcl.SvcUpTimeCheck(context.Background(), pkgs.NetworkConfigManager, "", logger, 0)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("error while checking service uptime.")
+	} else {
+		logger.Info().Msg("service is up and running.")
+	}
 	cl, err := appcl.SetupVapusSvcInternalClients(context.Background(), pkgs.NetworkConfigManager, "", logger)
 	if err != nil {
 		logger.Err(err).Msg("error while initializing vapus svc internal clients.")
