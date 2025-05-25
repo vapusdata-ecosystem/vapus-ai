@@ -216,7 +216,7 @@ message AIGuardrails {
     AIGuardrailScanMode scan_mode = 14; // @gotags: yaml:"scanMode"
     GuardModels guard_model = 15; // @gotags: yaml:"guardModel"
     repeated string eligible_model_nodes = 16; // @gotags: yaml:"eligibleModelNodes"
-    
+    repeated ThirdParty partner = 17; // @gotags: yaml:"partner"
 }
 
 message GuardModels {
@@ -289,3 +289,22 @@ message ToolChoice {
 message FunctionChoice {
     string name = 1; // @gotags: yaml:"name"
 }
+
+message ThirdParty {
+  repeated BedrockGuardrailModel bedrock = 1;       // @gotags: yaml:"bedrock"
+  repeated ThirdPartyGuardrailModel mistral = 2;    // @gotags: yaml:"mistral"
+  repeated ThirdPartyGuardrailModel pangea = 3;     // @gotags: yaml:"pangea"
+}
+
+
+message BedrockGuardrailModel {
+  string arn = 1;   // @gotags: yaml:"arn"
+  string id = 2;    // @gotags: yaml:"id"
+  string name = 3;  // @gotags: yaml:"name"
+}
+
+message ThirdPartyGuardrailModel {
+  string name = 1;  // @gotags: yaml:"name"
+  string id = 2;    // @gotags: yaml:"id"
+}
+

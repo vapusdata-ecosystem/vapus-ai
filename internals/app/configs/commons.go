@@ -12,14 +12,12 @@ type VapusSvcNetworkConfig struct {
 	HttpGwPort  int32 `yaml:"httpGwPort"`
 }
 type NetworkConfig struct {
-	ExternalURL  string                 `yaml:"externalUrl"`
-	PlatformSvc  *VapusSvcNetworkConfig `yaml:"platformSvc"`
-	AIStudioSvc  *VapusSvcNetworkConfig `yaml:"aistudioSvc"`
-	WebAppSvc    *VapusSvcNetworkConfig `yaml:"webappSvc"`
-	NabhikServer *VapusSvcNetworkConfig `yaml:"nabhikserver"`
-	AIGateway    *VapusSvcNetworkConfig `yaml:"aigateway"`
-	AIUtility    *VapusSvcNetworkConfig `yaml:"aiutility"`
-	GatewayURL   string                 `yaml:"gatewayUrl"`
+	ExternalURL string                 `yaml:"externalUrl"`
+	AIStudioSvc *VapusSvcNetworkConfig `yaml:"aistudioSvc"`
+	WebAppSvc   *VapusSvcNetworkConfig `yaml:"webappSvc"`
+	AIGateway   *VapusSvcNetworkConfig `yaml:"aigateway"`
+	AIUtility   *VapusSvcNetworkConfig `yaml:"aiutility"`
+	GatewayURL  string                 `yaml:"gatewayUrl"`
 }
 
 type SecretMap struct {
