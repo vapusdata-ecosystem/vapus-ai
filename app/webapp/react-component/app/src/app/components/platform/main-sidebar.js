@@ -804,7 +804,7 @@ const Sidebar = ({ userInfo }) => {
                 <ul className="py-2 text-sm text-gray-100">
                   <li>
                     <Link
-                      href="/settings"
+                      href="/settings/profile"
                       className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100 "
                       suppressHydrationWarning
                     >
@@ -1040,7 +1040,7 @@ const Sidebar = ({ userInfo }) => {
                 <ul className="py-2 text-sm text-gray-100">
                   <li>
                     <Link
-                      href="/settings"
+                      href="/settings/profile"
                       className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100"
                       suppressHydrationWarning
                     >

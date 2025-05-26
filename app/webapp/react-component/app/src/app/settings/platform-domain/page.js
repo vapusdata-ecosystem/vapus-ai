@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import Header from "@/app/components/platform/header";
 import { platformDomainApi } from "@/app/utils/settings-endpoint/platform-domain";
 import CreateNewButton from "@/app/components/add-new-button";
+import { userGlobalData } from "@/context/GlobalContext";
+import { userProfileApi } from "@/app/utils/settings-endpoint/profile-api";
 
 const DataTable = dynamic(() => import("@/app/components/table"), {
   ssr: false,
@@ -15,6 +17,42 @@ const PlatformDomains = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [createTemplate, setCreateTemplate] = useState("");
+  // Removed unused contextData and userData state variables
+  const [domainMapData, setDomainMapData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Get user data from global context
+        const globalContext = await userGlobalData();
+
+        // Check if userId exists
+        if (globalContext?.userInfo?.userId) {
+          const userId = globalContext.userInfo.userId;
+          // Make API call to get user profile with userId
+          const data = await userProfileApi.getuserProfile(userId);
+
+          if (data.output?.users && data.output.users.length > 0) {
+            // Store the domainMap for access checking
+            if (data.domainMap) {
+              setDomainMapData(data.domainMap);
+            }
+          } else {
+            console.error("No users found in API response");
+          }
+        } else {
+          console.error("User ID not found in global context");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setError(error.message || "Failed to fetch user data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Function to fetch the domains data
   const fetchDomainsData = async () => {
@@ -22,8 +60,8 @@ const PlatformDomains = () => {
       const data = await platformDomainApi.getplatformdomain();
       return data.output?.domains || [];
     } catch (error) {
-      console.error("Error fetching model nodes data:", error);
-      setError(error.message || "Failed to fetch plugins data");
+      console.error("Error fetching domains data:", error);
+      setError(error.message || "Failed to fetch domains data");
       return [];
     }
   };
@@ -31,49 +69,65 @@ const PlatformDomains = () => {
   const transformDomainsData = (domainItems) => {
     return domainItems.map((item) => {
       const domainId = item.domainId;
-      console.log("Checking domain ID:", domainId);
-      let hasAccess = true;
 
-      console.log("Has access:", hasAccess);
+      // Check if domainId exists in domainMap
+      const hasAccess = domainMapData.hasOwnProperty(domainId);
+      // console.log(`Domain ${domainId} - Has access:`, hasAccess);
 
-      const tickSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+      const accessGrantedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="inline">
+        <defs>
+          <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <circle cx="12" cy="12" r="10" fill="url(#greenGrad)" stroke="#047857" stroke-width="1"/>
+        <path d="M8 12l3 3 5-6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(16, 185, 129, 0.3)" stroke-width="2" opacity="0.8"/>
+      </svg>`;
+
+      const accessDeniedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="inline">
+        <defs>
+          <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <circle cx="12" cy="12" r="10" fill="url(#redGrad)" stroke="#b91c1c" stroke-width="1"/>
+        <path d="M8 8l8 8M16 8l-8 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(239, 68, 68, 0.3)" stroke-width="2" opacity="0.8"/>
+      </svg>`;
 
       return {
         "Display Name": item.displayName || "N/A",
         Status: item.status || "N/A",
         Id: domainId || "N/A",
         "Domain Type": item.domainType || "N/A",
-        "Has Access": `<span class="px-3 py-1 text-sm font-medium ${
-          hasAccess ? "text-green-800 bg-green-100" : "text-red-800 bg-red-100"
-        } rounded-full">${hasAccess ? tickSvg : "No"}</span>`,
+        "Has Access": hasAccess
+          ? `<div class="ml-8">${accessGrantedSvg}</div>`
+          : `<div class="ml-8">${accessDeniedSvg}</div>`,
       };
     });
   };
 
-  // For loading data
+  // For loading domains data - only run after domainMap is loaded
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      const domainsData = await fetchDomainsData();
-      console.log("Domains data fetched:", domainsData);
-      const transformedData = transformDomainsData(domainsData);
-      console.log("Transformed data:", transformedData);
-      setDomains(transformedData);
-      setIsLoading(false);
-    };
+    if (Object.keys(domainMapData).length >= 0) {
+      const loadData = async () => {
+        setIsLoading(true);
+        const domainsData = await fetchDomainsData();
+        const transformedData = transformDomainsData(domainsData);
+        setDomains(transformedData);
+        setIsLoading(false);
+      };
 
-    loadData();
-  }, []);
+      loadData();
+    }
+  }, [domainMapData]);
 
   // Define columns for the DataTable
   const columns = ["Display Name", "Status", "Id", "Domain Type", "Has Access"];
   const filteredColumns = ["Display Name", "Status", "Domain Type"];
-
-  // Function to create new domain
-  const createNewDomain = () => {
-    document.getElementById("actionTitle").innerHTML = "Create New Domain";
-    document.getElementById("yamlSpecTitle").innerHTML = "Enter your spec here";
-  };
 
   return (
     <div className="bg-zinc-800 flex h-screen">
