@@ -269,7 +269,7 @@ func (m *Users) ConvertFromPb(pb *mpb.User) *Users {
 }
 
 type UserOrganizationRole struct {
-	OrganizationId string   `json:"OrganizationId" yaml:"OrganizationId"`
+	OrganizationId string   `json:"organizationId" yaml:"organizationId"`
 	RoleArns       []string `json:"roleArns" yaml:"roleArns"`
 	InvitedOn      int64    `json:"invitedOn" yaml:"invitedOn"`
 	ValidTill      int64    `json:"validTill" yaml:"validTill"`
@@ -376,7 +376,7 @@ type Team struct {
 	Users        []*Users `bun:"users,type:jsonb" json:"users,omitempty" yaml:"users,omitempty" toml:"users,omitempty"`
 	Description  string   `bun:"description" json:"description,omitempty" yaml:"description,omitempty" toml:"description,omitempty"`
 	TeamId       string   `bun:"team_id" json:"teamId,omitempty" yaml:"teamId,omitempty" toml:"teamId,omitempty"`
-	Organization string   `bun:"Organization" json:"Organization,omitempty" yaml:"Organization,omitempty" toml:"Organization,omitempty"`
+	Organization string   `bun:"organization" json:"organization,omitempty" yaml:"organization,omitempty" toml:"organization,omitempty"`
 }
 
 func (m *Team) SetAccountId(accountId string) {
@@ -423,7 +423,7 @@ type JwtLog struct {
 	VapusBase    `bun:",embed" json:"base,omitempty" yaml:"base,omitempty" toml:"base,omitempty"`
 	JwtId        string `bun:"jwt_id" json:"jwtId,omitempty" yaml:"jwtId,omitempty" toml:"jwtId,omitempty"`
 	UserId       string `bun:"user_id" json:"userId,omitempty" yaml:"userId,omitempty" toml:"userId,omitempty"`
-	Organization string `bun:"Organization" json:"Organization,omitempty" yaml:"Organization,omitempty" toml:"Organization,omitempty"`
+	Organization string `bun:"organization" json:"organization,omitempty" yaml:"organization,omitempty" toml:"organization,omitempty"`
 	Scope        string `bun:"scope" json:"scope,omitempty" yaml:"scope,omitempty" toml:"scope,omitempty"`
 	DataProduct  string `bun:"data_product" json:"dataProduct,omitempty" yaml:"dataProduct,omitempty" toml:"dataProduct,omitempty"`
 }
@@ -439,7 +439,7 @@ type RefreshTokenLog struct {
 	JwtId        string `bun:"jwt_id" json:"jwtId,omitempty" yaml:"jwtId,omitempty" toml:"jwtId,omitempty"`
 	TokenHash    string `bun:"token_hash" json:"tokenHash,omitempty" yaml:"tokenHash,omitempty" toml:"tokenHash,omitempty"`
 	UserId       string `bun:"user_id" json:"userId,omitempty" yaml:"userId,omitempty" toml:"userId,omitempty"`
-	Organization string `bun:"Organization" json:"Organization,omitempty" yaml:"Organization,omitempty" toml:"Organization,omitempty"`
+	Organization string `bun:"organization" json:"organization,omitempty" yaml:"organization,omitempty" toml:"organization,omitempty"`
 	Scope        string `bun:"scope" json:"scope,omitempty" yaml:"scope,omitempty" toml:"scope,omitempty"`
 	ValidTill    int64  `bun:"valid_till" json:"validTill,omitempty" yaml:"validTill,omitempty" toml:"validTill,omitempty"`
 }
@@ -494,32 +494,32 @@ func (dm *Users) PreSaveUpdate(userId string) {
 }
 
 func (dm *Users) GetOrganizationRole(OrganizationId string) []*UserOrganizationRole {
-	// if OrganizationId == types.EMPTYSTR {
-	// 	return dm.OrganizationRoles
-	// }
-	// if dm == nil || dm.OrganizationRoles == nil {
-	// 	return []*UserOrganizationRole{}
-	// }
-	// for _, val := range dm.OrganizationRoles {
-	// 	if OrganizationId == val.OrganizationId {
-	// 		return []*UserOrganizationRole{val}
-	// 	}
-	// }
+	if OrganizationId == types.EMPTYSTR {
+		return dm.GetOrganizationRoles()
+	}
+	if dm == nil || dm.GetOrganizationRoles() == nil {
+		return []*UserOrganizationRole{}
+	}
+	for _, val := range dm.GetOrganizationRoles() {
+		if OrganizationId == val.OrganizationId {
+			return []*UserOrganizationRole{val}
+		}
+	}
 	return []*UserOrganizationRole{}
 }
 
 func (dm *Users) GetDefaultOrganization() string {
-	// if dm == nil || dm.OrganizationRoles == nil {
-	// 	return ""
-	// }
-	// for _, val := range dm.OrganizationRoles {
-	// 	if val.IsDefault {
-	// 		return val.OrganizationId
-	// 	}
-	// }
-	// if len(dm.OrganizationRoles) > 0 {
-	// 	return dm.OrganizationRoles[0].OrganizationId
-	// }
+	if dm == nil || dm.GetOrganizationRoles() == nil {
+		return ""
+	}
+	for _, val := range dm.GetOrganizationRoles() {
+		if val.IsDefault {
+			return val.OrganizationId
+		}
+	}
+	if len(dm.GetOrganizationRoles()) > 0 {
+		return dm.GetOrganizationRoles()[0].OrganizationId
+	}
 	return ""
 }
 

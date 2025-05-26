@@ -103,42 +103,6 @@ var NavMenuList = []RouteBaseStruct{
 `,
 	},
 	{
-		ItemName: "Nabhik AI",
-		ItemId:   NabhikAINav.String(),
-		Url:      UIRoute + NabhikAI,
-		Svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 m-1">
-  <title>AI Chat Agent Icon 4</title>
-  <!-- Chat bubble -->
-  <path d="M20 14a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9"></path>
-  <!-- Gear 1 -->
-  <circle cx="17" cy="6" r="2"></circle>
-  <path d="M17 4 V 2.5 M17 8 V 9.5 M19 6 H 20.5 M15 6 H 13.5 M18.4 4.6 L 19.5 3.5 M15.6 7.4 L 14.5 8.5 M18.4 7.4 L 19.5 8.5 M15.6 4.6 L 14.5 3.5" stroke-width="1.5"></path>
-   <!-- Gear 2 (Optional smaller/overlapping) -->
-  <circle cx="14" cy="10" r="1.5" stroke-width="1.5"></circle>
-  <path d="M14 8.5 V 7.5 M14 11.5 V 12.5 M15.5 10 H 16.5 M12.5 10 H 11.5 M15.1 9 L 15.8 8.2 M12.9 11 L 12.2 11.8 M15.1 11 L 15.8 11.8 M12.9 9 L 12.2 8.2" stroke-width="1"></path>
-</svg>
-`,
-	},
-	{
-		ItemName: "Data Server",
-		ItemId:   DataQueryServerNav.String(),
-		Url:      UIRoute + DataQueryServer,
-		Svg: `	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 m-1">
-	<title>SQL Query Editor (Window)</title>
-	<!-- Window Outline -->
-	<rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-	<!-- Top Bar Decoration (Optional) -->
-	<line x1="3" y1="7" x2="21" y2="7" />
-	<!-- Text Lines -->
-	<line x1="7" y1="11" x2="17" y2="11" />
-	<line x1="7" y1="14" x2="15" y2="14" />
-	<line x1="7" y1="17" x2="11" y2="17" />
-	<!-- Blinking Cursor Position Indicator -->
-	<line x1="12" y1="16" x2="12" y2="18" />
-  </svg>
-`,
-	},
-	{
 		ItemName: "Insights",
 		ItemId:   InsightsNav.String(),
 		Url:      UIRoute + InsightsGroup + LLMInsights,

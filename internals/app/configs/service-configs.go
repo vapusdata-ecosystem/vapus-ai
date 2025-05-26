@@ -20,11 +20,11 @@ type BaseOs struct {
 	URL                string   `yaml:"url"`
 	Digest             string   `yaml:"digest"`
 	Tag                string   `yaml:"tag"`
-	OrganizationMounts []string `yaml:"OrganizationMounts"`
+	OrganizationMounts []string `yaml:"organizationMounts"`
 }
 
 type LocalFSPaths struct {
-	OrganizationFiles string `yaml:"OrganizationFiles"`
+	OrganizationFiles string `yaml:"organizationFiles"`
 	DataSourceFiles   string `yaml:"dataSourceFiles"`
 }
 

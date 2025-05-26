@@ -17,7 +17,7 @@ type VDCLocalGovernanceModel struct {
 	AccessScope         string `json:"access"`
 	GovLabel            string `json:"govLabel"`
 	DataProductId       string `json:"dataProductId"`
-	Organization        string `json:"Organization"`
+	Organization        string `json:"organization"`
 	DataProduct         string `json:"dataProduct"`
 	UserId              string `json:"userId"`
 	AccountId           string `json:"accountId"`

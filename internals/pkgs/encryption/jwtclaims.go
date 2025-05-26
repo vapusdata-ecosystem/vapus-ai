@@ -22,11 +22,9 @@ type VapusDataResources struct {
 type PlatformScope struct {
 	UserId           string `validate:"required" json:"userId"`
 	AccountId        string `validate:"required" json:"accountId"`
-	OrganizationId   string `validate:"required" json:"OrganizationId"`
-	OrganizationRole string `validate:"required" json:"OrganizationRole"`
+	OrganizationId   string `validate:"required" json:"organizationId"`
+	OrganizationRole string `validate:"required" json:"organizationRole"`
 	RoleScope        string `validate:"required" json:"roleScope"`
-	PlatformRole     string `validate:"required" json:"platformRole"`
-	// MarketplaceId 	 string `validate:"required" json:"marketplaceId"`
 }
 
 type VapusDataPlatformAccessClaims struct {
@@ -42,7 +40,7 @@ func (x *PlatformScope) Validate() error {
 type VapusDataPlatformRefreshTokenClaims struct {
 	jwt.RegisteredClaims
 	UserId         string `validate:"required" json:"userId"`
-	OrganizationId string `validate:"required" json:"OrganizationId"`
+	OrganizationId string `validate:"required" json:"organizationId"`
 }
 
 func (x *VapusDataPlatformRefreshTokenClaims) Validate() error {

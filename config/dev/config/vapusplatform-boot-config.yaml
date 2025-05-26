@@ -5,6 +5,3 @@ platformAccount:
     creator: vikrant@vapusdata.com
 platformAccountDomain:
     name: VapusData Sandbox Service Domain
-datamesh:
-    name: VapusData DataMesh
-    creator: vikrant@vapusdata.com

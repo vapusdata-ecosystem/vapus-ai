@@ -65,10 +65,8 @@ class ServiceConfig(BaseSettings):
         case_sensitive = False
 
 class NetworkConfig(BaseSettings):
-    platformSvc: ServerConfig
     aistudioSvc: ServerConfig
     webappSvc: ServerConfig
-    nabhikserver: ServerConfig
     aiutility: ServerConfig
     aigateway: ServerConfig
     externalUrl: str

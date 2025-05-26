@@ -37,7 +37,7 @@ type UserRoleMap struct {
 	VapusBase      `bun:",embed" json:"base,omitempty" yaml:"base,omitempty" toml:"base,omitempty"`
 	RoleArns       []string `bun:"role" yaml:"role"`
 	UserID         string   `bun:"user_id" yaml:"userId"`
-	OrganizationID string   `bun:"Organization_id" yaml:"OrganizationId"`
+	OrganizationID string   `bun:"organization_id" yaml:"organizationId"`
 	ValidTill      int64    `bun:"valid_till" yaml:"validTill"`
 	IsDefault      bool     `bun:"is_default" yaml:"isDefault"`
 }
@@ -85,7 +85,7 @@ func (x *VapusResourceArn) ConvertToPb() *mpb.VapusResourceArn {
 
 type ResourceAclMap struct {
 	Users        []string `bun:"users,array" yaml:"users"`
-	Organization string   `bun:"Organization" yaml:"Organization"`
+	Organization string   `bun:"organization" yaml:"organization"`
 }
 
 func (x *ResourceAclMap) ConvertToPb() *mpb.ResourceAclMap {

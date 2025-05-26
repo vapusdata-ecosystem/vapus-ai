@@ -3,6 +3,7 @@ package aidmstore
 import (
 	"context"
 	"fmt"
+	"log"
 
 	// mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	"github.com/databricks/databricks-sql-go/logger"
@@ -92,7 +93,8 @@ func (ds *AIStudioDMStore) ListOrganizations(ctx context.Context, condition stri
 
 func (ds *AIStudioDMStore) GetOrganization(ctx context.Context, iden string, ctxClaim map[string]string) (*models.Organization, error) {
 	result := []*models.Organization{}
-	query := fmt.Sprintf("SELECT * FROM %s WHERE %s", apppkgs.OrganizationsTable, apppkgs.GetByIdFilter("", iden, ctxClaim))
+	query := fmt.Sprintf("SELECT * FROM %s WHERE vapus_id='%s'", apppkgs.OrganizationsTable, iden)
+	log.Println("GetOrganization Query:", query)
 	err := ds.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	if err != nil || len(result) == 0 {
 		logger.Err(err).Ctx(ctx).Msgf("error while getting organization for the request")
