@@ -22,6 +22,7 @@ type JwtAuthService interface {
 	GenerateVDPARefreshJWT(claims *VapusDataPlatformRefreshTokenClaims) (string, error)
 	ParseAndValidateVDPAJWT(tokenString string) (*VapusDataPlatformAccessClaims, error)
 	ValidateAccessToken(tokenString string) (map[string]string, error)
+	GenerateKeys(bits int) (string, string, error)
 }
 
 type JWTAuthn struct {
@@ -29,8 +30,9 @@ type JWTAuthn struct {
 	PrivateJWTKey       string `yaml:"privateJwtKey" json:"privateJwtKey"`
 	SigningAlgorithm    string `validate:"required" yaml:"signingAlgorithm" json:"signingAlgorithm"`
 	ForPublicValidation bool   `default:"false" yaml:"forPublicValidation" json:"forPublicValidation"`
-	TokenIssuer         string `default:"VapusData" yaml:"tokenIssuer" json:"tokenIssuer"`
-	TokenAudience       string `default:"*.vapusdata.com" yaml:"tokenAudience" json:"tokenAudience"`
+	TokenIssuer         string `yaml:"tokenIssuer" json:"tokenIssuer"`
+	TokenAudience       string `yaml:"tokenAudience" json:"tokenAudience"`
+	Bitsize             int    `default:"2048" yaml:"bitsize" json:"bitsize"`
 }
 
 type jwtAuthOpts func(jo *JWTAuthn)
@@ -40,7 +42,7 @@ type VapusDataJwtAuthn struct {
 	JwtAuthService
 }
 
-var JwtTokenIssuer = "VapusData"
+var JwtTokenIssuer = "vapusai"
 var JwtTokenAudience = "*.vapusdata.com"
 var VapusPlatformTokenSubject = "VapusData access token"
 var JwtOrganizationScope = "OrganizationScope"

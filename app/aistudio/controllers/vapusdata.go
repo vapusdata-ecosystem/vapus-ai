@@ -2,6 +2,7 @@ package dmcontrollers
 
 import (
 	"context"
+	"fmt"
 	"maps"
 	"slices"
 
@@ -55,6 +56,7 @@ func InitVapusDataController() {
 
 func (dmc *VapusDataController) PlatformPublicInfo(ctx context.Context, request *mpb.EmptyRequest) (*pb.PlatformPublicInfoResponse, error) {
 	accountInfo := dmstores.DMStoreManager.Account
+	fmt.Println("Account Info", dmstores.DMStoreManager.Account.Name)
 	if accountInfo == nil {
 		return &pb.PlatformPublicInfoResponse{}, grpcstatus.Error(grpccodes.NotFound, "Account details not found")
 	}
@@ -93,25 +95,6 @@ func (dmc *VapusDataController) AccountGetter(ctx context.Context, request *mpb.
 		Output: accountInfo.ConvertToPb(),
 		DmResp: pbtools.HandleDMResponse(ctx, utils.ACCOUNT_CREATED, "200"),
 	}, nil
-}
-
-func (x *VapusDataController) PlatformServicesInfo(ctx context.Context, request *pb.VapusdataServicesRequest) (*pb.VapusdataServicesResponse, error) {
-	resp := &pb.VapusdataServicesResponse{
-		NetworkParams: []*mpb.SvcNetworkParams{},
-	}
-	resp.NetworkParams = append(resp.NetworkParams, &mpb.SvcNetworkParams{
-		Port:    int64(pkgs.NetworkConfigManager.AIStudioSvc.Port),
-		SvcAddr: pkgs.NetworkConfigManager.AIStudioSvc.ServiceName,
-		SvcName: pkgs.NetworkConfigManager.AIStudioSvc.ServiceName,
-		SvcTag:  mpb.VapusSvcs_AISTUDIO,
-	})
-	resp.NetworkParams = append(resp.NetworkParams, &mpb.SvcNetworkParams{
-		Port:    int64(pkgs.NetworkConfigManager.PlatformSvc.Port),
-		SvcAddr: pkgs.NetworkConfigManager.PlatformSvc.ServiceName,
-		SvcName: pkgs.NetworkConfigManager.PlatformSvc.ServiceName,
-		SvcTag:  mpb.VapusSvcs_PLATFORM,
-	})
-	return resp, nil
 }
 
 func (x *VapusDataController) ResourceGetter(ctx context.Context, request *pb.ResourceGetterRequest) (*pb.ResourceGetterResponse, error) {

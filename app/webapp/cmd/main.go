@@ -73,9 +73,8 @@ func init() {
 
 	// pkgs.InitAuthn(pkgs.WebAppConfigManager.GetJwtAuthSecretPath(), validator)
 	// logger.Info().Msgf("Jwt Authentication package Initialized Successfully")
-
-	pkgs.InitVapusSvcInternalClients(pkgs.NetworkConfigManager.WebAppSvc.ServiceName, logger)
-
+	logger.Info().Msg("Initializing internal svc clients")
+	logger.Info().Msg("Internal svc clients initialized")
 }
 
 func main() {

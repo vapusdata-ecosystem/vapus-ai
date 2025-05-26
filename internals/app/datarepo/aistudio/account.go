@@ -3,6 +3,7 @@ package aidmstore
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/databricks/databricks-sql-go/logger"
 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
@@ -28,6 +29,7 @@ func (ds *AIStudioDMStore) CreateAccount(ctx context.Context, obj *models.Accoun
 func (ds *AIStudioDMStore) GetAccount(ctx context.Context, ctxClaim map[string]string) (*models.Account, error) {
 	result := make([]*models.Account, 0)
 	query := fmt.Sprintf("SELECT * FROM %s WHERE vapus_id = '%s'", apppkgs.AccountsTable, ctxClaim[encryption.ClaimAccountKey])
+	log.Println("Query to get account:", query)
 	err := ds.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	if err != nil || len(result) == 0 {
 		logger.Err(err).Ctx(ctx).Msg("error while getting account from datastore")

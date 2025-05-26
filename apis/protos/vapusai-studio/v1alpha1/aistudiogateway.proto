@@ -108,6 +108,7 @@ message ChatRequest {
     google.protobuf.Struct prompt_input = 16; // @gotags: yaml:"promptInput"
     StreamOptions stream_options = 17; // @gotags: yaml:"streamOptions"
     string tool_choice_params = 18; // @gotags: yaml:"toolChoiceParams"
+    SearchParameters search_parameters = 19; // @gotags: yaml:"searchParameters"
 }
 
 message StreamOptions {
@@ -227,3 +228,20 @@ message ChatCompletionChunkChoicesDelta {
     repeated models.v1alpha1.ToolCall tool_calls = 5; // @gotags: yaml:"tool_calls"
 }
 
+message SearchParameters {
+    string mode = 1; // @gotags: yaml:"mode"
+    bool return_citation = 2; // @gotags: yaml:"returnCitation"
+    string from_date = 3; // @gotags: yaml:"fromDate"
+    string to_date = 4; // @gotags: yaml:"toDate"
+    int32 max_search_result = 5; // @gotags: yaml:"maxSearchResult"
+    repeated Source sources = 6; // @gotags: yaml:"sources"
+}
+
+message Source {
+    string type = 1; // @gotags: yaml:"type"
+    repeated string links = 2; // @gotags: yaml:"type"
+    repeated string exclude_website = 3; // @gotags: yaml:"excludeWebsite"
+    repeated string x_handles = 4; // @gotags: yaml:"xHandles"
+    string country = 5; // @gotags: yaml:"country"
+    bool safe_search = 6; // @gotags: yaml:"safeSearch"
+}

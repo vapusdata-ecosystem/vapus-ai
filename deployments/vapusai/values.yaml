@@ -1,0 +1,182 @@
+affinity: {}
+aistudio:
+  artifacts:
+    digest: sha256:3835d0ee94c78588cac7a67b8fe4e657ce0741befccec5e85e57c87ee3263918
+    image: vapusdata-ecosystem/aistudio
+    pullPolicy: IfNotPresent
+    tag: v0.0.250
+  autoscaling:
+    enabled: false
+    maxReplicas: 10
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  containerName: aistudio
+  enabled: true
+  fullname: aistudio
+  name: aistudio
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 512m
+      memory: 512Mi
+    requests:
+      cpu: 256m
+      memory: 256Mi
+  service:
+    grpc:
+      name: aistudiogrpc
+      port: 9012
+      targetPort: 9012
+      type: grpc
+    svcPort: 9012
+    type: ClusterIP
+  serviceAccount:
+    annotations: null
+    clusterRole:
+      name: vapusdata-aistudio-master-cr
+    clusterRoleBinding:
+      name: vapusdata-aistudio-master-crb
+    create: true
+    name: vapusdata-aistudio-master-sa
+  volumePaths:
+    certMount:
+      name: tls-secrets
+      path: /certs
+    networkConfig:
+      path: /network
+    secretsMount:
+      name: aistudio-secrets
+      path: /secrets
+    serviceConfig:
+      name: aistudio-service-config
+      path: /config
+app:
+  podMountPath: /data/vapusdata
+auth:
+  oidc:
+    callback: /auth/callback
+    login: /login
+    logout: /logout
+genServiceAccount:
+  annotations: null
+  clusterRole:
+    name: vapusdata-gen-cr
+  clusterRoleBinding:
+    name: vapusdata-gen-crb
+  create: true
+  name: vapusdata-gen-sa
+imagePullSecrets:
+- name: vapusdata-ecosystem-pls
+ingress:
+  annotations: {}
+  className: gce
+  enabled: true
+  name: vapusdata-gateway
+  paths:
+  - backend:
+      service:
+        name: webapp
+        port:
+          number: 9013
+    path: /
+    pathType: Prefix
+nodeSelector: {}
+tolerations: []
+vapusaigateway:
+  artifacts:
+    digest: sha256:0ab0d81e3ed03c85114613a15189a5d899de614afb534a309ec8d3067bb51b6d
+    image: vapusdata-ecosystem/vapusaigateway
+    pullPolicy: IfNotPresent
+    tag: v0.0.250
+  autoscaling:
+    enabled: false
+    maxReplicas: 10
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  containerName: vapusaigateway
+  enabled: true
+  fullname: vapusaigateway
+  name: vapusaigateway
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 512Mi
+    requests:
+      cpu: 256m
+      memory: 256Mi
+  service:
+    http:
+      name: vapusaigateway
+      port: 9013
+      targetPort: 9013
+      type: http
+    svcPort: 9013
+    type: ClusterIP
+  volumePaths:
+    certMount:
+      name: tls-secrets
+      path: /certs
+    networkConfig:
+      path: /network
+    secretsMount:
+      name: aistudio-secrets
+      path: /secrets
+    serviceConfig:
+      name: aistudio-service-config
+      path: /config
+vapusdata:
+  globalConfigs:
+    networkConfig:
+      fileName: network-config.yaml
+      name: network-config
+    policyConfig:
+      fileName: policy/global-policies-config.yaml
+      name: global-policies-config
+  globalSecrets:
+    backend:
+      secretStore: be-secret-storage
+      secretStoreFileName: be-secret-storage.yaml
+    certs:
+      tlsSecret: vapusdatademotls
+  registry: asia-south1-docker.pkg.dev/vapusdata-beta/
+webapp:
+  artifacts:
+    digest: sha256:2cb6ffb5fbd0f829a866ab6d88ddea2c7534b52db4b4997b41eff82ebbe15727
+    image: vapusdata-ecosystem/webapp
+    pullPolicy: IfNotPresent
+    tag: v0.0.250
+  autoscaling:
+    enabled: false
+    maxReplicas: 10
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  containerName: webapp
+  enabled: true
+  fullname: webapp
+  name: webapp
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 512Mi
+    requests:
+      cpu: 256m
+      memory: 256Mi
+  service:
+    http:
+      name: webapp
+      port: 9013
+      targetPort: 9013
+      type: http
+    svcPort: 9013
+    type: ClusterIP
+  volumePaths:
+    certMount:
+      name: tls-secrets
+      path: /certs
+    networkConfig:
+      path: /network
+    serviceConfig:
+      name: webapp-service-config
+      path: /config

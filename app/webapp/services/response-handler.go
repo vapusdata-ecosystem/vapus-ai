@@ -5,8 +5,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/clients"
 	"github.com/vapusdata-ecosystem/vapusai/webapp/models"
-	pkgs "github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 	routes "github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -83,7 +83,7 @@ func HandleGLobalContextError(c echo.Context, err error) error {
 		if status.Code(err).String() == codes.Unauthenticated.String() {
 			return c.Redirect(http.StatusSeeOther, routes.Login)
 		}
-		publicInfo, _ := pkgs.VapusSvcInternalClientManager.PlConn.PlatformPublicInfo(c.Request().Context(), &mpb.EmptyRequest{})
+		publicInfo, _ := clients.GrpcClientManager.PlConn.PlatformPublicInfo(c.Request().Context(), &mpb.EmptyRequest{})
 
 		return c.Render(http.StatusBadRequest, "400.html", map[string]any{
 			"publicInfo": publicInfo,

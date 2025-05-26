@@ -46,8 +46,8 @@ func generateInstallerSpecTemplate() error {
 	specVal, err := filetools.GenericMarshaler(&setup.VapusSecretInstallerConfig{
 		SecretStore:       secM,
 		BackendDataStore:  secM,
-		ArtifactStore:     secM,
 		BackendCacheStore: secM,
+		FileStore:         secM,
 		AuthnSecrets: &authn.AuthnSecrets{
 			OIDCSecrets: &authn.OIDCSecrets{},
 		},

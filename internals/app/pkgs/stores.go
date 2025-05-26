@@ -204,6 +204,8 @@ func (ds *VapusStore) ActivatePostgresExtension(ctx context.Context, logger zero
 		logger.Err(err).Msg("error while running DDLs for vector extension")
 		return err
 	}
+
+	// btree_gin used for array, JSONB, and full-text search
 	ddl = "CREATE EXTENSION IF NOT EXISTS btree_gin;"
 	logger.Debug().Msgf("DDL: %v", ddl)
 	err = ds.Db.RunDDLs(ctx, &ddl)

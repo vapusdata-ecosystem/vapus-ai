@@ -34,9 +34,13 @@ type PlatformSetup struct {
 func NewPlatformSetup(bc *appconfigs.PlatformBootConfig, dbm *apppkgs.VapusStore, svcPkgs *apppkgs.VapusSvcPackages, svcPkgsParams *apppkgs.VapusSvcPackageParams, logger zerolog.Logger) *PlatformSetup {
 	return &PlatformSetup{
 		ownerPolicies: func() []string {
-			for _, role := range svcPkgs.PlatformRBACManager.Roles {
-				if role.Name == "platformOwners" {
-					return role.Policies
+			if svcPkgs != nil {
+				if svcPkgs.PlatformRBACManager != nil {
+					for _, role := range svcPkgs.PlatformRBACManager.Roles {
+						if role.Name == "platformOwners" {
+							return role.Policies
+						}
+					}
 				}
 			}
 			return []string{}
@@ -62,6 +66,7 @@ func (p *PlatformSetup) AddVapusDataPlatformOwners(ctx context.Context) error {
 	}
 	if count == 0 {
 		for _, user := range p.bootConfig.PlatformOwners {
+			log.Println("Creating platform owner for account ", p.accountId)
 			user, err := apppdrepo.CreateUser(ctx, &apppdrepo.LocalUserM{
 				Email:             user,
 				AccountId:         p.accountId,
@@ -100,7 +105,7 @@ func (p *PlatformSetup) AddVapusDataPlatformAccount(ctx context.Context) error {
 		account.PreSaveCreate(p.bootConfig.PlatformAccount.Creator)
 		account.BackendDataStorage = p.getBeDbStorage(ctx, account.Name)
 		account.BackendSecretStorage = p.getBeSecretStorage(ctx, account.Name)
-		account.ArtifactStorage = p.getArtifactStorage(ctx, account.Name)
+		// account.ArtifactStorage = p.getArtifactStorage(ctx, account.Name)
 		account.DmAccessJwtKeys = p.getJwtAccessKeys(ctx, account.Name)
 
 		_, err := apppdrepo.CreateAccount(ctx, account, p.dbManager, p.logger)
@@ -109,7 +114,7 @@ func (p *PlatformSetup) AddVapusDataPlatformAccount(ctx context.Context) error {
 		}
 		p.logger.Info().Msgf("Account successfully created for '%v' with creator set as '%v'.......", p.bootConfig.PlatformAccount.Name, p.bootConfig.PlatformAccount.Creator)
 		p.accountId = account.VapusID
-
+		p.logger.Info().Msgf("Account ID for this setup is '%v'", p.accountId)
 		return nil
 	}
 	p.logger.Info().Msg("Account for this setup already exists")

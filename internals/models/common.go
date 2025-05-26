@@ -31,7 +31,7 @@ type VapusBase struct {
 	LastAuditID  string   `json:"lastAuditId" bun:"last_audit_id"`
 	ErrorLogs    []string `json:"errorLogs" bun:"error_logs"`
 	// Labels       []string `json:"labels" bun:"labels,array"`
-	Organization string   `json:"Organization" bun:"Organization"`
+	Organization string   `json:"organization" bun:"organization"`
 	Status       string   `json:"status" bun:"status"`
 	Editors      []string `json:"editors" bun:"editors,array"`
 	Scope        string   `json:"scope" bun:"scope"`
@@ -93,7 +93,7 @@ type Comments struct {
 	Comment      string `json:"comment"`
 	User         string `json:"user"`
 	CommentedAt  int64  `json:"commentedAt"`
-	Organization string `json:"Organization"`
+	Organization string `json:"organization"`
 }
 
 func (c *Comments) ConvertFromPb(pb *mpb.Comment) *Comments {

@@ -31,7 +31,7 @@ func NewInstallerCmd() *cobra.Command {
 			if err != nil {
 				cobra.CheckErr(err)
 			}
-			err = installer.Run()
+			err = installer.Install()
 			if err != nil {
 				cobra.CheckErr(err)
 			}
@@ -54,16 +54,36 @@ type VapusdataInstaller struct {
 }
 
 func NewInstaller(f string) *VapusdataInstaller {
-	fBytes, err := os.ReadFile(f)
-	if err != nil {
-		cobra.CheckErr(err)
+	installer := &VapusdataInstaller{}
+	config := &setupconfig.VapusInstallerConfig{
+		AccountBootstrap: &setupconfig.AppBootConfig{
+			PlatformOwners: []string{},
+		},
 	}
-	config := &setupconfig.VapusInstallerConfig{}
-	err = filetools.GenericUnMarshaler(fBytes, config, filetools.GetConfFileType(f))
-	if err != nil {
-		cobra.CheckErr(err)
+	if f == "" {
+		err := getUserDevModeInput(config)
+		if err != nil {
+			cobra.CheckErr(err)
+		}
 	}
-	return &VapusdataInstaller{CustomValues: f, ConfigSpec: config}
+	log.Println("Vapusdata installation config validated successfully", "Dev Mode", config.App.Dev)
+	if f == "" && !config.App.Dev {
+		cobra.CheckErr("Config file is required")
+	}
+	if f != "" {
+		fBytes, err := os.ReadFile(f)
+		if err != nil {
+			cobra.CheckErr(err)
+		}
+
+		err = filetools.GenericUnMarshaler(fBytes, config, filetools.GetConfFileType(f))
+		if err != nil {
+			cobra.CheckErr(err)
+		}
+		installer.CustomValues = f
+	}
+	installer.ConfigSpec = config
+	return installer
 }
 
 func (x *VapusdataInstaller) PreRunChecks() error {
@@ -84,7 +104,7 @@ func (x *VapusdataInstaller) PreRunChecks() error {
 }
 
 func (x *VapusdataInstaller) writeFinalSpec() error {
-	fBytes, err := filetools.GenericMarshaler(x.ConfigSpec, filetools.GetConfFileType(x.CustomValues))
+	fBytes, err := filetools.GenericMarshaler(x.ConfigSpec, "yaml")
 	if err != nil {
 		return err
 	}
@@ -96,7 +116,7 @@ func (x *VapusdataInstaller) writeFinalSpec() error {
 	return nil
 }
 
-func (x *VapusdataInstaller) Run() error {
+func (x *VapusdataInstaller) Install() error {
 	kPath, err := pkg.KubeConfigPath.Run()
 	if err != nil {
 		return err
@@ -113,11 +133,13 @@ func (x *VapusdataInstaller) Run() error {
 	}
 	// Install Vault
 	if x.ConfigSpec.App.Dev {
-		plclient.MasterGlobals.Logger.Info().Msg("Vapusdata running in development mode")
-		err = x.installHashiCorpVault(x.namespace)
+		log.Println("===================================================================================")
+		err = x.installdev()
 		if err != nil {
+			plclient.MasterGlobals.Logger.Err(err).Msg("Error while installing vapusdata in dev mode")
 			return err
 		}
+
 	}
 	err = x.writeFinalSpec()
 	if err != nil {
@@ -155,6 +177,20 @@ func (x *VapusdataInstaller) Run() error {
 	return nil
 }
 
+func (x *VapusdataInstaller) installdev() error {
+	x.ConfigSpec.App.Namespace = x.namespace
+	x.ConfigSpec.App.Name = x.installationName
+	x.ConfigSpec.AccountBootstrap.PlatformAccount.Name = x.ConfigSpec.App.Name
+	x.ConfigSpec.AccountBootstrap.PlatformAccountOrganization.Name = x.ConfigSpec.App.Name + " Service Org"
+	err = x.ConfigSpec.Validate(plclient.MasterGlobals.Logger)
+	if err != nil {
+		plclient.MasterGlobals.Logger.Err(err).Msg("Error while validating vapusdata installation config")
+		return err
+	}
+	log.Println("Vapusdata installation config validated successfully")
+	return nil
+}
+
 func (x *VapusdataInstaller) checkHelmInstalled() error {
 	cmd := exec.Command("helm", "version")
 	if err := cmd.Run(); err != nil {
@@ -166,10 +202,13 @@ func (x *VapusdataInstaller) checkHelmInstalled() error {
 
 func (x *VapusdataInstaller) checkKubectlInstalled() error {
 	cmd := exec.Command("kubectl", "version")
-	if err := cmd.Run(); err != nil {
+	log.Println(strings.Join(cmd.Args, " "), "+++++++++++++++")
+	resp, err := cmd.CombinedOutput()
+	if err != nil {
+		plclient.MasterGlobals.Logger.Info().Msgf("Error while checking kubectl version output: %s", string(resp))
 		return err
 	}
-	plclient.MasterGlobals.Logger.Info().Msg("Kubectl is installed")
+	plclient.MasterGlobals.Logger.Info().Msgf("Kubectl version output: %s", string(resp))
 	return nil
 }
 
@@ -180,10 +219,6 @@ func (x *VapusdataInstaller) setupEnv() error {
 		return err
 	}
 	plclient.MasterGlobals.Logger.Info().Msgf("Vapusdata installation started in namespace : %s", x.namespace)
-	devModeStr, err := pkg.VapusDevMode.Run()
-	if err != nil {
-		return err
-	}
 	x.installationName, err = pkg.VapusInstallationName.Run()
 	if err != nil {
 		return err
@@ -196,7 +231,7 @@ func (x *VapusdataInstaller) setupEnv() error {
 	} else {
 		x.version = vapusversion
 	}
-	x.ConfigSpec.App.Dev = dmutils.StringToBool(devModeStr)
+
 	return nil
 }
 
@@ -240,5 +275,38 @@ func (x *VapusdataInstaller) installHashiCorpVault(namespace string) error {
 		return err
 	}
 	plclient.MasterGlobals.Logger.Info().Msg("Vault operator initialized successfully, Copy the unseal keys and root token as these are required for vapusdata installation. They are for one time use display only.")
+	return nil
+}
+
+func getUserDevModeInput(config *setupconfig.VapusInstallerConfig) error {
+	config.Postgresql.Auth.Username, err = pkg.DevPostgresUsername.Run()
+	if err != nil {
+		return err
+	}
+	config.Postgresql.Auth.Password, err = pkg.DevPostgresPassword.Run()
+	if err != nil {
+		return err
+	}
+	config.Postgresql.Auth.Database, err = pkg.DevPostgresDBName.Run()
+	if err != nil {
+		return err
+	}
+	config.Redis.Auth.Password, err = pkg.DevRedisPassword.Run()
+	if err != nil || config.Redis.Auth.Password == "" {
+		return err
+	}
+
+	creators, err := pkg.AIStudioCreator.Run()
+	if err != nil || creators == "" {
+		plclient.MasterGlobals.Logger.Err(err).Msg("AI Studio creator email is required")
+		return err
+	}
+	config.AccountBootstrap.PlatformOwners = strings.Split(creators, ",")
+	config.AccountBootstrap.PlatformAccount.Creator = creators
+	devModeStr, err := pkg.VapusDevMode.Run()
+	if err != nil {
+		return err
+	}
+	config.App.Dev = dmutils.StringToBool(devModeStr)
 	return nil
 }

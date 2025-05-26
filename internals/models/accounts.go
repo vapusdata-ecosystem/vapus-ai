@@ -40,7 +40,14 @@ func (a *Account) ConvertToPb() *mpb.Account {
 		AccountId:            a.VapusID,
 		AiAttributes:         a.AIAttributes.ConvertToPb(),
 		Profile:              a.Profile.ConvertToPb(),
-		Settings:             a.Settings.ConvertToPb(),
+		// BaseOsArtifacts: func() []*mpb.DomainArtifacts {
+		// 	var artifacts []*mpb.DomainArtifacts
+		// 	for _, d := range a.BaseOsArtifacts {
+		// 		artifacts = append(artifacts, d.ConvertToPb())
+		// 	}
+		// 	return artifacts
+		// }(),
+		Settings: a.Settings.ConvertToPb(),
 	}
 	return obj
 }
@@ -60,7 +67,14 @@ func (a *Account) ConvertFromPb(pb *mpb.Account) *Account {
 		AuthnParams:          (&AuthnOIDC{}).ConvertFromPb(pb.GetOidcParams()),
 		AIAttributes:         (&AccountAIAttributes{}).ConvertFromPb(pb.GetAiAttributes()),
 		Profile:              (&AccountProfile{}).ConvertFromPb(pb.Profile),
-		Settings:             (&AccountSettings{}).ConvertFromPb(pb.Settings),
+		// BaseOsArtifacts: func() []*DomainArtifacts {
+		// 	var artifacts []*DomainArtifacts
+		// 	for _, d := range pb.GetBaseOsArtifacts() {
+		// 		artifacts = append(artifacts, (&DomainArtifacts{}).ConvertFromPb(d))
+		// 	}
+		// 	return artifacts
+		// }(),
+		Settings: (&AccountSettings{}).ConvertFromPb(pb.Settings),
 	}
 	return obj
 }
