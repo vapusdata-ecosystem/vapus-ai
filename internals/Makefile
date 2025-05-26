@@ -22,7 +22,7 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 
-run: gosync
+run: sync
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME)
 
@@ -37,8 +37,8 @@ sec:
 
 .PHONY: all build test clean run
 
-gosync:
-	cd ../apis && make gosync
+sync:
+	cd ../apis && make sync
 	$(GOCMD) mod tidy 
 
 goget: gomodsync
@@ -56,6 +56,6 @@ gosec:
 	$(GOSEC) ./...
 
 govendor:
-	cd ../apis && make gosync
+	cd ../apis && make sync
 	$(GOCMD) mod tidy 
 	$(GOCMD) mod vendor

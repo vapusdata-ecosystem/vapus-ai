@@ -4,7 +4,7 @@
 GOCMD = go
 BUFCMD = buf
 
-.PHONY: protogen gosync api
+.PHONY: protogen sync api
 
 protogen:
 	rm -rf gen-go/protos
@@ -19,9 +19,9 @@ protogen:
 	protoc-go-inject-tag -input gen-go/protos/models/v1alpha1/vapusai.pb.go
 	protoc-go-inject-tag -input gen-go/protos/vapusai-studio/v1alpha1/*.pb.go
 
-gosync: protogen
+sync: protogen
 	cd gen-go && $(GOCMD) mod tidy && $(GOCMD) mod vendor
 	
 
-apisync: gosync
+apisync: sync
 	cd gen-go && $(GOCMD) run main.go

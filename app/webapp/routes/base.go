@@ -103,6 +103,25 @@ var NavMenuList = []RouteBaseStruct{
 `,
 	},
 	{
+		ItemName: "Data Server",
+		ItemId:   DataQueryServerNav.String(),
+		Url:      UIRoute + DataQueryServer,
+		Svg: `	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 m-1">
+	<title>SQL Query Editor (Window)</title>
+	<!-- Window Outline -->
+	<rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+	<!-- Top Bar Decoration (Optional) -->
+	<line x1="3" y1="7" x2="21" y2="7" />
+	<!-- Text Lines -->
+	<line x1="7" y1="11" x2="17" y2="11" />
+	<line x1="7" y1="14" x2="15" y2="14" />
+	<line x1="7" y1="17" x2="11" y2="17" />
+	<!-- Blinking Cursor Position Indicator -->
+	<line x1="12" y1="16" x2="12" y2="18" />
+  </svg>
+`,
+	},
+	{
 		ItemName: "Insights",
 		ItemId:   InsightsNav.String(),
 		Url:      UIRoute + InsightsGroup + LLMInsights,
@@ -122,7 +141,7 @@ var NavMenuList = []RouteBaseStruct{
 		Children: InsightsNavSideList,
 	},
 	{
-		ItemName: "Studios",
+		ItemName: "Playground",
 		ItemId:   VapusStudioNav.String(),
 		Url:      UIRoute + StudioGroup + AIStudio,
 		Svg: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="h-5 w-5 m-1"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.926" stroke-width="1.5" d="m6.514 9.06-3.988-.383 3.217-3.216a3.36 3.36 0 0 1 3.925-.595M10.95 13.55l.377 3.924 3.217-3.216a3.354 3.354 0 0 0 .52-4.06"></path><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.926" stroke-width="1.5" d="M15.005 10.166q-.36.416-.76.817c-1.342 1.341-2.838 2.347-4.315 2.978a1.11 1.11 0 0 1-1.24-.24l-2.416-2.414a1.11 1.11 0 0 1-.24-1.24c.632-1.477 1.638-2.972 2.98-4.314 2.815-2.814 6.309-4.151 8.882-3.65.454 2.33-.599 5.412-2.89 8.063M13.673 2.65l3.556 3.555"></path><path fill="currentColor" d="M13.56 6.44a1.5 1.5 0 1 1-2.12 2.12 1.5 1.5 0 0 1 2.12-2.12"></path><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.926" stroke-width="1.5" d="M6.015 13.987 2 18M4.42 12.392l-1.357 1.356M7.61 15.581l-1.356 1.356"></path></svg>
@@ -176,7 +195,6 @@ var BottonMenuList = []RouteBaseStruct{
 
 var DatamanagerSideList = []RouteBaseStruct{
 	{ItemName: "Data Sources", ItemId: OrganizationDataSourcesPage.String(), Url: UIRoute + MyOrganizationGroup + DataSources},
-	{ItemName: "Observability", ItemId: OrganizationObservabilityPage.String(), Url: UIRoute + MyOrganizationGroup + OrganizationObservability},
 }
 
 var ManageAINavSideList = []RouteBaseStruct{
@@ -184,7 +202,6 @@ var ManageAINavSideList = []RouteBaseStruct{
 	{ItemName: "Prompts", ItemId: AIPromptsPage.String(), Url: UIRoute + ManageAIGroup + ManageAIPrompts},
 	{ItemName: "Agents", ItemId: ManageAIAgentsPage.String(), Url: UIRoute + ManageAIGroup + ManageAIAgents},
 	{ItemName: "Guardrails", ItemId: ManageAIGuardrailsPage.String(), Url: UIRoute + ManageAIGroup + ManageAIGuardrails},
-	{ItemName: "Nabhik Task", ItemId: NabhikTaskPage.String(), Url: UIRoute + ManageAIGroup + NabhikTasks},
 }
 
 var InsightsNavSideList = []RouteBaseStruct{
@@ -211,7 +228,6 @@ var SettingsSideList = []RouteBaseStruct{
 var DevelopersSideList = []RouteBaseStruct{
 	{ItemName: "Resources", ItemId: DevelopersResourcesPage.String(), Url: UIRoute + DevelopersGroup + DevelopersResources},
 	{ItemName: "Enums", ItemId: DevelopersEnumsPage.String(), Url: UIRoute + DevelopersGroup + DevelopersEnums},
-	// {ItemName: "Tokens", ItemId: SettingTokenPage.String(), Url: UIRoute + SettingsGroup + SettingToken},
 }
 
 var (
@@ -219,15 +235,11 @@ var (
 
 	ManageOrganizationHome = UIRoute + MyOrganizationGroup
 
-	NabhikHome = UIRoute + NabhikAI
-
 	DataServerHome = UIRoute + UIRoute + DataQueryServer
 
 	ManageAIHome = UIRoute + ManageAIGroup + ManageAIModelNodes
 
 	AIStudioHome = UIRoute + StudioGroup + AIStudio
-
-	AgentStudioHome = UIRoute + StudioGroup + AgentStudio
 
 	SecretServiceHome = UIRoute + SettingsGroup + SecretStoreDetails
 )
