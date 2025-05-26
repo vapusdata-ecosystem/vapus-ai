@@ -60,7 +60,7 @@ sec:
 prehook: lint sec test
 
 gosync: 
-	cd ../ && make gosync
+	cd ../ && make sync
 
 govendor:
 	cd ../ && make govendor
