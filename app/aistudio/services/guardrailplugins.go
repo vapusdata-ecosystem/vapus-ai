@@ -109,7 +109,7 @@ func (v *GuardrailPluginsIntAgent) listGuardrailPlugins(ctx context.Context) err
 
 	bedrockList := []*pb.BedrockGuardrailList{}
 	for _, val := range listPlugins {
-		if val.PluginService == types.AWS_Berock.String() {
+		if val.PluginService == types.Bedrock_Guardrail.String() {
 			// fetching the secrets
 			secrets := &models.GenericCredentialModel{}
 			secretStr, err := v.dmStore.VapusStore.SecretStore.ReadSecret(ctx, val.NetworkParams.SecretName)
