@@ -26,18 +26,12 @@
         <div class="flex border-b border-zinc-500  font-semibold text-gray-50 ">
           <button onclick="showTab('basic-info')"
             class="tab-button px-4 py-2 focus:outline-none">Basic Info</button>
-          <button onclick="showTab('storage-info')"
-            class="tab-button px-4 py-2 focus:outline-none">Storages</button>
-          <button onclick="showTab('networks')"
-            class="tab-button px-4 py-2 focus:outline-none">Networks</button>
-          <button onclick="showTab('base-os')"
-            class="tab-button px-4 py-2 focus:outline-none">Operating Systems</button>
         </div>
 
         <!-- Tab Content -->
 
         <div id="basic-info" class="tab-content mt-2 bg-[#1b1b1b] p-4">
-          <h3 class="text-xl mb-4 detail-heading">Basic Information</h3>
+          <h3 class="text-xl mb-4 detail-heading">Organization Information</h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p class="detail-sect-key font-medium">Display Name</p>
@@ -50,10 +44,6 @@
             <div>
               <p class="detail-sect-key font-medium">Type</p>
               <p class="break-words p-2">{{ .Response.CurrentOrganization.OrganizationType }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Catalog</p>
-              <p class="break-words p-2">{{ .Response.CurrentOrganization.CatalogIndex }}</p>
             </div>
             <div>
               <p class="detail-sect-key font-medium">Status</p>
@@ -95,151 +85,6 @@
           {{ else }}
           <p class="text-gray-100">No attributes available.</p>
           {{ end }}
-        </div>
-
-        <div id="storage-info" class="tab-content mt-2 bg-[#1b1b1b] p-4">
-          <h3 class="text-xl mb-4 detail-heading">Artifact Storage</h3>
-          {{ if .Response.CurrentOrganization.ArtifactStorage }}
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <p class="detail-sect-key font-medium">Storage Type</p>
-              <p class="break-words p-2">{{ .Response.CurrentOrganization.ArtifactStorage.BesType }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Storage Service</p>
-              <p class="break-words p-2">{{ .Response.CurrentOrganization.ArtifactStorage.BesService }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Onboarding Type</p>
-              <p class="break-words p-2">{{ .Response.CurrentOrganization.ArtifactStorage.BesOnboarding }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Storage Engine</p>
-              <p class="break-words p-2">{{ .Response.CurrentOrganization.ArtifactStorage.BesEngine }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Address</p>
-              <p class="break-words p-2">{{ .Response.CurrentOrganization.ArtifactStorage.NetParams.Address }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Status</p>
-              <p class="break-words p-2"><span
-                  class="px-3 py-1 text-sm font-medium {{ if eq .Response.CurrentOrganization.ArtifactStorage.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{
-                  .Response.CurrentOrganization.ArtifactStorage.Status }}</span></p>
-            </div>
-          </div>
-          {{ else }}
-          <p class="text-gray-100">No storage information available.</p>
-          {{ end }}
-          <h3 class="text-xl mb-4 detail-heading">Catalog Details</h3>
-          {{ range $obj := .Response.CurrentOrganization.DataCatalog }}
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <p class="detail-sect-key font-medium">Name</p>
-              <p class="break-words p-2">{{ $obj.Name }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Display Name</p>
-              <p class="break-words p-2">{{ $obj.DisplayName }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Id</p>
-              <p class="break-words p-2">{{ $obj.DataCatalogId }}</p>
-            </div>
-            <div>
-              <p class="detail-sect-key font-medium">Description</p>
-              <p class="break-words p-2">{{ $obj.Description }}</p>
-            </div>
-          </div>
-          {{ end }}
-        </div>
-
-        <div id="base-os" class="tab-content mt-2 bg-[#1b1b1b] p-4">
-          <div class="space-y-4">
-            {{ range $obj := .Response.CurrentOrganization.OrganizationArtifacts }}
-            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
-              <h4 class="text-lg font-semibold text-gray-100">Type: {{ $obj.ArtifactType }}</h4>
-              <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
-                {{ range $val := $obj.Artifacts }}
-                <div>
-                  <p class="detail-sect-key font-medium">Url</p>
-                  <div class="flex items-center">
-                    <p class="text-gray-100" style="max-width: 500px; overflow-wrap: break-word;"
-                      style="max-width: 200px; overflow-wrap: break-word;">{{ $val.Artifact }}
-                      <button onclick="copyToClipboard('{{ $val.Artifact }}')" title="Copy" class="ml-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
-                          <path
-                            d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z" />
-                        </svg>
-
-                      </button>
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">Digest</p>
-                  <div class="flex items-center">
-                    <p class="text-gray-100" style="max-width: 500px; overflow-wrap: break-word;"
-                      style="max-width: 200px; overflow-wrap: break-word;">{{ $val.Digest }}
-                      <button onclick="copyToClipboard('{{ $val.Digest }}')" title="Copy" class="ml-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
-                          <path
-                            d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z" />
-                        </svg>
-                      </button>
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">IsLatest</p>
-                  <p class="break-words p-2">{{ $val.IsLatest }}</p>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">AddedOn</p>
-                  <p class="break-words p-2">{{ epochConverter $val.AddedOn }}</p>
-                </div>
-                {{ end }}
-              </div>
-            </div>
-            {{ end }}
-          </div>
-        </div>
-
-        <div id="networks" class="tab-content mt-2 bg-[#1b1b1b] p-4">
-          <h3 class="text-xl mb-4 detail-heading">Kubernetes Infra</h3>
-          <div class="space-y-4">
-            {{ range $obj := .Response.CurrentOrganization.DataProductInfraPlatform }}
-            <div class="bg-zinc-700 p-4 rounded-lg shadow-md">
-              <h4 class="text-lg font-semibold text-gray-100">Type: {{ $obj.Name }}</h4>
-              <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
-                <div>
-                  <p class="detail-sect-key font-medium">Name</p>
-                  <p class="detail-section-text">{{ $obj.Name }}</p>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">Id</p>
-                  <p class="detail-section-text">{{ $obj.InfraId }}</p>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">Service</p>
-                  <p class="detail-section-text">{{ $obj.InfraService }}</p>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">Service Provider</p>
-                  <p class="detail-section-text">{{ $obj.ServiceProvider }}</p>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">Secret Name</p>
-                  <p class="detail-section-text">{{ $obj.SecretName }}</p>
-                </div>
-                <div>
-                  <p class="detail-sect-key font-medium">Is Default</p>
-                  <p class="detail-section-text">{{ $obj.IsDefault }}</p>
-                </div>
-              </div>
-            </div>
-            {{ end }}
-          </div>
         </div>
       </div>
     </div>
