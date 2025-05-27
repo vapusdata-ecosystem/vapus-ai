@@ -337,7 +337,7 @@ message ResourceGetterResponse {
     repeated DataSourceServicesLogoMap data_source_services_logo_map = 6; // @gotags: yaml:"dataSourceServicesLogoMap"
     repeated ServiceProviderLogoMap service_provider_logo_map = 7; // @gotags: yaml:"serviceProviderLogoMap"
     repeated PluginTypeMap plugin_type_map = 8; // @gotags: yaml:"pluginTypeMap"
-    ThirdPartyGuardrails guardrail_types = 9; // @gotags: yaml:"guardrailTypes"
+    ThirdPartyGuardrailList guardrail_types = 9; // @gotags: yaml:"guardrailTypes"
 }
 
 message EnumGetterRequest {
@@ -379,7 +379,9 @@ message PluginTypeMap {
     map<string, string> services = 2;  // @gotags: yaml: "services"
 }
 
-message ThirdPartyGuardrails {
-    repeated string pangea = 1; //@gotags: yaml:"pangea"
-    repeated string mistral = 2; //@gotags: yaml:"mistral"
+message ThirdPartyGuardrailList {
+    repeated string pangea = 1; // @gotags: yaml:"pangea"
+    repeated string mistral = 2; // @gotags: yaml:"mistral"
+    repeated string bedrock = 3; // @gotags: yaml:"bedrock"
+    repeated string vapus = 4; // @gotags: yaml:"vapus"
 }
