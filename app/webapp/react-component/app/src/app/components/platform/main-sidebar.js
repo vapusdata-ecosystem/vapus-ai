@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { getAuthService } from "../../../../lib/auth";
+import { userGlobalData } from "@/context/GlobalContext";
+import { userProfileApi } from "@/app/utils/settings-endpoint/profile-api";
 
 const Sidebar = ({ userInfo }) => {
   // Internal navigation data
@@ -500,8 +502,40 @@ const Sidebar = ({ userInfo }) => {
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("");
   const [activeSideBar, setActiveSideBar] = useState("");
-  // Add missing activeSubmenu state
   const [activeSubmenu, setActiveSubmenu] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [contextData, setContextData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Get user data from global context
+        const globalContext = await userGlobalData();
+        setContextData(globalContext);
+        console.log("my data", globalContext);
+
+        // Check if userId exists
+        if (globalContext?.userInfo?.userId) {
+          const userId = globalContext.userInfo.userId;
+          console.log("User ID:", userId);
+
+          // Make API call to get user profile with userId
+          const data = await userProfileApi.getuserProfile(userId);
+          console.log("data", data);
+          setUserData(data.output.users[0]);
+        } else {
+          console.error("User ID not found in global context");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // clear cookies and redirect to login
   const handleLogout = () => {
@@ -826,10 +860,10 @@ const Sidebar = ({ userInfo }) => {
             <nav className="flex flex-col space-y-1 p-1">
               <div className="main-item flex px-2 py-2 shadow-lg rounded-full border border-zinc-500">
                 <p className="flex items-center justify-center w-8 h-8 text-xs font-semibold text-black rounded-full bg-white">
-                  A
+                  {userData?.displayName?.charAt(0) || " "}
                 </p>
                 <p className="block text-xs text-primary100 font-semibold text-gray-100 p-[10px]">
-                  Anand K
+                  {userData?.displayName?.slice(0, 7) || " "}
                 </p>
                 <button
                   id="hamburgerSideButton"
@@ -863,7 +897,7 @@ const Sidebar = ({ userInfo }) => {
               >
                 <div className="py-2">
                   <p className="block px-4 py-2 text-sm text-primary100 font-semibold">
-                    {userInfo?.displayName || "Anand Kumar"}
+                    {userData?.displayName || " "}
                   </p>
                 </div>
                 <ul className="py-2 text-sm text-gray-100">
@@ -1098,7 +1132,7 @@ const Sidebar = ({ userInfo }) => {
               >
                 <div className="py-2">
                   <p className="pl-2 block text-sm text-primary100 font-semibold">
-                    {userInfo?.displayName || "Anand Kumar"}
+                    {userData?.displayName || " "}
                   </p>
                 </div>
                 <ul className="py-2 text-sm text-gray-100">
