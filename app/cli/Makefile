@@ -18,7 +18,7 @@ BINARY_NAME = vapusctl
 all: test build ## Run tests and build
 
 protogen: ## Generate protobuf
-	cd ../../apis && make gosync
+	cd ../../apis && make sync
 
 build: ## Build the binary
 # CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -a -installsuffix -ldflags="-w -s" -o $(BINARY_FILE)
@@ -58,12 +58,12 @@ sec: ## Run gosec
 
 .PHONY: all build test clean run
 
-gosync:
-	cd ../ && make gosync
+sync:
+	cd ../ && make sync
 goget:
 	echo argument is $(lib)
 	$(GOGET) $(lib)
-	make gosync
+	make sync
 
 goinstall:
 	$(GOCMD) install $(lib)

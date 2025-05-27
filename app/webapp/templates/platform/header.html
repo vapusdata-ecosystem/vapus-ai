@@ -43,7 +43,7 @@
                 <ul class="py-2">
                     {{if .GlobalContext }}
                     {{if .GlobalContext.UserInfo }}
-                    {{ range $id, $val := .GlobalContext.UserInfo.OrganizationRoles }}
+                    {{ range $id, $val := .GlobalContext.UserInfo.Roles }}
                     <li><a onclick="domainLogin(`{{ $val.OrganizationId }}`)"
                             class="block rounded-md shadow-sm px-2 py-1 m-1 bg-[#1b1b1b] text-gray-100 hover:bg-zinc-800 hover:text-gray-100 text-xs cursor-pointer {{ if eq $val.OrganizationId $.GlobalContext.CurrentOrganization.OrganizationId }} headerOrganizationSelected {{ end }}"
                             data-domain="{{ $val.OrganizationId }}" style="width: 400px;">

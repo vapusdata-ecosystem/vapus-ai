@@ -65,7 +65,7 @@ func (dn *SecretStore) PreSaveDelete(authzClaim map[string]string) {
 }
 
 type SecretSharingParams struct {
-	Organization string   `json:"Organization,omitempty" yaml:"Organization"`
+	Organization string   `json:"organization,omitempty" yaml:"organization"`
 	Users        []string `json:"users,omitempty" yaml:"users"`
 	Groups       []string `json:"groups,omitempty" yaml:"groups"`
 }

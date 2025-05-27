@@ -29,10 +29,10 @@ func BootPlatform(ctx context.Context, conf *appconfigs.PlatformBootConfig, dbm 
 		logger.Fatal().Msgf("error while booting platform owner Organization. error: %v", err)
 	}
 
-	// err = pBooter.AddVapusDataPlatformOwners(ctx)
-	// if err != nil {
-	// 	logger.Fatal().Msgf("error while booting platform owners. error: %v", err)
-	// }
+	err = pBooter.AddVapusDataPlatformOwners(ctx)
+	if err != nil {
+		logger.Fatal().Msgf("error while booting platform owners. error: %v", err)
+	}
 	pBooter.Clean()
 	return nil
 }

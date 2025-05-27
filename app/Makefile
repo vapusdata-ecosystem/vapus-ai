@@ -17,7 +17,7 @@ BINARY_NAME = vapus_aistudio
 all: test build
 
 protogen:
-	cd ../apis && make gosync
+	cd ../apis && make sync
 
 test:
 	$(GOTEST) -v ./...
@@ -41,14 +41,14 @@ sec:
 prehook: lint sec test
 
 sync: 
-	cd ../internals && make gosync
+	cd ../internals && make sync
 	$(GOCMD) mod tidy 
 	cd aitools && make pysync
 
 goget:
 	echo argument is $(lib)
 	$(GOGET) $(lib)
-	make gosync
+	make sync
 
 goinstall:
 	$(GOCMD) install $(lib)

@@ -3,16 +3,16 @@ vapusBESecretStorage:
   secret: "vapusdata-be-secret"
 vapusBEDbStorage: 
   filePath:  "secrets/be-db-storages.yaml"
-  secret:  11c82-secret
+  secret:  764ed-secret
 vapusBECacheStorage: 
   filePath:  96406-secret
-  secret:  ff35a-secret
+  secret:  a7739-secret
 vapusFileStorage: 
   filePath:  96406-secret
-  secret:  de31d-secret
+  secret:  vapus-demo-bucket-store
 JWTAuthnSecrets: 
   filePath: "secrets/jwt-secrets.yaml"
-  secret: d8be6-secret
+  secret: e7157-secret
 networkConfigFile: network/network-config.yaml
 serverCerts:
   mtls: False

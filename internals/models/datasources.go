@@ -327,7 +327,7 @@ func (j *DataSourceCreds) ConvertFromPb(pb *mpb.DataSourceCreds) *DataSourceCred
 }
 
 type DataSourceSharingParams struct {
-	OrganizationId string `json:"OrganizationId" yaml:"OrganizationId"`
+	OrganizationId string `json:"organizationId" yaml:"organizationId"`
 	AccessScope    string `json:"accessScope" yaml:"accessScope"`
 	ValidFrom      int32  `json:"validFrom" yaml:"validFrom"`
 	ValidTill      int32  `json:"validTill" yaml:"validTill"`

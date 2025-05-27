@@ -317,34 +317,3 @@ func (a *AccountSettings) ConvertToPb() *mpb.AccountSettings {
 	}
 	return obj
 }
-
-type DomainArtifacts struct {
-	ArtifactType string              `json:"artifactType,omitempty" yaml:"artifactType"`
-	Artifacts    []*PlatformArtifact `json:"artifacts,omitempty" yaml:"artifacts"`
-}
-
-func (da *DomainArtifacts) ConvertToPb() *mpb.DomainArtifacts {
-	if da != nil {
-		obj := &mpb.DomainArtifacts{
-			ArtifactType: da.ArtifactType,
-			Artifacts:    make([]*mpb.PlatformArtifact, 0),
-		}
-		for _, a := range da.Artifacts {
-			obj.Artifacts = append(obj.Artifacts, a.ConvertToPb())
-		}
-		return obj
-	}
-	return nil
-}
-
-func (da *DomainArtifacts) ConvertFromPb(pb *mpb.DomainArtifacts) *DomainArtifacts {
-	if pb == nil {
-		return nil
-	}
-	da.ArtifactType = pb.GetArtifactType()
-	da.Artifacts = make([]*PlatformArtifact, 0)
-	for _, a := range pb.GetArtifacts() {
-		da.Artifacts = append(da.Artifacts, (&PlatformArtifact{}).ConvertFromPb(a))
-	}
-	return da
-}

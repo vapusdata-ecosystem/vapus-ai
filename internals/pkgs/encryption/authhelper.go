@@ -35,7 +35,7 @@ func FlatVDPAScopeClaims(claims *VapusDataPlatformAccessClaims, separator string
 	}
 	if claims != nil {
 
-		val := map[string]string{ClaimUserIdKey: claims.Scope.UserId, ClaimRoleScopeKey: claims.Scope.RoleScope, ClaimRoleKey: claims.Scope.PlatformRole, ClaimAccountKey: claims.Scope.AccountId}
+		val := map[string]string{ClaimUserIdKey: claims.Scope.UserId, ClaimRoleScopeKey: claims.Scope.RoleScope, ClaimAccountKey: claims.Scope.AccountId}
 		if claims.Scope.OrganizationId != "" {
 			val[ClaimOrganizationKey] = claims.Scope.OrganizationId
 			val[ClaimOrganizationRolesKey] = claims.Scope.OrganizationRole

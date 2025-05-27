@@ -14,7 +14,7 @@ type Organization struct {
 	Users                    []string          `bun:"users,array" json:"users,omitempty" yaml:"users"`
 	SecretPasscode           string            `bun:"salt_val" json:"saltVal,omitempty" yaml:"saltVal"`
 	AuthnJwtParams           *JWTParams        `bun:"authn_jwt_params,type:jsonb" json:"authnJwtParams,omitempty" yaml:"authnJwtParams"`
-	OrganizationType         string            `bun:"Organization_type" json:"OrganizationType,omitempty" yaml:"OrganizationType"`
+	OrganizationType         string            `bun:"organization_type" json:"organizationType,omitempty" yaml:"organizationType"`
 	BackendSecretStorage     *BackendStorages  `bun:"backend_secret_storage,type:jsonb" json:"backendSecretStorage,omitempty" yaml:"backendSecretStorage"`
 	ArtifactStorage          *BackendStorages  `bun:"artifact_storage,type:jsonb" json:"artifactStorage,omitempty" yaml:"artifactStorage"`
 	DataProductInfraPlatform []*K8SInfraParams `bun:"data_product_infra_platform,type:jsonb" json:"dataProductInfraPlatform,omitempty" yaml:"dataProductInfraPlatform"`

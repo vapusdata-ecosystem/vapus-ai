@@ -23,7 +23,6 @@ func NewDMValidator() (*DMValidator, error) {
 
 // Validate function to validate the data
 func (v *DMValidator) Validate(data interface{}) error {
-
 	if err := v.Validator.Validate(data.(protoreflect.ProtoMessage)); err != nil {
 		return err
 	}
