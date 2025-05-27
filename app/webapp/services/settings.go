@@ -125,7 +125,7 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     mpb.ResourceLcActions_UPDATE.String(),
-				API:        fmt.Sprintf("%s/api/v1alpha1/organisations", pkgs.NetworkConfigManager.GatewayURL),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations", pkgs.NetworkConfigManager.GatewayURL),
 				Method:     http.MethodPut,
 				YamlSpec:   string(bytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -148,7 +148,7 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 			}
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     utils.ADD_USERS,
-				API:        fmt.Sprintf("%s/api/v1alpha1/organisations/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
 				Method:     http.MethodPut,
 				YamlSpec:   string(uBytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -164,7 +164,7 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 			}
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     utils.UPGRADE,
-				API:        fmt.Sprintf("%s/api/v1alpha1/organisations/%s/upgrade-os", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations/%s/upgrade-os", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
 				Method:     http.MethodPost,
 				YamlSpec:   string(uBytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -242,7 +242,7 @@ func (x *WebappService) OrganizationUsersList(c echo.Context) error {
 			}
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     utils.ADD_USERS,
-				API:        fmt.Sprintf("%s/api/v1alpha1/organisations/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
 				Method:     http.MethodPut,
 				YamlSpec:   string(uBytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -526,7 +526,7 @@ func (x *WebappService) PlatformOrganizationsList(c echo.Context) error {
 	}
 	response.ActionRules = append(response.ActionRules, &models.ActionRule{
 		Action:   mpb.ResourceLcActions_CREATE.String(),
-		API:      fmt.Sprintf("%s/api/v1alpha1/organisations", pkgs.NetworkConfigManager.GatewayURL),
+		API:      fmt.Sprintf("%s/api/v1alpha1/organizations", pkgs.NetworkConfigManager.GatewayURL),
 		Method:   http.MethodPost,
 		YamlSpec: GetProtoYamlString(appconfigs.OrganizationManagerRequest),
 		Title:    "",

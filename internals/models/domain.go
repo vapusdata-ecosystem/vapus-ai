@@ -8,16 +8,15 @@ import (
 )
 
 type Organization struct {
-	VapusBase                `bun:",embed" json:"base,omitempty" yaml:"base,omitempty" toml:"base,omitempty"`
-	Name                     string            `bun:"name,notnull,unique" json:"name,omitempty" yaml:"name"`
-	DisplayName              string            `bun:"display_name" json:"displayName,omitempty" yaml:"displayName"`
-	Users                    []string          `bun:"users,array" json:"users,omitempty" yaml:"users"`
-	SecretPasscode           string            `bun:"salt_val" json:"saltVal,omitempty" yaml:"saltVal"`
-	AuthnJwtParams           *JWTParams        `bun:"authn_jwt_params,type:jsonb" json:"authnJwtParams,omitempty" yaml:"authnJwtParams"`
-	OrganizationType         string            `bun:"organization_type" json:"organizationType,omitempty" yaml:"organizationType"`
-	BackendSecretStorage     *BackendStorages  `bun:"backend_secret_storage,type:jsonb" json:"backendSecretStorage,omitempty" yaml:"backendSecretStorage"`
-	ArtifactStorage          *BackendStorages  `bun:"artifact_storage,type:jsonb" json:"artifactStorage,omitempty" yaml:"artifactStorage"`
-	DataProductInfraPlatform []*K8SInfraParams `bun:"data_product_infra_platform,type:jsonb" json:"dataProductInfraPlatform,omitempty" yaml:"dataProductInfraPlatform"`
+	VapusBase            `bun:",embed" json:"base,omitempty" yaml:"base,omitempty" toml:"base,omitempty"`
+	Name                 string           `bun:"name,notnull,unique" json:"name,omitempty" yaml:"name"`
+	DisplayName          string           `bun:"display_name" json:"displayName,omitempty" yaml:"displayName"`
+	Users                []string         `bun:"users,array" json:"users,omitempty" yaml:"users"`
+	SecretPasscode       string           `bun:"salt_val" json:"saltVal,omitempty" yaml:"saltVal"`
+	AuthnJwtParams       *JWTParams       `bun:"authn_jwt_params,type:jsonb" json:"authnJwtParams,omitempty" yaml:"authnJwtParams"`
+	OrganizationType     string           `bun:"organization_type" json:"organizationType,omitempty" yaml:"organizationType"`
+	BackendSecretStorage *BackendStorages `bun:"backend_secret_storage,type:jsonb" json:"backendSecretStorage,omitempty" yaml:"backendSecretStorage"`
+	ArtifactStorage      *BackendStorages `bun:"artifact_storage,type:jsonb" json:"artifactStorage,omitempty" yaml:"artifactStorage"`
 }
 
 func (m *Organization) SetAccountId(accountId string) {
@@ -62,10 +61,6 @@ func (d *Organization) GetArtifactStorage() *BackendStorages {
 	return d.ArtifactStorage
 }
 
-func (d *Organization) GetDataProductInfraPlatform() []*K8SInfraParams {
-	return d.DataProductInfraPlatform
-}
-
 func (d *Organization) GetAuthnJwtParams() *JWTParams {
 	return d.AuthnJwtParams
 }
@@ -82,23 +77,19 @@ func (d *Organization) HasArtifactStore() bool {
 func (dmn *Organization) ConvertToPb() *mpb.Organization {
 	if dmn != nil {
 		obj := &mpb.Organization{
-			Name:                     dmn.Name,
-			DisplayName:              dmn.DisplayName,
-			OrganizationId:           dmn.VapusID,
-			Users:                    dmn.Users,
-			SecretPasscode:           &mpb.CredentialSalt{SaltVal: dmn.SecretPasscode},
-			Status:                   dmn.Status,
-			OrganizationType:         mpb.OrganizationType(mpb.OrganizationType_value[dmn.OrganizationType]),
-			BackendSecretStorage:     dmn.BackendSecretStorage.ConvertToPb(),
-			ArtifactStorage:          dmn.ArtifactStorage.ConvertToPb(),
-			DataProductInfraPlatform: make([]*mpb.K8SInfraParams, 0),
-			ResourceBase:             dmn.ConvertToPbBase(),
+			Name:                 dmn.Name,
+			DisplayName:          dmn.DisplayName,
+			OrganizationId:       dmn.VapusID,
+			Users:                dmn.Users,
+			SecretPasscode:       &mpb.CredentialSalt{SaltVal: dmn.SecretPasscode},
+			Status:               dmn.Status,
+			OrganizationType:     mpb.OrganizationType(mpb.OrganizationType_value[dmn.OrganizationType]),
+			BackendSecretStorage: dmn.BackendSecretStorage.ConvertToPb(),
+			ArtifactStorage:      dmn.ArtifactStorage.ConvertToPb(),
+			ResourceBase:         dmn.ConvertToPbBase(),
 			Attributes: &mpb.OrganizationAttributes{
 				AuthnJwtParams: dmn.AuthnJwtParams.ConvertToPb(),
 			},
-		}
-		for _, ds := range dmn.DataProductInfraPlatform {
-			obj.DataProductInfraPlatform = append(obj.DataProductInfraPlatform, ds.ConvertToPb())
 		}
 		return obj
 	}
@@ -125,18 +116,14 @@ func (dmn *Organization) ConvertFromPb(pb *mpb.Organization) *Organization {
 		return nil
 	}
 	obj := &Organization{
-		Name:                     pb.GetName(),
-		DisplayName:              pb.GetDisplayName(),
-		Users:                    pb.GetUsers(),
-		SecretPasscode:           pb.GetSecretPasscode().GetSaltVal(),
-		OrganizationType:         mpb.OrganizationType_name[int32(pb.GetOrganizationType())],
-		BackendSecretStorage:     (&BackendStorages{}).ConvertFromPb(pb.GetBackendSecretStorage()),
-		ArtifactStorage:          (&BackendStorages{}).ConvertFromPb(pb.GetArtifactStorage()),
-		DataProductInfraPlatform: make([]*K8SInfraParams, 0),
-		AuthnJwtParams:           (&JWTParams{}).ConvertFromPb(pb.GetAttributes().GetAuthnJwtParams()),
-	}
-	for _, ds := range pb.GetDataProductInfraPlatform() {
-		obj.DataProductInfraPlatform = append(obj.DataProductInfraPlatform, (&K8SInfraParams{}).ConvertFromPb(ds))
+		Name:                 pb.GetName(),
+		DisplayName:          pb.GetDisplayName(),
+		Users:                pb.GetUsers(),
+		SecretPasscode:       pb.GetSecretPasscode().GetSaltVal(),
+		OrganizationType:     mpb.OrganizationType_name[int32(pb.GetOrganizationType())],
+		BackendSecretStorage: (&BackendStorages{}).ConvertFromPb(pb.GetBackendSecretStorage()),
+		ArtifactStorage:      (&BackendStorages{}).ConvertFromPb(pb.GetArtifactStorage()),
+		AuthnJwtParams:       (&JWTParams{}).ConvertFromPb(pb.GetAttributes().GetAuthnJwtParams()),
 	}
 	return obj
 }
@@ -180,19 +167,4 @@ func (dn *Organization) Delete(userId string) {
 	}
 	dn.DeletedBy = userId
 	dn.DeletedAt = dmutils.GetEpochTime()
-}
-
-func (dn *Organization) GetK8sInfra(id string) *K8SInfraParams {
-	if dn != nil {
-		for _, infra := range dn.DataProductInfraPlatform {
-			if id != "" {
-				if infra.InfraId == id {
-					return infra
-				}
-			} else {
-				return infra
-			}
-		}
-	}
-	return nil
 }

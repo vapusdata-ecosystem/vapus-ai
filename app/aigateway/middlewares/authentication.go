@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"strings"
 
@@ -54,6 +55,7 @@ func authnPlatformAccess(ctx context.Context, token string) (context.Context, er
 		pkgs.DmLogger.Err(err).Msg("error while fetching user details from request header")
 		return nil, apperr.ErrInvalidToken
 	}
+	log.Println("fetched user details from request header", user)
 	if !user.ValidateJwtClaim(parsedClaims) {
 		pkgs.DmLogger.Err(err).Msg("error while validating jwt claims")
 		return nil, apperr.ErrInvalidToken

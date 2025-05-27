@@ -260,12 +260,6 @@ func (x *OrganizationAgent) patchOrganization(ctx context.Context) error {
 			}
 		}
 	}
-	if newObj != nil && newObj.DataProductInfraPlatform != nil {
-		err = setOrganizationDPK8sInfra(ctx, x.organization, newObj.DataProductInfraPlatform, x.dmStore)
-		if err != nil {
-			return dmerrors.DMError(err, nil)
-		}
-	}
 	if newObj != nil && newObj.ArtifactStorage != nil {
 		resp, err := setOrganizationArtifactBEStore(ctx, newObj, x.dmStore)
 		if err != nil {
@@ -275,9 +269,6 @@ func (x *OrganizationAgent) patchOrganization(ctx context.Context) error {
 		if resp != nil {
 			x.organization.ArtifactStorage = resp
 		}
-	}
-	if newObj != nil {
-		x.organization.DataProductInfraPlatform = newObj.DataProductInfraPlatform
 	}
 	x.organization.DisplayName = newObj.DisplayName
 	err = x.dmStore.PutOrganization(ctx, x.organization, x.CtxClaim)
