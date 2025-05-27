@@ -1,6 +1,8 @@
 package models
 
-import dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+import (
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+)
 
 type FileStoreLog struct {
 	VapusBase  `bun:",embed" json:"base,omitempty" yaml:"base,omitempty" toml:"base,omitempty"`
@@ -28,6 +30,16 @@ func (dn *FileStoreLog) Delete(userId string) {
 	dn.DeletedBy = userId
 	dn.DeletedAt = dmutils.GetEpochTime()
 }
+
+// func (dn *FileStoreLog) ConvertToPb() *mpb.FileData {
+// 	if dn == nil {
+// 		return &mpb.FileData{}
+// 	}
+// 	return &mpb.FileData{
+// 		Name:   dn.Name,
+// 		Format: dn.Format,
+// 	}
+// }
 
 type FileStoreCache struct {
 	Path      string   `json:"path" yaml:"path" toml:"path"`

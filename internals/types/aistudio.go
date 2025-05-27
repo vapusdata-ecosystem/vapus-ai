@@ -32,8 +32,39 @@ var GrokSearchParameterSourceType = map[mpb.SearchParameterSources][]string{
 	},
 }
 
-// type PangeaGuardrailModels string
+type PangeaGuardrailModels string
 
-// const (
+const (
+	PangeaPromptGuard        PangeaGuardrailModels = "pangea_prompt_guard"
+	PangeaLlmResponseGuard   PangeaGuardrailModels = "pangea_llm_response_guard"
+	PangeaIngestionGuard     PangeaGuardrailModels = "pangea_ingestion_guard"
+	PangeaAgentPrePlanGuard  PangeaGuardrailModels = "pangea_agent_pre_plan_guard"
+	PangeaAgentPreToolGuard  PangeaGuardrailModels = "pangea_agent_pre_tool_guard"
+	PangeaAgentPostToolGuard PangeaGuardrailModels = "pangea_agent_post_tool_guard"
+)
 
-// )
+func (a PangeaGuardrailModels) String() string {
+	return string(a)
+}
+
+var PanegaGuardrailList = []PangeaGuardrailModels{
+	PangeaPromptGuard, PangeaLlmResponseGuard, PangeaIngestionGuard, PangeaAgentPrePlanGuard, PangeaAgentPreToolGuard, PangeaAgentPostToolGuard,
+}
+
+// ["pangea_prompt_guard", "pangea_llm_response_guard", "pangea_ingestion_guard", "pangea_agent_pre_plan_guard", "pangea_agent_pre_tool_guard", "pangea_agent_post_tool_guard"]
+
+type MistralGuardrailModels string
+
+const (
+	MistralModerationLatest MistralGuardrailModels = "mistral-moderation-latest"
+)
+
+func (a MistralGuardrailModels) String() string {
+	return string(a)
+}
+
+var MistralGuardrailList = []MistralGuardrailModels{
+	MistralModerationLatest,
+}
+
+// "Mistral": {"mistral-moderation-latest"},

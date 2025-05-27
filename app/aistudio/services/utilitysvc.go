@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/databricks/databricks-sql-go/logger"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
 	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
@@ -27,12 +28,14 @@ type BlobAgent struct {
 	method        string
 	uploadRequest *pb.UploadRequest
 	uploadStream  pb.UtilityService_UploadStreamServer
+	fetchRequest  *pb.FetchRequest
+	fetchResponse *pb.FetchResponse
 	organization  *models.Organization
 	uploadResult  *pb.UploadResponse
 	dmStore       *aidmstore.AIStudioDMStore
 }
 
-func (s *AIStudioServices) NewUtilityAgent(ctx context.Context, uploadRequest *pb.UploadRequest, uploadStream pb.UtilityService_UploadStreamServer) (*BlobAgent, error) {
+func (s *AIStudioServices) NewUtilityAgent(ctx context.Context, uploadRequest *pb.UploadRequest, uploadStream pb.UtilityService_UploadStreamServer, fetchRequest *pb.FetchRequest) (*BlobAgent, error) {
 	vapusPlatformClaim, ok := encryption.GetCtxClaim(ctx)
 	if !ok {
 		s.Logger.Error().Ctx(ctx).Msg("error while getting claim metadata from context")
@@ -46,11 +49,13 @@ func (s *AIStudioServices) NewUtilityAgent(ctx context.Context, uploadRequest *p
 	agent := &BlobAgent{
 		uploadRequest: uploadRequest,
 		uploadStream:  uploadStream,
+		fetchRequest:  fetchRequest,
 		organization:  organization,
+		fetchResponse: &pb.FetchResponse{},
+		uploadResult:  &pb.UploadResponse{},
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
 			CtxClaim: vapusPlatformClaim,
-			// Ctx:      ctx,
-			InitAt: dmutils.GetEpochTime(),
+			InitAt:   dmutils.GetEpochTime(),
 		},
 	}
 	agent.SetAgentId()
@@ -64,6 +69,12 @@ func (v *BlobAgent) GetUploadedResult() *pb.UploadResponse {
 	return v.uploadResult
 }
 
+func (v *BlobAgent) GetFetchResult() *pb.FetchResponse {
+	v.FinishAt = dmutils.GetEpochTime()
+	v.FinalLog()
+	return v.fetchResponse
+}
+
 func (v *BlobAgent) Act(ctx context.Context) error {
 	if v.uploadRequest != nil {
 		v.uploadResult = &pb.UploadResponse{
@@ -72,6 +83,8 @@ func (v *BlobAgent) Act(ctx context.Context) error {
 		return v.uploadFile(ctx)
 	} else if v.uploadStream != nil {
 		return v.uploadFileStream()
+	} else if v.fetchRequest != nil {
+		return v.downloadFile(ctx)
 	}
 	return nil
 }
@@ -142,6 +155,7 @@ func (v *BlobAgent) uploadFile(ctx context.Context) error {
 				})
 				continue
 			}
+			// Saving the file data in DB
 			_ = appdrepo.LogFileStoreLog(ctx, v.dmStore.VapusStore, logFileObj, v.CtxClaim)
 		}
 
@@ -159,5 +173,40 @@ func (v *BlobAgent) uploadFile(ctx context.Context) error {
 
 func (v *BlobAgent) uploadFileStream() error {
 	// upload file stream
+	return nil
+}
+
+func (v *BlobAgent) downloadFile(ctx context.Context) error {
+	if v.fetchRequest.GetFilePath() == "" {
+		v.Logger.Error().Msg("FilePath is empty")
+		return dmerrors.DMError(apperr.ErrEmptyFile, nil)
+	}
+	fileStoreLog, err := appdrepo.GetFile(ctx, v.dmStore.VapusStore, v.fetchRequest.GetFilePath(), v.CtxClaim)
+	if err != nil {
+		v.Logger.Err(err).Msgf("Error while fetching the file path")
+		return err
+	}
+	if fileStoreLog.DeletedBy != "" || fileStoreLog.DeletedAt != 0 {
+		v.Logger.Err(err).Msgf("Error File is Deleted")
+		return err
+	}
+
+	data, err := v.dmStore.BlobStore.DownloadObject(ctx, &options.BlobOpsParams{
+		BucketName: v.CtxClaim[encryption.ClaimOrganizationKey],
+		ObjectName: v.fetchRequest.GetFilePath(),
+	})
+
+	if err != nil {
+		logger.Err(err).Msg("error while downloading data file")
+		return err
+	}
+
+	fmt.Println("Data: ", data[0])
+
+	v.fetchResponse = &pb.FetchResponse{
+		Data:   data,
+		Name:   fileStoreLog.Name,
+		Format: mpb.ContentFormats(mpb.ContentFormats_value[fileStoreLog.Format]),
+	}
 	return nil
 }
