@@ -252,23 +252,50 @@ func (x *UserManagerAgent) PatchUser(ctx context.Context) error {
 			return dmerrors.DMError(apperr.ErrUser404, nil)
 		}
 	}
-	updatedRoles := []string{}
-	for _, organizationRole := range userObj.Roles {
-		if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
-			updatedRoles = append(updatedRoles, organizationRole.RoleArns...)
-		}
-	}
-	for _, organizationRole := range exUser.Roles {
-		if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
-			organizationRole.RoleArns = updatedRoles
-		}
-	}
+	// updatedRoles := []string{}
+	// for _, organizationRole := range userObj.Roles {
+	// 	if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
+	// 		updatedRoles = append(updatedRoles, organizationRole.RoleArns...)
+	// 	}
+	// }
+	// for _, organizationRole := range exUser.Roles {
+	// 	if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
+	// 		organizationRole.RoleArns = updatedRoles
+	// 	}
+	// }
 	exUser.PreSaveUpdate(x.CtxClaim[encryption.ClaimUserIdKey])
-	exUser.FirstName = userObj.FirstName
-	exUser.LastName = userObj.LastName
-	exUser.DisplayName = userObj.DisplayName
-	exUser.Profile = userObj.Profile
+
+	if userObj.FirstName != "" {
+		exUser.FirstName = userObj.FirstName
+	}
+	if userObj.LastName != "" {
+		exUser.LastName = userObj.LastName
+	}
+	if userObj.DisplayName != "" {
+		exUser.DisplayName = userObj.DisplayName
+	}
+	if userObj.Profile != nil {
+		if exUser.Profile.Addresses != nil {
+			exUser.Profile.Addresses = userObj.Profile.Addresses
+		}
+		if userObj.Profile.Avatar != "" {
+			exUser.Profile.Avatar = userObj.Profile.Avatar
+		}
+		if userObj.Profile.DateOfBirth != "" {
+			exUser.Profile.DateOfBirth = userObj.Profile.DateOfBirth
+		}
+		if userObj.Profile.Description != "" {
+			exUser.Profile.Description = userObj.Profile.Description
+		}
+		if userObj.Profile.Gender != "" {
+			exUser.Profile.Gender = userObj.Profile.Gender
+		}
+	}
 	err = x.dmStore.PutUser(ctx, exUser, x.CtxClaim)
+	if err != nil {
+		x.Logger.Error().Msg("error while updating the user object")
+		return err
+	}
 	x.result.Output.Users = utils.DmUArToPb([]*models.Users{exUser}, x.CtxClaim[encryption.ClaimOrganizationKey])
 	return nil
 }

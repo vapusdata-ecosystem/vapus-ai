@@ -35,7 +35,7 @@ func InitUtilityController() {
 }
 
 func (x *UtilityController) Upload(ctx context.Context, request *dpb.UploadRequest) (*dpb.UploadResponse, error) {
-	utAgent, err := x.DMServices.NewUtilityAgent(ctx, request, nil)
+	utAgent, err := x.DMServices.NewUtilityAgent(ctx, request, nil, nil)
 	if err != nil {
 		return nil, pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
 	}
@@ -49,7 +49,7 @@ func (x *UtilityController) Upload(ctx context.Context, request *dpb.UploadReque
 
 func (x *UtilityController) UploadStream(stream dpb.UtilityService_UploadStreamServer) error {
 	ctx := stream.Context()
-	utAgent, err := x.DMServices.NewUtilityAgent(stream.Context(), nil, stream)
+	utAgent, err := x.DMServices.NewUtilityAgent(stream.Context(), nil, stream, nil)
 	if err != nil {
 		return pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
 	}
@@ -58,4 +58,17 @@ func (x *UtilityController) UploadStream(stream dpb.UtilityService_UploadStreamS
 		return pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
 	}
 	return nil
+}
+
+func (x *UtilityController) GetFiles(ctx context.Context, request *dpb.FetchRequest) (*dpb.FetchResponse, error) {
+	utAgent, err := x.DMServices.NewUtilityAgent(ctx, nil, nil, request)
+	if err != nil {
+		return nil, pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
+	}
+	err = utAgent.Act(ctx)
+	if err != nil {
+		return nil, pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
+	}
+	resp := utAgent.GetFetchResult()
+	return resp, nil
 }

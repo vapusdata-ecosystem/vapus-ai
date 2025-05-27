@@ -57,7 +57,7 @@
             <div>
               <p class="detail-sect-key font-medium">Platform Roles</p>
               <p class=" break-words p-2">
-                {{ range $role := .GlobalContext.UserInfo.PlatformRoles }}
+                {{ range $role := .GlobalContext.UserInfo.Roles }}
                 <span
                   class="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-50 rounded-full">
                   {{ $role }}
@@ -69,7 +69,7 @@
           <!-- Organization Roles Section -->
           <h3 class="text-xl mb-4 detail-heading">Organization Roles:</h3>
           <div class="space-y-4">
-            {{ range $id, $val := .GlobalContext.UserInfo.OrganizationRoles }}
+            {{ range $id, $val := .GlobalContext.UserInfo.Roles }}
             {{ if eq $val.OrganizationId $.GlobalContext.CurrentOrganization.OrganizationId }}
             <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
               <h4 class="text-lg font-semibold ">Organization ID: {{ $val.OrganizationId }}</h4>

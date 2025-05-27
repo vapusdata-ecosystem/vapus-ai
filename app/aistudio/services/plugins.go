@@ -111,24 +111,29 @@ func (v *PluginManagerAgent) Act(ctx context.Context) error {
 }
 
 func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
-	cQ := fmt.Sprintf("status = 'ACTIVE' AND deleted_at IS NULL AND plugin_type = '%s'", v.managerRequest.GetSpec().GetPluginType())
-	switch v.managerRequest.GetSpec().GetScope() {
-	case mpb.ResourceScope_ORGANIZATION_SCOPE.String():
-		cQ += fmt.Sprintf(" AND scope = '%s' AND organization = '%s'", mpb.ResourceScope_USER_SCOPE.String(), v.CtxClaim[encryption.ClaimOrganizationKey])
-	case mpb.ResourceScope_USER_SCOPE.String():
-		cQ += fmt.Sprintf(" AND scope = '%s' AND created_by = '%s' AND organization = '%s'", mpb.ResourceScope_USER_SCOPE.String(), v.CtxClaim[encryption.ClaimUserIdKey], v.CtxClaim[encryption.ClaimOrganizationKey])
-	case mpb.ResourceScope_PLATFORM_SCOPE.String():
-		cQ += fmt.Sprintf(" AND scope = '%s'", mpb.ResourceScope_PLATFORM_SCOPE.String())
-	default:
-		return dmerrors.DMError(apperr.ErrInvalidPluginScopeParams, nil)
+	if v.managerRequest.GetSpec().GetPluginType() != mpb.IntegrationPluginTypes_GUARDRAILS {
+		cQ := fmt.Sprintf("status = 'ACTIVE' AND deleted_at IS NULL AND plugin_type = '%s'", v.managerRequest.GetSpec().GetPluginType())
+		switch v.managerRequest.GetSpec().GetScope() {
+		case mpb.ResourceScope_ORGANIZATION_SCOPE.String():
+			cQ += fmt.Sprintf(" AND scope = '%s' AND organization = '%s'", mpb.ResourceScope_USER_SCOPE.String(), v.CtxClaim[encryption.ClaimOrganizationKey])
+		case mpb.ResourceScope_USER_SCOPE.String():
+			cQ += fmt.Sprintf(" AND scope = '%s' AND created_by = '%s' AND organization = '%s'", mpb.ResourceScope_USER_SCOPE.String(), v.CtxClaim[encryption.ClaimUserIdKey], v.CtxClaim[encryption.ClaimOrganizationKey])
+		case mpb.ResourceScope_PLATFORM_SCOPE.String():
+			cQ += fmt.Sprintf(" AND scope = '%s'", mpb.ResourceScope_PLATFORM_SCOPE.String())
+		default:
+			return dmerrors.DMError(apperr.ErrInvalidPluginScopeParams, nil)
+		}
+		count, err := v.dmStore.CountPlugins(ctx, cQ, v.CtxClaim)
+		if err != nil {
+			v.Logger.Error().Err(err).Msg("error while fetching the plugin creds")
+			return err
+		}
+		if count > 0 {
+			v.Logger.Error().Msg("plugin already exists")
+			return dmerrors.DMError(apperr.ErrPluginServiceScopeExists, nil)
+		}
 	}
-	count, err := v.dmStore.CountPlugins(ctx,
-		cQ,
-		v.CtxClaim)
-	if count > 0 {
-		v.Logger.Error().Msg("plugin already exists")
-		return dmerrors.DMError(apperr.ErrPluginServiceScopeExists, nil)
-	}
+
 	validScope, ok := plugins.PluginTypeScopeMap[v.managerRequest.GetSpec().GetPluginType().String()]
 	if !ok {
 		v.Logger.Error().Msg("invalid plugin type")
@@ -142,11 +147,11 @@ func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
 	plugin.PreSaveCreate(v.CtxClaim)
 	if plugin.NetworkParams.SecretName == types.EMPTYSTR {
 		plugin.NetworkParams.SecretName = dmutils.GetSecretName("plugin", "", "creds-"+guuid.New().String())
-	}
-	err = apppkgs.SaveCredentialsCreds(ctx, plugin.NetworkParams.SecretName, plugin.NetworkParams.Credentials, v.dmStore.VapusStore, v.Logger)
-	if err != nil {
-		v.Logger.Error().Err(err).Msg("error while saving plugin creds")
-		return err
+		err := apppkgs.SaveCredentialsCreds(ctx, plugin.NetworkParams.SecretName, plugin.NetworkParams.Credentials, v.dmStore.VapusStore, v.Logger)
+		if err != nil {
+			v.Logger.Error().Err(err).Msg("error while saving plugin creds")
+			return err
+		}
 	}
 
 	if plugin.Scope == mpb.ResourceScope_PLATFORM_SCOPE.String() {
@@ -162,7 +167,7 @@ func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
 	plugin.Organization = v.CtxClaim[encryption.ClaimOrganizationKey]
 	plugin.NetworkParams.Credentials = nil
 	plugin.NetworkParams.IsAlreadyInSecretBS = true
-	err = v.dmStore.ConfigurePlugin(ctx, plugin, v.CtxClaim)
+	err := v.dmStore.ConfigurePlugin(ctx, plugin, v.CtxClaim)
 	if err != nil {
 		v.Logger.Error().Err(err).Msg("error while configuring plugin")
 		return dmerrors.DMError(apperr.ErrPluginCreate400, err)
