@@ -255,4 +255,9 @@ var PluginTypes = map[mpb.IntegrationPluginTypes]map[types.PluginServices]string
 	mpb.IntegrationPluginTypes_SEARCHAPI: {
 		types.SERPSEARCH: "https://s3-us-west-2.amazonaws.com/anchor-generated-image-bank/production/podcast_uploaded_nologo400/30457559/30457559-1662746398635-28be940c9e9a.jpg",
 	},
+	mpb.IntegrationPluginTypes_GUARDRAILS: {
+		types.Bedrock_Guardrail: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png",
+		types.Pangea_Guardrail:  "https://awsmp-logos.s3.amazonaws.com/seller-nqyldztntiony/7f339af3025e7696a9c33a632da937f4.png",
+		types.Mistral_Guardrail: "https://avatars.githubusercontent.com/u/99472018",
+	},
 }
