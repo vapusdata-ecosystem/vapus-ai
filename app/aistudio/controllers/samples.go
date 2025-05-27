@@ -41,15 +41,6 @@ var organizationObj *mpb.Organization = &mpb.Organization{
 	},
 	BackendSecretStorage: &mpb.BackendStorages{},
 	ArtifactStorage:      &mpb.BackendStorages{},
-	DataProductInfraPlatform: []*mpb.K8SInfraParams{
-		{
-			Credentials: &mpb.GenericCredentialObj{
-				AwsCreds:   &mpb.AWSCreds{},
-				GcpCreds:   &mpb.GCPCreds{},
-				AzureCreds: &mpb.AzureCreds{},
-			},
-		},
-	},
 }
 
 var dataSourceObj *mpb.DataSource = &mpb.DataSource{

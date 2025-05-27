@@ -173,11 +173,6 @@ var OrganizationManagerRequest *pb.OrganizationManagerRequest = &pb.Organization
 		},
 		BackendSecretStorage: &mpb.BackendStorages{},
 		ArtifactStorage:      &mpb.BackendStorages{},
-		DataProductInfraPlatform: []*mpb.K8SInfraParams{
-			{
-				Credentials: DataSourceCreds,
-			},
-		},
 	},
 }
 
