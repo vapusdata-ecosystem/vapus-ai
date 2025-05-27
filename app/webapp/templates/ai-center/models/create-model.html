@@ -115,7 +115,7 @@
                       <div id="dropdownMenuOrganization"
                         class="absolute z-10 mt-2 w-full bg-zinc-800 rounded-md shadow-lg hidden">
                         <div class="p-2 space-y-2 max-h-60 overflow-y-auto">
-                          {{ range $id, $val := .GlobalContext.UserInfo.OrganizationRoles }}
+                          {{ range $id, $val := .GlobalContext.UserInfo.Roles }}
                           <div class="flex items-center">
                             <input type="checkbox" name="spec.attributes.approved_domains" value="{{ $val.OrganizationId }}"
                               class="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700" />

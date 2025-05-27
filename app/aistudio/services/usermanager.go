@@ -252,17 +252,17 @@ func (x *UserManagerAgent) PatchUser(ctx context.Context) error {
 			return dmerrors.DMError(apperr.ErrUser404, nil)
 		}
 	}
-	updatedRoles := []string{}
-	for _, organizationRole := range userObj.Roles {
-		if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
-			updatedRoles = append(updatedRoles, organizationRole.RoleArns...)
-		}
-	}
-	for _, organizationRole := range exUser.Roles {
-		if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
-			organizationRole.RoleArns = updatedRoles
-		}
-	}
+	// updatedRoles := []string{}
+	// for _, organizationRole := range userObj.Roles {
+	// 	if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
+	// 		updatedRoles = append(updatedRoles, organizationRole.RoleArns...)
+	// 	}
+	// }
+	// for _, organizationRole := range exUser.Roles {
+	// 	if organizationRole.OrganizationId == x.CtxClaim[encryption.ClaimOrganizationKey] {
+	// 		organizationRole.RoleArns = updatedRoles
+	// 	}
+	// }
 	exUser.PreSaveUpdate(x.CtxClaim[encryption.ClaimUserIdKey])
 
 	if userObj.FirstName != "" {
@@ -292,6 +292,10 @@ func (x *UserManagerAgent) PatchUser(ctx context.Context) error {
 		}
 	}
 	err = x.dmStore.PutUser(ctx, exUser, x.CtxClaim)
+	if err != nil {
+		x.Logger.Error().Msg("error while updating the user object")
+		return err
+	}
 	x.result.Output.Users = utils.DmUArToPb([]*models.Users{exUser}, x.CtxClaim[encryption.ClaimOrganizationKey])
 	return nil
 }

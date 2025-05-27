@@ -18,14 +18,6 @@ type GcpBucketClient struct {
 	logger    zerolog.Logger
 }
 
-//temporary function to satusfy interface
-// func(s *GcpBucketClient) GetStorageData(ctx context.Context,params *options.BlobOpsParams) (*model.BlobStoreSchema,error) {
-
-// 	blobStoreSchema := model.BlobStoreSchema{}
-
-// 	return &blobStoreSchema , nil
-// }
-
 func NewBucketAgent(ctx context.Context, opts *GcpConfig, logger zerolog.Logger) (*GcpBucketClient, error) {
 	opts.SetGcpProjectId(logger)
 	client, err := storage.NewClient(ctx, option.WithCredentialsJSON(opts.ServiceAccountKey))
