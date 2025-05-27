@@ -141,7 +141,7 @@ type FileStoreAssetSharingParams struct {
 	// Marked required and added enum based on schema. Using string type directly for simplicity with tags.
 	Role string `json:"role,omitempty" jsonschema:"description=The role of the user to share the file with. This is a required field.,required,enum=owner,enum=organizer,enum=fileOrganizer,enum=writer,enum=commenter,enum=reader"`
 	// Marked required based on schema.
-	Organization string `json:"Organization,omitempty" jsonschema:"description=The Organization of the user to share the file with. This is a required field.,required"`
+	Organization string `json:"organization,omitempty" jsonschema:"description=The Organization of the user to share the file with. This is a required field.,required"`
 	// Marked required based on schema.
 	Group string `json:"group,omitempty" jsonschema:"description=The group of the user to share the file with. This is a required field.,required"`
 	// Marked required and added enum based on schema. Using string type directly for simplicity with tags.

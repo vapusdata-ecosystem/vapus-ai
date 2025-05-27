@@ -1,29 +1,27 @@
 package setupconfig
 
-var TrinoSetup = `
-fullnameOverride: vapusdata-trino
-coordinatorNameOverride: vapusdata-t-coordinator
-workerNameOverride: vapusdata-t-worker
-service:
-    port: 8088
-coordinator:
-    resources:
-        requests:
-            cpu: 500m
-            memory: 1Gi
-    jvm:
-        maxHeapSize: 2G
-        gc: G1GC
-worker:
-    replicas: 2
-    resources:
-        requests:
-            cpu: 500m
-            memory: 1Gi
-config:
-    coordinator:
-        logLevel: INFO
-    properties:
-        query.max-memory: 8GB
-        query.max-memory-per-node: 2GB
-`
+import (
+	"log"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog"
+)
+
+func GetValidator() *validator.Validate {
+	return validator.New()
+}
+
+func HandleValiationError(err error, logger zerolog.Logger) error {
+	log.Println(err.Error(), "====================================")
+	if _, ok := err.(*validator.InvalidValidationError); ok {
+		logger.Error().Err(err).Msg("Invalid validation error")
+		return err
+	}
+	if _, ok := err.(*validator.ValidationErrors); ok {
+		for _, fieldErr := range err.(validator.ValidationErrors) {
+			logger.Error().Err(err).Msgf("Validation error on field: %s, condition: %s", fieldErr.Namespace(), fieldErr.ActualTag())
+		}
+		return err
+	}
+	return nil
+}

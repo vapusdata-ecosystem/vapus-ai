@@ -1,0 +1,78 @@
+app:
+    name: ""
+    namespace: ""
+    domain: ""
+    address: ""
+    dev: false
+accountBootstrap: null
+secrets:
+    backendSecretStore:
+        secret: ""
+    backendDataStore:
+        secret: 11c82-secret
+    backendCacheStore:
+        secret: ff35a-secret
+    JWTAuthnSecrets:
+        secret: d8be6-secret
+    authnSecrets:
+        secret: bc7ee-secret
+    fileStore:
+        secret: de31d-secret
+postgresql:
+    fullnameOverride: ""
+    auth:
+        username: ""
+        password: ""
+        database: ""
+redis:
+    fullnameOverride: ""
+    auth:
+        enabled: false
+        password: ""
+    master:
+        enabled: false
+    sentinal:
+        enabled: false
+vault: null
+tlsCert:
+    cert: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpVENCN2FBREFnRUNBaFJrcDVBaHJSOUlCazgxSFo0UWJ6a3pPSE9KRkRBS0JnZ3Foa2pPUFFRREJEQUEKTUNJWUR6QXdNREV3TVRBeE1EQXdNREF3V2hnUE1EQXdNVEF4TURFd01EQXdNREJhTUFBd2dac3dFQVlIS29aSQp6ajBDQVFZRks0RUVBQ01EZ1lZQUJBQUp1bVhmeEs5RVhnL2d1bW5kOG9tV0xiY0E4dTdGV2VvWVhOUithS0tECk9ESUhLTmxyYjgwc1BzajBvWnE4cVM4OUNkQXZTeC9VZXl2cEtsRVhGczNWb1FFODMvb1p5MEVNNHlvQ29yUFoKZ1VFS0ZJMjFTdG9WVDRMbnNJZWdZU1NwdUJpT2N4bGh4bFJVejlUeWNhUytqSnhxa0VFUkJLYlRHMHZ2ZFBReQpZbjdjU2pBS0JnZ3Foa2pPUFFRREJBT0JpZ0F3Z1lZQ1FSblV5U0VIOGQ0RGhvV2FjZXJKbll2MlFVN1QwcTJ1CjFRZkJwWU82Y3ZPYUFOUWtOdUdDQ2I0NHllODBsd0RBWlJxZGdYTkJvQXJQTU92Zm1ZK1NTMjVVQWtGMjZUQjgKL2hTWmVNUmxYYVJuZ21YWHBMYTRZaittK1U2YTBRdjZBdElEYWc4c2g3OGhkMVdaS0crd2J6QUlLeEpBSFpERgpwWTQ5MVZPZjl3Z1cvbmNEMFE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSHVBZ0VBTUJBR0J5cUdTTTQ5QWdFR0JTdUJCQUFqQklIV01JSFRBZ0VCQkVJQkRpaDE0bnlOb2I2K0dEd1oKRGlMei8yZWpucnpSd09tTGpBZWhLdVN2ZTZIeHQzRjNXb05jT05Fd0VSOEFPdDVRa0t3dWdZdHFlYzE5ZzBwRwo5OWl6R2lxaGdZa0RnWVlBQkFBSnVtWGZ4SzlFWGcvZ3VtbmQ4b21XTGJjQTh1N0ZXZW9ZWE5SK2FLS0RPRElICktObHJiODBzUHNqMG9acThxUzg5Q2RBdlN4L1VleXZwS2xFWEZzM1ZvUUU4My9vWnkwRU00eW9Db3JQWmdVRUsKRkkyMVN0b1ZUNExuc0llZ1lTU3B1QmlPY3hsaHhsUlV6OVR5Y2FTK2pKeHFrRUVSQktiVEcwdnZkUFF5WW43YwpTZz09Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+    certFile: ""
+    keyFile: ""
+    autoGenerate: true
+secretStore:
+    dataSourceCreds:
+        genericCredentialObj:
+            username: ""
+            password: ""
+            apiToken: ""
+            apiTokenType: "0"
+            awsCreds:
+                accessKeyId: ""
+                secretAccessKey: ""
+                region: ""
+                sessionToken: ""
+                roleArn: ""
+            gcpCreds:
+                serviceAccountKey: ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsCiAgInByb2plY3RfaWQiOiAidmFwdXNkYXRhLW9zcyIsCiAgInByaXZhdGVfa2V5X2lkIjogImM5MzE2ZTg1OTkzZGQ2OGRjODgyNmRiOWExNjI3MTgzODZkZDY4MDIiLAogICJwcml2YXRlX2tleSI6ICItLS0tLUJFR0lOIFBSSVZBVEUgS0VZLS0tLS1cbk1JSUV2UUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktjd2dnU2pBZ0VBQW9JQkFRQ20zWGJEZGpxL2RxQnBcbklBRnBWOGo4ekZMVURGOVEwVk16ODNwL1Y2ajA1aHFhSEZoUFZJZk5WVkp0Y2ZWb3JySzFoZmVHODFtb1VLdlBcbll4ck8yTnV5RHNaMWZGb0lrMTkvdTFOUzRpdEs1N3hoUTYyV3lwZTA1RXR2aHBPd01zOTBvN2c0R0hoUWQrUW5cbjhFa3EyamZYM1ZTTjBWbWZMV1gxc0NaYlRnUm1SQTBkTk0wbHdiUkEwbkNTTUQ0dVRCcjkyb0ZObW9QOE5oYUtcbnVFVEZvcm4xOEhhUWE3eHV1SElwM0lmVzdHWDZpZ2ZDcDl5SGhjU05KVUtPc2hPTDFCUjV2WG1USVRIRGt1ZWRcbldMdktWYW04MWNuYjVKOEpzWXU2V1U5K1oxaXdkd3k4UVA3ODJXL1AyeVJTQVY5SllEYmN3bXcraHhtWFEvN3NcbnZiYVNmcXEzQWdNQkFBRUNnZ0VBS0dKTzNPMWZPSGxJUjBqMHJuOE5hSWsydnBVaitGWkEwY0RxYzZsT2ZiNjJcbnozZHVzL3hjUllpUncyVWlKS3lyR1oyTGs0Q1B3Vm1NeTB0TDhLV3hQZjJ2Y0QyaE9KUWFON3FwWnRUUDczZjRcbk1uNERwQXZ4L1ZpSEhUMnZ2cVA5YTFnNFBITkhvd254RU8xcGQ5S0tVMWNBb0xYNi83Z29CZmNVd1dJM1ZGeGRcbjF4eDFqN2g0OVFPYTFhMUg3U3VKTVU4VzY4YTlOR1phMGc1ekNyalRMd1VHR1Q5NktmK0liWFkvMUdEdlhXaGJcbmxsV1JlZVNUa2ZXN2xUbTd6c1dKK3h6R3B3aGtVQ0ZhejV6U29NWnFVK3QveUczYzFXc2l6RGZBaGR3MzJ2U3FcbjdMVnZpMDFxcm13OGxVSkl5dndKQlZaUHZ0dG05NHVwSHVXMVd1bUtPUUtCZ1FEUmJCanpwbHBGSG85cFJPK3JcbmF1L2ZFZC9xZlg5MVNSLzZ5eEw2Wk4rbFVjTFVyWXlUQVdLZ0EvM1BCQlIwM2k4cTdDQnVkOHE0WjdVNER4WVJcbjJXeGxzSnF4dHpCMGhxVTdWR0s5ZXBnK281Mk1PRU9vRFc5TlNtOXRVSWt1RXJMY0FjSFd4Wnh3T1Fqd2kzc3JcbmZSSllXSTlodnNqbkpXejV3MzNXcUhwbWt3S0JnUURMK2tpZ3VzaUo4M1pYT1R5TGJaMnhaSTdSTWJvckFkdVVcbmxYTm1TQm9ZRk9vUlNCZ0locEU1NWJmRldydFljM2Zadm5wRE44WVFVV0h4SEU5R2h0cGxNU0dYRWdKb1BEVWNcblRIUC9CelIvelE2S0RGSG4zNlNFcUZTNFJPKzNLWmpHYkVhQU4ycWNaTm94Q2krb1c3NjgxNGFsWUxnVkx1MjNcbi9GbWxna0M5elFLQmdRQzNCK0R1NGM4M1piUTFidmlCT3Q4V2VRcllhSUxEUVB2Z055Z0pDNnlqVWtnVGxQS3RcbmNLSi84NzBaOXhqaDQyWVovM0dBMnRXa1FZK1N4U3ltd1A0S0NrWEpXSy9TeC9NVlhYVkc0U1M2YWtsQnlkTG5cbng0WWxhUTdsM1dObmp4UWZVTEhYUWJLdUtrcno0UlB2T0VxV1NDQlliMlFyRVB5amRnWS9XOVJPWFFLQmdFZW5cblhrZ0lGVlpRaml2SjBYanhRc29FRng5cHBvcGhGcSsxYUZwdnphclQvZjJnSThFcTlHMHdRMFF5d1VrckZ0a0lcbnpvNDZVM3Q3K3pubHhmdHlkOW5BVHBweEd5TmVzeEdEMGVPdXRrU0cxaXFzZFVGTkVOQUJDZkhKVmFRMEdwVHBcbmlFS1dOUDlIZGxadnk1b0swSkFwN2dTK1d5d2wxaUFocDZRNmcxK3BBb0dBRGpCYk0yR1pKTTM0T29WYXFzMWpcbldZRW9iSEhKQ3lPN1JiblJpZ2s1UUc1NFNPVnFwY2FVRWtLd0FhOUZiRUI1bGVpdkRtS0JISUc1MSt0ZnBWSGRcbmdCbE1ZQ2FENkxTSE9veFE1YWlqVzlvUlhLdWNYQTdkaE1YbEJuZ3ZPUEJXUmZWc1hCeW02TVdwa3JvdXJoOXlcbkRLOTJHUzQvY2xxSEJTeGhCUFZrZFh3PVxuLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLVxuIiwKICAiY2xpZW50X2VtYWlsIjogInNlY3JldC1tYW5hZ2VyLWxvY2FsQHZhcHVzZGF0YS1vc3MuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLAogICJjbGllbnRfaWQiOiAiMTA3MzYzNjA0NzkwNTQ5MDkyNzc1IiwKICAiYXV0aF91cmkiOiAiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLAogICJ0b2tlbl91cmkiOiAiaHR0cHM6Ly9vYXV0aDIuZ29vZ2xlYXBpcy5jb20vdG9rZW4iLAogICJhdXRoX3Byb3ZpZGVyX3g1MDlfY2VydF91cmwiOiAiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vb2F1dGgyL3YxL2NlcnRzIiwKICAiY2xpZW50X3g1MDlfY2VydF91cmwiOiAiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS9zZWNyZXQtbWFuYWdlci1sb2NhbCU0MHZhcHVzZGF0YS1vc3MuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLAogICJ1bml2ZXJzZV9kb21haW4iOiAiZ29vZ2xlYXBpcy5jb20iCn0K
+                base64Encoded: true
+                region: ""
+                projectId: vapusdata-oss
+                zone: ""
+            azureCreds:
+                tenantId: ""
+                clientId: ""
+                clientSecret: ""
+            clientId: ""
+            clientSecret: ""
+        params: {}
+    dataSourceEngine: GCP_VAULT
+    dataSourceType: DSDT_SECRETS
+    dataSourceService: GCP_SECRET_MANAGER
+    params: {}
+    dataSourceSvcProvider: SSP_GCP
+    dataStorelist: []
+    dataStorePrefixList: []
+    version: ""
+    dataSourceId: ""
+devSecretStore: null

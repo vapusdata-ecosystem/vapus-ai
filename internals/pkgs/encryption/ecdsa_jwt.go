@@ -3,7 +3,6 @@ package encryption
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"crypto/rand"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
@@ -18,6 +17,7 @@ type ECDSAJwt interface {
 	GenerateVDPARefreshJWT(claims *VapusDataPlatformRefreshTokenClaims) (string, error)
 	ParseAndValidateVDPAJWT(tokenString string) (*VapusDataPlatformAccessClaims, error)
 	ValidateAccessToken(tokenString string) (map[string]string, error)
+	GenerateKeys(bits int) (string, string, error)
 }
 
 type ECDSAKeys struct {
@@ -44,20 +44,6 @@ var ellipticCurveMap = map[string]elliptic.Curve{
 	"P-521": elliptic.P521(),
 }
 
-func GenerateECDSAKeys(curve string) (*ECDSAKeys, error) {
-	eCurve := ellipticCurveMap[curve]
-	privKey, err := ecdsa.GenerateKey(eCurve, rand.Reader)
-	if err != nil {
-		dmlogger.CoreLogger.Err(err).Msgf("error generating ECDSA private key with elliptic curve %v", curve)
-		return nil, err
-	}
-	return &ECDSAKeys{
-		PrivateKey:    privKey,
-		PublicKey:     &privKey.PublicKey,
-		EllipticCurve: eCurve,
-	}, nil
-}
-
 // NewECDSAJwtAuthn creates a new ECDSA JWT Authn object with the given options.
 // It returns the ECDSAJwt interface. It logs an error if the private key is not parsed.
 func NewECDSAJwtAuthn(opts *JWTAuthn) (ECDSAJwt, error) {
@@ -82,6 +68,11 @@ func NewECDSAJwtAuthn(opts *JWTAuthn) (ECDSAJwt, error) {
 		res.ParsedPbKey = &parsedPvKey.PublicKey
 	}
 	return res, nil
+}
+
+func (e *ECDSAManager) GenerateKeys(curve int) (string, string, error) {
+
+	return "", "", nil
 }
 
 func (e *ECDSAManager) GenerateVDPAJWT(claims *VapusDataPlatformAccessClaims) (string, error) {

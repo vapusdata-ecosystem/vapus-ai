@@ -154,7 +154,7 @@ func (x *WebappService) ManageVapusAgentDetailHandler(c echo.Context) error {
 		"GlobalContext":  globalContext,
 		"Response":       response,
 		"SectionHeader":  "AI Agent Details",
-		"AgentStudio":    routes.AgentStudioHome,
+		"AgentStudio":    routes.AIStudioHome,
 		"ResourceBase":   response.AIAgent.ResourceBase,
 		"ResourceName":   response.AIAgent.Name,
 		"DownloadUrl":    fmt.Sprintf("%s/api/v1alpha1/fabric/download", pkgs.NetworkConfigManager.GatewayURL),
@@ -202,7 +202,7 @@ func (x *WebappService) CreateVapusAgent(c echo.Context) error {
 		"Response":      response,
 		"SectionHeader": "Build Your Agent",
 		"Enums":         Enums,
-		"DetailUrl":     routes.AgentStudioHome,
+		"DetailUrl":     routes.AIStudioHome,
 	})
 }
 

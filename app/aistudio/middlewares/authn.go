@@ -8,6 +8,7 @@ import (
 
 	rpcauth "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	dmstores "github.com/vapusdata-ecosystem/vapusai/aistudio/datastoreops"
 	pkgs "github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
 	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 	grpc "google.golang.org/grpc"
@@ -66,7 +67,7 @@ func authnPlatformAccess(ctx context.Context, token string) (context.Context, er
 		logger.Err(err).Msg("error while validating access token from request header")
 		return nil, status.Error(codes.Unauthenticated, err.Error())
 	}
-	user, err := pkgs.VapusSvcInternalClientManager.GetUser(ctx, parsedClaims[encryption.ClaimUserIdKey], logger, 3)
+	user, err := dmstores.DMStoreManager.GetUser(ctx, parsedClaims[encryption.ClaimUserIdKey], parsedClaims)
 	if err != nil {
 		logger.Err(err).Msg("error while fetching user details from request header")
 		return nil, status.Error(codes.Unauthenticated, err.Error())

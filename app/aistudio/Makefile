@@ -21,7 +21,7 @@ BINARY_NAME = vapus_aistudio
 all: test build
 
 protogen:
-	cd ../../apis && make gosync
+	cd ../../apis && make sync
 
 build-binary: protogen govendor
 	cd cmd && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -a -installsuffix -ldflags="-w -s" -o  ../$(BINARY_NAME) 
@@ -57,8 +57,8 @@ sec:
 
 prehook: lint sec test
 
-gosync: 
-	cd ../ && make gosync
+sync: 
+	cd ../ && make sync
 
 govendor:
 	cd ../ && make govendor
@@ -66,7 +66,7 @@ govendor:
 goget:
 	echo argument is $(lib)
 	$(GOGET) $(lib)
-	make gosync
+	make sync
 
 goinstall:
 	$(GOCMD) install $(lib)

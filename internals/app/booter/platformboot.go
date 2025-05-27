@@ -66,6 +66,7 @@ func (p *PlatformSetup) AddVapusDataPlatformOwners(ctx context.Context) error {
 	}
 	if count == 0 {
 		for _, user := range p.bootConfig.PlatformOwners {
+			log.Println("Creating platform owner for account ", p.accountId)
 			user, err := apppdrepo.CreateUser(ctx, &apppdrepo.LocalUserM{
 				Email:             user,
 				AccountId:         p.accountId,
@@ -113,7 +114,7 @@ func (p *PlatformSetup) AddVapusDataPlatformAccount(ctx context.Context) error {
 		}
 		p.logger.Info().Msgf("Account successfully created for '%v' with creator set as '%v'.......", p.bootConfig.PlatformAccount.Name, p.bootConfig.PlatformAccount.Creator)
 		p.accountId = account.VapusID
-
+		p.logger.Info().Msgf("Account ID for this setup is '%v'", p.accountId)
 		return nil
 	}
 	p.logger.Info().Msg("Account for this setup already exists")
