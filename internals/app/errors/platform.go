@@ -236,6 +236,8 @@ var (
 	ErrInvalidDataProductOwnerAccess       = errors.New("error while fetching data product, invalid data product owner access")
 	ErrMissingGovernance                   = errors.New("error while fetching governance, missing governance spec")
 	ErrMissingUploadResourceName           = errors.New("error while uploading file, missing resource name")
+	ErrEmptyFile                           = errors.New("error file path is empty")
+	ErrInvalidFilePath                     = errors.New("error file path is not valid")
 	ErrUploadErr                           = errors.New("error while uploading file to blob storage")
 	ErrCannotCreateServiceOrganization     = errors.New("error while creating service Organization, you cannot create service Organization")
 	ErrArchivingDataProduct                = errors.New("error while archiving data product")
