@@ -29,75 +29,11 @@ const Sidebar = ({ userInfo }) => {
         </svg>
       ),
     },
-    // Nabhik Ai
-    {
-      itemId: "nabhik ai",
-      itemName: "Nabhik AI",
-      url: "/nabhik-ai",
-      svg: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6 m-1"
-        >
-          {/* <title>AI Chat Agent Icon 4</title> */}
-          {/* Chat bubble */}
-          <path d="M20 14a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9"></path>
-          {/* Gear 1 */}
-          <circle cx="17" cy="6" r="2"></circle>
-          <path
-            d="M17 4 V 2.5 M17 8 V 9.5 M19 6 H 20.5 M15 6 H 13.5 M18.4 4.6 L 19.5 3.5 M15.6 7.4 L 14.5 8.5 M18.4 7.4 L 19.5 8.5 M15.6 4.6 L 14.5 3.5"
-            strokeWidth="1.5"
-          ></path>
-          {/* Gear 2 (Optional smaller/overlapping) */}
-          <circle cx="14" cy="10" r="1.5" strokeWidth="1.5"></circle>
-          <path
-            d="M14 8.5 V 7.5 M14 11.5 V 12.5 M15.5 10 H 16.5 M12.5 10 H 11.5 M15.1 9 L 15.8 8.2 M12.9 11 L 12.2 11.8 M15.1 11 L 15.8 11.8 M12.9 9 L 12.2 8.2"
-            strokeWidth="1"
-          ></path>
-        </svg>
-      ),
-    },
-    // Data Query Server
-    {
-      itemId: "data query server",
-      itemName: "Data Query Server",
-      url: "/data-query-server",
-      svg: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6 m-1"
-        >
-          {/* <title>SQL Query Editor (Window)</title> */}
-          {/* Window Outline */}
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-          {/* Top Bar Decoration (Optional) */}
-          <line x1="3" y1="7" x2="21" y2="7" />
-          {/* Text Lines */}
-          <line x1="7" y1="11" x2="17" y2="11" />
-          <line x1="7" y1="14" x2="15" y2="14" />
-          <line x1="7" y1="17" x2="11" y2="17" />
-          {/* Blinking Cursor Position Indicator */}
-          <line x1="12" y1="16" x2="12" y2="18" />
-        </svg>
-      ),
-    },
     // Insights
     {
       itemId: "insights",
       itemName: "Insights",
-      url: "/insights",
+      url: " ",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -109,10 +45,7 @@ const Sidebar = ({ userInfo }) => {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          {/* <title>Observability Icon 1</title> */}
-          {/* Line graph element */}
           <polyline points="3 17 8 11 13 13 17 8 21 12" />
-          {/* Bar elements (using fill) */}
           <rect
             x="5"
             y="18"
@@ -137,9 +70,6 @@ const Sidebar = ({ userInfo }) => {
             stroke="none"
             fill="currentColor"
           />
-          {/* Optional Axes (thinner stroke) */}
-          {/* <line x1="3" y1="21" x2="21" y2="21" strokeWidth="1"/> */}
-          {/* <line x1="3" y1="21" x2="3" y2="6" strokeWidth="1"/> */}
         </svg>
       ),
       children: [
@@ -192,144 +122,12 @@ const Sidebar = ({ userInfo }) => {
           ></path>
         </svg>
       ),
-      children: [
-        {
-          itemId: "data fabric",
-          itemName: "Data Fabric",
-          url: "/studios/data-fabric",
-        },
-        {
-          itemId: "ai studio",
-          itemName: "AI Studio",
-          url: "/studios/ai-studio",
-        },
-        {
-          itemId: "agent studio",
-          itemName: "Agent Studio",
-          url: "/studios/agent-studio",
-        },
-      ],
-    },
-    // Marketplace
-    {
-      itemId: "marketplace",
-      itemName: "Marketplace",
-      url: "/marketplace",
-      svg: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 m-1"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="3" y1="3" x2="21" y2="3"></line>
-          <line x1="3" y1="9" x2="21" y2="9"></line>
-          <line x1="3" y1="15" x2="21" y2="15"></line>
-          <line x1="3" y1="21" x2="21" y2="21"></line>
-          <line x1="3" y1="3" x2="3" y2="21"></line>
-          <line x1="9" y1="3" x2="9" y2="21"></line>
-          <line x1="15" y1="3" x2="15" y2="21"></line>
-          <line x1="21" y1="3" x2="21" y2="21"></line>
-        </svg>
-      ),
-      children: [
-        {
-          itemId: "data product",
-          itemName: "Data Products",
-          url: "/marketplace/data-products",
-        },
-        {
-          itemId: "my data products",
-          itemName: "My Data Products",
-          url: "/marketplace/my-data-products",
-        },
-        {
-          itemId: "data catalogs",
-          itemName: "Data Catalogs",
-          url: "/marketplace/Data-catalogs",
-        },
-        {
-          itemId: "discovery",
-          itemName: "Discovery",
-          url: "/marketplace/discovery",
-        },
-        {
-          itemId: "my access requests",
-          itemName: "My Access Requests",
-          url: "/marketplace/my-access-requests",
-        },
-      ],
-    },
-    // Data Center
-    {
-      itemId: "data center",
-      itemName: "Data Center",
-      url: "/data-center",
-      svg: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6 m-1"
-        >
-          {/* <title>Data Center Hybrid Icon</title> */}
-          {/* Server Rack Outline (Partial/Simplified) */}
-          <path d="M6 3h12v18H6z" />
-          <line x1="6" y1="8" x2="18" y2="8" />
-          <line x1="6" y1="16" x2="18" y2="16" />
-          {/* Database Symbol inside/overlapping */}
-          <ellipse cx="12" cy="12" rx="4" ry="1.5" />
-          <path d="M8 12v5a4 1.5 0 0 0 8 0v-5" />
-        </svg>
-      ),
-      children: [
-        {
-          itemId: "data product",
-          itemName: "Data Products",
-          url: "/data-center/data-products",
-        },
-        {
-          itemId: "data sources",
-          itemName: "Data Sources",
-          url: "/data-center/data-sources",
-        },
-        {
-          itemId: "data workers",
-          itemName: "Data Workers",
-          url: "/data-center/data-workers",
-        },
-        {
-          itemId: "vdc deployments",
-          itemName: "VDC deployments",
-          url: "/data-center/vdc-deployments",
-        },
-        {
-          itemId: "workers deployments",
-          itemName: "Workers Deployments",
-          url: "/data-center/workers-deployments",
-        },
-        {
-          itemId: "observability",
-          itemName: "Observability",
-          url: "/data-center/observability",
-        },
-      ],
     },
     // AI Center
     {
       itemId: "ai center",
       itemName: "AI Center",
-      url: "/ai-center/models-registry",
+      url: " ",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -341,13 +139,10 @@ const Sidebar = ({ userInfo }) => {
           strokeLinejoin="round"
           className="h-6 w-6 m-1"
         >
-          {/* <title>AI Studio Icon 5</title> */}
-          {/* Code Brackets */}
           <polyline points="8 3 3 9 8 15" />
           <polyline points="16 3 21 9 16 15" />
-          {/* AI Node/Core */}
           <circle cx="12" cy="18" r="3" fill="currentColor" />
-          <line x1="12" y1="15" x2="12" y2="9" /> {/* Connection line */}
+          <line x1="12" y1="15" x2="12" y2="9" />
         </svg>
       ),
       children: [
@@ -380,7 +175,7 @@ const Sidebar = ({ userInfo }) => {
     {
       itemId: "settings",
       itemName: "Settings",
-      url: "/settings/domain",
+      url: " ",
       svg: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -408,7 +203,6 @@ const Sidebar = ({ userInfo }) => {
           itemName: "Platform",
           url: "/settings/platform",
         },
-
         {
           itemId: "users",
           itemName: "Users",
@@ -465,13 +259,27 @@ const Sidebar = ({ userInfo }) => {
       ],
     },
   ];
-  // End
 
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
-  const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [openDropdowns, setOpenDropdowns] = useState(() => {
+    const initialState = {};
+    navMenuMap.forEach((item) => {
+      if (item.children) {
+        initialState[item.itemId] = true;
+      }
+    });
+    bottomMenuMap.forEach((item) => {
+      if (item.children) {
+        initialState[item.itemId] = false;
+      }
+    });
+    return initialState;
+  });
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState("");
   const [activeSideBar, setActiveSideBar] = useState("");
+  // Add missing activeSubmenu state
+  const [activeSubmenu, setActiveSubmenu] = useState("");
 
   // clear cookies and redirect to login
   const handleLogout = () => {
@@ -511,7 +319,6 @@ const Sidebar = ({ userInfo }) => {
     if (exactMatches.length > 0) {
       exactMatches.sort((a, b) => b.url.length - a.url.length);
       const bestMatch = exactMatches[0];
-
       setActiveNav(bestMatch.parentId);
       setActiveSideBar(bestMatch.childId);
       navFound = true;
@@ -529,9 +336,11 @@ const Sidebar = ({ userInfo }) => {
         }
       }
     }
+
     if (!navFound) setActiveNav("");
     if (!sidebarFound) setActiveSideBar("");
   };
+
   useEffect(() => {
     updateActiveStates(pathname);
   }, [pathname]);
@@ -547,40 +356,56 @@ const Sidebar = ({ userInfo }) => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  const toggleSubmenu = (submenuId) => {
-    if (activeSubmenu === submenuId) {
-      setActiveSubmenu(null);
-    } else {
-      setActiveSubmenu(submenuId);
-    }
+  const toggleDropdown = (itemId) => {
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [itemId]: !prev[itemId],
+    }));
+  };
+
+  // Add missing toggleSubmenu function
+  const toggleSubmenu = (itemId) => {
+    setActiveSubmenu(activeSubmenu === itemId ? "" : itemId);
   };
 
   const toggleHamburgerMenu = () => {
     setIsHamburgerMenuOpen(!isHamburgerMenuOpen);
   };
 
-  // Close submenus when clicking outside
+  // Close hamburger menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const mainItem = event.target.closest(".main-item");
       const hamburgerBtn = event.target.closest(
         "#hamburgerSideButton, #hamburgerSideButtonCollapsed"
       );
       const hamburgerMenu = event.target.closest(
         "#hamburgerSideMenu, #hamburgerSideMenuCollapsed"
       );
-
-      if (!mainItem && !hamburgerBtn && !hamburgerMenu) {
-        setActiveSubmenu(null);
+      if (!hamburgerBtn && !hamburgerMenu) {
         setIsHamburgerMenuOpen(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  // Close submenu when clicking outside (for collapsed sidebar)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const submenu = event.target.closest(".submenu");
+      const menuItem = event.target.closest(".main-item");
+      if (!submenu && !menuItem) {
+        setActiveSubmenu("");
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <div className="bg-zinc-800 flex h-screen">
@@ -623,31 +448,30 @@ const Sidebar = ({ userInfo }) => {
               </div>
             </button>
           </div>
-
           <div className="h-px bg-zinc-500 mx-4 my-2"></div>
 
           {/* Main Navigation Items */}
-          <nav className="flex flex-col space-y-1 bg-[#1b1b1b] p-1">
+          <nav className="flex flex-col space-y-1 bg-[#1b1b1b] p-1 flex-1 overflow-y-auto scrollbar">
             {navMenuMap.map((main) => (
-              <div key={main.itemId} className="main-item relative  ">
+              <div key={main.itemId} className="main-item">
                 <div
-                  className={`flex items-center justify-between w-full text-sm p-1 mb-1 cursor-pointer hover:bg-zinc-800 hover:text-gray-100 rounded-md relative ${
+                  className={`flex items-center justify-between w-full text-sm p-1 mb-1 cursor-pointer hover:bg-zinc-800 hover:text-gray-100 rounded-md ${
                     activeNav === main.itemId
-                      ? "bg-zinc-600 text-gray-100 "
+                      ? "bg-zinc-600 text-gray-100"
                       : "text-gray-100"
                   }`}
-                  onClick={() => toggleSubmenu(main.itemId)}
+                  onClick={() =>
+                    main.children ? toggleDropdown(main.itemId) : null
+                  }
                 >
-                  <span className="flex items-center ">
+                  <Link href={main.url} className="flex items-center flex-1">
                     {main.svg}
-                    <Link href={main.url}>{main.itemName}</Link>
-                  </span>
+                    <span>{main.itemName}</span>
+                  </Link>
                   {main.children && (
                     <svg
                       className={`w-3 h-3 transition-transform transform ${
-                        activeSubmenu === main.itemId
-                          ? "rotate-0"
-                          : "rotate-270"
+                        openDropdowns[main.itemId] ? "rotate-180" : "rotate-0"
                       }`}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -664,26 +488,44 @@ const Sidebar = ({ userInfo }) => {
                   )}
                 </div>
 
+                {/* Children Dropdown Menu with Connector Lines */}
                 {main.children && (
                   <div
-                    className={`submenu absolute left-[220px] top-0 pl-2 bg-[#1b1b1b] w-44 p-2 z-50 rounded-md border border-zinc-500 ${
-                      activeSubmenu === main.itemId ? "block" : "hidden"
+                    className={`ml-4 overflow-hidden transition-all duration-300 ease-in-out ${
+                      openDropdowns[main.itemId]
+                        ? "max-h-96 opacity-100"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
-                    {main.children.map((sub) => (
-                      <Link
-                        key={sub.itemId}
-                        href={sub.url}
-                        className={`block text-xs text-gray-100 p-2 mt-1 mb-1 hover:bg-zinc-800 shadow-sm shadow-zinc-700 ${
-                          activeSideBar === sub.itemId
-                            ? "bg-white !text-black font-bold"
-                            : ""
-                        }`}
-                      >
-                        {sub.svg}
-                        {sub.itemName}
-                      </Link>
-                    ))}
+                    <div className="relative">
+                      {/* Main vertical connector line */}
+                      <div className="absolute left-2 top-0 bottom-7 w-px bg-gray-500 "></div>
+                      <div className="space-y-1 py-1 pl-4">
+                        {main.children.map((sub, index) => (
+                          <div key={sub.itemId} className="relative pl-4">
+                            {/* Curved L-shaped connector */}
+                            <div className="absolute left-[-12px] top-1/2 -translate-y-1/2 w-4 h-4">
+                              {/* Corner curve using border and rounded */}
+                              <div className="w-6 h-2 border-l border-b border-gray-500 rounded-bl-[8px] absolute top-0 left-1"></div>
+                            </div>
+
+                            <Link
+                              href={sub.url}
+                              className={`block text-xs text-gray-300 p-2 pl-3 rounded hover:bg-zinc-700 hover:text-white transition-colors ${
+                                activeSideBar === sub.itemId
+                                  ? "bg-white !text-black font-bold"
+                                  : ""
+                              }`}
+                            >
+                              <div className="flex items-center">
+                                {sub.svg}
+                                <span>{sub.itemName}</span>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -693,28 +535,27 @@ const Sidebar = ({ userInfo }) => {
           {/* Bottom Navigation */}
           <div className="flex flex-col space-y-1 bg-[#1b1b1b] p-1 mt-auto">
             <div className="h-px bg-zinc-500 mx-4 my-2"></div>
-
             <nav className="flex flex-col space-y-1 bg-[#1b1b1b] p-1">
               {bottomMenuMap.map((main) => (
-                <div key={main.itemId} className="main-item relative">
+                <div key={main.itemId} className="main-item">
                   <div
-                    className={`flex items-center justify-between w-full bottom-0 text-sm p-1 mb-1 cursor-pointer hover:bg-zinc-800 hover:text-gray-100 rounded-md relative ${
+                    className={`flex items-center justify-between w-full text-sm p-1 mb-1 cursor-pointer hover:bg-zinc-800 hover:text-gray-100 rounded-md ${
                       activeNav === main.itemId
                         ? "bg-zinc-600 text-gray-100 font-semibold"
                         : "text-gray-100"
                     }`}
-                    onClick={() => toggleSubmenu(main.itemId)}
+                    onClick={() =>
+                      main.children ? toggleDropdown(main.itemId) : null
+                    }
                   >
-                    <span className="flex items-center">
+                    <Link href={main.url} className="flex items-center flex-1">
                       {main.svg}
-                      <Link href={main.url}>{main.itemName}</Link>
-                    </span>
+                      <span>{main.itemName}</span>
+                    </Link>
                     {main.children && (
                       <svg
                         className={`w-3 h-3 transition-transform transform ${
-                          activeSubmenu === main.itemId
-                            ? "rotate-0"
-                            : "rotate-270"
+                          openDropdowns[main.itemId] ? "rotate-180" : "rotate-0"
                         }`}
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -731,27 +572,45 @@ const Sidebar = ({ userInfo }) => {
                     )}
                   </div>
 
+                  {/* Dropdown Menu with Connector Lines */}
                   {main.children && (
                     <div
-                      className={`submenu absolute left-[220px] p-2 bg-[#1b1b1b] w-44 p-2 z-50 rounded-md border border-zinc-500 ${
-                        activeSubmenu === main.itemId ? "block" : "hidden"
+                      className={`ml-4 overflow-hidden transition-all duration-300 ease-in-out ${
+                        openDropdowns[main.itemId]
+                          ? "max-h-96 opacity-100"
+                          : "max-h-0 opacity-0"
                       }`}
-                      style={{ bottom: "var(--submenu-bottom, 0)" }}
                     >
-                      {main.children.map((sub) => (
-                        <Link
-                          key={sub.itemId}
-                          href={sub.url}
-                          className={`block text-xs text-gray-100 p-2 mt-1 mb-1 hover:bg-zinc-800 shadow-sm shadow-zinc-700 ${
-                            activeSideBar === sub.itemId
-                              ? "bg-white !text-black font-bold"
-                              : ""
-                          }`}
-                        >
-                          {sub.svg}
-                          {sub.itemName}
-                        </Link>
-                      ))}
+                      <div className="relative">
+                        {/* Main vertical connector line */}
+                        <div className="absolute left-2 top-0 bottom-7 w-px bg-gray-500 "></div>
+
+                        <div className="space-y-1 py-1 pl-4">
+                          {main.children.map((sub, index) => (
+                            <div key={sub.itemId} className="relative pl-4">
+                              {/* Curved L-shaped connector */}
+                              <div className="absolute left-[-12px] top-1/2 -translate-y-1/2 w-4 h-4">
+                                {/* Corner curve using border and rounded */}
+                                <div className="w-6 h-2 border-l border-b border-gray-500 rounded-bl-[8px] absolute top-0 left-1"></div>
+                              </div>
+
+                              <Link
+                                href={sub.url}
+                                className={`block text-xs text-gray-300 p-2 pl-3 rounded hover:bg-zinc-700 hover:text-white transition-colors ${
+                                  activeSideBar === sub.itemId
+                                    ? "bg-white !text-black font-bold"
+                                    : ""
+                                }`}
+                              >
+                                <div className="flex items-center">
+                                  {sub.svg}
+                                  <span>{sub.itemName}</span>
+                                </div>
+                              </Link>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -762,12 +621,11 @@ const Sidebar = ({ userInfo }) => {
             <nav className="flex flex-col space-y-1 p-1">
               <div className="main-item flex px-2 py-2 shadow-lg rounded-full border border-zinc-500">
                 <p className="flex items-center justify-center w-8 h-8 text-xs font-semibold text-black rounded-full bg-white">
-                  {/* {userInfo?.displayName?.charAt(0) || ""} */}A
+                  A
                 </p>
                 <p className="block text-xs text-primary100 font-semibold text-gray-100 p-[10px]">
-                  {/* {userInfo?.displayName?.slice(0, 7) || ""} */} Anand K
+                  Anand K
                 </p>
-
                 <button
                   id="hamburgerSideButton"
                   className="text-orange-700 pl-4 cursor-pointer"
@@ -790,22 +648,24 @@ const Sidebar = ({ userInfo }) => {
                   </svg>
                 </button>
               </div>
+
               {/* Hamburger Menu */}
               <div
-                className={`absolute bottom-6 left-[160px] sm:left-[185px] md:left-[200px] lg:left-[210px] bg-[#1b1b1b] text-gray-100 shadow-lg rounded-lg w-48 z-10 divide-y divide-gray-300 ${
+                id="hamburgerSideMenu"
+                className={`absolute bottom-6 left-[160px] sm:left-[185px] md:left-[200px] lg:left-[210px] bg-[#1b1b1b] text-gray-100 shadow-lg rounded-lg w-48 z-10 divide-y divide-gray-300 rounded-md border border-zinc-500 ${
                   isHamburgerMenuOpen ? "block" : "hidden"
                 }`}
               >
                 <div className="py-2">
                   <p className="block px-4 py-2 text-sm text-primary100 font-semibold">
-                    {userInfo?.displayName || ""}
+                    {userInfo?.displayName || "Anand Kumar"}
                   </p>
                 </div>
                 <ul className="py-2 text-sm text-gray-100">
                   <li>
                     <Link
                       href="/settings/profile"
-                      className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100 "
+                      className="flex p-2 white hover:bg-zinc-800 hover:text-gray-100"
                       suppressHydrationWarning
                     >
                       <svg
@@ -853,8 +713,7 @@ const Sidebar = ({ userInfo }) => {
             </nav>
           </div>
         </aside>
-
-        {/* Collapsed Sidebar */}
+        {/* collapsed sidebar */}
         <aside
           className={`flex h-screen w-[40px] flex-col bg-[#1b1b1b] border-r border-zinc-500 text-gray-100 shadow-lg transition-all duration-300 ${
             isSidebarExpanded ? "hidden" : ""
@@ -1028,13 +887,13 @@ const Sidebar = ({ userInfo }) => {
               </div>
 
               <div
-                className={`absolute bottom-6 left-[50px] bg-[#1b1b1b] text-gray-100 shadow-lg rounded-lg w-48 z-10 divide-y divide-gray-300 ${
+                className={`absolute bottom-6 left-[50px] bg-[#1b1b1b] text-gray-100 shadow-lg rounded-lg w-48 z-10 divide-y divide-gray-300 rounded-md border border-zinc-500 ${
                   isHamburgerMenuOpen ? "block" : "hidden"
                 }`}
               >
                 <div className="py-2">
                   <p className="pl-2 block text-sm text-primary100 font-semibold">
-                    {userInfo?.displayName || ""}
+                    {userInfo?.displayName || "Anand Kumar"}
                   </p>
                 </div>
                 <ul className="py-2 text-sm text-gray-100">
@@ -1090,49 +949,6 @@ const Sidebar = ({ userInfo }) => {
           </div>
         </aside>
       </div>
-      {/* CSS Keyframes */}
-      <style jsx>{`
-        @keyframes slideInLeft {
-          from {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        @keyframes slideOutLeft {
-          from {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          to {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-        }
-        @keyframes slideInRight {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        @keyframes slideOutRight {
-          from {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          to {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-        }
-      `}</style>
     </>
   );
 };

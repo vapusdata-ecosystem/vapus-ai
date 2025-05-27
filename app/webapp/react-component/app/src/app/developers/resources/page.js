@@ -1,8 +1,6 @@
 // ResourcePlatform.jsx
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import Sidebar from "@/app/components/platform/main-sidebar";
 
 export default function ResourcePlatform() {
   const [resources, setResources] = useState([]);
@@ -69,9 +67,6 @@ export default function ResourcePlatform() {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
-      {/* Assuming main-sidebar component would be imported separately */}
-      <Sidebar />
-
       <div className="overflow-y-auto scrollbar h-screen w-full">
         {/* Header would be imported separately */}
         <header className="bg-zinc-900 p-4 text-white">
