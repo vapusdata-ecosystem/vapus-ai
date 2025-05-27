@@ -76,11 +76,10 @@ message Organization {
 	CredentialSalt secret_passcode = 5; // @gotags: yaml:"secretPasscode"
 	OrganizationAttributes attributes = 6; // @gotags: yaml:"attributes"
 	string status = 8; // @gotags: yaml:"status"
-	OrganizationType organization_type = 10; // @gotags: yaml:"organizationType"
-	BackendStorages backend_secret_storage = 13; // @gotags: yaml:"backendSecretStorage"
-	BackendStorages artifact_storage = 14; // @gotags: yaml:"artifactStorage"
-	repeated K8SInfraParams data_product_infra_platform = 17; // @gotags: yaml:"dataProductInfraPlatform"
-	VapusBase resource_base = 18; // @gotags: yaml:"resourceBase"
+	OrganizationType organization_type = 9; // @gotags: yaml:"organizationType"
+	BackendStorages backend_secret_storage = 10; // @gotags: yaml:"backendSecretStorage"
+	BackendStorages artifact_storage = 11; // @gotags: yaml:"artifactStorage"
+	VapusBase resource_base = 12; // @gotags: yaml:"resourceBase"
 }
 
 /**

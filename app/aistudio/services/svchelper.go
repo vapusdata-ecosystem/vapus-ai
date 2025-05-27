@@ -9,12 +9,9 @@ import (
 	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
 	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
-	dputils "github.com/vapusdata-ecosystem/vapusai/core/data-platform/utils"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
 	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
-	k8s "github.com/vapusdata-ecosystem/vapusai/core/tools/k8s"
-	"k8s.io/client-go/tools/clientcmd/api"
 )
 
 func getOrganizationArtifactCreds(ctx context.Context, organization *models.Organization, store *aidmstore.AIStudioDMStore) *models.OCILoginCreds {
@@ -95,45 +92,4 @@ func getOrganizationAuthn(ctx context.Context, organization *models.Organization
 		jwtParams.ForPublicValidation = true
 	}
 	return jwtParams, nil
-}
-
-func getOrganizationDPK8sInfra(ctx context.Context, organization *models.Organization, infraId string, store *aidmstore.AIStudioDMStore) (*models.K8SInfraParams, error) {
-	infra := organization.GetK8sInfra(infraId)
-	if infra != nil {
-		secretStr, err := store.SecretStore.ReadSecret(ctx, infra.SecretName)
-		if err != nil {
-			helperLogger.Err(err).Msgf("error while fetching k8s infra params from secret storage for organization %v.", organization.VapusID)
-			return nil, err
-		}
-		creds := &models.GenericCredentialModel{}
-		err = json.Unmarshal([]byte(dmutils.AnyToStr(secretStr)), creds)
-		if err != nil {
-			helperLogger.Err(err).Ctx(ctx).Msg("error while unmarshaling the k8s infra params from secret store")
-			return nil, err
-		}
-		infra.Credentials = creds
-		return infra, nil
-	}
-	return nil, apperr.ErrK8SInfra404
-}
-
-func getOrganizationK8SConfig(ctx context.Context, organization *models.Organization, infraId string, store *aidmstore.AIStudioDMStore) (*api.Config, string) {
-	infraParams, err := getOrganizationDPK8sInfra(ctx, organization, infraId, store)
-	var kubeConfig *api.Config
-	if err != nil {
-		infraId = ""
-		helperLogger.Err(err).Msgf("error while retreiving organization k8s infra params, will use the current K8S cluster for deployment for organization - %v", organization.VapusID)
-	} else {
-		kubeConfig, err = k8s.OrganizationK8SConfig(ctx, infraParams, helperLogger)
-		if err != nil {
-			infraId = ""
-			helperLogger.Err(err).Msgf("error while retreiving organization kubeconfig, will use the current K8S cluster for deployment for organization - %v", organization.VapusID)
-		}
-		infraId = infraParams.InfraId
-	}
-	return kubeConfig, infraId
-}
-
-func buildOrganizationCatalogName(name string) string {
-	return dputils.BuildDataTableName(name + "_catalog")
 }

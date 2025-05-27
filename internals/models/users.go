@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"slices"
 	"strings"
 	"time"
@@ -38,6 +39,11 @@ func (dm *Users) ValidateJwtClaim(claimCtx map[string]string) bool {
 	// if dm.OwnerAccount != claimCtx[encryption.ClaimAccountKey] {
 	// 	return false
 	// }
+	log.Println(dm.Roles)
+	log.Println(dm.Email)
+	log.Println("------------------------")
+	log.Println("Validating user roles for organization:", dm.GetOrganizationRoles())
+	log.Println("Claim context:", claimCtx)
 	for _, dm := range dm.GetOrganizationRoles() {
 		if claimCtx[encryption.ClaimOrganizationKey] == dm.OrganizationId {
 			claimRoles := strings.Split(claimCtx[encryption.ClaimOrganizationRolesKey], "|")
@@ -248,13 +254,13 @@ func (m *Users) ConvertFromPb(pb *mpb.User) *Users {
 			DisplayName: pb.GetDisplayName(),
 			UserId:      pb.GetUserId(),
 			Email:       pb.GetEmail(),
-			// Roles: func(s []*mpb.UserOrganizationRole) (pbs []*UserOrganizationRole) {
-			// 	for _, v := range s {
-			// 		pbs = append(pbs, (&UserOrganizationRole{}).ConvertFromPb(v))
-			// 	}
-			// 	return pbs
+			Roles: func(s []*mpb.UserOrganizationRole) (pbs []*UserOrganizationRole) {
+				for _, v := range s {
+					pbs = append(pbs, (&UserOrganizationRole{}).ConvertFromPb(v))
+				}
+				return pbs
 
-			// }(pb.Roles()),
+			}(pb.Roles),
 			InviteId:         pb.GetInviteId(),
 			InvitedOn:        pb.GetInvitedOn(),
 			InviteExpiresOn:  pb.GetInviteExpiresOn(),
