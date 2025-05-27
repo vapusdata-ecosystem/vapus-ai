@@ -9,7 +9,7 @@ import ToastContainerMessage from "@/app/components/notification/customToast";
 import LoadingOverlay from "@/app/components/loading/loading";
 import { platformDomainCreateApi } from "@/app/utils/settings-endpoint/platform-domain";
 
-export default function CreatePlatformDomain() {
+export default function UpdatePlatform() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("form");
   const [isLoading, setIsLoading] = useState(false);

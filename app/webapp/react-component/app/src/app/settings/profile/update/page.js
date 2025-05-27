@@ -319,7 +319,7 @@ export default function UpdateProfile() {
         action: "PATCH_USER",
         spec: {
           displayName: formData.displayName,
-          userId: formData.displayName,
+          userId: userData?.userId,
           profile: {
             avatar: formData.avatar || uploadedAvatarPath || "",
             addresses: filteredAddresses,
