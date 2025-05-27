@@ -165,5 +165,19 @@ func (x *VapusDataController) ResourceGetter(ctx context.Context, request *pb.Re
 		}
 		result.PluginTypeMap = append(result.PluginTypeMap, pluginTypeMap)
 	}
+
+	thirdPartyGuardrailList := pb.ThirdPartyGuardrailList{
+		Pangea:  []string{},
+		Mistral: []string{},
+		Bedrock: []string{},
+		Vapus:   []string{},
+	}
+	for _, val := range types.PanegaGuardrailList {
+		thirdPartyGuardrailList.Pangea = append(thirdPartyGuardrailList.Pangea, val.String())
+	}
+	for _, val := range types.MistralGuardrailList {
+		thirdPartyGuardrailList.Mistral = append(thirdPartyGuardrailList.Mistral, val.String())
+	}
+	result.GuardrailTypes = &thirdPartyGuardrailList
 	return result, nil
 }
