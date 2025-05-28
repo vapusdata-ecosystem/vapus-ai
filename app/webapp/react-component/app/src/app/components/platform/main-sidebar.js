@@ -7,7 +7,7 @@ import { getAuthService } from "../../../../lib/auth";
 import { userGlobalData } from "@/context/GlobalContext";
 import { userProfileApi } from "@/app/utils/settings-endpoint/profile-api";
 
-const Sidebar = ({ userInfo }) => {
+const Sidebar = () => {
   // Internal navigation data
   const navMenuMap = [
     // Dashboard

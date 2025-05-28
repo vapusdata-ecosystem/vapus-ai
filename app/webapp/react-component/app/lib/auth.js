@@ -1,6 +1,5 @@
 "use client";
 import { jwtDecode } from "jwt-decode";
-import { loginApi } from "@/app/utils/auth-endpoint/auth";
 import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import AuthExpiredModal from "@/app/components/notification/authExpiredPopPup";
@@ -8,7 +7,7 @@ import AuthExpiredModal from "@/app/components/notification/authExpiredPopPup";
 const AUTH_CONFIG = {
   loginPath: "/login",
   loginRedirectPath: "/login",
-  callbackPath: "/api/callback",
+  callbackPath: "/auth/callback",
   logoutPath: "/login",
   homePath: "/dashboard",
   accessTokenCookieName: "access_token",
@@ -125,7 +124,6 @@ export class AuthService {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        alert("Error");
 
         const data = await response.json();
 
