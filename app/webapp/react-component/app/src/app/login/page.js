@@ -10,7 +10,7 @@ import ToastContainerMessage from "../components/notification/customToast";
 
 export default function LoginPage({
   platform = "VapusData",
-  landingPage = "/settings/domain",
+  landingPage = "/dashboard",
 }) {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();

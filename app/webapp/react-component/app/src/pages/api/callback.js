@@ -4,7 +4,7 @@ const AUTH_CONFIG = {
   loginRedirectPath: "/login",
   callbackPath: "/api/callback",
   logoutPath: "/logout",
-  homePath: "/settings/domain",
+  homePath: "/dashboard",
   accessTokenCookieName: "access_token",
   idTokenCookieName: "id_token",
   cookiePath: "/",
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   try {
     const payload = {
       code,
-      host: `http://localhost:3000${AUTH_CONFIG.callbackPath}`,
+      host: `http://127.0.0.1:9014/${AUTH_CONFIG.callbackPath}`,
     };
 
     const result = await LoginCallbacksApi.getLoginCallback(payload);
