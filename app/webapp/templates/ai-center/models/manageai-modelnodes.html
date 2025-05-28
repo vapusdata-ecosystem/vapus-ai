@@ -41,6 +41,8 @@
       document.getElementById(id).classList.add("hidden");
     }
     document.addEventListener("DOMContentLoaded", function() {
+    console.log("Herrreeee")
+    console.log(`{{ $.Response.AIModelNodes }}`)
       var headers = ["Name", "Service Provider", "Node Id", "Owner", "Status", "View Details"];
       var dataTableArray = [];
       {{ range $id, $val := .Response.AIModelNodes }}
