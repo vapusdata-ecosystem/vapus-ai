@@ -245,6 +245,7 @@ func (x *OrganizationAgent) ugradeOrganizationArtifacts(ctx context.Context) err
 func (x *OrganizationAgent) patchOrganization(ctx context.Context) error {
 	var err error
 	newObj := utils.DmNodeToObj(x.managerRequest)
+
 	if x.organization.OrganizationType == mpb.OrganizationType_SERVICE_ORGANIZATION.String() {
 		return dmerrors.DMError(apperr.ErrCannotCreateServiceOrganization, nil)
 	}
