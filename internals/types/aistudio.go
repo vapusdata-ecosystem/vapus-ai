@@ -12,6 +12,10 @@ const (
 	// Nemo    GuardrailsProvider = "nemo"
 )
 
+var GuardrailList = []GuardrailsProvider{
+	Bedrock, Mistral, Pangea, Vapus,
+}
+
 func (x GuardrailsProvider) String() string {
 	return string(x)
 }

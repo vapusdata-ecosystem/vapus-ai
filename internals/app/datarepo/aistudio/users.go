@@ -3,6 +3,7 @@ package aidmstore
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/databricks/databricks-sql-go/logger"
@@ -242,6 +243,7 @@ func (ds *AIStudioDMStore) CustomListUsers(ctx context.Context, fieldQuery, cond
 func (ds *AIStudioDMStore) GetUser(ctx context.Context, userId string, ctxClaim map[string]string) (*models.Users, error) {
 	result := make([]*models.Users, 0)
 	query := fmt.Sprintf("SELECT * FROM %s WHERE %s", apppkgs.UsersTable, apppkgs.GetByIdFilter("user_id", userId, ctxClaim))
+	log.Println("Query to get user:", query)
 	err := ds.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	if err != nil || len(result) == 0 {
 		logger.Err(err).Ctx(ctx).Msg("error while getting users from datastore")
