@@ -18,4 +18,6 @@ const (
 	GOOGLE_DRIVE PluginServices = "GOOGLE_DRIVE"
 	SLACK        PluginServices = "SLACK"
 	SERPSEARCH   PluginServices = "SERP"
+	GOOGLE_CALENDAR     PluginServices = "GOOGLE_CALENDAR"
+
 )

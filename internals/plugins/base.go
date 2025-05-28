@@ -10,6 +10,7 @@ import (
 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
 	"github.com/vapusdata-ecosystem/vapusai/core/data-platform/connectors/filestores"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	"github.com/vapusdata-ecosystem/vapusai/core/operator/calendar"
 	"github.com/vapusdata-ecosystem/vapusai/core/operator/emailer"
 	searchengine "github.com/vapusdata-ecosystem/vapusai/core/operator/search"
 )
@@ -18,6 +19,7 @@ type PluginsBase struct {
 	Emailer      emailer.Emailer
 	FileManager  filestores.FileStore
 	SearchEngine searchengine.Search
+	Calendar     calendar.Calendar
 }
 
 type VapusPlugins struct {
@@ -81,6 +83,8 @@ func (p *VapusPlugins) LoadPlugin(ctx context.Context, plugin *models.Plugin) er
 		p.LoadSearchPlugin(ctx, plugin)
 	case mpb.IntegrationPluginTypes_FILESTORES.String():
 		p.LoadFileStorePlugin(ctx, plugin)
+	case mpb.IntegrationPluginTypes_CALENDAR.String():
+		p.LoadCalendarPlugin(ctx, plugin)
 	default:
 		p.logger.Error().Msgf("Invalid plugin type - %s", plugin.PluginType)
 		return apperr.ErrInvalidPluginType
@@ -113,6 +117,7 @@ func (p *VapusPlugins) GetUserPluginPool(ctx context.Context, owner string) (*Pl
 		return &PluginsBase{}, nil
 	}
 	userPluginPool, ok := pluginPool.(*PluginsBase)
+
 	if !ok {
 		return nil, apperr.ErrInvalidPluginObject
 	} else {
