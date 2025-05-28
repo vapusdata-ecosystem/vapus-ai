@@ -1,235 +1,12 @@
 "use client";
 import Head from "next/head";
-import { useEffect, useState } from "react";
 import Script from "next/script";
 import Header from "@/app/components/platform/header";
 import AIToolCallPopup from "../aitoolcallpoppup";
 import NestedDropdown from "@/app/components/nestedDropdown";
 import PromptDropdown from "@/app/components/promptDropdown";
-import {
-  addContextLocally,
-  aiInterfaceAction,
-} from "@/app/components/JS/ai-chat";
-import { toast } from "react-toastify";
 
 export default function AIStudio({ response, globalContext, aiStudioChat }) {
-  const [isToolCallModalOpen, setIsToolCallModalOpen] = useState(false);
-  const openToolCallModal = () => {
-    setIsToolCallModalOpen(true);
-  };
-  const closeToolCallModal = () => {
-    setIsToolCallModalOpen(false);
-  };
-
-  const handleAddTool = (toolData) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      spec: {
-        ...prevData.spec,
-        Tools: [toolData],
-      },
-    }));
-
-    // Show success notification
-    toast.success("Tool added successfully");
-  };
-
-  useEffect(() => {
-    if (aiStudioChat) {
-      loadAIStudioChat("aiChatResult");
-      const cChatId = aiStudioChat.ChatId;
-
-      if (cChatId !== "") {
-        const radio = document.querySelector(
-          'input[name="aiInteractionMode"][value="CHAT_MODE"]'
-        );
-        if (radio) {
-          radio.checked = true;
-        }
-        handleInteractionModeChange("CHAT_MODE");
-      } else {
-        const radio = document.querySelector(
-          'input[name="aiInteractionMode"][value="P2P"]'
-        );
-        if (radio) {
-          radio.checked = true;
-        }
-        handleInteractionModeChange("P2P");
-      }
-    }
-  }, [aiStudioChat]);
-
-  // Define functions that were in the HTML
-  function toggleRow(rowId) {
-    const expandedRow = document.getElementById(rowId);
-    expandedRow.classList.toggle("hidden");
-  }
-
-  function toggleSection(id) {
-    const section = document.getElementById(id);
-    section.classList.toggle("hidden");
-  }
-
-  function handleInteractionModeChange(divId) {
-    document.getElementsByName("aiInteractionMode").forEach((element) => {
-      if (element.value === divId) {
-        document.getElementById(divId).classList.remove("hidden");
-      } else {
-        document.getElementById(element.value).classList.add("hidden");
-      }
-    });
-  }
-
-  function createNewChat() {
-    const currentUrl = window.location.href;
-    const urlObj = new URL(currentUrl);
-    urlObj.searchParams.set("createNewChat", "true");
-    window.location.href = urlObj.toString();
-  }
-
-  function closeOptionsBar() {
-    const rightbar = document.getElementById("rightbar");
-    rightbar.classList.add("hidden");
-  }
-
-  function updateTemperatureValue(value) {
-    document.getElementById("temperatureValue").value =
-      parseFloat(value).toFixed(1);
-  }
-
-  function updateSliderValue(value) {
-    const numericValue = parseFloat(value);
-    if (numericValue >= 0.0 && numericValue <= 1.0) {
-      document.getElementById("temperatureSlider").value =
-        numericValue.toFixed(1);
-    } else {
-      // showAlert function is defined in external JS
-      // showAlert(AlertError, "Request Temperature", "Temperature must be between 0.0 and 1.0");
-    }
-  }
-
-  function submitTemperature() {
-    const temperature = document.getElementById("temperatureValue").value;
-    // showAlert function is defined in external JS
-    // showAlert(AlertInfo, "Request Temperature", `Temperature set to: ${temperature}`);
-  }
-
-  function EnterInput(event) {
-    if (event.key === "Enter") {
-      submitInput();
-    }
-  }
-
-  function showModels(id) {
-    const models = document.getElementById(`models-` + id);
-    const modelElems = document.getElementsByClassName("modelList");
-    for (let i = 0; i < modelElems.length; i++) {
-      modelElems[i].classList.add("hidden");
-    }
-    models.classList.remove("hidden");
-  }
-
-  function toggleContextPopup() {
-    const popup = document.getElementById("contextModal");
-    popup.classList.toggle("hidden");
-  }
-
-  function connectGoogleDrive() {
-    // showAlert is defined in external JS
-    // showAlert(AlertInfo, "Connect to Google Drive", "Note: This feature is not yet implemented.");
-  }
-
-  function connectOneDrive() {
-    // showAlert is defined in external JS
-    // showAlert(AlertInfo, "Connect to One Drive", "Note: This feature is not yet implemented.");
-  }
-
-  function toggleURLCrawlFlag() {
-    const urlCrawlDiv = document.getElementById("urlCrawlDiv");
-    urlCrawlDiv.classList.toggle("hidden");
-  }
-
-  function toggleStream(element) {
-    const button =
-      element.tagName === "BUTTON" ? element : element.closest("button");
-    if (!button) return;
-    const isOn = button.getAttribute("aria-checked") === "true";
-    const newState = !isOn;
-    button.classList.toggle("bg-orange-700", newState);
-    button.classList.toggle("bg-gray-300", !newState);
-    const indicator = button.querySelector("span");
-    if (indicator)
-      indicator.style.transform = newState
-        ? "translateX(32px)"
-        : "translateX(0)";
-    const label = document.getElementById("toggleStateLabel");
-    if (label) label.textContent = newState ? "Stream ON" : "Stream OFF";
-    button.setAttribute("aria-checked", newState.toString());
-  }
-
-  function getToggleStreamValue() {
-    const toggleButton = document.getElementById("toggleStreamButton");
-    return toggleButton ? toggleButton.getAttribute("aria-checked") : "false";
-  }
-
-  function submitInput() {
-    const inputArea = document.getElementById("input");
-    const textInput = inputArea.value;
-    const aiModel = document.getElementById("aiModel").value;
-    const temperature = document.getElementById("temperatureValue").value;
-    const maxTokens = document.getElementById("maxTokens").value;
-    const topk = document.getElementById("topk").value;
-    const topP = document.getElementById("topP").value;
-    const promptId = document.getElementById("promptId").value;
-    const contextType = document.getElementById("contextType").value;
-    const contextValue = document.getElementById("contextValue").value;
-
-    let modelName;
-    let modelNodeId;
-    let splitVal = aiModel.split("||");
-    modelNodeId = splitVal[0];
-    modelName = splitVal[1];
-
-    if (modelName === "" || modelNodeId === "") {
-      // showAlert(AlertError, "Model Selection", "Please select a model");
-      return;
-    }
-    inputArea.value = "";
-    inputArea.disabled = true;
-
-    // addContextLocally is defined in external JS
-    addContextLocally(
-      {
-        content: textInput,
-        userId: globalContext.UserInfo.UserId,
-        domain: globalContext.CurrentDomain.DomainId,
-      },
-      true
-    );
-
-    // aiInterfaceAction is defined in external JS
-    aiInterfaceAction(
-      response.ActionParams.API,
-      response.ActionParams.ChatAPI,
-      globalContext.AccessTokenKey,
-      "aiChatResult",
-      contextType,
-      contextValue,
-      modelNodeId,
-      promptId,
-      textInput,
-      temperature,
-      topP,
-      modelName,
-      maxTokens,
-      topk
-    );
-
-    inputArea.disabled = false;
-    document.getElementById("contextType").value = "";
-    document.getElementById("contextValue").value = "";
-  }
-
   return (
     <>
       <Head>
@@ -286,7 +63,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
 
       {/* External Script Tags */}
       <Script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></Script>
-
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.0/jsoneditor.min.js" />
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js" />
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/go.min.js" />
@@ -308,12 +84,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
           <button
             id="optionsIcon"
             className="fixed bottom-4 right-4 bg-orange-700 p-3 rounded-full shadow-lg focus:outline-none z-50 cursor-pointer"
-            onClick={() => {
-              const rightbar = document.getElementById("rightbar");
-              const isHidden = rightbar.classList.contains("hidden");
-              rightbar.classList.toggle("hidden", !isHidden);
-              rightbar.classList.toggle("visible", isHidden);
-            }}
           >
             {/* Menu bar SVG */}
             <svg
@@ -357,14 +127,12 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                 {/* Text Input */}
                 <textarea
                   id="input"
-                  onKeyDown={EnterInput}
                   className="w-full h-16 p-1 rounded-lg focus:outline-none text-gray-100"
                   placeholder="Type your message here..."
                 ></textarea>
                 {/* promptInput */}
                 <textarea
                   id="promptInput"
-                  onKeyDown={EnterInput}
                   className="w-full h-16 p-1 rounded-lg focus:outline-none text-gray-100 hidden"
                   placeholder="Type your message here..."
                 ></textarea>
@@ -376,7 +144,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                       aria-label="datafiles"
                       data-testid="datafiles"
                       className="flex cursor-pointer h-6 w-6 items-center justify-center rounded-full transition-colors hover:bg-zinc-900 hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 disabled:bg-[#D7D7D7]"
-                      onClick={toggleContextPopup}
                     >
                       <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0">
                         <path
@@ -392,7 +159,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     data-testid="startChat"
                     id="startChat"
                     className="flex cursor-pointer h-6 w-6 items-center justify-center rounded-full transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 disabled:bg-[#D7D7D7]"
-                    onClick={submitInput}
                   >
                     <svg
                       viewBox="0 0 32 32"
@@ -414,7 +180,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     data-testid="inprogressChat"
                     id="inprogressChat"
                     className="hidden flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 disabled:bg-[#D7D7D7]"
-                    onClick={() => cancelStream()}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -426,7 +191,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      {/* Small square in the center */}
                       <rect
                         x="9"
                         y="9"
@@ -455,7 +219,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     name="aiInteractionMode"
                     value="P2P"
                     className="peer hidden"
-                    onClick={() => handleInteractionModeChange("P2P")}
                     defaultChecked
                   />
                   <div className=" w-4 h-4 rounded-full border-2 peer-checked:bg-orange-700 transition" />
@@ -467,7 +230,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     name="aiInteractionMode"
                     value="CHAT_MODE"
                     className="peer hidden"
-                    onClick={() => handleInteractionModeChange("CHAT_MODE")}
                   />
                   <div className="w-4 h-4 rounded-full border-2  peer-checked:bg-orange-700 transition" />
                   <span className="ml-2 text-sm">Chat</span>
@@ -476,7 +238,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
 
               <div className="mb-2 mt-2 text-gray-100">
                 <NestedDropdown />
-                {/* <input type="text" id="aiModel" hidden value="" /> */}
                 <input type="text" id="aiModel" hidden />
               </div>
 
@@ -487,14 +248,13 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     id="toggleStateLabel"
                     className="block text-sm font-medium mb-1"
                   >
-                    Stream
+                    Stream OFF
                   </label>
                   <button
                     id="toggleStreamButton"
                     className="relative cursor-pointer inline-flex h-6 w-16 items-center rounded-full bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff5f1f]"
                     role="switch"
                     aria-checked="false"
-                    onClick={(e) => toggleStream(e.target)}
                   >
                     <span className="absolute left-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform transform"></span>
                   </button>
@@ -502,7 +262,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
 
                 <div className="mb-2 mt-2">
                   <PromptDropdown />
-                  {/* <input type="text" id="promptId" hidden value="" /> */}
                   <input type="text" id="promptId" hidden />
                 </div>
 
@@ -510,18 +269,11 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                   <button
                     id="addToolCallButton"
                     type="button"
-                    onClick={openToolCallModal}
                     className="bg-orange-700 w-full px-2 py-2 text-sm rounded-lg focus:outline-none cursor-pointer"
                     suppressHydrationWarning
                   >
                     Add Tool Call
                   </button>
-                  <AIToolCallPopup
-                    isOpen={isToolCallModalOpen}
-                    onClose={closeToolCallModal}
-                    onAddTool={handleAddTool}
-                    // existingTools={formData.spec.Tools[0]}
-                  />
                 </div>
               </div>
 
@@ -530,7 +282,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                   <a
                     className="flex p-2 bg-orange-700 hover:bg-zinc-900 items-center justify-between text-sm font-medium transition-colors rounded-lg"
                     href="#"
-                    onClick={createNewChat}
                   >
                     <span className="flex flex-row items-center justify-start">
                       <div slot="icon" className="w-4 text-neutral-white">
@@ -573,7 +324,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                                   <a
                                     href={`${globalContext?.CurrentUrl}?aiChatId=${val.ChatId}`}
                                   >
-                                    {/* limitletters function  implemented */}
                                     {val.CurrentLog.Value.length > 35
                                       ? val.CurrentLog.Value.substring(0, 35) +
                                         "..."
@@ -604,10 +354,8 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                 <h2 className="text-lg font-bold">Sidebar</h2>
                 <button
                   id="closeSidebar"
-                  onClick={closeOptionsBar}
                   className="hover:text-gray-100 focus:outline-none cursor-pointer"
                 >
-                  {/* Close SVG */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -636,7 +384,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                   id="temperatureSelect"
                   className="flex items-center space-x-4 mt-2"
                 >
-                  {/* Slider */}
                   <input
                     id="temperatureSlider"
                     type="range"
@@ -645,9 +392,7 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     step="0.1"
                     defaultValue="0.7"
                     className="w-full h-2 bg-orange-700 rounded-lg appearance-none cursor-pointer"
-                    onChange={(e) => updateTemperatureValue(e.target.value)}
                   />
-                  {/* Numeric Value */}
                   <input
                     id="temperatureValue"
                     type="number"
@@ -656,7 +401,6 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
                     max="1.0"
                     defaultValue="0.7"
                     className="w-16 px-2 py-1 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring focus:ring-orange-700"
-                    onChange={(e) => updateSliderValue(e.target.value)}
                   />
                 </div>
 
@@ -701,20 +445,13 @@ export default function AIStudio({ response, globalContext, aiStudioChat }) {
               </div>
             </div>
 
-            <input
-              type="text"
-              id="currentChatId"
-              hidden
-              //   defaultValue={aiStudioChat ? aiStudioChat.ChatId : ""}
-            />
+            <input type="text" id="currentChatId" hidden />
 
             <div id="currentChat" className="hidden">
               {aiStudioChat ? JSON.stringify(aiStudioChat) : ""}
             </div>
           </div>
         </div>
-
-        {/* Context Popup Component  */}
       </div>
     </>
   );

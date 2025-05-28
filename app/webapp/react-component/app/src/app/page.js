@@ -1,11 +1,9 @@
-// import LoginPage from "./login/page";
-import UsersPage from "./settings/users/page";
+import Dashboard from "./dashboard/page";
 
 export default function Home() {
   return (
     <>
-      <UsersPage />
-      {/* <LoginPage /> */}
+      <Dashboard />
     </>
   );
 }

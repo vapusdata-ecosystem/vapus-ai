@@ -1,7 +1,7 @@
 "use client";
 import Header from "../components/platform/header";
 
-export default function AIPromptsPage({ backListingLink = "./" }) {
+export default function Dashboard({ backListingLink = "./" }) {
   return (
     <div className="bg-zinc-800 flex h-screen">
       <div className="overflow-y-auto scrollbar h-screen w-full">
