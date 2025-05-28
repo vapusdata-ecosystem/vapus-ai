@@ -285,9 +285,9 @@ const Sidebar = ({ userInfo }) => {
       ),
       children: [
         {
-          itemId: "domain",
-          itemName: "Domain",
-          url: "/settings/domain",
+          itemId: "organization",
+          itemName: "organization",
+          url: "/settings/organization",
           svg: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -370,9 +370,9 @@ const Sidebar = ({ userInfo }) => {
           ),
         },
         {
-          itemId: "platform-Domain",
-          itemName: "Platform Domain",
-          url: "/settings/platform-domain",
+          itemId: "platform-organizations",
+          itemName: "Platform organizations",
+          url: "/settings/platform-organizations",
           svg: (
             <svg
               xmlns="http://www.w3.org/2000/svg"
