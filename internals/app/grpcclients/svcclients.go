@@ -45,7 +45,7 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 	counter++
 	logger.Info().Msg("Checking if all services are up........")
 	aiStudioSvcDns := fmt.Sprintf("%s:%d", networkConfig.AIStudioSvc.ServiceName, networkConfig.AIStudioSvc.ServicePort)
-	// aiUtilityDns := fmt.Sprintf("%s:%d", networkConfig.AIUtility.ServiceName, networkConfig.AIUtility.ServicePort)
+	aiUtilityDns := fmt.Sprintf("%s:%d", networkConfig.AIUtility.ServiceName, networkConfig.AIUtility.ServicePort)
 
 	err := dmutils.Telnet("tcp", aiStudioSvcDns)
 	if err != nil {
@@ -57,15 +57,15 @@ func SvcUpTimeCheck(ctx context.Context, networkConfig *svcconfig.NetworkConfig,
 		}
 	}
 
-	// err = dmutils.Telnet("tcp", aiUtilityDns)
-	// if err != nil {
-	// 	logger.Error().Err(err).Msg("Ai Utility Server service is not up yet")
-	// 	if counter > 6 {
-	// 		return err
-	// 	} else {
-	// 		return SvcUpTimeCheck(ctx, networkConfig, self, logger, counter)
-	// 	}
-	// }
+	err = dmutils.Telnet("tcp", aiUtilityDns)
+	if err != nil {
+		logger.Error().Err(err).Msg("Ai Utility Server service is not up yet")
+		if counter > 6 {
+			return err
+		} else {
+			return SvcUpTimeCheck(ctx, networkConfig, self, logger, counter)
+		}
+	}
 	return nil
 }
 
