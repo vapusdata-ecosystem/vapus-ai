@@ -42,7 +42,7 @@ func InitVapusGuardrailPlugins() {
 	}
 }
 
-func (v *AIModels) ListBedrock(ctx context.Context, req *pb.GuardrailsManagerRequest) (*pb.GuardrailsTypeResponse, error) {
+func (v *AIModels) ListBedrock(ctx context.Context, req *pb.GuardrailsTypeGetterRequest) (*pb.GuardrailsTypeResponse, error) {
 	agent, err := v.DMServices.NewGuardrailPluginsIntAgent(ctx, services.WithGuardrailPluginsManagerRequest(req), services.WithGuardrailPluginsManagerAction(mpb.ResourceLcActions_LIST))
 	if err != nil {
 		v.Logger.Error().Err(err).Msg("List: error while creating new guardrail plugin request")
