@@ -13,10 +13,24 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+type NoAuthnRequired string
+
+const (
+	LoginHandler  NoAuthnRequired = "/api/v1alpha1/login"
+	LoginCallback NoAuthnRequired = "/api/v1alpha1/login/callback"
+	PublicInfo    NoAuthnRequired = "/api/v1alpha1/public-info"
+	Services      NoAuthnRequired = "/api/v1alpha1/services"
+	Register      NoAuthnRequired = "/api/v1alpha1/register"
+)
+
+func (x NoAuthnRequired) String() string {
+	return string(x)
+}
 func Authentication(c *fiber.Ctx) error {
-	if c.Path() == "/metrics" {
+	if c.Path() == "/metrics" || c.Path() == LoginHandler.String() || c.Path() == LoginCallback.String() || c.Path() == PublicInfo.String() || c.Path() == Services.String() || c.Path() == Register.String() {
 		return c.Next()
 	}
+
 	tokenBytes := c.Request().Header.Peek("Authorization")
 	if tokenBytes == nil {
 		return c.Status(http.StatusUnauthorized).JSON(fiber.Map{

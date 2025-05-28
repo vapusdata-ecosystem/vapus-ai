@@ -171,6 +171,7 @@ var OrganizationManagerRequest *pb.OrganizationManagerRequest = &pb.Organization
 		Attributes: &mpb.OrganizationAttributes{
 			AuthnJwtParams: &mpb.JWTParams{},
 		},
+		OrganizationType:     mpb.OrganizationType_USER_ORGANIZATION,
 		BackendSecretStorage: &mpb.BackendStorages{},
 		ArtifactStorage:      &mpb.BackendStorages{},
 	},
