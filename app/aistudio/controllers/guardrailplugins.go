@@ -2,6 +2,7 @@ package dmcontrollers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
@@ -42,7 +43,8 @@ func InitVapusGuardrailPlugins() {
 	}
 }
 
-func (v *AIModels) ListBedrock(ctx context.Context, req *pb.GuardrailsManagerRequest) (*pb.GuardrailsTypeResponse, error) {
+func (v *VapusGuardrailPlugins) ListBedrock(ctx context.Context, req *pb.GuardrailsTypeGetterRequest) (*pb.GuardrailsTypeResponse, error) {
+	fmt.Println("================ I have been called Bedrock ================")
 	agent, err := v.DMServices.NewGuardrailPluginsIntAgent(ctx, services.WithGuardrailPluginsManagerRequest(req), services.WithGuardrailPluginsManagerAction(mpb.ResourceLcActions_LIST))
 	if err != nil {
 		v.Logger.Error().Err(err).Msg("List: error while creating new guardrail plugin request")

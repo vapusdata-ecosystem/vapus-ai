@@ -23,7 +23,7 @@ import (
 
 type GuardrailPluginsIntAgent struct {
 	*processes.VapusInterfaceBase
-	managerRequest *pb.GuardrailsManagerRequest
+	managerRequest *pb.GuardrailsTypeGetterRequest
 	getterRequest  *pb.GuardrailsGetterRequest
 	result         *pb.GuardrailsTypeResponse
 	dmStore        *aidmstore.AIStudioDMStore
@@ -31,7 +31,7 @@ type GuardrailPluginsIntAgent struct {
 
 type GuardrailPluginsIntAgentOpts func(*GuardrailPluginsIntAgent)
 
-func WithGuardrailPluginsManagerRequest(managerRequest *pb.GuardrailsManagerRequest) GuardrailPluginsIntAgentOpts {
+func WithGuardrailPluginsManagerRequest(managerRequest *pb.GuardrailsTypeGetterRequest) GuardrailPluginsIntAgentOpts {
 	return func(v *GuardrailPluginsIntAgent) {
 		v.managerRequest = managerRequest
 	}
