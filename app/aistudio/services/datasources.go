@@ -78,6 +78,7 @@ func (x *AIStudioServices) NewDataSourceAgent(ctx context.Context, opts ...DSInt
 	agent := &DataSourceAgent{
 		result:       &pb.DataSourceResponse{Output: &pb.DataSourceResponse_DataSourceOutput{}},
 		organization: organization,
+		dmStore:      x.DMStore,
 		dataSource:   datasource,
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
 			InitAt: dmutils.GetEpochTime(),

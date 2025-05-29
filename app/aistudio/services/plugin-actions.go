@@ -38,6 +38,7 @@ func (s *AIStudioServices) NewPluginActionsAgent(ctx context.Context, request *p
 	agent := &PluginActionsAgent{
 		request: request,
 		result:  make([]*mpb.Plugin, 0),
+		dmStore: s.DMStore,
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
 			CtxClaim: vapusPlatformClaim,
 			// Ctx:      ctx,

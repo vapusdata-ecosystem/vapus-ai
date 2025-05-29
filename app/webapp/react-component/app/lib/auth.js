@@ -1,6 +1,5 @@
 "use client";
 import { jwtDecode } from "jwt-decode";
-import { loginApi } from "@/app/utils/auth-endpoint/auth";
 import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import AuthExpiredModal from "@/app/components/notification/authExpiredPopPup";
@@ -8,9 +7,9 @@ import AuthExpiredModal from "@/app/components/notification/authExpiredPopPup";
 const AUTH_CONFIG = {
   loginPath: "/login",
   loginRedirectPath: "/login",
-  callbackPath: "/api/callback",
+  callbackPath: "/auth/callback",
   logoutPath: "/login",
-  homePath: "/settings/domain",
+  homePath: "/dashboard",
   accessTokenCookieName: "access_token",
   idTokenCookieName: "id_token",
   cookiePath: "/",
@@ -111,7 +110,23 @@ export class AuthService {
         document.cookie = `loginRedirectUrl=${landingPage}; path=${AUTH_CONFIG.cookiePath}`;
         localStorage.setItem("loginRedirectUrl", landingPage);
 
-        const data = await loginApi.getLogin();
+        const response = await fetch(
+          "http://127.0.0.1:9017/api/v1alpha1/login",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: "Bearer",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
         if (data && data.loginUrl) {
           window.location.href = data.loginUrl;
           return { success: true };

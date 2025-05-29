@@ -259,26 +259,26 @@ const UserDetails = () => {
                   </>
                 )}
 
-              {/* Domain Roles Section */}
+              {/* Organization Roles Section */}
               <h3 className="text-xl mb-4 font-bold text-[#f4d1c2] underline">
-                Domain Roles:
+                Organization Roles:
               </h3>
               <div className="space-y-4">
-                {userData?.domainRoles?.map((domain, index) => (
+                {userData?.domainRoles?.map((Organization, index) => (
                   <div
                     key={index}
                     className="bg-zinc-700 p-4 rounded-lg shadow-md"
                   >
                     <h4 className="text-md font-semibold">
-                      Domain ID: {domain.domainId}{" "}
-                      {domainMap[domain.domainId] &&
-                        `(${domainMap[domain.domainId]})`}
+                      Organization ID: {Organization.organizationId}{" "}
+                      {domainMap[Organization.organizationId] &&
+                        `(${domainMap[Organization.organizationId]})`}
                     </h4>
                     <div className="flex flex-col sm:flex-row sm:justify-between mt-2">
                       <div>
                         <p className="font-semibold text-gray-400">Roles</p>
                         <ul className="list-disc ml-5">
-                          {domain.role?.map((role, roleIndex) => (
+                          {Organization.role?.map((role, roleIndex) => (
                             <li key={roleIndex}>{role}</li>
                           ))}
                         </ul>
@@ -288,7 +288,7 @@ const UserDetails = () => {
                           Invited On:
                         </p>
                         <p className="break-words p-2">
-                          {formatEpochTime(domain.invitedOn)}
+                          {formatEpochTime(Organization.invitedOn)}
                         </p>
                       </div>
                     </div>

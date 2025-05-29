@@ -7,12 +7,12 @@ import { domainApi } from "@/app/utils/settings-endpoint/domain-api";
 import AddUserModal from "./adduser/addUser";
 
 export default function DomainDetails() {
-  const [domains, setdomains] = useState(null);
+  const [organizations, setdomains] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("basic-info");
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Simplified - we don't need currentDomainId state since we can get it from domains
+  // Simplified - we don't need currentDomainId state since we can get it from organizations
   const addUserHandler = () => {
     setModalOpen(true);
   };
@@ -28,7 +28,7 @@ export default function DomainDetails() {
         const data = await domainApi.getDomains();
         setdomains(data);
       } catch (error) {
-        console.error("Error fetching domain data:", error);
+        console.error("Error fetching Organization data:", error);
       } finally {
         setLoading(false);
       }
@@ -57,20 +57,22 @@ export default function DomainDetails() {
   if (loading) {
     return (
       <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-white text-xl">Loading domain details...</div>
+        <div className="text-white text-xl">
+          Loading Organization details...
+        </div>
       </div>
     );
   }
 
-  // Get current domain from the fetched data
-  const currentDomain = domains?.output?.domains[0];
+  // Get current Organization from the fetched data
+  const currentDomain = organizations?.output?.organizations[0];
 
-  // Get the domainId directly from the currentDomain object
-  const domainId = currentDomain?.domainId;
+  // Get the organizationId directly from the currentDomain object
+  const organizationId = currentDomain?.organizationId;
 
   const headerResourceData = {
-    id: currentDomain.domainId,
-    name: currentDomain.name || "Unnamed Domain",
+    id: currentDomain.organizationId,
+    name: currentDomain.name || "Unnamed Organization",
     createdAt: currentDomain.resourceBase?.createdAt
       ? parseInt(currentDomain.resourceBase.createdAt) * 1000
       : null,
@@ -80,7 +82,7 @@ export default function DomainDetails() {
 
     // Create action params for update functionality
     createActionParams: currentDomain.createActionParams || {
-      weblink: `/settings/domain/#`,
+      weblink: `/settings/Organization/#`,
     },
   };
 
@@ -88,7 +90,7 @@ export default function DomainDetails() {
     <div className="bg-zinc-800 flex h-screen">
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
-          sectionHeader="Domain Settings"
+          sectionHeader="Organization Settings"
           hideBackListingLink={true}
           backListingLink="./"
         />
@@ -96,14 +98,14 @@ export default function DomainDetails() {
         <div className="flex-grow p-2 w-full text-gray-100">
           {/* Section Headers component */}
           <SectionHeaders
-            resourceId={domainId}
-            resourceType="domain"
-            fetchUrl="/setting-domain.json"
+            resourceId={organizationId}
+            resourceType="Organization"
+            fetchUrl="/setting-Organization.json"
             resourceData={headerResourceData}
             customButton={{
               show: true,
               title: "Add Users",
-              onClick: () => addUserHandler(domainId),
+              onClick: () => addUserHandler(organizationId),
             }}
           />
 
@@ -111,7 +113,7 @@ export default function DomainDetails() {
           <AddUserModal
             isOpen={modalOpen}
             onClose={closeModal}
-            domainId={domainId}
+            organizationId={organizationId}
           />
 
           <div className="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
@@ -178,9 +180,11 @@ export default function DomainDetails() {
                 </div>
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Domain ID:
+                    Organization ID:
                   </p>
-                  <p className="break-words p-2">{currentDomain.domainId}</p>
+                  <p className="break-words p-2">
+                    {currentDomain.organizationId}
+                  </p>
                 </div>
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
@@ -456,7 +460,7 @@ export default function DomainDetails() {
                   ))
                 ) : (
                   <p className="text-gray-100">
-                    No domain artifacts available.
+                    No Organization artifacts available.
                   </p>
                 )}
               </div>
