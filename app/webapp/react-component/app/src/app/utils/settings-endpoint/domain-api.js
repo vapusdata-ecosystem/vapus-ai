@@ -1,8 +1,8 @@
 import { fetchApi } from "../api";
 
 const API_ENDPOINTS = {
-  DOMAIN: "/api/v1alpha1/domains/{domain_id}",
-  ADD_USERS: "/api/v1alpha1/domains/{domain_id}/users",
+  DOMAIN: "/api/v1alpha1/organizations/{organizations_id}",
+  ADD_USERS: "/api/v1alpha1/organizations/{organizations_id}/users",
 };
 
 export const domainApi = {

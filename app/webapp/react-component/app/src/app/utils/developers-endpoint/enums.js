@@ -2,7 +2,7 @@ import { fetchApi } from "../api";
 
 const API_ENDPOINTS = {
   ENUMS: "/api/v1alpha1/resources-spec",
-  BEDROCKGUARDRAILS: "",
+  BEDROCKGUARDRAILS: "/api/v1alpha1/aistudio/guardrails/bedrock",
 };
 
 export const enumsApi = {

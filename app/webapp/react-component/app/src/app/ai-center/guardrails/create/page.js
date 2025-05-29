@@ -12,7 +12,10 @@ import LoadingOverlay from "@/app/components/loading/loading";
 import { GuardrailFormApi } from "@/app/utils/ai-studio-endpoint/guardrails-api";
 import AddButton from "@/app/components/buttons/addButton";
 import RemoveButton from "@/app/components/buttons/removeButton";
-import { enumsApi } from "@/app/utils/developers-endpoint/enums";
+import {
+  bedrockGuardrailsApi,
+  enumsApi,
+} from "@/app/utils/developers-endpoint/enums";
 import { strTitle } from "@/app/components/JS/common";
 
 export default function CreateGuardrail() {
@@ -30,10 +33,33 @@ export default function CreateGuardrail() {
   const [guardrailType, setGuardrailType] = useState("vapus");
   const [guardrailProviders, setGuardrailProviders] = useState([]);
   const [guardrailTypes, setGuardrailTypes] = useState({});
-  const handleGuardrailChange = (e) => {
-    setGuardrailType(e.target.value);
+  const [bedrockGuardrails, setBedrockGuardrails] = useState([]);
+
+  const handleGuardrailChange = async (e) => {
+    const selectedType = e.target.value;
+    setGuardrailType(selectedType);
     setSelectedGuardrails([]);
+    // If bedrock is selected, fetch bedrock guardrails
+    if (selectedType === "bedrock") {
+      try {
+        setIsLoading(true);
+        const bedrockResponse =
+          await bedrockGuardrailsApi.getBedrockGuardrailsApi();
+        const bedrockData = bedrockResponse.output || [];
+        setBedrockGuardrails(bedrockData);
+        console.log("Bedrock guardrails:", bedrockData);
+      } catch (error) {
+        console.error("Failed to fetch bedrock guardrails:", error);
+        toast.error("Failed to fetch bedrock guardrails");
+        setBedrockGuardrails([]);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setBedrockGuardrails([]);
+    }
   };
+
   const [wordEntries, setWordEntries] = useState([
     { words: "", fileLocation: "" },
   ]);
@@ -51,14 +77,55 @@ export default function CreateGuardrail() {
 
   const handleGuardrailSelection = (guardrail) => {
     setSelectedGuardrails((prev) => {
-      if (prev.includes(guardrail)) {
-        // If already selected, remove it
-        return prev.filter((item) => item !== guardrail);
+      if (guardrailType === "bedrock") {
+        // For bedrock, guardrail is an object with id and Name
+        const isSelected = prev.some(
+          (item) => typeof item === "object" && item.id === guardrail.id
+        );
+        if (isSelected) {
+          return prev.filter(
+            (item) => !(typeof item === "object" && item.id === guardrail.id)
+          );
+        } else {
+          return [...prev, guardrail];
+        }
+      } else if (guardrailType === "mistral" || guardrailType === "pangea") {
+        // For mistral and pangea, guardrail is a string
+        // Convert to object format for consistency
+        const guardrailObj = { name: guardrail, id: guardrail };
+        const isSelected = prev.some(
+          (item) => typeof item === "object" && item.id === guardrail
+        );
+        if (isSelected) {
+          return prev.filter(
+            (item) => !(typeof item === "object" && item.id === guardrail)
+          );
+        } else {
+          return [...prev, guardrailObj];
+        }
       } else {
-        // Otherwise add it
-        return [...prev, guardrail];
+        // For vapus and other types, handle as string
+        if (prev.includes(guardrail)) {
+          return prev.filter((item) => item !== guardrail);
+        } else {
+          return [...prev, guardrail];
+        }
       }
     });
+  };
+  // For Mistral and Pangea in the JSX:
+  const isGuardrailSelected = (guardrail) => {
+    if (guardrailType === "bedrock") {
+      return selectedGuardrails.some(
+        (item) => typeof item === "object" && item.id === guardrail.id
+      );
+    } else if (guardrailType === "mistral" || guardrailType === "pangea") {
+      return selectedGuardrails.some(
+        (item) => typeof item === "object" && item.id === guardrail
+      );
+    } else {
+      return selectedGuardrails.includes(guardrail);
+    }
   };
 
   // Fetch enums data
@@ -191,20 +258,32 @@ export default function CreateGuardrail() {
       spec: {
         displayName: "",
         name: "",
-        minConfidence: "",
-        maxConfidence: "",
+        minConfidence: 0,
+        maxConfidence: 0,
         description: "",
         failureMessage: "",
-        scanMode: "INVALID_SSP",
+        scanMode: "BIDIRECTIONAL",
         resourceBase: {
-          scope: "DOMAIN_SCOPE",
+          createdAt: "0",
+          createdBy: "",
+          deletedAt: "0",
+          deletedBy: "",
+          updatedAt: "0",
+          updatedBy: "",
+          organization: "",
+          account: "",
+          status: "",
+          owners: [],
+          scope: "ORGANIZATION_SCOPE",
+          labels: [],
+          editors: [],
         },
         contents: {
-          hateSpeech: "",
-          insults: "",
-          sexual: "",
-          threats: "",
-          misconduct: "",
+          hateSpeech: "NONE",
+          insults: "NONE",
+          sexual: "NONE",
+          threats: "NONE",
+          misconduct: "NONE",
         },
         topics: [
           {
@@ -230,6 +309,16 @@ export default function CreateGuardrail() {
           modelNodeId: "",
           modelId: "",
         },
+        guardrailId: "",
+        schema: "",
+        eligibleModelNodes: [],
+        partner: [
+          {
+            bedrock: [],
+            mistral: [],
+            pangea: [],
+          },
+        ],
       },
     };
 
@@ -377,11 +466,35 @@ export default function CreateGuardrail() {
       dataObj = convertNumericStrings(dataObj);
 
       // Ensure default values if not set
-      if (!dataObj.scanMode) dataObj.scanMode = "INVALID_SSP";
+      if (!dataObj.scanMode) dataObj.scanMode = "BIDIRECTIONAL";
       if (!dataObj.resourceBase || !dataObj.resourceBase.scope) {
         dataObj.resourceBase = dataObj.resourceBase || {};
-        dataObj.resourceBase.scope = "DOMAIN_SCOPE";
+        dataObj.resourceBase.scope = "ORGANIZATION_SCOPE";
       }
+
+      // Prepare partner data
+      let partnerData = [];
+
+      // Only add partner data if guardrails are selected
+      if (selectedGuardrails && selectedGuardrails.length > 0) {
+        const partnerObj = {};
+
+        // Only include the selected guardrail type with its data
+        if (guardrailType === "bedrock") {
+          partnerObj.bedrock = selectedGuardrails;
+        } else if (guardrailType === "mistral") {
+          partnerObj.mistral = selectedGuardrails;
+        } else if (guardrailType === "pangea") {
+          partnerObj.pangea = selectedGuardrails;
+        }
+        // Only add to partnerData if we have something to add
+        if (Object.keys(partnerObj).length > 0) {
+          partnerData.push(partnerObj);
+        }
+      }
+
+      dataObj.partner = partnerData;
+      delete dataObj.guardrailType;
 
       const payload = { spec: dataObj };
 
@@ -1060,14 +1173,67 @@ export default function CreateGuardrail() {
                               <div className="mt-2">
                                 <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
                                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-                                    {guardrailTypes[guardrailType] &&
+                                    {/* Bedrock guardrails */}
+                                    {guardrailType === "bedrock" &&
+                                      bedrockGuardrails.map((guardrail) => {
+                                        const isSelected =
+                                          selectedGuardrails.some(
+                                            (item) =>
+                                              typeof item === "object" &&
+                                              item.id === guardrail.id
+                                          );
+
+                                        return (
+                                          <div
+                                            key={guardrail.id}
+                                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                              isSelected
+                                                ? "border-orange-700 bg-zinc-700"
+                                                : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                            }`}
+                                            onClick={() =>
+                                              handleGuardrailSelection(
+                                                guardrail
+                                              )
+                                            }
+                                          >
+                                            <div className="text-sm font-medium">
+                                              {guardrail.Name}
+                                            </div>
+                                            {isSelected && (
+                                              <div className="text-orange-500">
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  width="16"
+                                                  height="16"
+                                                  viewBox="0 0 24 24"
+                                                  fill="none"
+                                                  stroke="currentColor"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                >
+                                                  <polyline points="20 6 9 17 4 12"></polyline>
+                                                </svg>
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+
+                                    {/* Other guardrail types (Mistral, Pangea) */}
+                                    {(guardrailType === "mistral" ||
+                                      guardrailType === "pangea") &&
+                                      guardrailTypes[guardrailType] &&
                                       guardrailTypes[guardrailType].map(
                                         (guardrail) => (
                                           <div
                                             key={guardrail}
                                             className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
-                                              selectedGuardrails.includes(
-                                                guardrail
+                                              selectedGuardrails.some(
+                                                (item) =>
+                                                  typeof item === "object" &&
+                                                  item.id === guardrail
                                               )
                                                 ? "border-orange-700 bg-zinc-700"
                                                 : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
@@ -1081,8 +1247,10 @@ export default function CreateGuardrail() {
                                             <div className="text-sm font-medium">
                                               {strTitle(guardrail)}
                                             </div>
-                                            {selectedGuardrails.includes(
-                                              guardrail
+                                            {selectedGuardrails.some(
+                                              (item) =>
+                                                typeof item === "object" &&
+                                                item.id === guardrail
                                             ) && (
                                               <div className="text-orange-500">
                                                 <svg
@@ -1109,7 +1277,11 @@ export default function CreateGuardrail() {
                                 <input
                                   type="hidden"
                                   name="selectedGuardrails"
-                                  value={selectedGuardrails.join(",")}
+                                  value={
+                                    guardrailType === "bedrock"
+                                      ? JSON.stringify(selectedGuardrails)
+                                      : selectedGuardrails.join(",")
+                                  }
                                 />
                               </div>
                             </>

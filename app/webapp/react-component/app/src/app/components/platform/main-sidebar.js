@@ -860,7 +860,7 @@ const Sidebar = () => {
             <nav className="flex flex-col space-y-1 p-1">
               <div className="main-item flex px-2 py-2 shadow-lg rounded-full border border-zinc-500">
                 <p className="flex items-center justify-center w-8 h-8 text-xs font-semibold text-black rounded-full bg-white">
-                  {userData?.displayName?.charAt(0) || " "}
+                  {userData?.displayName?.charAt(0) || "?"}
                 </p>
                 <p className="block text-xs text-primary100 font-semibold text-gray-100 p-[10px]">
                   {userData?.displayName?.slice(0, 7) || " "}

@@ -1,4 +1,4 @@
-import { accessToken } from "@/app/utils/api";
+import { getAccessToken } from "@/app/utils/api";
 import { domainApi } from "@/app/utils/settings-endpoint/domain-api";
 
 // function to decode accessToken and get the data
@@ -14,7 +14,6 @@ function parseJwt(token) {
         })
         .join("")
     );
-
     return JSON.parse(jsonPayload);
   } catch (error) {
     return null;
@@ -23,7 +22,7 @@ function parseJwt(token) {
 
 // data from accessToken
 export const userGlobalData = async () => {
-  const token = accessToken;
+  const token = getAccessToken();
   const userInfo = parseJwt(token)?.scope || null;
   return {
     userInfo,
@@ -33,16 +32,15 @@ export const userGlobalData = async () => {
 // user data
 export const getGlobalData = async () => {
   try {
-    const domains = await domainApi.getDomains();
-    const currentDomain = domains?.output?.domains?.[0] || null;
-
+    const organizations = await domainApi.getDomains();
+    const currentDomain = organizations?.output?.organizations?.[0] || null;
     return {
       currentDomain,
     };
   } catch (error) {
     console.error("Error fetching global data:", error);
     return {
-      domains: [],
+      organizations: [],
       currentDomain: null,
       error,
     };
