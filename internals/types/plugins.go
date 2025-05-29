@@ -21,4 +21,5 @@ const (
 	Bedrock_Guardrail PluginServices = "AWS_Berock"
 	Pangea_Guardrail  PluginServices = "Pangea"
 	Mistral_Guardrail PluginServices = "Mistral"
+	GOOGLE_CALENDAR     PluginServices = "GOOGLE_CALENDAR"
 )

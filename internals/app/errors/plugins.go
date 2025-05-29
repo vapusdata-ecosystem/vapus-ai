@@ -32,4 +32,6 @@ var (
 	ErrInvalidPluginType          = errors.New("error while configuring plugin, invalid plugin type requested")
 	ErrInvalidFileSharingType     = errors.New("error while configuring plugin, invalid file sharing type requested")
 	ErrInvalidFileSharingResource = errors.New("error while configuring plugin, invalid file sharing resource requested")
+	ErrInvalidCalenderService     = errors.New("invalid calendar credentials")
+	ErrInvalidCalenderConn        = errors.New("error while configuring plugin, invalid plugin service requested")
 )

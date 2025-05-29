@@ -545,6 +545,8 @@ enum IntegrationPluginTypes {
   CODE_REPOSITORIES = 5;
   MESSAGING_CHANNELS = 6;
   GUARDRAILS = 7;
+  LLM_HUB = 8;
+  CALENDAR = 9;
 }
 
 enum VapusStreamEvents {
