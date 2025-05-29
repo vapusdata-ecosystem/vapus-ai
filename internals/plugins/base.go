@@ -40,6 +40,9 @@ var PluginTypeScopeMap = map[string][]string{
 		mpb.ResourceScope_USER_SCOPE.String(),
 		mpb.ResourceScope_ORGANIZATION_SCOPE.String(),
 	},
+	mpb.IntegrationPluginTypes_CALENDAR.String():{
+		mpb.ResourceScope_USER_SCOPE.String(),
+	},
 	mpb.IntegrationPluginTypes_CODE_REPOSITORIES.String(): {
 		mpb.ResourceScope_USER_SCOPE.String(),
 		mpb.ResourceScope_ORGANIZATION_SCOPE.String(),

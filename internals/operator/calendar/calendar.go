@@ -3,7 +3,6 @@ package calendar
 import (
 	"context"
 	"encoding/base64"
-	"fmt"
 
 	// "log"
 
@@ -17,11 +16,6 @@ import (
 )
 
 type Calendar interface {
-	// CreateEvent(ctx context.Context, summary, location, description string, startTime, endTime string) (string, error)
-	// UpdateEvent(ctx context.Context, eventId, newSummary , newLocation, newDescription, newStart, newEnd string) error
-	// ListEvent(ctx context.Context) error
-	// GetEvent(ctx context.Context,eventId string) (*calendar.Event, error)
-	// DeleteEvent(ctx context.Context, eventId string) error
 	CreateEvent(ctx context.Context, req *options.CreateEventRequest) (*options.CreateEventResponse, error)
 	UpdateEvent(ctx context.Context, req *options.UpdateEventRequest) error
 	ListEvent(ctx context.Context, userEmail string) (*options.ListEventsResponse, error)
