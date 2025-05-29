@@ -111,6 +111,7 @@ func (v *PluginManagerAgent) Act(ctx context.Context) error {
 }
 
 func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
+	fmt.Println("========== I am creating Plugins ==========")
 	if v.managerRequest.GetSpec().GetPluginType() != mpb.IntegrationPluginTypes_GUARDRAILS {
 		cQ := fmt.Sprintf("status = 'ACTIVE' AND deleted_at IS NULL AND plugin_type = '%s'", v.managerRequest.GetSpec().GetPluginType())
 		switch v.managerRequest.GetSpec().GetScope() {
@@ -132,8 +133,9 @@ func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
 			v.Logger.Error().Msg("plugin already exists")
 			return dmerrors.DMError(apperr.ErrPluginServiceScopeExists, nil)
 		}
+		fmt.Println("Inside If block==============>>>>>>>>>>>")
 	}
-
+	fmt.Println("Outside of if block")
 	validScope, ok := plugins.PluginTypeScopeMap[v.managerRequest.GetSpec().GetPluginType().String()]
 	if !ok {
 		v.Logger.Error().Msg("invalid plugin type")

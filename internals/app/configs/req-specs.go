@@ -117,6 +117,7 @@ var AiGuardrailManagerRequest *pb.GuardrailsManagerRequest = &pb.GuardrailsManag
 		SensitiveDataset: []*mpb.SensitiveDataGuardrails{{}},
 		ResourceBase:     &mpb.VapusBase{},
 		GuardModel:       &mpb.GuardModels{},
+		Partner:          []*mpb.ThirdParty{},
 	},
 }
 

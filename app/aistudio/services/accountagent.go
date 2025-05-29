@@ -60,6 +60,7 @@ func (dms *AIStudioServices) NewAccountAgent(ctx context.Context, request *pb.Ac
 	agent := &AccountAgent{
 		request:      request,
 		organization: organization,
+		dmStore:      dms.DMStore,
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
 			InitAt: dmutils.GetEpochTime(),
 			// Ctx:       ctx,

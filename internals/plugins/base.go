@@ -52,6 +52,11 @@ var PluginTypeScopeMap = map[string][]string{
 		mpb.ResourceScope_USER_SCOPE.String(),
 		mpb.ResourceScope_ORGANIZATION_SCOPE.String(),
 	},
+	mpb.IntegrationPluginTypes_GUARDRAILS.String(): {
+		mpb.ResourceScope_PLATFORM_SCOPE.String(),
+		mpb.ResourceScope_USER_SCOPE.String(),
+		mpb.ResourceScope_ORGANIZATION_SCOPE.String(),
+	},
 }
 
 func New(ctx context.Context, pluginList []*models.Plugin, selectedPlugins []string, logger zerolog.Logger) *VapusPlugins {
