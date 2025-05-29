@@ -11,6 +11,7 @@ import (
 type GcpConfig struct {
 	ProjectID, Region, Zone string
 	ServiceAccountKey       []byte
+	IsDomainScopeApp          bool
 }
 
 var (
