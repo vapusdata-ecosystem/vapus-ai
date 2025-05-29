@@ -117,6 +117,7 @@ var AiGuardrailManagerRequest *pb.GuardrailsManagerRequest = &pb.GuardrailsManag
 		SensitiveDataset: []*mpb.SensitiveDataGuardrails{{}},
 		ResourceBase:     &mpb.VapusBase{},
 		GuardModel:       &mpb.GuardModels{},
+		Partner:          []*mpb.ThirdParty{},
 	},
 }
 
@@ -171,6 +172,7 @@ var OrganizationManagerRequest *pb.OrganizationManagerRequest = &pb.Organization
 		Attributes: &mpb.OrganizationAttributes{
 			AuthnJwtParams: &mpb.JWTParams{},
 		},
+		OrganizationType:     mpb.OrganizationType_USER_ORGANIZATION,
 		BackendSecretStorage: &mpb.BackendStorages{},
 		ArtifactStorage:      &mpb.BackendStorages{},
 	},

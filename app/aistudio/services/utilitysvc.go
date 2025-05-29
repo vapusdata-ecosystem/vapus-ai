@@ -51,6 +51,7 @@ func (s *AIStudioServices) NewUtilityAgent(ctx context.Context, uploadRequest *p
 		uploadStream:  uploadStream,
 		fetchRequest:  fetchRequest,
 		organization:  organization,
+		dmStore:       s.DMStore,
 		fetchResponse: &pb.FetchResponse{},
 		uploadResult:  &pb.UploadResponse{},
 		VapusInterfaceBase: &processes.VapusInterfaceBase{

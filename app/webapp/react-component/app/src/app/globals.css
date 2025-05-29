@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+.custom-text {
+  font-family: var(--font-sans);
+}
+
+.code-snippet {
+  font-family: var(--font-mono);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+table.dataTable {
+  @apply w-full border-collapse border border-gray-300;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  @apply border border-gray-300 rounded-md px-2 py-1;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 8px;
+  cursor: pointer;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 10vh;
+  background: oklch(0.37 0.013 285.805);
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #dd290a;
+  border-radius: 10vh;
+  /* border: 1px solid #ffffff; */
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #dd290a;
+}
+
+.labels {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d2d6de;
+}
+
+.form-input-field {
+  margin-top: 0.25rem;
+  display: block;
+  font-size: 0.875rem;
+  background-color: #3f3f46;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  border: none;
+  width: 100%;
+  color: #f3f4f6;
+  height: 35px;
+}
+
+#form-textarea {
+  margin-top: 0.25rem;
+  display: block;
+  font-size: 0.875rem;
+  background-color: #3f3f46;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  border: none;
+  width: 100%;
+  color: #f3f4f6;
+}
+
+/* .vapus-dropdown {
+  position: relative;
+}
+
+.vapus-dropdown-toggle {
+  padding: 6px;
+  border: 1px solid oklch(0.552 0.016 285.938);
+  cursor: pointer;
+}
+
+.vapus-dropdown-menu {
+  border: 1px solid oklch(0.552 0.016 285.938);
+  background-color: oklch(0.37 0.013 285.805);
+  color: rgb(235, 235, 235);
+}
+
+.vapus-dropdown-item {
+  padding: 3px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.vapus-dropdown-item.parent {
+  font-weight: bold;
+  cursor: default;
+  color: #010101;
+  background-color: #cecfcf;
+}
+
+.vapus-dropdown-item.child {
+  padding-left: 10px;
+}
+
+.vapus-dropdown-item.child:hover {
+  background-color: oklch(0.21 0.006 285.885);
+  color: #ffffff;
+} */

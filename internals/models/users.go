@@ -1,7 +1,6 @@
 package models
 
 import (
-	"log"
 	"slices"
 	"strings"
 	"time"
@@ -39,11 +38,7 @@ func (dm *Users) ValidateJwtClaim(claimCtx map[string]string) bool {
 	// if dm.OwnerAccount != claimCtx[encryption.ClaimAccountKey] {
 	// 	return false
 	// }
-	log.Println(dm.Roles)
-	log.Println(dm.Email)
-	log.Println("------------------------")
-	log.Println("Validating user roles for organization:", dm.GetOrganizationRoles())
-	log.Println("Claim context:", claimCtx)
+
 	for _, dm := range dm.GetOrganizationRoles() {
 		if claimCtx[encryption.ClaimOrganizationKey] == dm.OrganizationId {
 			claimRoles := strings.Split(claimCtx[encryption.ClaimOrganizationRolesKey], "|")
