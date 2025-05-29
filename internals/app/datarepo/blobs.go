@@ -8,6 +8,7 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/databricks/databricks-sql-go/logger"
+	"github.com/rs/zerolog"
 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
 	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
@@ -81,7 +82,10 @@ func ValidateFileCache(ctx context.Context, dmstores *apppkgs.VapusStore, checks
 		return 0, false, err
 	}
 	if obj.Checksums != nil {
+		fmt.Println("obj.Checksums: ", obj.Checksums)
+		fmt.Println("Checksums: ", checksum)
 		if slices.Contains(obj.Checksums, checksum) {
+			fmt.Println("Checksum exsits ========")
 			return int(obj.Counter), true, nil
 		} else {
 			obj.Counter += 1
@@ -94,16 +98,25 @@ func ValidateFileCache(ctx context.Context, dmstores *apppkgs.VapusStore, checks
 }
 
 func GetFile(ctx context.Context, dmstores *apppkgs.VapusStore, filePath string, ctxClaim map[string]string) (*models.FileStoreLog, error) {
-	// okay, here I need to fetch the file data and
 	if filePath == "" {
 		return nil, apperr.ErrAIModelNode404
 	}
 	result := &models.FileStoreLog{}
-	query := fmt.Sprintf("SELECT * FROM %s WHERE path = '%s' AND created_by = '%s' AND owner_account = '%s'", apppkgs.FileStoreLogTable, filePath, ctxClaim[encryption.ClaimUserIdKey], ctxClaim[encryption.ClaimAccountKey])
+	query := fmt.Sprintf("SELECT * FROM %s WHERE path = '%s' AND created_by = '%s'", apppkgs.FileStoreLogTable, filePath, ctxClaim[encryption.ClaimUserIdKey])
 	err := dmstores.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	if err != nil {
 		logger.Err(err).Ctx(ctx).Msg("error while getting the file from datastore")
 		return nil, err
 	}
-	return nil, nil
+	return result, nil
+}
+
+func DeleteRedisKey(ctx context.Context, keyPath string, dmstores *apppkgs.VapusStore, logger zerolog.Logger) error {
+	fmt.Println("Error while uploading the data....", keyPath)
+	_, err := dmstores.Cacher.RedisClient.DeleteKey(ctx, keyPath) // Deleting the Key from the redis
+	if err != nil {
+		logger.Err(err).Msgf("Error while deleting the Redis chache")
+		return err
+	}
+	return nil
 }

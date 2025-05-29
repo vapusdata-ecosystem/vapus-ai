@@ -31,9 +31,11 @@ func (ds *AIStudioDMStore) CreateVapusSecret(ctx context.Context, obj *models.Se
 }
 
 func (ds *AIStudioDMStore) ListVapusSecrets(ctx context.Context, condition string, ctxClaim map[string]string) ([]*models.SecretStore, error) {
+	fmt.Println("I am in List VapusSecrets")
 	var result []*models.SecretStore
 	condition = apppkgs.GetAccountFilter(ctxClaim, condition)
 	query := fmt.Sprintf("SELECT * FROM %s WHERE %s", apppkgs.SecretStoreTable, condition)
+	fmt.Println("Query: ", query)
 	err := ds.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	// err := ds.Db.Select(ctx, &datasvcpkgs.QueryOpts{
 	// 	DataCollection: apppkgs.DataSourcesMetadataTable,
