@@ -84,6 +84,9 @@ func (a *AIGuardrails) ConvertToPb() *mpb.AIGuardrails {
 	for i := range a.SensitiveDataset {
 		obj.SensitiveDataset[i] = a.SensitiveDataset[i].ConvertToPb()
 	}
+	for i := range a.Partner {
+		obj.Partner[i] = a.Partner[i].ConvertToPb()
+	}
 	return obj
 }
 
@@ -130,6 +133,9 @@ func (a *AIGuardrails) ConvertFromPb(obpb *mpb.AIGuardrails) *AIGuardrails {
 	}
 	for i := range obpb.SensitiveDataset {
 		a.SensitiveDataset[i] = new(SensitiveDataGuardrails).ConvertFromPb(obpb.SensitiveDataset[i])
+	}
+	for i := range obpb.Partner {
+		a.Partner[i] = new(ThirdParty).ConvertFromPb(obpb.Partner[i])
 	}
 	return a
 }
@@ -228,15 +234,71 @@ type ThirdParty struct {
 	// Nemo    []*FileData                 `json:"nemo,omitempty" yaml:"nemo,omitempty" toml:"nemo,omitempty"`
 }
 
+func (a *ThirdParty) ConvertToPb() *mpb.ThirdParty {
+	obj := &mpb.ThirdParty{}
+
+	for i := range a.Bedrock {
+		obj.Bedrock[i] = a.Bedrock[i].ConvertToPb()
+	}
+	for i := range a.Mistral {
+		obj.Mistral[i] = a.Mistral[i].ConvertToPb()
+	}
+	for i := range a.Pangea {
+		obj.Pangea[i] = a.Pangea[i].ConvertToPb()
+	}
+	return obj
+}
+
+func (a *ThirdParty) ConvertFromPb(obpb *mpb.ThirdParty) *ThirdParty {
+	for i := range obpb.Bedrock {
+		a.Bedrock[i] = new(BedrockGuardrailModel).ConvertFromPb(obpb.Bedrock[i])
+	}
+	for i := range obpb.Mistral {
+		a.Mistral[i] = new(ThirdPartyGuardrailModel).ConvertFromPb(obpb.Mistral[i])
+	}
+	for i := range obpb.Bedrock {
+		a.Pangea[i] = new(ThirdPartyGuardrailModel).ConvertFromPb(obpb.Pangea[i])
+	}
+	return a
+}
+
 type BedrockGuardrailModel struct {
 	Arn  string `json:"arn,omitempty" yaml:"arn,omitempty" toml:"arn,omitempty"`
 	Id   string `json:"id,omitempty" yaml:"id,omitempty" toml:"id,omitempty"`
 	Name string `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
 }
 
+func (a *BedrockGuardrailModel) ConvertToPb() *mpb.BedrockGuardrailModel {
+	return &mpb.BedrockGuardrailModel{
+		Arn:  a.Arn,
+		Id:   a.Id,
+		Name: a.Name,
+	}
+}
+
+func (a *BedrockGuardrailModel) ConvertFromPb(obpb *mpb.BedrockGuardrailModel) *BedrockGuardrailModel {
+	a.Arn = obpb.Arn
+	a.Id = obpb.Id
+	a.Name = obpb.Name
+	return a
+}
+
 type ThirdPartyGuardrailModel struct {
 	Name string `json:"name,omitempty" yaml:"name,omitempty" toml:"name,omitempty"`
 	Id   string `json:"id,omitempty" yaml:"id,omitempty" toml:"id,omitempty"`
+}
+
+func (a *ThirdPartyGuardrailModel) ConvertToPb() *mpb.ThirdPartyGuardrailModel {
+	return &mpb.ThirdPartyGuardrailModel{
+		Id:   a.Id,
+		Name: a.Name,
+	}
+}
+
+func (a *ThirdPartyGuardrailModel) ConvertFromPb(obpb *mpb.ThirdPartyGuardrailModel) *ThirdPartyGuardrailModel {
+	a.Id = obpb.Id
+	a.Name = obpb.Name
+	return a
 }
 
 // type FileData struct {

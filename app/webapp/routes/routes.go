@@ -61,7 +61,7 @@ const (
 
 const (
 	SettingsGroup         = "/settings"
-	SettingsOrganizations = "/domain"
+	SettingsOrganizations = "/organisation"
 	SettingToken          = "/tokens"
 	SettingsPlatform      = "/platform"
 	SettingsIntergation   = "/integrations"
@@ -70,7 +70,7 @@ const (
 
 	SettingsPlugins               = "/plugins"
 	SettingsPluginResource        = "/plugins/:pluginId"
-	SettingsPlatformOrganizations = "/platform-domains"
+	SettingsPlatformOrganizations = "/platform-organisations"
 	SettingsPluginsCreate         = "/plugins/create"
 	SettingsPluginsUpdate         = "/plugins/:pluginId/update"
 

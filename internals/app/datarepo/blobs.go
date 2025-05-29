@@ -2,14 +2,17 @@ package datarepo
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"slices"
 
 	"github.com/bytedance/sonic"
 	"github.com/databricks/databricks-sql-go/logger"
+	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
 	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
 	options "github.com/vapusdata-ecosystem/vapusai/core/options"
+	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
 )
 
 func GetOrCreateBucket(ctx context.Context, dmstores *apppkgs.VapusStore, createIfNotExist bool, bucketName string) (string, error) {
@@ -88,4 +91,19 @@ func ValidateFileCache(ctx context.Context, dmstores *apppkgs.VapusStore, checks
 	} else {
 		return 0, false, LogFileCacher(ctx, dmstores, 0, checksum, name, path)
 	}
+}
+
+func GetFile(ctx context.Context, dmstores *apppkgs.VapusStore, filePath string, ctxClaim map[string]string) (*models.FileStoreLog, error) {
+	// okay, here I need to fetch the file data and
+	if filePath == "" {
+		return nil, apperr.ErrAIModelNode404
+	}
+	result := &models.FileStoreLog{}
+	query := fmt.Sprintf("SELECT * FROM %s WHERE path = '%s' AND created_by = '%s' AND owner_account = '%s'", apppkgs.FileStoreLogTable, filePath, ctxClaim[encryption.ClaimUserIdKey], ctxClaim[encryption.ClaimAccountKey])
+	err := dmstores.Db.PostgresClient.SelectInApp(ctx, &query, &result)
+	if err != nil {
+		logger.Err(err).Ctx(ctx).Msg("error while getting the file from datastore")
+		return nil, err
+	}
+	return nil, nil
 }

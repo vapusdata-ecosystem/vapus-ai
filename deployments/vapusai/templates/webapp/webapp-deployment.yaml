@@ -45,7 +45,7 @@ spec:
               mountPath: {{ .Values.app.podMountPath }}{{ .Values.webapp.volumePaths.serviceConfig.path }}
               readOnly: true
             - name: {{ .Values.vapusdata.globalConfigs.networkConfig.name }}
-              mountPath: {{ .Values.app.podMountPath }}{{ .Values.nabhikserver.volumePaths.networkConfig.path }}
+              mountPath: {{ .Values.app.podMountPath }}{{ .Values.webapp.volumePaths.networkConfig.path }}
               readOnly: true
           env:
             - name: MOUNT_PATH

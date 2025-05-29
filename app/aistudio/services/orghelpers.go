@@ -44,7 +44,9 @@ func setOrganizationArtifactBEStore(ctx context.Context, organization *models.Or
 		organization.ArtifactStorage.Status = mpb.CommonStatus_ACTIVE.String()
 		return organization.ArtifactStorage, nil
 	} else {
-		// return dmstores.AccountPool.ArtifactStorage, nil
+		if dmstores.DMStoreManager.Account.ArtifactStorage == nil {
+			return nil, nil
+		}
 		return &models.BackendStorages{
 			BesType:       dmstores.DMStoreManager.Account.ArtifactStorage.BesType,
 			BesOnboarding: dmstores.DMStoreManager.Account.ArtifactStorage.BesOnboarding,
@@ -52,7 +54,6 @@ func setOrganizationArtifactBEStore(ctx context.Context, organization *models.Or
 			NetParams:     dmstores.DMStoreManager.Account.ArtifactStorage.NetParams,
 			Status:        dmstores.DMStoreManager.Account.ArtifactStorage.Status,
 		}, nil
-
 	}
 }
 
@@ -143,7 +144,7 @@ func organizationConfigureTool(ctx context.Context, organization *models.Organiz
 		return nil, dmerrors.DMError(apperr.ErrSettingOrganizationArtifactStore, err) //nolint:wrapcheck
 	}
 	organization.ArtifactStorage = resp
-	var errCh = make(chan error, 3)
+	var errCh = make(chan error, 1)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
@@ -152,15 +153,6 @@ func organizationConfigureTool(ctx context.Context, organization *models.Organiz
 		_ = dbStore.BlobStore.CreateBucket(ctx, &options.BlobOpsParams{
 			BucketName: organization.VapusID,
 		})
-	}()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		err = setOrganizationDPK8sInfra(ctx, organization, organization.DataProductInfraPlatform, dbStore)
-		if err != nil {
-			errCh <- dmerrors.DMError(apperr.ErrSettingOrganizationK8SInfra, err)
-			return
-		}
 	}()
 	wg.Wait()
 	close(errCh)

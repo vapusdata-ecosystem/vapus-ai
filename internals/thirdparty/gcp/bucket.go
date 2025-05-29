@@ -18,14 +18,6 @@ type GcpBucketClient struct {
 	logger    zerolog.Logger
 }
 
-//temporary function to satusfy interface
-// func(s *GcpBucketClient) GetStorageData(ctx context.Context,params *options.BlobOpsParams) (*model.BlobStoreSchema,error) {
-
-// 	blobStoreSchema := model.BlobStoreSchema{}
-
-// 	return &blobStoreSchema , nil
-// }
-
 func NewBucketAgent(ctx context.Context, opts *GcpConfig, logger zerolog.Logger) (*GcpBucketClient, error) {
 	opts.SetGcpProjectId(logger)
 	client, err := storage.NewClient(ctx, option.WithCredentialsJSON(opts.ServiceAccountKey))
@@ -44,9 +36,26 @@ func (g *GcpBucketClient) Close() {
 	g.Client.Close()
 }
 
+func getSetBucket(ctx context.Context, client *storage.Client, bucket, projectId string) *storage.BucketHandle {
+	bucketObj := client.Bucket(bucket)
+	if bucketObj == nil {
+		bucket := client.Bucket(bucket)
+		if err := bucket.Create(ctx, projectId, nil); err != nil {
+			return nil
+		}
+		return nil
+	} else {
+		return bucketObj
+	}
+}
+
 func (g *GcpBucketClient) CreateBucket(ctx context.Context, params *options.BlobOpsParams) error {
 	bucketName := params.BucketName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return ErrCreatingBucket
+	}
 	if err := bucket.Create(ctx, g.ProjectID, nil); err != nil {
 		g.logger.Err(err).Msgf("Failed to create bucket: %v", err)
 		return ErrCreatingBucket
@@ -56,7 +65,11 @@ func (g *GcpBucketClient) CreateBucket(ctx context.Context, params *options.Blob
 
 func (g *GcpBucketClient) DeleteBucket(ctx context.Context, params *options.BlobOpsParams) error {
 	bucketName := params.BucketName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return ErrCreatingBucket
+	}
 	if err := bucket.Delete(ctx); err != nil {
 		g.logger.Err(err).Msgf("Failed to delete bucket: %v", err)
 		return ErrDeletingBucket
@@ -83,7 +96,11 @@ func (g *GcpBucketClient) ListBuckets(ctx context.Context) ([]string, error) {
 
 func (g *GcpBucketClient) GetBucket(ctx context.Context, params *options.BlobOpsParams) (string, error) {
 	bucketName := params.BucketName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return "", ErrCreatingBucket
+	}
 	_, err := bucket.Attrs(ctx)
 	if err != nil {
 		g.logger.Err(err).Msgf("Failed to get bucket: %v", err)
@@ -94,7 +111,11 @@ func (g *GcpBucketClient) GetBucket(ctx context.Context, params *options.BlobOps
 
 func (g *GcpBucketClient) GetBucketAttrs(ctx context.Context, params *options.BlobOpsParams) (*storage.BucketAttrs, error) {
 	bucketName := params.BucketName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return nil, ErrCreatingBucket
+	}
 	attrs, err := bucket.Attrs(ctx)
 	if err != nil {
 		g.logger.Err(err).Msgf("Failed to get bucket attributes: %v", err)
@@ -105,7 +126,11 @@ func (g *GcpBucketClient) GetBucketAttrs(ctx context.Context, params *options.Bl
 
 func (g *GcpBucketClient) ListObjects(ctx context.Context, params *options.BlobOpsParams) ([]string, error) {
 	bucketName := params.BucketName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return nil, ErrCreatingBucket
+	}
 	objs := bucket.Objects(ctx, nil)
 	var objNames []string
 	for {
@@ -125,7 +150,11 @@ func (g *GcpBucketClient) ListObjects(ctx context.Context, params *options.BlobO
 func (g *GcpBucketClient) GetObject(ctx context.Context, params *options.BlobOpsParams) (*storage.ObjectHandle, error) {
 	bucketName := params.BucketName
 	objectName := params.ObjectName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return nil, ErrCreatingBucket
+	}
 	obj := bucket.Object(objectName)
 	_, err := obj.Attrs(ctx)
 	if err != nil {
@@ -140,7 +169,11 @@ func (g *GcpBucketClient) UploadObject(ctx context.Context, params *options.Blob
 	bucketName := params.BucketName
 	objectName := params.ObjectName
 	data := params.Data
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return ErrCreatingBucket
+	}
 	obj := bucket.Object(objectName)
 	w := obj.NewWriter(ctx)
 	if _, err := w.Write(data); err != nil {
@@ -158,7 +191,11 @@ func (g *GcpBucketClient) DownloadObject(ctx context.Context, params *options.Bl
 
 	bucketName := params.BucketName
 	objectName := params.ObjectName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return nil, ErrDownloadingObject
+	}
 	obj := bucket.Object(objectName)
 	r, err := obj.NewReader(ctx)
 	if err != nil {
@@ -175,10 +212,13 @@ func (g *GcpBucketClient) DownloadObject(ctx context.Context, params *options.Bl
 }
 
 func (g *GcpBucketClient) DeleteObject(ctx context.Context, params *options.BlobOpsParams) error {
-
 	bucketName := params.BucketName
 	objectName := params.ObjectName
-	bucket := g.Client.Bucket(bucketName)
+	bucket := getSetBucket(ctx, g.Client, bucketName, g.ProjectID)
+	if bucket == nil {
+		g.logger.Err(fmt.Errorf("bucket %s does not exist", bucketName)).Msgf("Failed to get or create bucket: %v", bucketName)
+		return ErrDeletingObject
+	}
 	obj := bucket.Object(objectName)
 	if err := obj.Delete(ctx); err != nil {
 		g.logger.Err(err).Msgf("Failed to delete object: %v", err)

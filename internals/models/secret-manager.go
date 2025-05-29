@@ -65,7 +65,7 @@ func (dn *SecretStore) PreSaveDelete(authzClaim map[string]string) {
 }
 
 type SecretSharingParams struct {
-	Organization string   `json:"Organization,omitempty" yaml:"Organization"`
+	Organization string   `json:"organization,omitempty" yaml:"organization"`
 	Users        []string `json:"users,omitempty" yaml:"users"`
 	Groups       []string `json:"groups,omitempty" yaml:"groups"`
 }
@@ -231,6 +231,7 @@ type GCPCreds struct {
 	Region            string `json:"region,omitempty" yaml:"region"`
 	ProjectId         string `json:"projectId,omitempty" yaml:"projectId"`
 	Zone              string `json:"zone,omitempty" yaml:"zone"`
+	IsDomainScopeApp  bool   `json:"isDomainScopeApp,omitempty" yaml:"isDomainScopeApp"`
 }
 
 func (m *GCPCreds) ConvertToPb() *mpb.GCPCreds {
@@ -241,6 +242,7 @@ func (m *GCPCreds) ConvertToPb() *mpb.GCPCreds {
 			Region:            m.Region,
 			ProjectId:         m.ProjectId,
 			Zone:              m.Zone,
+			IsDomainScopeApp:  m.IsDomainScopeApp,
 		}
 	}
 	return nil
@@ -254,6 +256,7 @@ func (m *GCPCreds) ConvertFromPb(pb *mpb.GCPCreds) *GCPCreds {
 			Region:            pb.GetRegion(),
 			ProjectId:         pb.GetProjectId(),
 			Zone:              pb.GetZone(),
+			IsDomainScopeApp:  pb.GetIsDomainScopeApp(),
 		}
 	}
 	return nil

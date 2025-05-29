@@ -13,6 +13,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+	"github.com/vapusdata-ecosystem/vapusai/webapp/clients"
 	"github.com/vapusdata-ecosystem/vapusai/webapp/pkgs"
 	"github.com/vapusdata-ecosystem/vapusai/webapp/routes"
 	"github.com/vapusdata-ecosystem/vapusai/webapp/services"
@@ -138,64 +139,67 @@ func GetNewRouter() *echo.Echo {
 			grpc.MaxCallSendMsgSize(100*1024*1024),
 		),
 	}
-	err = pb.RegisterVapusdataServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterVapusdataServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering VapusdataService handler from endpoint")
 	}
 
-	err = pb.RegisterDatasourceServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterDatasourceServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering DataProduct service handler from endpoint")
 	}
 
-	err = pb.RegisterPluginServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterPluginServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering PluginService handler from endpoint")
 	}
-	err = pb.RegisterOrganizationServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterOrganizationServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering OrganizationService handler from endpoint")
 	}
-	err = pb.RegisterUserManagementServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterUserManagementServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering UserManagementService handler from endpoint")
 	}
 
-	err = pb.RegisterUtilityServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterUtilityServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering UtilityService handler from endpoint")
 	}
 
-	err = pb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIAgents handler from endpoint")
 	}
-	err = pb.RegisterAgentServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAgentServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering Vapus Agents Service from endpoint")
 	}
-	err = pb.RegisterAgentStudioHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAgentStudioHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering Vapus Agents Studio from endpoint")
 	}
-	err = pb.RegisterAIStudioHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIStudioHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIStudio handler from endpoint")
 	}
-	err = pb.RegisterAIModelsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIModelsHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIModels handler from endpoint")
 	}
-	err = pb.RegisterAIPromptsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIPromptsHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIPrompts handler from endpoint")
 	}
-	err = pb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterAIGuardrailsHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
 	}
-
-	err = pb.RegisterSecretServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	err = pb.RegisterGuardrailPluginsHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
+	if err != nil {
+		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
+	}
+	err = pb.RegisterSecretServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering SecretService handler from endpoint")
 	}

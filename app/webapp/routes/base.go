@@ -103,23 +103,6 @@ var NavMenuList = []RouteBaseStruct{
 `,
 	},
 	{
-		ItemName: "Nabhik AI",
-		ItemId:   NabhikAINav.String(),
-		Url:      UIRoute + NabhikAI,
-		Svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 m-1">
-  <title>AI Chat Agent Icon 4</title>
-  <!-- Chat bubble -->
-  <path d="M20 14a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9"></path>
-  <!-- Gear 1 -->
-  <circle cx="17" cy="6" r="2"></circle>
-  <path d="M17 4 V 2.5 M17 8 V 9.5 M19 6 H 20.5 M15 6 H 13.5 M18.4 4.6 L 19.5 3.5 M15.6 7.4 L 14.5 8.5 M18.4 7.4 L 19.5 8.5 M15.6 4.6 L 14.5 3.5" stroke-width="1.5"></path>
-   <!-- Gear 2 (Optional smaller/overlapping) -->
-  <circle cx="14" cy="10" r="1.5" stroke-width="1.5"></circle>
-  <path d="M14 8.5 V 7.5 M14 11.5 V 12.5 M15.5 10 H 16.5 M12.5 10 H 11.5 M15.1 9 L 15.8 8.2 M12.9 11 L 12.2 11.8 M15.1 11 L 15.8 11.8 M12.9 9 L 12.2 8.2" stroke-width="1"></path>
-</svg>
-`,
-	},
-	{
 		ItemName: "Data Server",
 		ItemId:   DataQueryServerNav.String(),
 		Url:      UIRoute + DataQueryServer,
@@ -158,7 +141,7 @@ var NavMenuList = []RouteBaseStruct{
 		Children: InsightsNavSideList,
 	},
 	{
-		ItemName: "Studios",
+		ItemName: "Playground",
 		ItemId:   VapusStudioNav.String(),
 		Url:      UIRoute + StudioGroup + AIStudio,
 		Svg: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="h-5 w-5 m-1"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.926" stroke-width="1.5" d="m6.514 9.06-3.988-.383 3.217-3.216a3.36 3.36 0 0 1 3.925-.595M10.95 13.55l.377 3.924 3.217-3.216a3.354 3.354 0 0 0 .52-4.06"></path><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.926" stroke-width="1.5" d="M15.005 10.166q-.36.416-.76.817c-1.342 1.341-2.838 2.347-4.315 2.978a1.11 1.11 0 0 1-1.24-.24l-2.416-2.414a1.11 1.11 0 0 1-.24-1.24c.632-1.477 1.638-2.972 2.98-4.314 2.815-2.814 6.309-4.151 8.882-3.65.454 2.33-.599 5.412-2.89 8.063M13.673 2.65l3.556 3.555"></path><path fill="currentColor" d="M13.56 6.44a1.5 1.5 0 1 1-2.12 2.12 1.5 1.5 0 0 1 2.12-2.12"></path><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="22.926" stroke-width="1.5" d="M6.015 13.987 2 18M4.42 12.392l-1.357 1.356M7.61 15.581l-1.356 1.356"></path></svg>
@@ -212,7 +195,6 @@ var BottonMenuList = []RouteBaseStruct{
 
 var DatamanagerSideList = []RouteBaseStruct{
 	{ItemName: "Data Sources", ItemId: OrganizationDataSourcesPage.String(), Url: UIRoute + MyOrganizationGroup + DataSources},
-	{ItemName: "Observability", ItemId: OrganizationObservabilityPage.String(), Url: UIRoute + MyOrganizationGroup + OrganizationObservability},
 }
 
 var ManageAINavSideList = []RouteBaseStruct{
@@ -220,7 +202,6 @@ var ManageAINavSideList = []RouteBaseStruct{
 	{ItemName: "Prompts", ItemId: AIPromptsPage.String(), Url: UIRoute + ManageAIGroup + ManageAIPrompts},
 	{ItemName: "Agents", ItemId: ManageAIAgentsPage.String(), Url: UIRoute + ManageAIGroup + ManageAIAgents},
 	{ItemName: "Guardrails", ItemId: ManageAIGuardrailsPage.String(), Url: UIRoute + ManageAIGroup + ManageAIGuardrails},
-	{ItemName: "Nabhik Task", ItemId: NabhikTaskPage.String(), Url: UIRoute + ManageAIGroup + NabhikTasks},
 }
 
 var InsightsNavSideList = []RouteBaseStruct{
@@ -247,7 +228,6 @@ var SettingsSideList = []RouteBaseStruct{
 var DevelopersSideList = []RouteBaseStruct{
 	{ItemName: "Resources", ItemId: DevelopersResourcesPage.String(), Url: UIRoute + DevelopersGroup + DevelopersResources},
 	{ItemName: "Enums", ItemId: DevelopersEnumsPage.String(), Url: UIRoute + DevelopersGroup + DevelopersEnums},
-	// {ItemName: "Tokens", ItemId: SettingTokenPage.String(), Url: UIRoute + SettingsGroup + SettingToken},
 }
 
 var (
@@ -255,15 +235,11 @@ var (
 
 	ManageOrganizationHome = UIRoute + MyOrganizationGroup
 
-	NabhikHome = UIRoute + NabhikAI
-
 	DataServerHome = UIRoute + UIRoute + DataQueryServer
 
 	ManageAIHome = UIRoute + ManageAIGroup + ManageAIModelNodes
 
 	AIStudioHome = UIRoute + StudioGroup + AIStudio
-
-	AgentStudioHome = UIRoute + StudioGroup + AgentStudio
 
 	SecretServiceHome = UIRoute + SettingsGroup + SecretStoreDetails
 )

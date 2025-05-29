@@ -142,6 +142,12 @@ service UtilityService {
             body: "*"
         };
     }
+
+    rpc GetFiles(FetchRequest) returns(FetchResponse){
+         option (google.api.http) = {
+            get: "/api/v1alpha1/utility/getfiles"
+        };
+    }
 }
 
 message UploadResponse {
@@ -159,6 +165,16 @@ message UploadRequest {
     repeated models.v1alpha1.FileData objects = 1; // @gotags: yaml:"objects"
     string resource = 2; // @gotags: yaml:"resource"
     string resource_id = 3; // @gotags: yaml:"resourceId"
+}
+
+message FetchRequest {
+    string file_path = 1; // @gotags: yaml:"filePath"
+}
+
+message FetchResponse {
+    string name = 1; //  @gotags: yaml:"name"
+    bytes data = 2; //  @gotags: yaml:"data"
+    models.v1alpha1.ContentFormats format = 3; //  @gotags: yaml:"format"
 }
 
 message SecretGetterRequest {
@@ -321,6 +337,7 @@ message ResourceGetterResponse {
     repeated DataSourceServicesLogoMap data_source_services_logo_map = 6; // @gotags: yaml:"dataSourceServicesLogoMap"
     repeated ServiceProviderLogoMap service_provider_logo_map = 7; // @gotags: yaml:"serviceProviderLogoMap"
     repeated PluginTypeMap plugin_type_map = 8; // @gotags: yaml:"pluginTypeMap"
+    ThirdPartyGuardrailList guardrail_types = 9; // @gotags: yaml:"guardrailTypes"
 }
 
 message EnumGetterRequest {
@@ -360,4 +377,11 @@ message ServiceProviderLogoMap {
 message PluginTypeMap {
     models.v1alpha1.IntegrationPluginTypes plugin_types = 1; // @gotags: yaml:"pluginTypes"
     map<string, string> services = 2;  // @gotags: yaml: "services"
+}
+
+message ThirdPartyGuardrailList {
+    repeated string pangea = 1; // @gotags: yaml:"pangea"
+    repeated string mistral = 2; // @gotags: yaml:"mistral"
+    repeated string bedrock = 3; // @gotags: yaml:"bedrock"
+    repeated string vapus = 4; // @gotags: yaml:"vapus"
 }

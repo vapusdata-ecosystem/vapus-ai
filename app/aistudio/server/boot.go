@@ -87,14 +87,14 @@ func bootStores(ctx context.Context, conf *appconfigs.VapusAISvcConfig) {
 	if dmstores.DMStoreManager.Error != nil {
 		logger.Fatal().Err(dmstores.DMStoreManager.Error).Msg("error while initializing data stores.")
 	}
-	if pkgs.PluginServiceManager == nil {
-		pkgs.PluginServiceManager, _ = appdrepo.NewPluginPool(context.Background(), dmstores.DMStoreManager.VapusStore, logger)
-	}
 
 	services.InitAIStudioServices(dmstores.DMStoreManager)
 	// TO activate the Postgres vector and btree_gin
 	dmstores.DMStoreManager.ActivatePostgresExtension(ctx, logger)
 	appBooter.BootDataTables(ctx, dmstores.DMStoreManager.VapusStore, logger)
+	if pkgs.PluginServiceManager == nil {
+		pkgs.PluginServiceManager, _ = appdrepo.NewPluginPool(context.Background(), dmstores.DMStoreManager.VapusStore, logger)
+	}
 }
 
 func bootConnectionPool() {

@@ -35,9 +35,6 @@ platformBaseAccount:
       creator: vikrant@vapusdata.com
   platformAccountOrganization:
       name: VapusData Sandbox Service Domain
-  datamesh:
-      name: VapusData DataMesh
-      creator: vikrant@vapusdata.com
 authnMethod: oidc
 baseOs:
   - artifactType: vdc 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"github.com/rs/zerolog"
 	options "github.com/vapusdata-ecosystem/vapusai/core/options"
 	"golang.org/x/oauth2/google"
@@ -22,7 +21,6 @@ type CalendarClient struct {
 }
 
 func NewGoogleCalendar(ctx context.Context, opts *GcpConfig, logger zerolog.Logger) (*CalendarClient, error) {
-	fmt.Println("DOMAINSCOPE_---------------->",opts.IsDomainScopeApp)
 	if opts.IsDomainScopeApp {
 		creds, err := google.CredentialsFromJSON(ctx, opts.ServiceAccountKey)
 		if err != nil || creds == nil {
@@ -40,7 +38,6 @@ func NewGoogleCalendar(ctx context.Context, opts *GcpConfig, logger zerolog.Logg
 			logger.Err(err).Msgf("Error while getting the client_email from the GCP KEY json -- %v", err)
 			return nil, err
 		}
-		fmt.Println("EMAIL--------------->", clEmail)
 		return &CalendarClient{
 			logger:         logger,
 			clientEmail:    clEmail,
@@ -64,13 +61,10 @@ func (c *CalendarClient) getClient(ctx context.Context, userEmail string) *calen
 		c.logger.Err(err).Msgf("Error while impersonating the user -- %v", err)
 		return nil
 	}
-	fmt.Println("TOKEN--------------->", tokenSource)
 	client, err := calendar.NewService(ctx, option.WithTokenSource(tokenSource))
-	fmt.Println("GOOOGLE CaLENDER", client)
 	if err != nil {
 		return nil
 	}
-	fmt.Println("CLINET SOURCE ------------------>")
 
 	return client
 }
@@ -115,67 +109,45 @@ func (c *CalendarClient) CreateEvent(ctx context.Context, req *options.CreateEve
 
 }
 
-// func (c *CalendarClient) UpdateEvent(ctx context.Context, eventId, newSummary string) error {
-// 	event, err := c.client.Events.Get("Primary", eventId).Do()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	event.Summary = newSummary
-// 	_, err = c.client.Events.Update("primary", eventId, event).Do()
-// 	return err
-
-// }
-
 func (c *CalendarClient) UpdateEvent(ctx context.Context, req *options.UpdateEventRequest) error {
-	event, err := c.client.Events.Get("primary", req.EventId).Context(ctx).Do()
+	client := c.getClient(ctx, req.UserEmail)
+	if client == nil {
+		return fmt.Errorf("failed to get calendar client")
+	}
+	event, err := client.Events.Get("primary", req.EventId).Do()
 	if err != nil {
-		return fmt.Errorf("failed to fetch event: %w", err)
+		return fmt.Errorf("failed to get event: %w", err)
+	}
+	// Update fields if provided
+	if req.Summary != "" {
+		event.Summary = req.Summary
+	}
+	if req.Description != "" {
+		event.Description = req.Description
+	}
+	if req.Location != "" {
+		event.Location = req.Location
+	}
+	if req.StartTime != "" {
+		event.Start = &calendar.EventDateTime{DateTime: req.StartTime, TimeZone: "Asia/Kolkata"}
+	}
+	if req.EndTime != "" {
+		event.End = &calendar.EventDateTime{DateTime: req.EndTime, TimeZone: "Asia/Kolkata"}
 	}
 
-	event.Summary = req.Summary
-	event.Location = req.Location
-	event.Description = req.Description
-	event.Start.DateTime = req.StartTime
-	event.End.DateTime = req.EndTime
-
-	_, err = c.client.Events.Update("primary", req.EventId, event).Context(ctx).Do()
+	_, err = client.Events.Update("primary", req.EventId, event).Do()
 	if err != nil {
 		return fmt.Errorf("failed to update event: %w", err)
 	}
 
 	return nil
 }
-
-// func (c *CalendarClient) UpdateEvent(ctx context.Context, eventId, newSummary, newLocation, newDescription, newStart, newEnd string) error {
-// 	event, err := c.client.Events.Get("primary", eventId).Do()
-// 	if err != nil {
-// 		return fmt.Errorf("failed to fetch event: %w", err)
-// 	}
-
-// 	event.Summary = newSummary
-// 	event.Location = newLocation
-// 	event.Description = newDescription
-// 	event.Start.DateTime = newStart
-// 	event.End.DateTime = newEnd
-
-// 	_, err = c.client.Events.Update("primary", eventId, event).Context(ctx).Do()
-// 	if err != nil {
-// 		return fmt.Errorf("failed to update event: %w", err)
-// 	}
-
-// 	return nil
-// }
-
-//	func (c *CalendarClient) GetEvent(ctx context.Context, eventId string) (*calendar.Event, error)  {
-//		event, err := c.client.Events.Get("primary", eventId).Do()
-//		if err != nil {
-//			return nil,err
-//		}
-//		fmt.Println("These are the event details ", event.Summary, event.Start, event.End)
-//		return event,nil
-//	}
 func (c *CalendarClient) GetEvent(ctx context.Context, req *options.GetEventRequest) (*options.GetEventResponse, error) {
-	event, err := c.client.Events.Get("primary", req.EventId).Do()
+	client := c.getClient(ctx, req.UserEmail)
+	if client == nil {
+		return nil, fmt.Errorf("failed to get calendar client")
+	}
+	event, err := client.Events.Get("primary", req.EventId).Do()
 	if err != nil {
 		return nil, err
 	}
@@ -187,24 +159,27 @@ func (c *CalendarClient) GetEvent(ctx context.Context, req *options.GetEventRequ
 	}
 
 	fmt.Println("These are the event details ", resp.Summary, resp.StartTime, resp.EndTime)
-
 	return resp, nil
 }
 
-// func (c *CalendarClient) DeleteEvent(ctx context.Context, eventId string) error {
-// 	return c.client.Events.Delete("primary", eventId).Do()
-// }
-
 func (c *CalendarClient) DeleteEvent(ctx context.Context, req *options.DeleteEventRequest) error {
-	err := c.client.Events.Delete("primary", req.EventId).Context(ctx).Do()
+	client := c.getClient(ctx, req.UserEmail)
+	if client == nil {
+		return fmt.Errorf("failed to get calendar client")
+	}
+	err := client.Events.Delete("primary", req.EventId).Context(ctx).Do()
 	if err != nil {
 		return fmt.Errorf("failed to delete event: %w", err)
 	}
 	return nil
 }
 
-func (c *CalendarClient) ListEvent(ctx context.Context) (*options.ListEventsResponse, error) {
-	events, err := c.client.Events.List("primary").Context(ctx).Do()
+func (c *CalendarClient) ListEvent(ctx context.Context, userEmail string) (*options.ListEventsResponse, error) {
+	client := c.getClient(ctx, userEmail)
+	if client == nil {
+		return nil, fmt.Errorf("failed to get calendar client")
+	}
+	events, err := client.Events.List("primary").Context(ctx).Do()
 	if err != nil {
 		return nil, fmt.Errorf("failed to list events: %w", err)
 	}
@@ -223,17 +198,4 @@ func (c *CalendarClient) ListEvent(ctx context.Context) (*options.ListEventsResp
 		Events: eventList,
 		Status: "success",
 	}, nil
-
 }
-
-// func (c *CalendarClient) ListEvent(ctx context.Context) error {
-// 	events, err := c.client.Events.List("primary").Do()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	for _, item := range events.Items {
-// 		fmt.Println("This is all the scedule meetings", item.Start.DateTime, item.End.DateTime, item.Id)
-
-// 	}
-// 	return nil
-// }

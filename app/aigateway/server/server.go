@@ -308,6 +308,11 @@ func NewAIGateway() *fiber.App {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering VapusdataService handler from endpoint")
 	}
 
+	err = pb.RegisterOrganizationServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	if err != nil {
+		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering OrganizationService handler from endpoint")
+	}
+
 	err = pb.RegisterDatasourceServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering DataProduct service handler from endpoint")
@@ -356,7 +361,10 @@ func NewAIGateway() *fiber.App {
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
 	}
-
+	err = pb.RegisterGuardrailPluginsHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
+	if err != nil {
+		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering Guardrail Plugins handler from endpoint")
+	}
 	err = pb.RegisterSecretServiceHandlerFromEndpoint(context.Background(), gwmux, pkgs.VapusSvcInternalClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering SecretService handler from endpoint")

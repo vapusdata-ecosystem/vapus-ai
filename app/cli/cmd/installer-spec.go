@@ -47,6 +47,7 @@ func generateInstallerSpecTemplate() error {
 		SecretStore:       secM,
 		BackendDataStore:  secM,
 		BackendCacheStore: secM,
+		FileStore:         secM,
 		AuthnSecrets: &authn.AuthnSecrets{
 			OIDCSecrets: &authn.OIDCSecrets{},
 		},

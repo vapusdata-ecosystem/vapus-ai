@@ -119,13 +119,13 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 			}
 			bytess, err := pbtools.ProtoYamlMarshal(obj)
 			if err != nil {
-				Logger.Err(err).Msg("error while marshaling domain spec")
+				Logger.Err(err).Msg("error while marshaling organisation spec")
 				return x.HandleError(c, err, http.StatusNotFound, globalContext)
 			}
 
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     mpb.ResourceLcActions_UPDATE.String(),
-				API:        fmt.Sprintf("%s/api/v1alpha1/domains", pkgs.NetworkConfigManager.GatewayURL),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations", pkgs.NetworkConfigManager.GatewayURL),
 				Method:     http.MethodPut,
 				YamlSpec:   string(bytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -143,12 +143,12 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 			}
 			uBytess, err := pbtools.ProtoYamlMarshal(addUserObj)
 			if err != nil {
-				Logger.Err(err).Msg("error while marshaling domain add user spec")
+				Logger.Err(err).Msg("error while marshaling organisation add user spec")
 				return x.HandleError(c, err, http.StatusNotFound, globalContext)
 			}
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     utils.ADD_USERS,
-				API:        fmt.Sprintf("%s/api/v1alpha1/domains/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
 				Method:     http.MethodPut,
 				YamlSpec:   string(uBytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -159,12 +159,12 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 				OrganizationId: response.CurrentOrganization.OrganizationId,
 			})
 			if err != nil {
-				Logger.Err(err).Msg("error while marshaling domain upgrade OS spec")
+				Logger.Err(err).Msg("error while marshaling organisation upgrade OS spec")
 				return x.HandleError(c, err, http.StatusNotFound, globalContext)
 			}
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     utils.UPGRADE,
-				API:        fmt.Sprintf("%s/api/v1alpha1/domains/%s/upgrade-os", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations/%s/upgrade-os", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
 				Method:     http.MethodPost,
 				YamlSpec:   string(uBytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -173,11 +173,11 @@ func (x *WebappService) OrganizationSettings(c echo.Context) error {
 		}
 
 	} else {
-		Logger.Err(err).Msg("error while getting domain")
+		Logger.Err(err).Msg("error while getting organisation")
 		return x.HandleError(c, err, http.StatusNotFound, globalContext)
 	}
 
-	return c.Render(http.StatusOK, "settings-domain.html", map[string]any{
+	return c.Render(http.StatusOK, "settings-organisation.html", map[string]any{
 		"GlobalContext": globalContext,
 		"Response":      response,
 		"SectionHeader": "Organization Settings",
@@ -237,12 +237,12 @@ func (x *WebappService) OrganizationUsersList(c echo.Context) error {
 			}
 			uBytess, err := pbtools.ProtoYamlMarshal(addUserObj)
 			if err != nil {
-				Logger.Err(err).Msg("error while marshaling domain add user spec")
+				Logger.Err(err).Msg("error while marshaling organisation add user spec")
 				return x.HandleError(c, err, http.StatusNotFound, globalContext)
 			}
 			response.ActionRules = append(response.ActionRules, &models.ActionRule{
 				Action:     utils.ADD_USERS,
-				API:        fmt.Sprintf("%s/api/v1alpha1/domains/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
+				API:        fmt.Sprintf("%s/api/v1alpha1/organizations/%s/users", pkgs.NetworkConfigManager.GatewayURL, response.CurrentOrganization.OrganizationId),
 				Method:     http.MethodPut,
 				YamlSpec:   string(uBytess),
 				ResourceId: response.CurrentOrganization.OrganizationId,
@@ -250,10 +250,10 @@ func (x *WebappService) OrganizationUsersList(c echo.Context) error {
 			})
 		}
 	} else {
-		Logger.Err(err).Msg("error while getting domain")
+		Logger.Err(err).Msg("error while getting organisation")
 		return x.HandleError(c, err, http.StatusNotFound, globalContext)
 	}
-	return c.Render(http.StatusOK, "settings-domain-users.html", map[string]any{
+	return c.Render(http.StatusOK, "settings-organisation-users.html", map[string]any{
 		"GlobalContext": globalContext,
 		"Response":      response,
 		"SectionHeader": "Organization Users",
@@ -521,17 +521,17 @@ func (x *WebappService) PlatformOrganizationsList(c echo.Context) error {
 		Logger.Err(err).Msg("error while getting explore page global context")
 		return HandleGLobalContextError(c, err)
 	}
-	for _, domain := range globalContext.UserInfo.Roles {
-		response.YourOrganizations = append(response.YourOrganizations, domain.OrganizationId)
+	for _, organisation := range globalContext.UserInfo.Roles {
+		response.YourOrganizations = append(response.YourOrganizations, organisation.OrganizationId)
 	}
 	response.ActionRules = append(response.ActionRules, &models.ActionRule{
 		Action:   mpb.ResourceLcActions_CREATE.String(),
-		API:      fmt.Sprintf("%s/api/v1alpha1/domains", pkgs.NetworkConfigManager.GatewayURL),
+		API:      fmt.Sprintf("%s/api/v1alpha1/organizations", pkgs.NetworkConfigManager.GatewayURL),
 		Method:   http.MethodPost,
 		YamlSpec: GetProtoYamlString(appconfigs.OrganizationManagerRequest),
 		Title:    "",
 	})
-	return c.Render(http.StatusOK, "settings-platform-domains.html", map[string]any{
+	return c.Render(http.StatusOK, "settings-platform-organisations.html", map[string]any{
 		"GlobalContext": globalContext,
 		"Response":      response,
 		"SectionHeader": "Organizations",

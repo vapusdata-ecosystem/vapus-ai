@@ -24,11 +24,9 @@ type Calendar interface {
 	// DeleteEvent(ctx context.Context, eventId string) error
 	CreateEvent(ctx context.Context, req *options.CreateEventRequest) (*options.CreateEventResponse, error)
 	UpdateEvent(ctx context.Context, req *options.UpdateEventRequest) error
-	ListEvent(ctx context.Context) (*options.ListEventsResponse, error) 
+	ListEvent(ctx context.Context, userEmail string) (*options.ListEventsResponse, error)
 	GetEvent(ctx context.Context, req *options.GetEventRequest) (*options.GetEventResponse, error)
 	DeleteEvent(ctx context.Context, req *options.DeleteEventRequest) error
-	
-	
 }
 type CalendarClient struct {
 	logger zerolog.Logger
@@ -51,7 +49,7 @@ func New(ctx context.Context, service string, netOps *models.PluginNetworkParams
 		cfg := &gcp.GcpConfig{
 			ServiceAccountKey: serviceAccountKey,
 			ProjectID:         netOps.Credentials.GcpCreds.ProjectId,
-			IsDomainScopeApp: ,
+			IsDomainScopeApp:  netOps.Credentials.GcpCreds.IsDomainScopeApp,
 		}
 
 		client, err := gcp.NewGoogleCalendar(ctx, cfg, logger)
@@ -62,8 +60,6 @@ func New(ctx context.Context, service string, netOps *models.PluginNetworkParams
 		}
 
 		calendar.Calendar = client
-	fmt.Println("NEW------------------------->",calendar.Calendar)
-
 	default:
 		logger.Error().Msg("Invalid calendar service")
 		return nil, dmerrors.DMError(apperr.ErrInvalidCalenderService, apperr.ErrInvalidCalenderConn)
