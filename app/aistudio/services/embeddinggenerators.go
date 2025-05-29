@@ -10,6 +10,7 @@ import (
 	"github.com/vapusdata-ecosystem/vapusai/aistudio/pkgs"
 	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
 	aimodels "github.com/vapusdata-ecosystem/vapusai/core/aistudio/providers"
+	aidmstore "github.com/vapusdata-ecosystem/vapusai/core/app/datarepo/aistudio"
 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
 	models "github.com/vapusdata-ecosystem/vapusai/core/models"
 	encryption "github.com/vapusdata-ecosystem/vapusai/core/pkgs/encryption"
@@ -24,7 +25,7 @@ type EmbeddingAgent struct {
 	request    *pb.EmbeddingsInterface
 	logger     zerolog.Logger
 	modelNode  *models.AIModelNode
-	*AIStudioServices
+	dmStore    *aidmstore.AIStudioDMStore
 }
 
 func (s *AIStudioServices) NewEmbeddingAgent(ctx context.Context,
@@ -45,9 +46,9 @@ func (s *AIStudioServices) NewEmbeddingAgent(ctx context.Context,
 	}
 
 	agent := &EmbeddingAgent{
+		dmStore: s.DMStore,
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
-			AgentId: dmutils.GetUUID(),
-			// Ctx:      ctx,
+			AgentId:  dmutils.GetUUID(),
 			CtxClaim: vapusPlatformClaim,
 		},
 		modelNode: result,

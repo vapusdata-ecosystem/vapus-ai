@@ -65,6 +65,7 @@ func (x *AIStudioServices) NewSecretsManagerAgent(ctx context.Context, opts ...S
 	agent := &SecretsManagerAgent{
 		organization: organization,
 		result:       &pb.VapusSecretsResponse{},
+		dmStore:      x.DMStore,
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
 			InitAt: dmutils.GetEpochTime(),
 			// Ctx:       ctx,
