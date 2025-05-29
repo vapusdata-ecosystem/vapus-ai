@@ -154,6 +154,7 @@ message GCPCreds {
   string region = 3; //  @gotags: yaml:"region"
   string project_id = 4; //  @gotags: yaml:"projectId"
   string zone = 5; //  @gotags: yaml:"zone"
+  bool is_domain_scope_app = 6; //  @gotags: yaml:"isDomainScopeApp"
 }
 
 message AzureCreds {
