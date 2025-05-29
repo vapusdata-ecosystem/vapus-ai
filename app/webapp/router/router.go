@@ -195,7 +195,10 @@ func GetNewRouter() *echo.Echo {
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
 	}
-
+	err = pb.RegisterGuardrailPluginsHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
+	if err != nil {
+		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering AIGuardrails handler from endpoint")
+	}
 	err = pb.RegisterSecretServiceHandlerFromEndpoint(context.Background(), gwmux, clients.GrpcClientManager.AIStudioDns, opts)
 	if err != nil {
 		pkgs.DmLogger.Fatal().Err(err).Msg("error while registering SecretService handler from endpoint")

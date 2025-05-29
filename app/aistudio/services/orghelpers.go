@@ -44,7 +44,9 @@ func setOrganizationArtifactBEStore(ctx context.Context, organization *models.Or
 		organization.ArtifactStorage.Status = mpb.CommonStatus_ACTIVE.String()
 		return organization.ArtifactStorage, nil
 	} else {
-		// return dmstores.AccountPool.ArtifactStorage, nil
+		if dmstores.DMStoreManager.Account.ArtifactStorage == nil {
+			return nil, nil
+		}
 		return &models.BackendStorages{
 			BesType:       dmstores.DMStoreManager.Account.ArtifactStorage.BesType,
 			BesOnboarding: dmstores.DMStoreManager.Account.ArtifactStorage.BesOnboarding,
@@ -52,7 +54,6 @@ func setOrganizationArtifactBEStore(ctx context.Context, organization *models.Or
 			NetParams:     dmstores.DMStoreManager.Account.ArtifactStorage.NetParams,
 			Status:        dmstores.DMStoreManager.Account.ArtifactStorage.Status,
 		}, nil
-
 	}
 }
 
