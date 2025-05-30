@@ -60,7 +60,7 @@ func (x *UtilityController) UploadStream(stream dpb.UtilityService_UploadStreamS
 	return nil
 }
 
-func (x *UtilityController) Download(ctx context.Context, request *dpb.DownloadRequest) (*dpb.DownloadResponse, error) {
+func (x *UtilityController) GetFiles(ctx context.Context, request *dpb.FetchRequest) (*dpb.FetchResponse, error) {
 	utAgent, err := x.DMServices.NewUtilityAgent(ctx, nil, nil, request)
 	if err != nil {
 		return nil, pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
@@ -69,6 +69,6 @@ func (x *UtilityController) Download(ctx context.Context, request *dpb.DownloadR
 	if err != nil {
 		return nil, pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
 	}
-	resp := utAgent.GetDownloadResult()
+	resp := utAgent.GetFetchResult()
 	return resp, nil
 }
