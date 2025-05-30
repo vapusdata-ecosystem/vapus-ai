@@ -3,6 +3,7 @@ package datarepo
 import (
 	"context"
 	"fmt"
+	"log"
 	"path/filepath"
 	"slices"
 
@@ -103,11 +104,13 @@ func GetFile(ctx context.Context, dmstores *apppkgs.VapusStore, filePath string,
 	}
 	result := &models.FileStoreLog{}
 	query := fmt.Sprintf("SELECT * FROM %s WHERE path = '%s' AND created_by = '%s'", apppkgs.FileStoreLogTable, filePath, ctxClaim[encryption.ClaimUserIdKey])
-	err := dmstores.Db.PostgresClient.SelectInApp(ctx, &query, &result)
+	log.Println("Query to get file from datastore: ", query)
+	err := dmstores.Db.PostgresClient.SelectInApp(ctx, &query, result)
 	if err != nil {
 		logger.Err(err).Ctx(ctx).Msg("error while getting the file from datastore")
 		return nil, err
 	}
+	log.Println("File retrieved from datastore: ", result)
 	return result, nil
 }
 
