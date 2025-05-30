@@ -143,9 +143,9 @@ service UtilityService {
         };
     }
 
-    rpc GetFiles(FetchRequest) returns(FetchResponse){
+    rpc Download(DownloadRequest) returns(DownloadResponse){
          option (google.api.http) = {
-            get: "/api/v1alpha1/utility/getfiles"
+            get: "/api/v1alpha1/utility/download"
         };
     }
 }
@@ -167,11 +167,11 @@ message UploadRequest {
     string resource_id = 3; // @gotags: yaml:"resourceId"
 }
 
-message FetchRequest {
+message DownloadRequest {
     string file_path = 1; // @gotags: yaml:"filePath"
 }
 
-message FetchResponse {
+message DownloadResponse {
     string name = 1; //  @gotags: yaml:"name"
     bytes data = 2; //  @gotags: yaml:"data"
     models.v1alpha1.ContentFormats format = 3; //  @gotags: yaml:"format"

@@ -279,7 +279,7 @@ func (x *WebappService) UserDetails(c echo.Context) error {
 	}
 
 	cRoles := GetUserCurrentOrganizationRole(globalContext.UserInfo, globalContext.CurrentOrganization.OrganizationId)
-	if slices.Contains(cRoles, mpb.UserRoles_ORG_OWNER.String()) {
+	if slices.Contains(cRoles, mpb.PlatformRoles_SERVICE_OWNER.String()) {
 		var updateSpec = ""
 		bbtes, err := pbtools.ProtoYamlMarshal(&dpb.UserManagerRequest{
 			Spec:   user,
