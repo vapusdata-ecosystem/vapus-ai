@@ -71,8 +71,8 @@ func (p *PlatformSetup) AddVapusDataPlatformOwners(ctx context.Context) error {
 				Email:             user,
 				AccountId:         p.accountId,
 				Organization:      p.accountOrganization,
-				OrganizationRoles: []string{mpb.UserRoles_SERVICE_OWNER.String()},
-			}, []string{mpb.UserRoles_SERVICE_OWNER.String()}, nil, map[string]string{encryption.ClaimAccountKey: p.accountId, encryption.ClaimUserIdKey: user},
+				OrganizationRoles: []string{mpb.PlatformRoles_SERVICE_OWNER.String()},
+			}, []string{mpb.PlatformRoles_SERVICE_OWNER.String()}, nil, map[string]string{encryption.ClaimAccountKey: p.accountId, encryption.ClaimUserIdKey: user},
 				p.dbManager, p.logger)
 			if err != nil {
 				p.logger.Fatal().Err(err).Msgf("error while creating platform owner with email '%v'", user)

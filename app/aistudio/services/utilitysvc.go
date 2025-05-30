@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"path/filepath"
 	"strings"
 
@@ -133,7 +134,7 @@ func (v *BlobAgent) uploadFile(ctx context.Context) error {
 		keyPath := fmt.Sprintf("%s/%s/%s", v.uploadRequest.Resource, v.uploadRequest.ResourceId, fileData.Name)
 		logFileObj := &models.FileStoreLog{
 			Name:       fileData.Name,
-			Path:       fileData.Path,
+			Path:       keyPath,
 			Format:     fileData.Format.String(),
 			Size:       int64(len(fileData.Data)),
 			Resource:   v.uploadRequest.Resource,
@@ -186,7 +187,25 @@ func (v *BlobAgent) downloadFile(ctx context.Context) error {
 		v.Logger.Error().Msg("FilePath is empty")
 		return dmerrors.DMError(apperr.ErrEmptyFile, nil)
 	}
-	fileStoreLog, err := appdrepo.GetFile(ctx, v.dmStore.VapusStore, v.fetchRequest.GetPath(), v.CtxClaim)
+	fileSplits := strings.Split(v.fetchRequest.GetPath(), "/")
+	if len(fileSplits) < 2 {
+		v.Logger.Error().Msg("FilePath is not valid")
+		return dmerrors.DMError(apperr.ErrInvalidFilePath, nil)
+	}
+	name := fileSplits[len(fileSplits)-1]
+	if name == "" {
+		v.Logger.Error().Msg("File name is empty")
+		return dmerrors.DMError(apperr.ErrEmptyFile, nil)
+	}
+
+	key := fileSplits[:len(fileSplits)-1]
+	if len(key) == 0 {
+		v.Logger.Error().Msg("File key is empty")
+		return dmerrors.DMError(apperr.ErrEmptyFile, nil)
+	}
+	keyPath := strings.Join(key, "/")
+	v.Logger.Info().Msgf("Fetching file with name: %s with key: %s", name, keyPath)
+	fileStoreLog, err := appdrepo.GetFile(ctx, v.dmStore.VapusStore, keyPath, v.CtxClaim)
 	if err != nil {
 		v.Logger.Err(err).Msgf("Error while fetching the file path")
 		return err
@@ -195,7 +214,11 @@ func (v *BlobAgent) downloadFile(ctx context.Context) error {
 		v.Logger.Err(err).Msgf("Error File is Deleted")
 		return err
 	}
-
+	log.Println("FileStoreLog: ", fileStoreLog.Name, name)
+	if fileStoreLog.Name != name {
+		v.Logger.Err(err).Msgf("Error File name does not match")
+		return dmerrors.DMError(apperr.ErrFileNameMismatch, nil)
+	}
 	data, err := v.dmStore.BlobStore.DownloadObject(ctx, &options.BlobOpsParams{
 		BucketName: v.CtxClaim[encryption.ClaimOrganizationKey],
 		ObjectName: v.fetchRequest.GetPath(),
@@ -206,7 +229,7 @@ func (v *BlobAgent) downloadFile(ctx context.Context) error {
 		return err
 	}
 
-	fmt.Println("Data: ", data[0])
+	fmt.Println("Data: ", fileStoreLog)
 
 	v.fetchResponse = &pb.DownloadResponse{
 		Data:   data,

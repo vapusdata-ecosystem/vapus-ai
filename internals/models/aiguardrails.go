@@ -1,9 +1,6 @@
 package models
 
 import (
-	"fmt"
-	"reflect"
-
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
@@ -130,6 +127,7 @@ func (a *AIGuardrails) ConvertFromPb(obpb *mpb.AIGuardrails) *AIGuardrails {
 	}
 	a.EligibleModelNodes = obpb.EligibleModelNodes
 	a.Partner = make([]*ThirdParty, len(obpb.Partner))
+
 	for i := range obpb.Topics {
 		a.Topics[i] = new(TopicGuardrails).ConvertFromPb(obpb.Topics[i])
 	}
@@ -139,7 +137,7 @@ func (a *AIGuardrails) ConvertFromPb(obpb *mpb.AIGuardrails) *AIGuardrails {
 	for i := range obpb.SensitiveDataset {
 		a.SensitiveDataset[i] = new(SensitiveDataGuardrails).ConvertFromPb(obpb.SensitiveDataset[i])
 	}
-	fmt.Println("obpb.Partner: ", reflect.ValueOf(obpb.Partner))
+	// fmt.Println("obpb.Partner: ", reflect.ValueOf(obpb.Partner))
 	for i := range obpb.Partner {
 		a.Partner[i] = new(ThirdParty).ConvertFromPb(obpb.Partner[i])
 	}
@@ -241,8 +239,11 @@ type ThirdParty struct {
 }
 
 func (a *ThirdParty) ConvertToPb() *mpb.ThirdParty {
-	obj := &mpb.ThirdParty{}
-
+	obj := &mpb.ThirdParty{
+		Bedrock: make([]*mpb.BedrockGuardrailModel, len(a.Bedrock)),
+		Mistral: make([]*mpb.ThirdPartyGuardrailModel, len(a.Mistral)),
+		Pangea:  make([]*mpb.ThirdPartyGuardrailModel, len(a.Pangea)),
+	}
 	for i := range a.Bedrock {
 		obj.Bedrock[i] = a.Bedrock[i].ConvertToPb()
 	}
@@ -256,13 +257,16 @@ func (a *ThirdParty) ConvertToPb() *mpb.ThirdParty {
 }
 
 func (a *ThirdParty) ConvertFromPb(obpb *mpb.ThirdParty) *ThirdParty {
+	a.Bedrock = make([]*BedrockGuardrailModel, len(obpb.Bedrock))
+	a.Mistral = make([]*ThirdPartyGuardrailModel, len(obpb.Mistral))
+	a.Pangea = make([]*ThirdPartyGuardrailModel, len(obpb.Pangea))
 	for i := range obpb.Bedrock {
 		a.Bedrock[i] = new(BedrockGuardrailModel).ConvertFromPb(obpb.Bedrock[i])
 	}
 	for i := range obpb.Mistral {
 		a.Mistral[i] = new(ThirdPartyGuardrailModel).ConvertFromPb(obpb.Mistral[i])
 	}
-	for i := range obpb.Bedrock {
+	for i := range obpb.Pangea {
 		a.Pangea[i] = new(ThirdPartyGuardrailModel).ConvertFromPb(obpb.Pangea[i])
 	}
 	return a

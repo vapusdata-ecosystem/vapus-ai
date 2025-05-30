@@ -100,7 +100,7 @@ func (dms *AIStudioServices) SignupHandler(ctx context.Context, request *pb.Regi
 	userObj.Roles = []*models.UserOrganizationRole{
 		{
 			OrganizationId: organization.VapusID,
-			RoleArns:       []string{mpb.UserRoles_ORG_OWNER.String()},
+			RoleArns:       []string{mpb.OrgRoles_ORG_OWNER.String()},
 			InvitedOn:      dmutils.GetEpochTime(),
 		},
 	}

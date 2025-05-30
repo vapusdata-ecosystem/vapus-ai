@@ -9,9 +9,9 @@ option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha
 
 
 service GuardrailPlugins {
-    rpc ListBedrock(GuardrailsTypeGetterRequest) returns(GuardrailsTypeResponse) {
+    rpc List(GuardrailsTypeGetterRequest) returns(GuardrailsTypeResponse) {
         option (google.api.http) = {
-            get: "/api/v1alpha1/aistudio/guardrails/bedrock"
+            get: "/api/v1alpha1/aistudio/guardrails-plugins"
         };
     }
 }
@@ -20,13 +20,20 @@ message GuardrailsTypeGetterRequest {
     models.v1alpha1.AWSCreds aws_creds = 1; //  @gotags: yaml:"awsCreds";
 }
 
-message BedrockGuardrailList {
+message BedrockGuardrailModels {
     string id = 1; // @gotags: yaml:"id"
     string Name = 2; // @gotags: yaml:"name"
     string arn = 3; // @gotags: yaml:"arn"
 }
 
+message ThirdPartyGuardrailModels {
+    string id = 1; // @gotags: yaml:"id"
+    string Name = 2; // @gotags: yaml:"name"
+}
+
 message GuardrailsTypeResponse {
     models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
-    repeated BedrockGuardrailList output = 2; // @gotags: yaml:"output"
+    repeated BedrockGuardrailModels bedrock_output = 2; // @gotags: yaml:"bedrockOutput"
+    repeated ThirdPartyGuardrailModels pangea_output = 3; // @gotags: yaml:"pangeaOutput"
+    repeated ThirdPartyGuardrailModels mistral_output = 4; // @gotags: yaml:"mistralOutput"
 }

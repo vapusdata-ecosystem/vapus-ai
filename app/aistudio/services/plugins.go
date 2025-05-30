@@ -162,7 +162,7 @@ func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
 		}
 	}
 	if plugin.Scope == mpb.ResourceScope_ORGANIZATION_SCOPE.String() {
-		if !strings.Contains(v.CtxClaim[encryption.ClaimOrganizationRolesKey], mpb.UserRoles_ORG_OWNER.String()) {
+		if !strings.Contains(v.CtxClaim[encryption.ClaimOrganizationRolesKey], mpb.OrgRoles_ORG_OWNER.String()) {
 			return dmerrors.DMError(apperr.ErrPluginOrganizationScope403, nil)
 		}
 	}
@@ -208,6 +208,8 @@ func (v *PluginManagerAgent) patchPlugin(ctx context.Context) error {
 		existingObj.NetworkParams.SecretName = plugin.NetworkParams.SecretName
 	}
 	existingObj.Status = mpb.CommonStatus_ACTIVE.String()
+	// DynamicParams can also be updated
+	existingObj.DynamicParams = plugin.DynamicParams
 	err = v.dmStore.PutPlugin(ctx, existingObj, v.CtxClaim)
 	if err != nil {
 		v.Logger.Error().Err(err).Msg("error while configuring plugin")
@@ -266,6 +268,10 @@ func (v *PluginManagerAgent) archivePlugins(ctx context.Context) error {
 	result.DeletedAt = dmutils.GetEpochTime()
 	result.DeletedBy = v.CtxClaim[encryption.ClaimUserIdKey]
 	err = v.dmStore.PutPlugin(ctx, result, v.CtxClaim)
+	if err != nil {
+		v.Logger.Error().Err(err).Msg("error while updating plugin from datastore")
+		return dmerrors.DMError(apperr.ErrPluginScope403, err)
+	}
 	v.result = nil
 	return nil
 }

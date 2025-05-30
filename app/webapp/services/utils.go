@@ -69,7 +69,7 @@ func (x *WebappService) BaseGroupClientCalls(c echo.Context, obj *models.GlobalC
 	}
 	for _, ud := range obj.UserInfo.Roles {
 		if ud.OrganizationId == obj.CurrentOrganization.OrganizationId {
-			if slices.Contains(ud.Role, mpb.UserRoles_ORG_OWNER.String()) {
+			if slices.Contains(ud.Role, mpb.PlatformRoles_SERVICE_OWNER.String()) {
 				obj.IsOrganizationOwner = true
 			}
 		}
