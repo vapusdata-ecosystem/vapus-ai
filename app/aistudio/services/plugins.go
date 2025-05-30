@@ -208,6 +208,8 @@ func (v *PluginManagerAgent) patchPlugin(ctx context.Context) error {
 		existingObj.NetworkParams.SecretName = plugin.NetworkParams.SecretName
 	}
 	existingObj.Status = mpb.CommonStatus_ACTIVE.String()
+	// DynamicParams can also be updated
+	existingObj.DynamicParams = plugin.DynamicParams
 	err = v.dmStore.PutPlugin(ctx, existingObj, v.CtxClaim)
 	if err != nil {
 		v.Logger.Error().Err(err).Msg("error while configuring plugin")
