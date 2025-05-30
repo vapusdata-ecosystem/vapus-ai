@@ -3,13 +3,47 @@ import React, { useState, useEffect } from "react";
 import Header from "@/app/components/platform/header";
 import { userGlobalData } from "@/context/GlobalContext";
 import { userProfileApi } from "../../utils/settings-endpoint/profile-api";
+import { DownloadFileApi } from "@/app/utils/file-endpoint/file";
 import ActionDropdown from "../../components/action-dropdown";
 
 const UserDetails = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [domainMap, setDomainMap] = useState({});
+  const [organizationMap, setOrganizationMap] = useState({});
   const [contextData, setContextData] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
+
+  // Function to download and decode avatar image
+  const downloadAndDecodeAvatar = async (avatarPath) => {
+    try {
+      if (!avatarPath) return null;
+
+      console.log("Downloading avatar from path:", avatarPath);
+
+      // Call the download API with path parameter
+      const response = await DownloadFileApi.getDownloadFile({
+        path: avatarPath,
+      });
+
+      console.log("Avatar download response:", response);
+
+      // Extract data and format from response
+      if (response && response.data && response.format) {
+        const { data, format } = response;
+
+        // Create base64 image URL
+        const mimeType = `image/${format.toLowerCase()}`;
+        const base64Image = `data:${mimeType};base64,${data}`;
+
+        return base64Image;
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error downloading avatar:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,10 +75,21 @@ const UserDetails = () => {
           }
 
           setUserData(user);
-          // Handle domainMap - it might be at different levels or missing
+          // Handle organizationMap - it might be at different levels or missing
           const domainMapData =
-            data?.domainMap || data?.output?.domainMap || {};
-          setDomainMap(domainMapData);
+            data?.organizationMap || data?.output?.organizationMap || {};
+          setOrganizationMap(domainMapData);
+
+          // Download and decode avatar if it exists
+          if (user?.profile?.avatar) {
+            console.log("User has avatar:", user.profile.avatar);
+            const decodedAvatar = await downloadAndDecodeAvatar(
+              user.profile.avatar
+            );
+            if (decodedAvatar) {
+              setAvatarPreview(decodedAvatar);
+            }
+          }
         } else {
           console.error("User ID not found in global context");
         }
@@ -105,28 +150,46 @@ const UserDetails = () => {
               <div className="flex items-center text-center space-y-4">
                 {/* Profile Avatar */}
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden bg-zinc-700 flex items-center justify-center">
-                  {userData?.profile?.avatar ? (
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      alt="Profile Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : userData?.profile?.avatar ? (
                     <img
                       src={userData.profile.avatar}
                       alt="Profile Avatar"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to default avatar if image fails to load
+                        e.target.style.display = "none";
+                        e.target.nextSibling.style.display = "flex";
+                      }}
                     />
-                  ) : (
-                    <div className="text-gray-400 text-center">
-                      <svg
-                        className="w-12 h-12 mx-auto mb-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-sm">No Image</span>
-                    </div>
-                  )}
+                  ) : null}
+
+                  {/* Default avatar placeholder */}
+                  <div
+                    className={`text-gray-400 text-center ${
+                      avatarPreview || userData?.profile?.avatar
+                        ? "hidden"
+                        : "flex flex-col items-center justify-center"
+                    }`}
+                  >
+                    <svg
+                      className="w-12 h-12 mx-auto mb-2"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-sm">No Image</span>
+                  </div>
                 </div>
 
                 {/* Display Name */}
@@ -305,10 +368,12 @@ const UserDetails = () => {
                     >
                       <h4 className="text-md font-semibold">
                         Organization ID: {organizationRole.organizationId}
-                        {domainMap &&
-                          Object.keys(domainMap).length > 0 &&
-                          domainMap[organizationRole.organizationId] &&
-                          ` (${domainMap[organizationRole.organizationId]})`}
+                        {organizationMap &&
+                          Object.keys(organizationMap).length > 0 &&
+                          organizationMap[organizationRole.organizationId] &&
+                          ` (${
+                            organizationMap[organizationRole.organizationId]
+                          })`}
                       </h4>
                       <div className="flex flex-col sm:flex-row sm:justify-between mt-2">
                         <div>
