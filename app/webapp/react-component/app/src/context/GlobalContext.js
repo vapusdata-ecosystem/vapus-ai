@@ -33,15 +33,16 @@ export const userGlobalData = async () => {
 export const getGlobalData = async () => {
   try {
     const organizations = await domainApi.getDomains();
-    const currentDomain = organizations?.output?.organizations?.[0] || null;
+    const currentOrganization =
+      organizations?.output?.organizations?.[0] || null;
     return {
-      currentDomain,
+      currentOrganization,
     };
   } catch (error) {
     console.error("Error fetching global data:", error);
     return {
       organizations: [],
-      currentDomain: null,
+      currentOrganization: null,
       error,
     };
   }

@@ -65,13 +65,13 @@ const UserDetails = () => {
           // Fix: Handle array structure - data could be an array or have users array
           let user;
           if (Array.isArray(data)) {
-            user = data[0]; // If data is directly an array
+            user = data[0];
           } else if (data.output && Array.isArray(data.output.users)) {
-            user = data.output.users[0]; // If data has output.users structure
+            user = data.output.users[0];
           } else if (data.users && Array.isArray(data.users)) {
-            user = data.users[0]; // If data has users array
+            user = data.users[0];
           } else {
-            user = data; // If data is the user object directly
+            user = data;
           }
 
           setUserData(user);

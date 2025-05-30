@@ -15,6 +15,67 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+//  Loading Component
+const ModernLoader = () => {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-[#1b1b1b]">
+      <div className="flex flex-col items-center space-y-6">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-slate-200 dark:border-slate-700 rounded-full animate-pulse"></div>
+          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-orange-700 border-r-orange-700 rounded-full animate-spin"></div>
+          <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-orange-700 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-ping"></div>
+        </div>
+
+        {/* Loading text with typewriter effect */}
+        <div className="flex items-center space-x-1">
+          <span className="text-slate-600 dark:text-slate-400 font-medium">
+            Loading
+          </span>
+          <div className="flex space-x-1">
+            <div
+              className="w-1 h-1 bg-orange-700 rounded-full animate-bounce"
+              style={{ animationDelay: "0ms" }}
+            ></div>
+            <div
+              className="w-1 h-1 bg-orange-700 rounded-full animate-bounce"
+              style={{ animationDelay: "150ms" }}
+            ></div>
+            <div
+              className="w-1 h-1 bg-orange-700 rounded-full animate-bounce"
+              style={{ animationDelay: "300ms" }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="w-48 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-orange-700 to-orange-500 rounded-full animate-pulse"
+            style={{
+              width: "60%",
+              animation: "loading-progress 2s ease-in-out infinite",
+            }}
+          ></div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes loading-progress {
+          0% {
+            width: 0%;
+          }
+          50% {
+            width: 70%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -47,9 +108,7 @@ export default function RootLayout({ children }) {
     }
   }, [pathname, isLoginPage, router]);
 
-  // Improved 404 detection
   useEffect(() => {
-    // Method 1: Check for common 404 indicators
     const checkFor404 = () => {
       // Check if the current page has a not-found indicator
       const notFoundElement =
@@ -64,21 +123,19 @@ export default function RootLayout({ children }) {
         document.title.toLowerCase().includes("404") ||
         document.title.toLowerCase().includes("not found");
 
-      // Check URL patterns that might indicate 404 (customize based on your routes)
+      // Check URL patterns that might indicate 404
       const urlPattern404 = /\/(404|not-found)$/i.test(pathname);
 
       return !!(notFoundElement || titleIndicates404 || urlPattern404);
     };
 
-    // Initial check
     setIsNotFoundPage(checkFor404());
 
-    // Use MutationObserver to detect DOM changes (for dynamic content)
+    // Use MutationObserver to detect DOM changes
     const observer = new MutationObserver(() => {
       setIsNotFoundPage(checkFor404());
     });
 
-    // Observe changes to the document body
     observer.observe(document.body, {
       childList: true,
       subtree: true,
@@ -97,7 +154,7 @@ export default function RootLayout({ children }) {
     };
   }, [pathname]);
 
-  // Show loading while checking authentication
+  // Show  loading while checking authentication
   if (isAuthenticated === null && !isLoginPage) {
     return (
       <html lang="en">
@@ -110,9 +167,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-lg">Loading...</div>
-          </div>
+          <ModernLoader />
         </body>
       </html>
     );
