@@ -38,14 +38,12 @@ func (g *GcpBucketClient) Close() {
 
 func getSetBucket(ctx context.Context, client *storage.Client, bucket, projectId string) *storage.BucketHandle {
 	bucketObj := client.Bucket(bucket)
-	_, err := bucketObj.Attrs(ctx)
-	if err == storage.ErrBucketNotExist {
-		if err := bucketObj.Create(ctx, projectId, nil); err != nil {
+	if bucketObj == nil {
+		bucket := client.Bucket(bucket)
+		if err := bucket.Create(ctx, projectId, nil); err != nil {
 			return nil
-		} else {
-			// Need to be updated
-			return bucketObj
 		}
+		return nil
 	} else {
 		return bucketObj
 	}

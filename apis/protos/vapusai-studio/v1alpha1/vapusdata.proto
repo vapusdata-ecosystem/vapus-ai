@@ -143,9 +143,9 @@ service UtilityService {
         };
     }
 
-    rpc Download(DownloadRequest) returns(DownloadResponse){
+    rpc GetFiles(FetchRequest) returns(FetchResponse){
          option (google.api.http) = {
-            get: "/api/v1alpha1/utility/download"
+            get: "/api/v1alpha1/utility/getfiles"
         };
     }
 }
@@ -167,11 +167,11 @@ message UploadRequest {
     string resource_id = 3; // @gotags: yaml:"resourceId"
 }
 
-message DownloadRequest {
-    string path = 1; // @gotags: yaml:"path"
+message FetchRequest {
+    string file_path = 1; // @gotags: yaml:"filePath"
 }
 
-message DownloadResponse {
+message FetchResponse {
     string name = 1; //  @gotags: yaml:"name"
     bytes data = 2; //  @gotags: yaml:"data"
     models.v1alpha1.ContentFormats format = 3; //  @gotags: yaml:"format"
@@ -187,7 +187,7 @@ message SecretManagerRequest {
 }
 
 message VapusSecretsResponse{
-    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+     models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
     repeated models.v1alpha1.SecretStore output = 2; // @gotags: yaml:"output"
 }
 

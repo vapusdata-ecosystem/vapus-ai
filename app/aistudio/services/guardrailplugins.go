@@ -108,11 +108,10 @@ func (v *GuardrailPluginsIntAgent) listGuardrailPlugins(ctx context.Context) err
 	}
 
 	bedrockList := []*pb.BedrockGuardrailList{}
-	// secrets := &models.GenericCredentialModel{}
-	secrets := &models.PluginNetworkParams{} // so, that we can get the URL for pangea
 	for _, val := range listPlugins {
-		if val.PluginService == types.Bedrock_Guardrail.String() || val.PluginService == types.Pangea_Guardrail.String() || val.PluginService == types.Mistral_Guardrail.String() {
+		if val.PluginService == types.Bedrock_Guardrail.String() {
 			// fetching the secrets
+			secrets := &models.GenericCredentialModel{}
 			secretStr, err := v.dmStore.VapusStore.SecretStore.ReadSecret(ctx, val.NetworkParams.SecretName)
 			if err != nil {
 				v.Logger.Error().Err(err).Msg("error while fetching the secrets")
@@ -123,43 +122,37 @@ func (v *GuardrailPluginsIntAgent) listGuardrailPlugins(ctx context.Context) err
 				logger.Err(err).Ctx(ctx).Msg("error while unmarshelling creds from secret store.")
 				return dmerrors.DMError(apperr.ErrDataSourceCredsSecretGet, err)
 			}
-		}
-		// Now Sectrets have been checked....
 
-		// storing the secrets in creds
-		bedrockClient, err := bedrock.NewBedrockGuardrails(ctx, &bedrock.BedrockOpts{
-			SecretAccessKey: secrets.Credentials.AwsCreds.SecretAccessKey,
-			AccessKeyId:     secrets.Credentials.AwsCreds.AccessKeyId,
-			Region:          secrets.Credentials.AwsCreds.Region,
-		}, v.Logger)
-		if err != nil {
-			logger.Err(err).Msg("Error while creating AWS client")
-			return err
-		}
+			// storing the secrets in creds
+			bedrockClient, err := bedrock.NewBedrockGuardrails(ctx, &bedrock.BedrockOpts{
+				SecretAccessKey: secrets.AwsCreds.SecretAccessKey,
+				AccessKeyId:     secrets.AwsCreds.AccessKeyId,
+				Region:          secrets.AwsCreds.Region,
+			}, v.Logger)
+			if err != nil {
+				logger.Err(err).Msg("Error while creating AWS client")
+				return err
+			}
 
-		// Fetching the list
-		identifiers := ""
-		list, err := bedrockClient.ListGuardrails(ctx, &identifiers, v.Logger)
-		if err != nil {
-			logger.Err(err).Msg("Unable to list of guardrails")
-			return err
+			// Fetching the list
+			identifiers := ""
+			list, err := bedrockClient.ListGuardrails(ctx, &identifiers, v.Logger)
+			if err != nil {
+				logger.Err(err).Msg("Unable to list of guardrails")
+				return err
+			}
+			v.Logger.Debug().Msg("List of guardrails fetched successfully")
+			// Adding the data to the response...
+			for _, val := range list {
+				bedrockList = append(bedrockList, &pb.BedrockGuardrailList{
+					Id:   val.Id,
+					Arn:  val.ARN,
+					Name: val.Name,
+				})
+			}
 		}
-		v.Logger.Debug().Msg("List of guardrails fetched successfully")
-		// Adding the data to the response...
-		for _, val := range list {
-			bedrockList = append(bedrockList, &pb.BedrockGuardrailList{
-				Id:   val.Id,
-				Arn:  val.ARN,
-				Name: val.Name,
-			})
-		}
-
 	}
 	// setting up the response
 	v.result.Output = append(v.result.Output, bedrockList...)
 	return nil
-}
-
-func (v *GuardrailPluginsIntAgent) getPluginSecrets(ctx context.Context, secretName string) (*models.PluginNetworkParams, error) {
-	return nil, nil
 }
