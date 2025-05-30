@@ -43,7 +43,7 @@ func InitVapusGuardrailPlugins() {
 	}
 }
 
-func (v *VapusGuardrailPlugins) ListBedrock(ctx context.Context, req *pb.GuardrailsTypeGetterRequest) (*pb.GuardrailsTypeResponse, error) {
+func (v *VapusGuardrailPlugins) List(ctx context.Context, req *pb.GuardrailsTypeGetterRequest) (*pb.GuardrailsTypeResponse, error) {
 	fmt.Println("================ I have been called Bedrock ================")
 	agent, err := v.DMServices.NewGuardrailPluginsIntAgent(ctx, services.WithGuardrailPluginsManagerRequest(req), services.WithGuardrailPluginsManagerAction(mpb.ResourceLcActions_LIST))
 	if err != nil {
