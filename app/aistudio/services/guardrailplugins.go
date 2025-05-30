@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
 
 	"github.com/databricks/databricks-sql-go/logger"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
@@ -126,7 +125,7 @@ func (v *GuardrailPluginsIntAgent) listGuardrailPlugins(ctx context.Context) err
 			bedrockResp, err := v.bedrock(ctx, secrets)
 			if err != nil {
 				v.Logger.Error().Err(err).Msg("error while fetching the bedrock guardrail list")
-				return dmerrors.DMError(apperr.ErrVapusSecret404, err) // update
+				return dmerrors.DMError(apperr.ErrBedrockGuardrail, err) // update
 			}
 			bedrockList = append(bedrockList, bedrockResp...) // user might have two-three bedrock accounts
 
@@ -139,11 +138,10 @@ func (v *GuardrailPluginsIntAgent) listGuardrailPlugins(ctx context.Context) err
 			clientExist, err := v.pangea(ctx, secrets, val.NetworkParams.URL)
 			if err != nil {
 				v.Logger.Error().Err(err).Msg("error while creating the pangea client")
-				return dmerrors.DMError(apperr.ErrVapusSecret404, err) // update
+				return dmerrors.DMError(apperr.ErrPangeaGuardrail, err) // update
 			}
 			if clientExist && pangeaCnt == 0 {
 				for _, val := range types.PanegaGuardrailList {
-					val.String()
 					pangeaList = append(pangeaList, &pb.ThirdPartyGuardrailModels{
 						Name: val.String(),
 						Id:   val.String(),
@@ -161,11 +159,10 @@ func (v *GuardrailPluginsIntAgent) listGuardrailPlugins(ctx context.Context) err
 			clientExist, err := v.mistral(ctx, secrets)
 			if err != nil {
 				v.Logger.Error().Err(err).Msg("error while creating the mistral client")
-				return dmerrors.DMError(apperr.ErrVapusSecret404, err) // update
+				return dmerrors.DMError(apperr.ErrMistralGuardrail, err) // update
 			}
 			if clientExist && mistralCnt == 0 {
 				for _, val := range types.MistralGuardrailList {
-					val.String()
 					mistralList = append(mistralList, &pb.ThirdPartyGuardrailModels{
 						Name: val.String(),
 						Id:   val.String(),
@@ -191,16 +188,12 @@ func (v *GuardrailPluginsIntAgent) getPluginSecrets(ctx context.Context, secretN
 		v.Logger.Error().Err(err).Msg("error while fetching the secrets")
 		return nil, dmerrors.DMError(apperr.ErrVapusSecret404, err)
 	}
-	fmt.Println("Secrets: ", reflect.ValueOf(secretStr))
-	fmt.Println("Secrets: ", secretStr)
+
 	err = json.Unmarshal([]byte(dmutils.AnyToStr(secretStr)), secrets)
 	if err != nil {
 		logger.Err(err).Ctx(ctx).Msg("error while unmarshelling creds from secret store.")
 		return nil, dmerrors.DMError(apperr.ErrDataSourceCredsSecretGet, err)
 	}
-	fmt.Println("secrets after unmarsahling", secrets)
-	fmt.Println(secrets.ApiTokenType)
-	fmt.Println(secrets.AwsCreds.SecretAccessKey)
 	return secrets, nil
 }
 

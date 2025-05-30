@@ -262,4 +262,7 @@ var (
 	ErrFailedEmailOperatorAction           = errors.New("error while performing email operator action")
 	ErrFileConversionFailed                = errors.New("error while converting file format")
 	ErrInvalidFileStoreService             = errors.New("invalid file store service")
+	ErrBedrockGuardrail                    = errors.New("error while creating the bedrock client, invalid bedrock credential")
+	ErrPangeaGuardrail                     = errors.New("error while creating the pangea client, invalid pangea credential")
+	ErrMistralGuardrail                    = errors.New("error while creating the mistral client, invalid mistral credential")
 )
