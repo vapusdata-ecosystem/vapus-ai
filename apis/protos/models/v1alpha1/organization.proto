@@ -16,8 +16,8 @@ package models.v1alpha1;
 option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
 
 enum OrganizationType {
-	SERVICE_ORGANIZATION = 0;
-	USER_ORGANIZATION = 1;
+	USER_ORGANIZATION = 0;
+	SERVICE_ORGANIZATION = 1;
 	GOVERNANCE_ORGANIZATION = 2;
 }
 /**

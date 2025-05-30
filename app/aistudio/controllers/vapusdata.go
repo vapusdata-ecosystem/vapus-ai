@@ -172,12 +172,12 @@ func (x *VapusDataController) ResourceGetter(ctx context.Context, request *pb.Re
 		Bedrock: []string{},
 		Vapus:   []string{},
 	}
-	for _, val := range types.PanegaGuardrailList {
-		thirdPartyGuardrailList.Pangea = append(thirdPartyGuardrailList.Pangea, val.String())
-	}
-	for _, val := range types.MistralGuardrailList {
-		thirdPartyGuardrailList.Mistral = append(thirdPartyGuardrailList.Mistral, val.String())
-	}
+	// for _, val := range types.PanegaGuardrailList {
+	// 	thirdPartyGuardrailList.Pangea = append(thirdPartyGuardrailList.Pangea, val.String())
+	// }
+	// for _, val := range types.MistralGuardrailList {
+	// 	thirdPartyGuardrailList.Mistral = append(thirdPartyGuardrailList.Mistral, val.String())
+	// }
 	result.GuardrailTypes = &thirdPartyGuardrailList
 	return result, nil
 }
