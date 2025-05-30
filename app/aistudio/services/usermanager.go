@@ -198,7 +198,7 @@ func (x *UserManagerAgent) GetUser(ctx context.Context, userId string) error {
 		return nil
 	} else if user.Organization == x.CtxClaim[encryption.ClaimOrganizationKey] {
 		dmRole := user.GetOrganizationRole(x.CtxClaim[encryption.ClaimOrganizationKey])
-		if len(dmRole) > 0 && slices.Contains(dmRole[0].RoleArns, mpb.UserRoles_ORG_USER.String()) {
+		if len(dmRole) > 0 && slices.Contains(dmRole[0].RoleArns, mpb.OrgRoles_ORG_USER.String()) {
 			x.result.Output.Users = utils.DmUArToPb([]*models.Users{user}, x.CtxClaim[encryption.ClaimOrganizationKey])
 			return nil
 		} else {
@@ -247,7 +247,7 @@ func (x *UserManagerAgent) PatchUser(ctx context.Context) error {
 			x.Logger.Error().Msg("error while getting organization role from user object")
 			return dmerrors.DMError(apperr.ErrUser404, nil)
 		}
-		if !strings.Contains(x.CtxClaim[encryption.ClaimRoleKey], mpb.UserRoles_ORG_OWNER.String()) {
+		if !strings.Contains(x.CtxClaim[encryption.ClaimRoleKey], mpb.OrgRoles_ORG_OWNER.String()) {
 			x.Logger.Error().Msg("error while getting organization role from user object")
 			return dmerrors.DMError(apperr.ErrUser404, nil)
 		}

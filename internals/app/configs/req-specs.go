@@ -220,6 +220,8 @@ var EnumSpecs = map[string]map[string]int32{
 	"AIGuardrailScanMode":           mpb.AIGuardrailScanMode_value,
 	"AIResponseFormat":              mpb.AIResponseFormat_value,
 	"VapusSecretType":               mpb.VapusSecretType_value,
+	"PlatformRoles":                 mpb.PlatformRoles_value,
+	"OrgRoles":                      mpb.OrgRoles_value,
 }
 
 func GetValidEnums() map[string]map[string]int32 {
