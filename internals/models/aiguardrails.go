@@ -1,9 +1,6 @@
 package models
 
 import (
-	"fmt"
-	"reflect"
-
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
@@ -130,6 +127,7 @@ func (a *AIGuardrails) ConvertFromPb(obpb *mpb.AIGuardrails) *AIGuardrails {
 	}
 	a.EligibleModelNodes = obpb.EligibleModelNodes
 	a.Partner = make([]*ThirdParty, len(obpb.Partner))
+
 	for i := range obpb.Topics {
 		a.Topics[i] = new(TopicGuardrails).ConvertFromPb(obpb.Topics[i])
 	}
@@ -139,7 +137,7 @@ func (a *AIGuardrails) ConvertFromPb(obpb *mpb.AIGuardrails) *AIGuardrails {
 	for i := range obpb.SensitiveDataset {
 		a.SensitiveDataset[i] = new(SensitiveDataGuardrails).ConvertFromPb(obpb.SensitiveDataset[i])
 	}
-	fmt.Println("obpb.Partner: ", reflect.ValueOf(obpb.Partner))
+	// fmt.Println("obpb.Partner: ", reflect.ValueOf(obpb.Partner))
 	for i := range obpb.Partner {
 		a.Partner[i] = new(ThirdParty).ConvertFromPb(obpb.Partner[i])
 	}

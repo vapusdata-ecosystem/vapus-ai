@@ -151,7 +151,7 @@ func (x *OrganizationAgent) listOrganizationUsers(ctx context.Context) error {
 	if err != nil {
 		return dmerrors.DMError(apperr.ErrInvalidOrganizationRequested, err) //nolint:wrapcheck
 	}
-	filter := fmt.Sprintf(`organization_roles @> '[{"organizationId": "%s"}]'`, organizationObj.VapusID)
+	filter := fmt.Sprintf(`roles @> '[{"organizationId": "%s"}]'`, organizationObj.VapusID)
 	users, err := x.dmStore.ListUsers(ctx, filter, x.CtxClaim)
 	if err != nil {
 		return dmerrors.DMError(apperr.ErrInvalidOrganizationRequested, err) //nolint:wrapcheck
