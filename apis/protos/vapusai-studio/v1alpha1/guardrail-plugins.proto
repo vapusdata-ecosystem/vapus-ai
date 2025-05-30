@@ -9,9 +9,9 @@ option go_package = "github.com/vapusdata-ecosystem/apis/protos/aistudio/v1alpha
 
 
 service GuardrailPlugins {
-    rpc ListBedrock(GuardrailsTypeGetterRequest) returns(GuardrailsTypeResponse) {
+    rpc List(GuardrailsTypeGetterRequest) returns(GuardrailsTypeResponse) {
         option (google.api.http) = {
-            get: "/api/v1alpha1/aistudio/guardrails/bedrock"
+            get: "/api/v1alpha1/aistudio/guardrails-plugins"
         };
     }
 }
