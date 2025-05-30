@@ -34,7 +34,7 @@ export default function SecretDetailsPage({ params }) {
     const fetchSecretDetails = async () => {
       try {
         const response = await secretStoreApi.getSecretStoreName(secretName);
-
+        console.log("secretDetails", response);
         if (!response) {
           console.error("No response received from server");
           setError("No response received from server");
@@ -136,7 +136,7 @@ export default function SecretDetailsPage({ params }) {
     <div className="bg-zinc-800 flex h-screen">
       <div className="overflow-y-auto h-screen w-full">
         <Header
-          sectionHeader="Secret Service Details"
+          sectionHeader="Secret  Details"
           hideBackListingLink={false}
           backListingLink="./"
         />
@@ -196,12 +196,12 @@ export default function SecretDetailsPage({ params }) {
                   <p className="p-2">{secret.provider}</p>
                 </div>
 
-                {/* Domain */}
+                {/* Organization */}
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Domain:
+                    Organization:
                   </p>
-                  <p className="p-2">{secret.resourceBase?.domain}</p>
+                  <p className="p-2">{secret.resourceBase?.organization}</p>
                 </div>
 
                 {/* Data */}

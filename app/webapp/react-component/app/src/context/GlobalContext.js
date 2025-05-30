@@ -1,5 +1,5 @@
 import { getAccessToken } from "@/app/utils/api";
-import { domainApi } from "@/app/utils/settings-endpoint/domain-api";
+import { domainApi } from "@/app/utils/settings-endpoint/organization-api";
 
 // function to decode accessToken and get the data
 function parseJwt(token) {

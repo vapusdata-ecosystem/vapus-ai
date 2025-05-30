@@ -521,7 +521,7 @@ export default function UpdateGuardrail({ params }) {
       } else {
         toast.success("Resource updated successfully.");
         setTimeout(() => {
-          router.push(`/ai-center/guardrails`);
+          router.push(`/ai-center/guardrails/${guardrail_id}`);
         }, 1000);
       }
     } catch (error) {
@@ -532,7 +532,6 @@ export default function UpdateGuardrail({ params }) {
     }
   };
 
-  // Handle error case
   // Handle error case
   if (!guardrail) {
     return (

@@ -47,9 +47,54 @@ export default function RootLayout({ children }) {
     }
   }, [pathname, isLoginPage, router]);
 
-  // Check for not-found page
+  // Improved 404 detection
   useEffect(() => {
-    setIsNotFoundPage(!!document.getElementById("not-found-page"));
+    // Method 1: Check for common 404 indicators
+    const checkFor404 = () => {
+      // Check if the current page has a not-found indicator
+      const notFoundElement =
+        document.getElementById("not-found-page") ||
+        document.querySelector('[data-testid="not-found"]') ||
+        document.querySelector(".not-found") ||
+        document.querySelector('[class*="not-found"]') ||
+        document.querySelector('[class*="404"]');
+
+      // Check if page title indicates 404
+      const titleIndicates404 =
+        document.title.toLowerCase().includes("404") ||
+        document.title.toLowerCase().includes("not found");
+
+      // Check URL patterns that might indicate 404 (customize based on your routes)
+      const urlPattern404 = /\/(404|not-found)$/i.test(pathname);
+
+      return !!(notFoundElement || titleIndicates404 || urlPattern404);
+    };
+
+    // Initial check
+    setIsNotFoundPage(checkFor404());
+
+    // Use MutationObserver to detect DOM changes (for dynamic content)
+    const observer = new MutationObserver(() => {
+      setIsNotFoundPage(checkFor404());
+    });
+
+    // Observe changes to the document body
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "id", "data-testid"],
+    });
+
+    // Also check after a small delay to catch delayed renders
+    const timeoutId = setTimeout(() => {
+      setIsNotFoundPage(checkFor404());
+    }, 100);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
   }, [pathname]);
 
   // Show loading while checking authentication

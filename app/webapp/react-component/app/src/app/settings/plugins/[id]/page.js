@@ -195,12 +195,12 @@ export default function PluginDetailsPage({ params }) {
                   <p className="p-2">{pluginData.pluginId || "N/A"}</p>
                 </div>
 
-                {/* Domain */}
+                {/* Organization */}
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Domain:
+                    Organization:
                   </p>
-                  <p className="p-2">{pluginData.domain || "N/A"}</p>
+                  <p className="p-2">{pluginData.organization || "N/A"}</p>
                 </div>
 
                 {/* Plugin Type */}

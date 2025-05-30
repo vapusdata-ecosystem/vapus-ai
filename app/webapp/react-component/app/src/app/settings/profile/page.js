@@ -27,8 +27,24 @@ const UserDetails = () => {
           // Make API call to get user profile with userId
           const data = await userProfileApi.getuserProfile(userId);
           console.log("data", data);
-          setUserData(data.output.users[0]);
-          setDomainMap(data.domainMap);
+
+          // Fix: Handle array structure - data could be an array or have users array
+          let user;
+          if (Array.isArray(data)) {
+            user = data[0]; // If data is directly an array
+          } else if (data.output && Array.isArray(data.output.users)) {
+            user = data.output.users[0]; // If data has output.users structure
+          } else if (data.users && Array.isArray(data.users)) {
+            user = data.users[0]; // If data has users array
+          } else {
+            user = data; // If data is the user object directly
+          }
+
+          setUserData(user);
+          // Handle domainMap - it might be at different levels or missing
+          const domainMapData =
+            data?.domainMap || data?.output?.domainMap || {};
+          setDomainMap(domainMapData);
         } else {
           console.error("User ID not found in global context");
         }
@@ -58,7 +74,7 @@ const UserDetails = () => {
   // Action button for update
   const responseData = {
     resourceId: "resource-123",
-    createActionParams: userData.createActionParams || {
+    createActionParams: userData?.createActionParams || {
       weblink: "./profile/update",
     },
   };
@@ -86,7 +102,7 @@ const UserDetails = () => {
           <div className="overflow-x-auto text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
             {/* Profile Header Section */}
             <div className="bg-[#1b1b1b] rounded-lg p-4 shadow-md">
-              <div className="flex  items-center text-center space-y-4">
+              <div className="flex items-center text-center space-y-4">
                 {/* Profile Avatar */}
                 <div className="w-24 h-24 rounded-full border-4 border-gray-600 overflow-hidden bg-zinc-700 flex items-center justify-center">
                   {userData?.profile?.avatar ? (
@@ -115,26 +131,30 @@ const UserDetails = () => {
 
                 {/* Display Name */}
                 <div>
-                  <h2 className="text-2xl font-bold  mb-2">
+                  <h2 className="text-2xl font-bold mb-2">
                     {userData?.displayName || "No Display Name"}
                   </h2>
                   <p>{userData?.email || "No Email"}</p>
                 </div>
 
-                {/* Status Badge */}
+                {/* Status Badge - Fixed: Use status directly, not resourceBase.status */}
                 <div>
                   <span
                     className={`px-4 py-2 text-sm font-medium rounded-full ${
+                      userData?.status === "ACTIVE" ||
                       userData?.resourceBase?.status === "ACTIVE"
                         ? "text-green-800 bg-green-100"
                         : "text-red-800 bg-red-100"
                     }`}
                   >
-                    {userData?.resourceBase?.status || "N/A"}
+                    {userData?.status ||
+                      userData?.resourceBase?.status ||
+                      "N/A"}
                   </span>
                 </div>
               </div>
             </div>
+
             {/* User Information */}
             <div className="tab-content mt-2 bg-[#1b1b1b] rounded-lg p-4">
               {/* User Details Section */}
@@ -172,19 +192,32 @@ const UserDetails = () => {
                     {userData?.invitedType || "N/A"}
                   </p>
                 </div>
+
+                {/* Fixed: Use platformRoles if it exists, otherwise show platform policies or a fallback */}
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Platform Role:
                   </p>
                   <p className="break-words p-2">
-                    {userData?.platformRoles?.map((role, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-200 rounded-full mr-2"
-                      >
-                        {role}
-                      </span>
-                    ))}
+                    {userData?.platformRoles?.length > 0
+                      ? userData.platformRoles.map((role, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-200 rounded-full mr-2"
+                          >
+                            {role}
+                          </span>
+                        ))
+                      : userData?.platformPolicies?.length > 0
+                      ? userData.platformPolicies.map((policy, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-200 rounded-full mr-2"
+                          >
+                            {policy}
+                          </span>
+                        ))
+                      : "No Platform Roles"}
                   </p>
                 </div>
               </div>
@@ -259,41 +292,47 @@ const UserDetails = () => {
                   </>
                 )}
 
-              {/* Organization Roles Section */}
+              {/* Organization Roles Section - Fixed: Use 'roles' instead of 'domainRoles' */}
               <h3 className="text-xl mb-4 font-bold text-[#f4d1c2] underline">
                 Organization Roles:
               </h3>
               <div className="space-y-4">
-                {userData?.domainRoles?.map((Organization, index) => (
-                  <div
-                    key={index}
-                    className="bg-zinc-700 p-4 rounded-lg shadow-md"
-                  >
-                    <h4 className="text-md font-semibold">
-                      Organization ID: {Organization.organizationId}{" "}
-                      {domainMap[Organization.organizationId] &&
-                        `(${domainMap[Organization.organizationId]})`}
-                    </h4>
-                    <div className="flex flex-col sm:flex-row sm:justify-between mt-2">
-                      <div>
-                        <p className="font-semibold text-gray-400">Roles</p>
-                        <ul className="list-disc ml-5">
-                          {Organization.role?.map((role, roleIndex) => (
-                            <li key={roleIndex}>{role}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-400">
-                          Invited On:
-                        </p>
-                        <p className="break-words p-2">
-                          {formatEpochTime(Organization.invitedOn)}
-                        </p>
+                {userData?.roles?.length > 0 ? (
+                  userData.roles.map((organizationRole, index) => (
+                    <div
+                      key={index}
+                      className="bg-zinc-700 p-4 rounded-lg shadow-md"
+                    >
+                      <h4 className="text-md font-semibold">
+                        Organization ID: {organizationRole.organizationId}
+                        {domainMap &&
+                          Object.keys(domainMap).length > 0 &&
+                          domainMap[organizationRole.organizationId] &&
+                          ` (${domainMap[organizationRole.organizationId]})`}
+                      </h4>
+                      <div className="flex flex-col sm:flex-row sm:justify-between mt-2">
+                        <div>
+                          <p className="font-semibold text-gray-400">Roles</p>
+                          <ul className="list-disc ml-5">
+                            {organizationRole.role?.map((role, roleIndex) => (
+                              <li key={roleIndex}>{role}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-400">
+                            Invited On:
+                          </p>
+                          <p className="break-words p-2">
+                            {formatEpochTime(organizationRole.invitedOn)}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-gray-400">No organization roles found</p>
+                )}
               </div>
             </div>
           </div>

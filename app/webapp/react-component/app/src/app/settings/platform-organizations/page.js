@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Header from "@/app/components/platform/header";
-import { platformDomainApi } from "@/app/utils/settings-endpoint/platform-domain";
+import { platformDomainApi } from "@/app/utils/settings-endpoint/platform-organization";
 import CreateNewButton from "@/app/components/add-new-button";
 import { userGlobalData } from "@/context/GlobalContext";
 import { userProfileApi } from "@/app/utils/settings-endpoint/profile-api";
@@ -13,11 +13,10 @@ const DataTable = dynamic(() => import("@/app/components/table"), {
 });
 
 const PlatformDomains = () => {
-  const [domains, setDomains] = useState([]);
+  const [Organization, setDomains] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [createTemplate, setCreateTemplate] = useState("");
-  // Removed unused contextData and userData state variables
   const [domainMapData, setDomainMapData] = useState({});
 
   useEffect(() => {
@@ -31,11 +30,12 @@ const PlatformDomains = () => {
           const userId = globalContext.userInfo.userId;
           // Make API call to get user profile with userId
           const data = await userProfileApi.getuserProfile(userId);
+          console.log("Anand", data);
 
           if (data.output?.users && data.output.users.length > 0) {
-            // Store the domainMap for access checking
-            if (data.domainMap) {
-              setDomainMapData(data.domainMap);
+            // Store the organizationMap for access checking
+            if (data.organizationMap) {
+              setDomainMapData(data.organizationMap);
             }
           } else {
             console.error("No users found in API response");
@@ -54,25 +54,22 @@ const PlatformDomains = () => {
     fetchData();
   }, []);
 
-  // Function to fetch the domains data
   const fetchDomainsData = async () => {
     try {
       const data = await platformDomainApi.getplatformdomain();
-      return data.output?.domains || [];
+      console.log("Organization", data);
+      return data.output?.organizations || [];
     } catch (error) {
-      console.error("Error fetching domains data:", error);
-      setError(error.message || "Failed to fetch domains data");
+      console.error("Error fetching Organization data:", error);
+      setError(error.message || "Failed to fetch Organization data");
       return [];
     }
   };
 
   const transformDomainsData = (domainItems) => {
     return domainItems.map((item) => {
-      const domainId = item.domainId;
-
-      // Check if domainId exists in domainMap
-      const hasAccess = domainMapData.hasOwnProperty(domainId);
-      // console.log(`Domain ${domainId} - Has access:`, hasAccess);
+      const organizationId = item.organizationId;
+      const hasAccess = domainMapData.hasOwnProperty(organizationId);
 
       const accessGrantedSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" class="inline">
         <defs>
@@ -101,8 +98,8 @@ const PlatformDomains = () => {
       return {
         "Display Name": item.displayName || "N/A",
         Status: item.status || "N/A",
-        Id: domainId || "N/A",
-        "Domain Type": item.domainType || "N/A",
+        Id: item.organizationId || "N/A",
+        "Domain Type": item.organizationType || "N/A",
         "Has Access": hasAccess
           ? `<div class="ml-8">${accessGrantedSvg}</div>`
           : `<div class="ml-8">${accessDeniedSvg}</div>`,
@@ -110,7 +107,7 @@ const PlatformDomains = () => {
     });
   };
 
-  // For loading domains data - only run after domainMap is loaded
+  // For loading Organization data - only run after organizationMap is loaded
   useEffect(() => {
     if (Object.keys(domainMapData).length >= 0) {
       const loadData = async () => {
@@ -133,7 +130,7 @@ const PlatformDomains = () => {
     <div className="bg-zinc-800 flex h-screen">
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
-          sectionHeader="Domains"
+          sectionHeader="Organization"
           hideBackListingLink={true}
           backListingLink="./"
         />
@@ -141,7 +138,10 @@ const PlatformDomains = () => {
         <div className="flex-grow p-2 w-full">
           <div className="flex justify-end mb-2 items-center p-2">
             {/* Add your create new resource button here */}
-            <CreateNewButton href="./platform-domain/create" label="Add New" />
+            <CreateNewButton
+              href="./platform-organizations/create"
+              label="Add New"
+            />
           </div>
 
           <section id="tables" className="space-y-6">
@@ -149,7 +149,7 @@ const PlatformDomains = () => {
               <div className="flex justify-center items-center h-64 text-red-400">
                 <div className="text-xl">Error: {error}</div>
               </div>
-            ) : domains.length === 0 && !isLoading ? (
+            ) : Organization.length === 0 && !isLoading ? (
               <div className="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
                 <table
                   className="min-w-full divide-y divide-zinc-500 text-xs text-gray-100 border-2 border-zinc-500"
@@ -164,7 +164,7 @@ const PlatformDomains = () => {
                         colSpan="5"
                         className="px-3 py-3 whitespace-nowrap text-center"
                       >
-                        No Domains found
+                        No Organization found
                       </td>
                     </tr>
                   </tbody>
@@ -174,7 +174,7 @@ const PlatformDomains = () => {
               <div className="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
                 <DataTable
                   id="platformDomainsTable"
-                  data={domains}
+                  data={Organization}
                   columns={columns}
                   loading={isLoading}
                   filteredColumns={filteredColumns}

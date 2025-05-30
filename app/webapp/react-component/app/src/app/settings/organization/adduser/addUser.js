@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import RemoveButton from "@/app/components/buttons/removeButton";
 import AddButton from "@/app/components/buttons/addButton";
 import { toast } from "react-toastify";
-import { addUsersApi } from "@/app/utils/settings-endpoint/domain-api";
+import { addUsersApi } from "@/app/utils/settings-endpoint/organization-api";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import MultiSelectDropdown from "@/app/components/multiSelectDropdown";
 import { enumsApi } from "@/app/utils/developers-endpoint/enums";
