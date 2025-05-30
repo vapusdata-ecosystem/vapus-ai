@@ -131,10 +131,23 @@ func (x *OrganizationAgent) addOrganizationUsers(ctx context.Context) error {
 		return dmerrors.DMError(apperr.ErrInvalidOrganizationRequested, nil)
 	}
 	for _, user := range x.userAddRequest.GetUsers() {
+		f := []string{}
+		for _, role := range user.GetRole() {
+			_, ok := mpb.OrgRoles_value[role]
+			if ok {
+				f = append(f, role)
+			} else {
+				x.Logger.Warn().Ctx(ctx).Msgf("Invalid role %s for user %s in organization %s", role, user.GetUserId(), x.organization.VapusID)
+			}
+		}
+		if len(f) == 0 {
+			x.Logger.Warn().Ctx(ctx).Msgf("No valid roles found for user %s in organization %s", user.GetUserId(), x.organization.VapusID)
+			f = []string{mpb.OrgRoles_ORG_USER.String()} // Default to member if no valid roles provided
+		}
 		if !slices.Contains(x.organization.Users, user.GetUserId()) {
 			err := x.attachOrganization2User(ctx, user.GetUserId(), user.InviteIfNotFound, &models.UserOrganizationRole{
 				OrganizationId: x.organization.VapusID,
-				RoleArns:       user.GetRole(),
+				RoleArns:       f,
 			})
 			if err != nil {
 				x.Logger.Err(err).Ctx(ctx).Msgf("error while mapping user %s to this organization %v", user, x.organization)
@@ -151,7 +164,7 @@ func (x *OrganizationAgent) listOrganizationUsers(ctx context.Context) error {
 	if err != nil {
 		return dmerrors.DMError(apperr.ErrInvalidOrganizationRequested, err) //nolint:wrapcheck
 	}
-	filter := fmt.Sprintf(`roles @> '[{"organizationId": "%s"}]'`, organizationObj.VapusID)
+	filter := fmt.Sprintf(`organization_roles @> '[{"organizationId": "%s"}]'`, organizationObj.VapusID)
 	users, err := x.dmStore.ListUsers(ctx, filter, x.CtxClaim)
 	if err != nil {
 		return dmerrors.DMError(apperr.ErrInvalidOrganizationRequested, err) //nolint:wrapcheck
@@ -178,7 +191,7 @@ func (x *OrganizationAgent) configureOrganization(ctx context.Context) error {
 	}
 	err = x.attachOrganization2User(ctx, x.CtxClaim[encryption.ClaimUserIdKey], true, &models.UserOrganizationRole{
 		OrganizationId: x.organization.VapusID,
-		RoleArns:       []string{mpb.UserRoles_ORG_USER.String()},
+		RoleArns:       []string{mpb.OrgRoles_ORG_USER.String()},
 	})
 	if err != nil {
 		x.Logger.Err(err).Ctx(ctx).Msgf("error while mapping user as organization owner to this organization %v", x.organization)

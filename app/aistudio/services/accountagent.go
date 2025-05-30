@@ -105,7 +105,7 @@ func (x *AccountAgent) GetResponse() *models.Account {
 
 func (x *AccountAgent) configureAIAttributes(ctx context.Context) (*models.Account, error) {
 	userRoles := strings.Split(x.CtxClaim[encryption.ClaimRoleKey], ",")
-	if !slices.Contains(userRoles, mpb.UserRoles_SERVICE_OWNER.String()) || !slices.Contains(userRoles, mpb.UserRoles_SERVICE_OPERATOR.String()) {
+	if !slices.Contains(userRoles, mpb.PlatformRoles_SERVICE_OWNER.String()) || !slices.Contains(userRoles, mpb.PlatformRoles_SERVICE_OPERATOR.String()) {
 		return nil, dmerrors.DMError(apperr.ErrAccountOps403, nil)
 
 	}
@@ -134,7 +134,7 @@ func (x *AccountAgent) configureAIAttributes(ctx context.Context) (*models.Accou
 
 func (x *AccountAgent) updateAccount(ctx context.Context) (*models.Account, error) {
 	userRoles := strings.Split(x.CtxClaim[encryption.ClaimRoleKey], ",")
-	if !slices.Contains(userRoles, mpb.UserRoles_SERVICE_OWNER.String()) || x.organization.OrganizationType != mpb.OrganizationType_SERVICE_ORGANIZATION.String() {
+	if !slices.Contains(userRoles, mpb.PlatformRoles_SERVICE_OWNER.String()) || x.organization.OrganizationType != mpb.OrganizationType_SERVICE_ORGANIZATION.String() {
 		return nil, dmerrors.DMError(apperr.ErrAccountOps403, nil)
 	}
 	var err error

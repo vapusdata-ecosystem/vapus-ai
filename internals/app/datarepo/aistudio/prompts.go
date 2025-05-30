@@ -3,6 +3,7 @@ package aidmstore
 import (
 	"context"
 	"fmt"
+	"log"
 
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	apperr "github.com/vapusdata-ecosystem/vapusai/core/app/errors"
@@ -33,6 +34,7 @@ func (ds *AIStudioDMStore) ListAIPrompts(ctx context.Context, condition string, 
 	condition = apppkgs.GetAccountFilter(ctxClaim, condition)
 	query := fmt.Sprintf("SELECT * FROM %s WHERE %s", apppkgs.AIModelPromptTable, condition)
 	result := []*models.AIPrompt{}
+	log.Println("query:", query)
 	err := ds.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	if err != nil {
 		ds.logger.Err(err).Ctx(ctx).Msg("error while fetching ai prompt list from datastore")

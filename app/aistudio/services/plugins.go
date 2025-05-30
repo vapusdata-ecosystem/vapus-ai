@@ -162,7 +162,7 @@ func (v *PluginManagerAgent) configurePlugin(ctx context.Context) error {
 		}
 	}
 	if plugin.Scope == mpb.ResourceScope_ORGANIZATION_SCOPE.String() {
-		if !strings.Contains(v.CtxClaim[encryption.ClaimOrganizationRolesKey], mpb.UserRoles_ORG_OWNER.String()) {
+		if !strings.Contains(v.CtxClaim[encryption.ClaimOrganizationRolesKey], mpb.OrgRoles_ORG_OWNER.String()) {
 			return dmerrors.DMError(apperr.ErrPluginOrganizationScope403, nil)
 		}
 	}

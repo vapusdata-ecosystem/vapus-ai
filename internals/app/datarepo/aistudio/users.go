@@ -196,7 +196,7 @@ func (ds *AIStudioDMStore) PutUser(ctx context.Context, obj *models.Users, ctxCl
 
 func (ds *AIStudioDMStore) GetOrganizationUsers(ctx context.Context, organization string, ctxClaim map[string]string) ([]*models.Users, error) {
 	result := []*models.Users{}
-	query := fmt.Sprintf(`SELECT * FROM %s WHERE roles @> '[{"organizationId": "%s"}]'`, apppkgs.UsersTable, organization)
+	query := fmt.Sprintf(`SELECT * FROM %s WHERE organization_roles @> '[{"organizationId": "%s"}]'`, apppkgs.UsersTable, organization)
 	err := ds.Db.PostgresClient.SelectInApp(ctx, &query, &result)
 	if err != nil {
 		logger.Err(err).Ctx(ctx).Msg("error while getting users from datastore")

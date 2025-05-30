@@ -9,13 +9,16 @@ package models.v1alpha1;
 option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
 
 
-enum UserRoles {
+enum PlatformRoles {
     ANONYMOUS = 0;
     SERVICE_OWNER = 1;
     SERVICE_OPERATOR = 2;
-    ORG_OWNER = 3;
-    ORG_USER = 4;
-    AI_GOVERNER = 5;
+    AI_GOVERNER = 3;
+}
+
+enum OrgRoles {
+    ORG_OWNER = 0;
+    ORG_USER = 1;
 }
 
 enum UserInviteType {

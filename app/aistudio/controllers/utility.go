@@ -69,6 +69,6 @@ func (x *UtilityController) Download(ctx context.Context, request *dpb.DownloadR
 	if err != nil {
 		return nil, pbtools.HandleGrpcError(err, grpccodes.Internal) //nolint:wrapcheck
 	}
-	resp := utAgent.GetDownloadResult()
+	resp := utAgent.GetFetchResult()
 	return resp, nil
 }

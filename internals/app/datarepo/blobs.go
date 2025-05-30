@@ -3,6 +3,7 @@ package datarepo
 import (
 	"context"
 	"fmt"
+	"log"
 	"path/filepath"
 	"slices"
 
@@ -82,10 +83,7 @@ func ValidateFileCache(ctx context.Context, dmstores *apppkgs.VapusStore, checks
 		return 0, false, err
 	}
 	if obj.Checksums != nil {
-		fmt.Println("obj.Checksums: ", obj.Checksums)
-		fmt.Println("Checksums: ", checksum)
 		if slices.Contains(obj.Checksums, checksum) {
-			fmt.Println("Checksum exsits ========")
 			return int(obj.Counter), true, nil
 		} else {
 			obj.Counter += 1
@@ -98,16 +96,19 @@ func ValidateFileCache(ctx context.Context, dmstores *apppkgs.VapusStore, checks
 }
 
 func GetFile(ctx context.Context, dmstores *apppkgs.VapusStore, filePath string, ctxClaim map[string]string) (*models.FileStoreLog, error) {
+	// okay, here I need to fetch the file data and
 	if filePath == "" {
 		return nil, apperr.ErrAIModelNode404
 	}
 	result := &models.FileStoreLog{}
 	query := fmt.Sprintf("SELECT * FROM %s WHERE path = '%s' AND created_by = '%s'", apppkgs.FileStoreLogTable, filePath, ctxClaim[encryption.ClaimUserIdKey])
-	err := dmstores.Db.PostgresClient.SelectInApp(ctx, &query, &result)
+	log.Println("Query to get file from datastore: ", query)
+	err := dmstores.Db.PostgresClient.SelectInApp(ctx, &query, result)
 	if err != nil {
 		logger.Err(err).Ctx(ctx).Msg("error while getting the file from datastore")
 		return nil, err
 	}
+	log.Println("File retrieved from datastore: ", result)
 	return result, nil
 }
 
