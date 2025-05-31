@@ -22,13 +22,13 @@ message GuardrailsTypeGetterRequest {
 
 message BedrockGuardrailModels {
     string id = 1; // @gotags: yaml:"id"
-    string Name = 2; // @gotags: yaml:"name"
+    string name = 2; // @gotags: yaml:"name"
     string arn = 3; // @gotags: yaml:"arn"
 }
 
 message ThirdPartyGuardrailModels {
     string id = 1; // @gotags: yaml:"id"
-    string Name = 2; // @gotags: yaml:"name"
+    string name = 2; // @gotags: yaml:"name"
 }
 
 message GuardrailsTypeResponse {
