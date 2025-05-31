@@ -14,14 +14,14 @@ import {
 import AddButton from "@/app/components/buttons/addButton";
 import RemoveButton from "@/app/components/buttons/removeButton";
 import { userGlobalData } from "@/context/GlobalContext";
-import { UploadFileApi } from "@/app/utils/file-endpoint/file";
+import { DownloadFileApi, UploadFileApi } from "@/app/utils/file-endpoint/file";
 
 export default function UpdateProfile() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("form");
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
-  const [domainMap, setDomainMap] = useState({});
+  const [organizationMap, setOrganizationMap] = useState({});
   const [contextData, setContextData] = useState(null);
   const [formData, setFormData] = useState({
     displayName: "",
@@ -64,11 +64,13 @@ export default function UpdateProfile() {
           console.log("data", data);
 
           const userInfo = data.output.users[0];
+          const avatarPath = userInfo.profile.avatar;
+          console.log("avatar", avatarPath);
           setUserData(userInfo);
-          setDomainMap(data.domainMap);
+          setOrganizationMap(data.organizationMap);
 
-          // Populate form data with fetched user data
-          populateFormData(userInfo);
+          // Populate form data with fetched user data (now async)
+          await populateFormData(userInfo);
         } else {
           console.error("User ID not found in global context");
         }
@@ -83,9 +85,38 @@ export default function UpdateProfile() {
     fetchData();
   }, []);
 
+  // Api to Download the file
+  const downloadAndDecodeAvatar = async (avatarPath) => {
+    try {
+      if (!avatarPath) return null;
+
+      // Call the download API
+      const response = await DownloadFileApi.getDownloadFile({
+        path: avatarPath,
+      });
+
+      console.log("Avatar download response:", response);
+
+      // Extract data and format from response
+      if (response && response.data && response.format) {
+        const { data, format } = response;
+
+        // Create base64 image URL
+        const mimeType = `image/${format.toLowerCase()}`;
+        const base64Image = `data:${mimeType};base64,${data}`;
+
+        return base64Image;
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error downloading avatar:", error);
+      return null;
+    }
+  };
+
   // Function to populate form data from API response
-  const populateFormData = (userInfo) => {
-    // Set basic form data
+  const populateFormData = async (userInfo) => {
     const newFormData = {
       displayName: userInfo.displayName || "",
       avatar: userInfo.profile?.avatar || "",
@@ -94,7 +125,7 @@ export default function UpdateProfile() {
 
     // Handle addresses
     if (userInfo.profile?.addresses && userInfo.profile.addresses.length > 0) {
-      // If user has existing addresses, use them
+      // If user has existing addresses
       newFormData.addresses = userInfo.profile.addresses.map((addr) => ({
         street_address1: addr.street_address1 || "",
         street_address2: addr.street_address2 || "",
@@ -123,14 +154,18 @@ export default function UpdateProfile() {
 
     // Set form data
     setFormData(newFormData);
-
-    // Set avatar preview and uploaded path if avatar exists
     if (userInfo.profile?.avatar) {
-      setAvatarPreview(userInfo.profile.avatar);
-      setUploadedAvatarPath(userInfo.profile.avatar); // Store existing avatar path
+      setUploadedAvatarPath(userInfo.profile.avatar);
+
+      // Download and decode the avatar image
+      const decodedAvatar = await downloadAndDecodeAvatar(
+        userInfo.profile.avatar
+      );
+      if (decodedAvatar) {
+        setAvatarPreview(decodedAvatar);
+      }
     }
   };
-
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -154,7 +189,7 @@ export default function UpdateProfile() {
       }
 
       // Validate file size (5MB limit)
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         toast.error("File size must be less than 5MB");
         return;
@@ -208,14 +243,12 @@ export default function UpdateProfile() {
       // Extract responsePath from the upload response
       if (uploadResponse.output && uploadResponse.output.length > 0) {
         const responsePath = uploadResponse.output[0].responsePath;
-
-        // Store the uploaded image path
         setUploadedAvatarPath(responsePath);
 
         // Update form data with the response path instead of base64
         setFormData((prevData) => ({
           ...prevData,
-          avatar: responsePath, // Use responsePath instead of base64Data
+          avatar: responsePath,
         }));
 
         toast.success("Avatar uploaded successfully!");
@@ -229,12 +262,11 @@ export default function UpdateProfile() {
       // Reset avatar on error
       setAvatarPreview("");
       setAvatarFile(null);
-      setUploadedAvatarPath(""); // Reset the uploaded path
+      setUploadedAvatarPath("");
       setFormData((prevData) => ({
         ...prevData,
         avatar: "",
       }));
-      // Clear the file input
       document.getElementById("avatar").value = "";
     } finally {
       setIsLoading(false);

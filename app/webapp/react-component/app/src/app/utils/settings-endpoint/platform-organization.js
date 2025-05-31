@@ -2,7 +2,7 @@ import { fetchApi } from "../api";
 
 const API_ENDPOINTS = {
   // AI Studio
-  PLATFORM_DOMAIN: "/api/v1alpha1/domains",
+  PLATFORM_DOMAIN: "/api/v1alpha1/organizations",
 };
 
 export const platformDomainApi = {

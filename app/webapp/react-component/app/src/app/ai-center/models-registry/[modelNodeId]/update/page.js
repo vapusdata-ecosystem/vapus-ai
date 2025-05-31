@@ -8,7 +8,6 @@ import NetworkCredentials from "@/app/components/formcomponets/NetworkCredential
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import { toast } from "react-toastify";
 import LoadingOverlay from "@/app/components/loading/loading";
-import YamlEditorClient from "@/app/components/formcomponets/ymal";
 import { useRouter } from "next/navigation";
 import { enumsApi } from "@/app/utils/developers-endpoint/enums";
 import { strTitle, wordLimit } from "@/app/components/JS/common";
@@ -21,7 +20,7 @@ const CreateModelsNodesUpdate = ({ params }) => {
   const ai_model_node_id = unwrappedParams?.modelNodeId
     ? String(unwrappedParams.modelNodeId).trim()
     : "";
-  const [formMode, setFormMode] = useState("form"); // 'form' or 'yaml'
+  const [formMode, setFormMode] = useState("form");
   const [showDropdownMenu, setShowDropdownMenu] = useState(false);
   const [showGuardrailsDropdown, setShowGuardrailsDropdown] = useState(false);
   const [guardrails, setGuardrails] = useState([]);
@@ -30,6 +29,11 @@ const CreateModelsNodesUpdate = ({ params }) => {
   const [initialNetworkParams, setInitialNetworkParams] = useState(null);
   const [networkParams, setNetworkParams] = useState({});
   const [serviceProviderLogos, setServiceProviderLogos] = useState({});
+  const [selectedModels, setSelectedModels] = useState({
+    generativeModels: [],
+    embeddingModels: [],
+  });
+
   const [enums, setEnums] = useState({
     SvcProvider: [],
     ResourceScope: [],
@@ -53,6 +57,42 @@ const CreateModelsNodesUpdate = ({ params }) => {
       ...providers.filter((provider) => provider === selectedProvider),
       ...providers.filter((provider) => provider !== selectedProvider),
     ];
+  };
+
+  // function to initialize selected models
+  const initializeSelectedModels = (modelNode) => {
+    if (modelNode && modelNode.attributes) {
+      const generativeModels = modelNode.attributes.generativeModels || [];
+      const embeddingModels = modelNode.attributes.embeddingModels || [];
+
+      setSelectedModels({
+        generativeModels: generativeModels.map((model) => model.modelId),
+        embeddingModels: embeddingModels.map((model) => model.modelId),
+      });
+    }
+  };
+
+  // function to handle model checkbox changes
+  const handleModelCheckboxChange = (modelId, modelType) => {
+    setSelectedModels((prevState) => {
+      const updatedModels = { ...prevState };
+      const modelArray = updatedModels[modelType];
+
+      if (modelArray.includes(modelId)) {
+        updatedModels[modelType] = modelArray.filter((id) => id !== modelId);
+      } else {
+        updatedModels[modelType] = [...modelArray, modelId];
+      }
+
+      return updatedModels;
+    });
+  };
+
+  const isModelSelected = (modelId, modelType) => {
+    return selectedModels[modelType].includes(modelId);
+  };
+  const stringCheck = (value) => {
+    return value || "N/A";
   };
 
   // Fetch enums data
@@ -167,6 +207,8 @@ const CreateModelsNodesUpdate = ({ params }) => {
           })),
         },
       });
+      // Initialize selected models
+      initializeSelectedModels(modelNode);
     }
   };
 
@@ -272,6 +314,17 @@ const CreateModelsNodesUpdate = ({ params }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Filter selected models
+    const selectedGenerativeModels =
+      aiModelNode.output.aiModelNodes[0].attributes?.generativeModels?.filter(
+        (model) => selectedModels.generativeModels.includes(model.modelId)
+      ) || [];
+
+    const selectedEmbeddingModels =
+      aiModelNode.output.aiModelNodes[0].attributes?.embeddingModels?.filter(
+        (model) => selectedModels.embeddingModels.includes(model.modelId)
+      ) || [];
+
     // Combine formData with networkParams
     let dataObj = {
       ...formData,
@@ -308,6 +361,9 @@ const CreateModelsNodesUpdate = ({ params }) => {
           approved_domains: dataObj.attributes.approved_domains,
           discover_models: dataObj.attributes.discover_models,
           networkParams: dataObj.attributes.networkParams,
+          // Add the selected models
+          generativeModels: selectedGenerativeModels,
+          embeddingModels: selectedEmbeddingModels,
         },
         securityGuardrails: {
           guardrails: guardrailIds,
@@ -645,53 +701,73 @@ const CreateModelsNodesUpdate = ({ params }) => {
                           <div className="mt-2">
                             <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
                               <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-4">
-                                {getSortedProviders(
-                                  enums.SvcProvider,
+                                {/* Only show the selected service provider */}
+                                {formData.attributes.service_provider &&
+                                formData.attributes.service_provider !==
+                                  "INVALID_PROVIDER" &&
+                                enums.SvcProvider.includes(
                                   formData.attributes.service_provider
-                                ).map((provider) => (
+                                ) ? (
                                   <div
-                                    key={provider}
-                                    className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex flex-col items-center ${
-                                      formData.attributes.service_provider ===
-                                      provider
-                                        ? "border-orange-700 bg-zinc-700"
-                                        : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
-                                    }`}
-                                    onClick={() => {
-                                      const event = {
-                                        target: {
-                                          name: "attributes.service_provider",
-                                          value: provider,
-                                          type: "select",
-                                        },
-                                      };
-                                      handleInputChange(event);
-                                    }}
+                                    key={formData.attributes.service_provider}
+                                    className="border-orange-700 bg-zinc-700 border rounded-md p-3 cursor-pointer transition-all duration-200 flex flex-col items-center"
                                   >
                                     {/* Display image with text */}
                                     <div className="flex items-center gap-2">
                                       <div className="h-6 w-6 flex items-center justify-center">
-                                        {serviceProviderLogos[provider] ? (
+                                        {serviceProviderLogos[
+                                          formData.attributes.service_provider
+                                        ] ? (
                                           <img
-                                            src={serviceProviderLogos[provider]}
-                                            alt={provider}
+                                            src={
+                                              serviceProviderLogos[
+                                                formData.attributes
+                                                  .service_provider
+                                              ]
+                                            }
+                                            alt={
+                                              formData.attributes
+                                                .service_provider
+                                            }
                                             className="max-h-full max-w-full object-contain"
                                           />
                                         ) : (
                                           <div className="h-8 w-8 bg-zinc-600 rounded-full flex items-center justify-center text-xs">
-                                            {provider.substring(0, 2)}
+                                            {formData.attributes.service_provider.substring(
+                                              0,
+                                              2
+                                            )}
                                           </div>
                                         )}
                                       </div>
                                       <div
                                         className="tooltip text-[10px] font-medium "
-                                        tooltip={strTitle(provider)}
+                                        tooltip={strTitle(
+                                          formData.attributes.service_provider
+                                        )}
                                       >
-                                        {wordLimit(strTitle(provider), 5)}
+                                        {wordLimit(
+                                          strTitle(
+                                            formData.attributes.service_provider
+                                          ),
+                                          5
+                                        )}
                                       </div>
                                     </div>
                                   </div>
-                                ))}
+                                ) : (
+                                  // Show a placeholder if no valid service provider is selected
+                                  <div className="border-zinc-600 border rounded-md p-3 flex flex-col items-center opacity-50">
+                                    <div className="flex items-center gap-2">
+                                      <div className="h-8 w-8 bg-zinc-600 rounded-full flex items-center justify-center text-xs">
+                                        ?
+                                      </div>
+                                      <div className="text-[10px] font-medium text-gray-400">
+                                        No Provider
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
 
@@ -717,6 +793,285 @@ const CreateModelsNodesUpdate = ({ params }) => {
                           onParamsChange={handleNetworkParamsChange}
                           initialParams={initialNetworkParams}
                         />
+                      </details>
+
+                      {/* Supported Models Section */}
+                      <details
+                        className="border border-zinc-500 p-4 rounded mb-4"
+                        open
+                      >
+                        <summary className="text-lg font-semibold cursor-pointer">
+                          Supported Models
+                        </summary>
+
+                        {aiModelNode &&
+                        aiModelNode.output &&
+                        aiModelNode.output.aiModelNodes &&
+                        aiModelNode.output.aiModelNodes[0] ? (
+                          <div className="mt-4 space-y-6">
+                            {/* Generative Models Table */}
+                            <div>
+                              <h3 className="text-lg font-semibold text-orange-700 mb-3">
+                                Generative Models
+                              </h3>
+                              <div
+                                className="bg-zinc-800 rounded-lg shadow-md overflow-y-auto scrollbar text-sm"
+                                style={{ maxHeight: "400px" }}
+                              >
+                                <table className="min-w-full divide-y divide-zinc-500">
+                                  <thead className="bg-zinc-900 sticky top-0">
+                                    <tr>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        <input
+                                          type="checkbox"
+                                          onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            const modelDetails =
+                                              aiModelNode.output
+                                                .aiModelNodes[0];
+
+                                            if (isChecked) {
+                                              // Select all generative models
+                                              const allGenerativeIds = (
+                                                modelDetails.attributes
+                                                  ?.generativeModels || []
+                                              ).map((model) => model.modelId);
+
+                                              setSelectedModels((prev) => ({
+                                                ...prev,
+                                                generativeModels:
+                                                  allGenerativeIds,
+                                              }));
+                                            } else {
+                                              // Deselect all generative models
+                                              setSelectedModels((prev) => ({
+                                                ...prev,
+                                                generativeModels: [],
+                                              }));
+                                            }
+                                          }}
+                                          checked={
+                                            aiModelNode.output.aiModelNodes[0]
+                                              .attributes?.generativeModels
+                                              ?.length > 0 &&
+                                            selectedModels.generativeModels
+                                              .length ===
+                                              (aiModelNode.output
+                                                .aiModelNodes[0].attributes
+                                                ?.generativeModels?.length || 0)
+                                          }
+                                          disabled={
+                                            !aiModelNode.output.aiModelNodes[0]
+                                              .attributes?.generativeModels
+                                              ?.length
+                                          }
+                                          className="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700 accent-orange-700 disabled:opacity-50"
+                                        />
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Model Name
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Model Id
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Model Type
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Native Model Owner
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="bg-zinc-800 divide-y divide-zinc-500 border-l border-r border-zinc-500">
+                                    {aiModelNode.output.aiModelNodes[0]
+                                      .attributes?.generativeModels?.length >
+                                    0 ? (
+                                      aiModelNode.output.aiModelNodes[0].attributes.generativeModels.map(
+                                        (model, index) => (
+                                          <tr
+                                            key={`gen-${index}`}
+                                            className="cursor-pointer hover:bg-zinc-600"
+                                          >
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              <input
+                                                type="checkbox"
+                                                checked={isModelSelected(
+                                                  model.modelId,
+                                                  "generativeModels"
+                                                )}
+                                                onChange={() =>
+                                                  handleModelCheckboxChange(
+                                                    model.modelId,
+                                                    "generativeModels"
+                                                  )
+                                                }
+                                                className="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700 accent-orange-700"
+                                              />
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {model.modelName}
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {model.modelId}
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {model.modelType}
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {stringCheck(model.ownedBy)}
+                                            </td>
+                                          </tr>
+                                        )
+                                      )
+                                    ) : (
+                                      <tr>
+                                        <td
+                                          colSpan="5"
+                                          className="px-3 py-8 text-center text-gray-400"
+                                        >
+                                          No Generative models available
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            {/* Embedding Models Table */}
+                            <div>
+                              <h3 className="text-lg font-semibold text-orange-700 mb-3">
+                                Embedding Models
+                              </h3>
+                              <div
+                                className="bg-zinc-800 rounded-lg shadow-md overflow-y-auto scrollbar text-sm"
+                                style={{ maxHeight: "400px" }}
+                              >
+                                <table className="min-w-full divide-y divide-zinc-500">
+                                  <thead className="bg-zinc-900 sticky top-0">
+                                    <tr>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        <input
+                                          type="checkbox"
+                                          onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            const modelDetails =
+                                              aiModelNode.output
+                                                .aiModelNodes[0];
+
+                                            if (isChecked) {
+                                              // Select all embedding models
+                                              const allEmbeddingIds = (
+                                                modelDetails.attributes
+                                                  ?.embeddingModels || []
+                                              ).map((model) => model.modelId);
+
+                                              setSelectedModels((prev) => ({
+                                                ...prev,
+                                                embeddingModels:
+                                                  allEmbeddingIds,
+                                              }));
+                                            } else {
+                                              // Deselect all embedding models
+                                              setSelectedModels((prev) => ({
+                                                ...prev,
+                                                embeddingModels: [],
+                                              }));
+                                            }
+                                          }}
+                                          checked={
+                                            aiModelNode.output.aiModelNodes[0]
+                                              .attributes?.embeddingModels
+                                              ?.length > 0 &&
+                                            selectedModels.embeddingModels
+                                              .length ===
+                                              (aiModelNode.output
+                                                .aiModelNodes[0].attributes
+                                                ?.embeddingModels?.length || 0)
+                                          }
+                                          disabled={
+                                            !aiModelNode.output.aiModelNodes[0]
+                                              .attributes?.embeddingModels
+                                              ?.length
+                                          }
+                                          className="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700 accent-orange-700 disabled:opacity-50"
+                                        />
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Model Name
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Model Id
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Model Type
+                                      </th>
+                                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                        Native Model Owner
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="bg-zinc-800 divide-y divide-zinc-500 border-l border-r border-zinc-500">
+                                    {aiModelNode.output.aiModelNodes[0]
+                                      .attributes?.embeddingModels?.length >
+                                    0 ? (
+                                      aiModelNode.output.aiModelNodes[0].attributes.embeddingModels.map(
+                                        (model, index) => (
+                                          <tr
+                                            key={`emb-${index}`}
+                                            className="cursor-pointer hover:bg-zinc-600"
+                                          >
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              <input
+                                                type="checkbox"
+                                                checked={isModelSelected(
+                                                  model.modelId,
+                                                  "embeddingModels"
+                                                )}
+                                                onChange={() =>
+                                                  handleModelCheckboxChange(
+                                                    model.modelId,
+                                                    "embeddingModels"
+                                                  )
+                                                }
+                                                className="h-4 w-4 text-orange-700 border-gray-300 rounded focus:ring-orange-700 accent-orange-700"
+                                              />
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {model.modelName}
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {model.modelId}
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {model.modelType}
+                                            </td>
+                                            <td className="px-3 py-3 whitespace-nowrap">
+                                              {stringCheck(model.ownedBy)}
+                                            </td>
+                                          </tr>
+                                        )
+                                      )
+                                    ) : (
+                                      <tr>
+                                        <td
+                                          colSpan="5"
+                                          className="px-3 py-8 text-center text-gray-400"
+                                        >
+                                          No Embedding models available
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="mt-4 text-center text-gray-400">
+                            Loading models...
+                          </div>
+                        )}
                       </details>
                     </fieldset>
 

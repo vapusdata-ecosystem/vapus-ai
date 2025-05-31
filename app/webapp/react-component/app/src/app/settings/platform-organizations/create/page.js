@@ -7,7 +7,7 @@ import Header from "@/app/components/platform/header";
 import YamlEditorClient from "@/app/components/formcomponets/ymal";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import LoadingOverlay from "@/app/components/loading/loading";
-import { platformDomainCreateApi } from "@/app/utils/settings-endpoint/platform-domain";
+import { platformDomainCreateApi } from "@/app/utils/settings-endpoint/platform-organization";
 
 export default function CreatePlatformDomain() {
   const router = useRouter();

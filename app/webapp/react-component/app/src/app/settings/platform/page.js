@@ -14,6 +14,7 @@ export default function PlatformSettings() {
     const fetchData = async () => {
       try {
         const data = await platformApi.getPlatform();
+        console.log("platformData", data);
 
         setPlatformData(data);
       } catch (error) {

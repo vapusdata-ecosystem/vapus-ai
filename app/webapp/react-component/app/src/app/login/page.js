@@ -29,7 +29,7 @@ export default function LoginPage({
 
     if (params.get("register") === "true") {
       setShowModal(true);
-      toast.info("Please create a domain to continue");
+      toast.info("Please create a organization to continue");
     }
 
     const error = params.get("error");
@@ -201,21 +201,21 @@ export default function LoginPage({
         </div>
       </main>
 
-      {/* Domain Modal */}
+      {/* organization Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-zinc-600/90 flex justify-center items-center">
           <div className="bg-white rounded-lg shadow-lg w-1/3 h-1/3 p-6 relative">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              Create Domain
+              Create organization
             </h3>
             <input
-              id="domainInput"
+              id="organizationInput"
               type="text"
-              placeholder="Enter domain name"
+              placeholder="Enter organization name"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-900 mb-4"
             />
             <button
-              id="createDomain"
+              id="createorganization"
               className="w-full py-2 px-4 bg-black hover:bg-pink-900 text-white font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-900 transition duration-200"
             >
               Continue

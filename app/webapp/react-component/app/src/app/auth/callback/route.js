@@ -17,7 +17,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
 
-  const serverCookies = getServerCookies();
+  const serverCookies = await getServerCookies();
 
   if (!code) {
     return NextResponse.redirect(new URL(AUTH_CONFIG.loginPath, request.url));

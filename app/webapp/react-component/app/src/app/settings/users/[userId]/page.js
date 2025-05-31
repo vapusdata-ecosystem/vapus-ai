@@ -3,6 +3,7 @@ import React, { useState, useEffect, use } from "react";
 import Header from "@/app/components/platform/header";
 import { userApi } from "@/app/utils/settings-endpoint/user-api";
 import ActionDropdown from "@/app/components/action-dropdown";
+import { strTitle } from "@/app/components/JS/common";
 
 const UserDetails = ({ params }) => {
   console.log("my params", params);
@@ -15,12 +16,13 @@ const UserDetails = ({ params }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [domainMap, setDomainMap] = useState({});
+  const [organizationMap, setOrganizationMap] = useState({});
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await userApi.getuserId(userID);
+        console.log("userinfo", response);
 
         if (!response) {
           console.error("No response received from server");
@@ -37,7 +39,7 @@ const UserDetails = ({ params }) => {
           response.output.users.length > 0
         ) {
           setUserData(response.output.users[0]);
-          setDomainMap(response.domainMap || {});
+          setOrganizationMap(response.organizationMap || {});
         } else if (
           response.output &&
           response.output.users &&
@@ -45,7 +47,7 @@ const UserDetails = ({ params }) => {
         ) {
           // Handle case where users is not an array
           setUserData(response.output.users);
-          setDomainMap(response.domainMap || {});
+          setOrganizationMap(response.organizationMap || {});
         } else {
           console.error(
             "Data does not contain expected output format:",
@@ -84,12 +86,8 @@ const UserDetails = ({ params }) => {
   }
 
   // Create header resource data structure to match DomainDetails
-
   const responseData = {
     resourceId: "resource-123",
-    // createActionParams: userData.createActionParams || {
-    //   weblink: "./platform/update",
-    // },
     yamlSpec: userData.yamlSpec || JSON.stringify(userData, null, 2),
   };
 
@@ -113,7 +111,6 @@ const UserDetails = ({ params }) => {
           )}
 
           {/* Section Headers */}
-
           <div className="flex justify-end">
             <ActionDropdown
               response={responseData}
@@ -148,17 +145,17 @@ const UserDetails = ({ params }) => {
                 </div>
                 <div className=" lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Status
+                    Status:
                   </p>
                   <p className="break-words p-2">
                     <span
                       className={`px-3 py-1 text-sm font-medium rounded-full ${
-                        userData?.resourceBase?.status === "ACTIVE"
+                        userData?.status === "ACTIVE"
                           ? "text-green-800 bg-green-100"
                           : "text-red-800 bg-red-100"
                       }`}
                     >
-                      {userData?.resourceBase?.status || "N/A"}
+                      {userData?.status || "N/A"}
                     </span>
                   </p>
                 </div>
@@ -183,47 +180,32 @@ const UserDetails = ({ params }) => {
                     Onboarding Type:
                   </p>
                   <p className="break-words p-2">
-                    {userData?.invitedType || "N/A"}
-                  </p>
-                </div>
-                <div className=" lg:flex items-center">
-                  <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Platform Role:
-                  </p>
-                  <p className="break-words p-2">
-                    {userData?.platformRoles?.map((role, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-200 rounded-full mr-2"
-                      >
-                        {role}
-                      </span>
-                    ))}
+                    {strTitle(userData?.invitedType || "N/A")}
                   </p>
                 </div>
               </div>
 
-              {/* Domain Roles Section */}
+              {/* Organization Roles Section */}
               <h3 className="text-xl mb-4 font-bold text-[#f4d1c2] underline">
-                Domain Roles:
+                Organization Roles:
               </h3>
               <div className="space-y-4 ">
-                {userData?.domainRoles?.map((domain, index) => (
+                {userData?.roles?.map((Organization, index) => (
                   <div
                     key={index}
                     className="bg-zinc-700 p-4 rounded-lg shadow-md"
                   >
                     <h4 className="text-md font-semibold">
-                      Domain ID: {domain.domainId}{" "}
-                      {domainMap[domain.domainId] &&
-                        `(${domainMap[domain.domainId]})`}
+                      Organization ID: {Organization.organizationId}{" "}
+                      {organizationMap[Organization.organizationId] &&
+                        `(${organizationMap[Organization.organizationId]})`}
                     </h4>
                     <div className="flex flex-col sm:flex-row sm:justify-between mt-2">
                       <div>
                         <p className="font-semibold text-gray-400">Roles</p>
                         <ul className="list-disc ml-5">
-                          {domain.role?.map((role, roleIndex) => (
-                            <li key={roleIndex}>{role}</li>
+                          {Organization.role?.map((role, roleIndex) => (
+                            <li key={roleIndex}>{strTitle(role)}</li>
                           ))}
                         </ul>
                       </div>
@@ -232,7 +214,7 @@ const UserDetails = ({ params }) => {
                           Invited On:
                         </p>
                         <p className="break-words p-2">
-                          {formatEpochTime(domain.invitedOn)}
+                          {formatEpochTime(userData?.invitedOn)}
                         </p>
                       </div>
                     </div>
