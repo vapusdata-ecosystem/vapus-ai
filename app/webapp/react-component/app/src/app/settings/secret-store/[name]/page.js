@@ -8,6 +8,8 @@ import {
   secretStoreApi,
   secretStoreArchiveApi,
 } from "@/app/utils/settings-endpoint/secret-store-api";
+import LoadingOverlay from "@/app/components/loading/loading";
+import { strTitle } from "@/app/components/JS/common";
 
 export default function SecretDetailsPage({ params }) {
   console.log("my params", params);
@@ -82,31 +84,42 @@ export default function SecretDetailsPage({ params }) {
     setActiveTab(tabId);
   };
 
-  if (loading) {
-    return (
-      <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-white text-xl">Loading secret details...</div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
-      <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-red-500 text-xl">Error: {error}</div>
+      <div className="bg-zinc-800 flex h-screen">
+        <div className="overflow-y-auto h-screen w-full">
+          <Header
+            sectionHeader="Secret Details"
+            hideBackListingLink={false}
+            backListingLink="./"
+          />
+          <div className="flex justify-center items-center h-64 text-red-400">
+            <div className="text-xl">Error: {error}</div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (!secretDetails) {
+  if (!loading && !secretDetails) {
     return (
-      <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-white text-xl">Secret not found</div>
+      <div className="bg-zinc-800 flex h-screen">
+        <div className="overflow-y-auto h-screen w-full">
+          <Header
+            sectionHeader="Secret Details"
+            hideBackListingLink={false}
+            backListingLink="./"
+          />
+          <div className="flex justify-center items-center h-64 text-white">
+            <div className="text-xl">Secret not found</div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  const secret = secretDetails.SecretStore;
+  const secret = secretDetails?.SecretStore;
+  
   // Create a data object for SectionHeaders
   const apiServices = {
     secret: {
@@ -114,7 +127,8 @@ export default function SecretDetailsPage({ params }) {
       delete: secretStoreArchiveApi.getSecretStoreArchive,
     },
   };
-  const headerResourceData = {
+  
+  const headerResourceData = secret ? {
     id: secret.name,
     name: secret.name || "Unnamed Secret",
     createdAt: secret.resourceBase?.createdAt
@@ -124,30 +138,39 @@ export default function SecretDetailsPage({ params }) {
     status: secret.resourceBase?.status,
     resourceBase: secret.resourceBase,
     resourceType: "secret",
-
     createActionParams: secret.createActionParams || {
       weblink: `./${secret.name}/update`,
     },
     // Add YAML spec for download button
     yamlSpec: secret.yamlSpec || JSON.stringify(secret, null, 2),
-  };
+  } : null;
 
   return (
-    <div className="bg-zinc-800 flex h-screen">
+    <div className="bg-zinc-800 flex h-screen relative">
+      <LoadingOverlay 
+        isLoading={loading} 
+        text="Loading secret details"
+        size="default"
+        isOverlay={true}
+        className="absolute bg-zinc-800 inset-0 z-10"
+      />
+      
       <div className="overflow-y-auto h-screen w-full">
         <Header
-          sectionHeader="Secret  Details"
+          sectionHeader="Secret Details"
           hideBackListingLink={false}
           backListingLink="./"
         />
 
         <div className="flex-grow p-2 w-full text-gray-100">
-          <SectionHeaders
-            resourceId={secret.name}
-            resourceType="secret"
-            resourceData={headerResourceData}
-            apiServices={apiServices}
-          />
+          {secret && headerResourceData && (
+            <SectionHeaders
+              resourceId={secret.name}
+              resourceType="secret"
+              resourceData={headerResourceData}
+              apiServices={apiServices}
+            />
+          )}
 
           {/* Tabs */}
           <div className="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
@@ -177,7 +200,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Name:
                   </p>
-                  <p className="p-2">{stringCheck(secret.name)}</p>
+                  <p className="p-2">{stringCheck(secret?.name)}</p>
                 </div>
 
                 {/* Secret Type */}
@@ -185,7 +208,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Secret Type:
                   </p>
-                  <p className="p-2">{secret.secretType}</p>
+                  <p className="p-2">{strTitle(secret?.secretType || "N/A")}</p>
                 </div>
 
                 {/* Provider */}
@@ -193,7 +216,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Provider:
                   </p>
-                  <p className="p-2">{secret.provider}</p>
+                  <p className="p-2">{strTitle(secret?.provider || "N/A")}</p>
                 </div>
 
                 {/* Organization */}
@@ -201,7 +224,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Organization:
                   </p>
-                  <p className="p-2">{secret.resourceBase?.organization}</p>
+                  <p className="p-2">{secret?.resourceBase?.organization || "N/A"}</p>
                 </div>
 
                 {/* Data */}
@@ -209,7 +232,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Data:
                   </p>
-                  <p className="p-2">{secret.data || "N/A"}</p>
+                  <p className="p-2">{secret?.data || "N/A"}</p>
                 </div>
 
                 {/* Description */}
@@ -217,7 +240,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Description:
                   </p>
-                  <p className="p-2">{secret.description}</p>
+                  <p className="p-2">{secret?.description || "N/A"}</p>
                 </div>
 
                 {/* ExpireAt */}
@@ -225,7 +248,7 @@ export default function SecretDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Expire At:
                   </p>
-                  <p className="p-2">{epochConverterFull(secret.expireAt)}</p>
+                  <p className="p-2">{epochConverterFull(secret?.expireAt)}</p>
                 </div>
               </div>
             </div>

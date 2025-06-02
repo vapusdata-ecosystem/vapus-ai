@@ -6,6 +6,7 @@ import SectionHeaders from "@/app/components/section-headers";
 import { domainApi } from "@/app/utils/settings-endpoint/organization-api";
 import AddUserModal from "./adduser/addUser";
 import { strTitle } from "@/app/components/JS/common";
+import LoadingOverlay from "@/app/components/loading/loading";
 
 export default function OrganizationDetails() {
   const [organizations, setdomains] = useState(null);
@@ -55,23 +56,13 @@ export default function OrganizationDetails() {
     setActiveTab(tabId);
   };
 
-  if (loading) {
-    return (
-      <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-white text-xl">
-          Loading Organization details...
-        </div>
-      </div>
-    );
-  }
-
   // Get current Organization from the fetched data
   const currentOrganization = organizations?.output?.organizations[0];
 
   // Get the organizationId directly from the currentOrganization object
   const organizationId = currentOrganization?.organizationId;
 
-  const headerResourceData = {
+  const headerResourceData = currentOrganization ? {
     id: currentOrganization.organizationId,
     name: currentOrganization.name || "Unnamed Organization",
     createdAt: currentOrganization.resourceBase?.createdAt
@@ -85,10 +76,18 @@ export default function OrganizationDetails() {
     createActionParams: currentOrganization.createActionParams || {
       weblink: `/settings/organization/#`,
     },
-  };
+  } : null;
 
   return (
-    <div className="bg-zinc-800 flex h-screen">
+    <div className="bg-zinc-800 flex h-screen relative">
+      <LoadingOverlay 
+        isLoading={loading} 
+        text="Loading Organization details"
+        size="default"
+        isOverlay={true}
+        className="absolute bg-zinc-800 inset-0 z-10"
+      />
+      
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Organization Settings"
@@ -98,17 +97,19 @@ export default function OrganizationDetails() {
 
         <div className="flex-grow p-2 w-full text-gray-100">
           {/* Section Headers component */}
-          <SectionHeaders
-            resourceId={organizationId}
-            resourceType="Organization"
-            fetchUrl="/setting-Organization.json"
-            resourceData={headerResourceData}
-            customButton={{
-              show: true,
-              title: "Add Users",
-              onClick: () => addUserHandler(organizationId),
-            }}
-          />
+          {currentOrganization && (
+            <SectionHeaders
+              resourceId={organizationId}
+              resourceType="Organization"
+              fetchUrl="/setting-Organization.json"
+              resourceData={headerResourceData}
+              customButton={{
+                show: true,
+                title: "Add Users",
+                onClick: () => addUserHandler(organizationId),
+              }}
+            />
+          )}
 
           {/* Modal component */}
           <AddUserModal
@@ -117,56 +118,58 @@ export default function OrganizationDetails() {
             organizationId={organizationId}
           />
 
-          <div className="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
-            {/* Tabs - Styled to match first example */}
-            <div className="flex border-b border-zinc-500">
-              <button
-                onClick={() => showTab("basic-info")}
-                className={`px-4 py-2 font-semibold focus:outline-none ${
-                  activeTab === "basic-info"
-                    ? "bg-[oklch(0.205_0_0)] text-white rounded-t-[10px]"
-                    : ""
+          {currentOrganization && (
+            <div className="overflow-x-auto scrollbar text-gray-100 bg-zinc-800 rounded-lg p-8 shadow-md">
+              {/* Tabs - Styled to match first example */}
+              <div className="flex border-b border-zinc-500">
+                <button
+                  onClick={() => showTab("basic-info")}
+                  className={`px-4 py-2 font-semibold focus:outline-none ${
+                    activeTab === "basic-info"
+                      ? "bg-[oklch(0.205_0_0)] text-white rounded-t-[10px]"
+                      : ""
+                  }`}
+                >
+                  Basic Info
+                </button>
+              </div>
+
+              {/* Basic Info Tab */}
+              <div
+                id="basic-info"
+                className={`mt-2 bg-[#1b1b1b] p-4 ${
+                  activeTab !== "basic-info" ? "hidden" : ""
                 }`}
               >
-                Basic Info
-              </button>
-            </div>
-
-            {/* Basic Info Tab */}
-            <div
-              id="basic-info"
-              className={`mt-2 bg-[#1b1b1b] p-4 ${
-                activeTab !== "basic-info" ? "hidden" : ""
-              }`}
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className=" lg:lg:flex items-center">
-                  <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Display Name:
-                  </p>
-                  <p className="break-words p-2">
-                    {currentOrganization.displayName}
-                  </p>
-                </div>
-                <div className="lg:flex items-center">
-                  <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Organization ID:
-                  </p>
-                  <p className="break-words p-2">
-                    {currentOrganization.organizationId}
-                  </p>
-                </div>
-                <div className="lg:flex items-center">
-                  <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Type:
-                  </p>
-                  <p className="break-words p-2">
-                    {strTitle(currentOrganization.organizationType)}
-                  </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className=" lg:lg:flex items-center">
+                    <p className="text-base font-extralight text-[#f4d1c2] block">
+                      Display Name:
+                    </p>
+                    <p className="break-words p-2">
+                      {currentOrganization.displayName}
+                    </p>
+                  </div>
+                  <div className="lg:flex items-center">
+                    <p className="text-base font-extralight text-[#f4d1c2] block">
+                      Organization ID:
+                    </p>
+                    <p className="break-words p-2">
+                      {currentOrganization.organizationId}
+                    </p>
+                  </div>
+                  <div className="lg:flex items-center">
+                    <p className="text-base font-extralight text-[#f4d1c2] block">
+                      Type:
+                    </p>
+                    <p className="break-words p-2">
+                      {strTitle(currentOrganization.organizationType)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

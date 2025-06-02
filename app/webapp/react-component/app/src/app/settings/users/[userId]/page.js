@@ -4,6 +4,7 @@ import Header from "@/app/components/platform/header";
 import { userApi } from "@/app/utils/settings-endpoint/user-api";
 import ActionDropdown from "@/app/components/action-dropdown";
 import { strTitle } from "@/app/components/JS/common";
+import LoadingOverlay from "@/app/components/loading/loading";
 
 const UserDetails = ({ params }) => {
   console.log("my params", params);
@@ -77,26 +78,28 @@ const UserDetails = ({ params }) => {
     return new Date(epoch * 1000).toLocaleString();
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-zinc-800">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-      </div>
-    );
-  }
 
   // Create header resource data structure to match DomainDetails
+ 
   const responseData = {
-    resourceId: "resource-123",
-    yamlSpec: userData.yamlSpec || JSON.stringify(userData, null, 2),
-  };
+  resourceId: "resource-123",
+  yamlSpec: userData?.yamlSpec || (userData ? JSON.stringify(userData, null, 2) : '{}'),
+};
 
   const globalContextData = {
     AccessTokenKey: "your-access-token-here",
   };
 
   return (
-    <div className="bg-zinc-800 flex h-screen">
+    <div className="bg-zinc-800 flex h-screen relative">
+       <LoadingOverlay 
+              isLoading={loading} 
+              text="Loading User Details"
+              size="default"
+              isOverlay={true}
+              className="absolute bg-zinc-800 inset-0 z-10"
+            />
+       
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="User Details"
@@ -104,11 +107,8 @@ const UserDetails = ({ params }) => {
           backListingLink="./"
         />
         <div className="flex-grow p-2 w-full text-gray-100">
-          {loading && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-            </div>
-          )}
+          
+        
 
           {/* Section Headers */}
           <div className="flex justify-end">

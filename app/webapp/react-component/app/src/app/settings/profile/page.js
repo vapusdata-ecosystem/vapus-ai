@@ -5,6 +5,7 @@ import { userGlobalData } from "@/context/GlobalContext";
 import { userProfileApi } from "../../utils/settings-endpoint/profile-api";
 import { DownloadFileApi } from "@/app/utils/file-endpoint/file";
 import ActionDropdown from "../../components/action-dropdown";
+import LoadingOverlay from "@/app/components/loading/loading";
 
 const UserDetails = () => {
   const [userData, setUserData] = useState(null);
@@ -110,8 +111,14 @@ const UserDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-zinc-800">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+      <div className="flex justify-center items-center h-screen bg-zinc-800 relative">
+         <LoadingOverlay 
+         isLoading={loading} 
+         text="Loading plugin details"
+         size="default"
+         isOverlay={true}
+         className="absolute inset-0 bg-zinc-800"
+       />
       </div>
     );
   }

@@ -246,7 +246,7 @@ const PlatformDomains = () => {
             ) : Organization.length === 0 && !isLoading ? (
               <EmptyState />
             ) : (
-              <div className="overflow-x-auto scrollbar p-4  text-gray-100">
+              <div className="p-4">
                 <DataTable
                   key={`platform-Organization-${dataVersion}`}
                   id="platformDomainsTable"
@@ -255,6 +255,7 @@ const PlatformDomains = () => {
                   loading={isLoading}
                   filteredColumns={filteredColumns}
                   dangerouslySetInnerHTML={true}
+                  loadingText="Loading Organization..."
                 />
               </div>
             )}

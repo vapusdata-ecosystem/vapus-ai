@@ -18,6 +18,7 @@ const Header = ({
   const [userRoles, setUserRoles] = useState([]);
   const [currentGlobalContext, setCurrentGlobalContext] = useState(null);
   const [isOrgSwitching, setIsOrgSwitching] = useState(false);
+  const [currentOrgId, setCurrentOrgId] = useState(null); 
 
   const dropdownRef = useRef(null);
 
@@ -37,7 +38,7 @@ const Header = ({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Function to set cookie
+  // Function to set cookie 
   const setCookie = (name, value, days = 7) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -50,7 +51,7 @@ const Header = ({
   };
 
   // Updated function to handle organization login with API call
-  const handleDomainLogin = async (organizationId) => {
+  const handleOrganizationLogin = async (organizationId) => {
     try {
       setIsOrgSwitching(true);
       setError(null);
@@ -60,10 +61,12 @@ const Header = ({
         utility: "ORGANIZATION_LOGIN",
       };
 
-      // API endpoint call
+      // API  call
       const output = await OrgAccessTokenApi.getOrgAccessToken(payload);
 
-      // Check if we have the expected response structure
+      console.log("Organization switched:", output);
+
+      
       if (output && output.token && output.token.accessToken) {
         deleteCookie("access_token");
         setCookie("access_token", output.token.accessToken);
@@ -73,8 +76,10 @@ const Header = ({
           `Switched to ${organizationId} successfully.`
         );
 
+        setCurrentOrgId(organizationId);
+
         setTimeout(() => {
-          // Redirect to current page
+          // Redirect to current page 
           window.location.reload();
         }, 1000);
       } else {
@@ -82,6 +87,9 @@ const Header = ({
           "Organization Switched",
           "Organization switched successfully."
         );
+        
+        setCurrentOrgId(organizationId);
+        
         setTimeout(() => {
           window.location.reload();
         }, 1000);
@@ -95,14 +103,21 @@ const Header = ({
     }
   };
 
-  // Function to limit string length similar to the template's limitletters function
-  const limitLetters = (str, maxLength) => {
-    return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
-  };
+  // Function to limit string length 
+  
+  // const limitLetters = (str, maxLength) => {
+  //   return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
+  // };
 
-  // Helper function to check if organization is current
+  // Enhanced helper function to check if organization is current
   const isCurrentOrg = (orgId) => {
-    return orgId === currentGlobalContext?.currentOrganization?.organizationId;
+    if (currentOrgId) {
+      return orgId === currentOrgId;
+    }
+    
+    // Then check from global context
+    const contextOrgId = currentGlobalContext?.currentOrganization?.organizationId; 
+    return orgId === contextOrgId;
   };
 
   useEffect(() => {
@@ -116,6 +131,25 @@ const Header = ({
         // Get user data from global context
         const globalContext = await userGlobalData();
         setCurrentGlobalContext(globalContext);
+        
+        // Try different possible paths for current organization
+        let currentOrgIdFromContext = null;
+        if (globalContext?.currentOrganization?.organizationId) {
+          currentOrgIdFromContext = globalContext.currentOrganization.organizationId;
+        } else if (globalContext?.organization?.organizationId) {
+          currentOrgIdFromContext = globalContext.organization.organizationId;
+        } else if (globalContext?.organizationId) {
+          currentOrgIdFromContext = globalContext.organizationId;
+        } else if (globalContext?.userInfo?.organizationId) {
+          currentOrgIdFromContext = globalContext.userInfo.organizationId;
+        }
+        
+        console.log("Detected current org ID:", currentOrgIdFromContext);
+        
+        if (currentOrgIdFromContext) {
+          setCurrentOrgId(currentOrgIdFromContext);
+        }
+        
         if (!isMounted) return;
 
         // Check if userId exists
@@ -197,7 +231,7 @@ const Header = ({
           <h1 className="text-xl text-gray-100 font-bold">{sectionHeader}</h1>
         </div>
 
-        {/* Right Section: Domain Dropdown */}
+        {/* Right Section: organization Dropdown */}
         <div className="flex relative" ref={dropdownRef}>
           <button
             onClick={toggleDropdown}
@@ -262,11 +296,15 @@ const Header = ({
                   {userRoles.length > 0 ? (
                     userRoles.map((role, index) => {
                       const isCurrent = isCurrentOrg(role.organizationId);
+                      
+                      // Debug log for each role
+                      console.log(`Role ${role.organizationId} - isCurrent:`, isCurrent);
+                      
                       return (
                         <li key={role.organizationId || index}>
                           <button
                             onClick={() =>
-                              handleDomainLogin(role.organizationId)
+                              handleOrganizationLogin(role.organizationId)
                             }
                             disabled={isOrgSwitching}
                             className={`block rounded-md shadow-sm px-2 py-1 m-1 text-gray-100 text-xs cursor-pointer w-full break-words transition-colors ${

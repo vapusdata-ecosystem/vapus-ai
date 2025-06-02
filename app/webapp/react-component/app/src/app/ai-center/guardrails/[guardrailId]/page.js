@@ -7,6 +7,7 @@ import {
   GuardrailArchiveApi,
 } from "@/app/utils/ai-studio-endpoint/guardrails-api";
 import { strTitle } from "@/app/components/JS/common";
+import LoadingOverlay from "@/app/components/loading/loading";
 
 export default function GuardrailDetailsPage({ params }) {
   const resolvedParams = use(params);
@@ -93,8 +94,14 @@ export default function GuardrailDetailsPage({ params }) {
 
   if (loading) {
     return (
-      <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-white text-xl">Loading guardrail details...</div>
+      <div className="bg-zinc-800 flex h-screen justify-center items-center relative">
+        <LoadingOverlay 
+         isLoading={loading} 
+         text="Loading plugin details"
+         size="default"
+         isOverlay={true}
+         className="absolute inset-0 z-10 bg-zinc-800"
+       />
       </div>
     );
   }

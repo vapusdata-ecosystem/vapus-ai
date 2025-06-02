@@ -163,6 +163,7 @@ const UsersTable = () => {
                   columns={columns}
                   loading={isLoading}
                   filteredColumns={filteredColumns}
+                  loadingText="Loading Users List..."
                 />
               </div>
             )}
