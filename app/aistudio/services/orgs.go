@@ -234,6 +234,10 @@ func (x *OrganizationAgent) attachOrganization2User(ctx context.Context, userId 
 			}
 		}
 	}
+	if len(user.Roles) == 0 {
+		user.Roles = make([]*models.UserOrganizationRole, 0)
+	}
+	user.Roles = append(user.Roles, obj)
 	return x.dmStore.PutUser(ctx, user, x.CtxClaim)
 }
 
