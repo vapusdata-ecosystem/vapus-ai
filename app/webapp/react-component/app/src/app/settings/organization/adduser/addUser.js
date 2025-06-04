@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import RemoveButton from "@/app/components/buttons/removeButton";
 import AddButton from "@/app/components/buttons/addButton";
 import { toast } from "react-toastify";
-import { addUsersApi } from "@/app/utils/settings-endpoint/domain-api";
+import { addUsersApi } from "@/app/utils/settings-endpoint/organization-api";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import MultiSelectDropdown from "@/app/components/multiSelectDropdown";
 import { enumsApi } from "@/app/utils/developers-endpoint/enums";
@@ -26,8 +26,8 @@ const XIcon = () => (
   </svg>
 );
 
-// Add domainId as a prop
-export default function AddUserModal({ isOpen, onClose, domainId }) {
+// Add organizationId as a prop
+export default function AddUserModal({ isOpen, onClose, organizationId }) {
   const [users, setUsers] = useState([
     { userId: "", roles: [], inviteIfNotFound: true }, // Changed default to true
   ]);
@@ -35,23 +35,28 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
   const [roleOptions, setRoleOptions] = useState([]);
   const [loadingRoles, setLoadingRoles] = useState(false);
 
-  // Fetch the PlatformUserRoles data
+  // Fetch the OrgRoles data
   useEffect(() => {
     const fetchEnumsData = async () => {
       try {
         setLoadingRoles(true);
         const response = await enumsApi.getEnums();
-        const platformUserRoles = response.enumResponse?.find(
-          (item) => item.name === "PlatformUserRoles"
+        console.log("Full enums response:", response);
+
+        const OrgRoles = response.enumResponse?.find(
+          (item) => item.name === "OrgRoles"
         );
+
+        console.log("Found OrgRoles:", OrgRoles);
+
         const roleOptions =
-          platformUserRoles?.value?.map((role) => ({
+          OrgRoles?.value?.map((role) => ({
             id: role,
             name: role,
           })) || [];
 
         setRoleOptions(roleOptions);
-        console.log("Platform Users Roles:", roleOptions);
+        console.log("Processed role options:", roleOptions);
       } catch (error) {
         console.error("Failed to fetch User Roles data:", error);
         toast.error("Failed to fetch configuration data");
@@ -60,11 +65,13 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
       }
     };
 
-    fetchEnumsData();
-  }, []);
+    if (isOpen) {
+      fetchEnumsData();
+    }
+  }, [isOpen]);
 
   const addUserParams = () => {
-    setUsers([...users, { userId: "", roles: [], inviteIfNotFound: true }]); // Changed default to true
+    setUsers([...users, { userId: "", roles: [], inviteIfNotFound: true }]);
   };
 
   const removeUserParams = (index) => {
@@ -80,15 +87,23 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
   };
 
   const handleRoleSelectionChange = (index, selectedRoles) => {
+    console.log("Selected roles received:", selectedRoles);
     const updatedUsers = [...users];
-    updatedUsers[index].roles = selectedRoles;
+
+    // Convert selected role objects back to string array for API
+    const roleStrings = selectedRoles.map((role) =>
+      typeof role === "string" ? role : role.id || role.name
+    );
+
+    updatedUsers[index].roles = roleStrings;
     setUsers(updatedUsers);
+    console.log("Updated user roles:", updatedUsers[index].roles);
   };
 
   const handleSubmit = async () => {
-    // Add validation for domainId
-    if (!domainId) {
-      toast.error("Domain ID is required");
+    // Add validation for organizationId
+    if (!organizationId) {
+      toast.error("Organization ID is required");
       return;
     }
 
@@ -104,22 +119,19 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
 
     try {
       setIsLoading(true);
-
       const payload = {
-        domainId: domainId,
+        organizationId: organizationId,
         users: validUsers.map((user) => ({
           userId: user.userId,
           validTill: "0", // Added required field
-          role: user.roles, // Changed from 'roles' to 'role'
+          role: user.roles, // Array of role strings
           added: false, // Added required field
           inviteIfNotFound: user.inviteIfNotFound,
         })),
       };
 
       console.log("Full API Payload:", payload);
-
       const output = await addUsersApi.getAddUsers(payload);
-
       const resourceInfo = output?.result || {
         resource: "User",
         count: validUsers.length,
@@ -142,6 +154,7 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
   };
 
   if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 bg-zinc-600/80 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <ToastContainerMessage />
@@ -178,6 +191,7 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
                     }
                   />
                 </div>
+
                 {/* MultiSelectDropdown */}
                 <div className="mb-4">
                   <label className="block mb-2 text-sm font-medium">Role</label>
@@ -187,12 +201,16 @@ export default function AddUserModal({ isOpen, onClose, domainId }) {
                     onSelectionChange={(selectedRoles) =>
                       handleRoleSelectionChange(index, selectedRoles)
                     }
-                    initialSelected={user.roles}
+                    initialSelected={user.roles.map((role) => ({
+                      id: role,
+                      name: role,
+                    }))}
                     isLoading={loadingRoles}
                     dropdownId={`dropdown-${index}`}
                   />
                 </div>
               </div>
+
               <div className="mb-4 flex items-center">
                 <input
                   type="checkbox"

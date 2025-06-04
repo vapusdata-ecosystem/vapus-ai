@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import LoadingOverlay from "./loading/loading";
 
 const DataTable = ({
   id,
@@ -12,6 +13,7 @@ const DataTable = ({
   select = true,
   responsive = true,
   loading = false,
+  loadingText = "Loading data...", 
   className = "",
   filteredColumns = [],
 }) => {
@@ -340,27 +342,31 @@ const DataTable = ({
   ]);
 
   return (
-    <div className="datatable-container">
-      {loading ? (
-        <div className="flex justify-center items-center h-64 text-white">
-          <div className="text-xl">Loading data...</div>
-        </div>
-      ) : (
-        <div className="overflow-x-auto scrollbar rounded-lg shadow-md">
-          <table
-            ref={tableRef}
-            id={id}
-            className={`min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs ${className}`}
-          >
-            <thead className="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
-              {/* Headers will be populated by DataTables with filter dropdowns */}
-            </thead>
-            <tbody className="bg-zinc-800 divide-y divide-zinc-500 break-words">
-              {/* Body will be populated by DataTables */}
-            </tbody>
-          </table>
-        </div>
-      )}
+    <div className="datatable-container relative">
+      {/* LoadingOverlay Component */}
+      <LoadingOverlay 
+        isLoading={loading}
+        text={loadingText}
+        size="default"
+        showProgressBar={true}
+        isOverlay={true}
+        className="rounded-lg mt-80"
+      />
+      
+      <div className="overflow-x-auto scrollbar rounded-lg shadow-md">
+        <table
+          ref={tableRef}
+          id={id}
+          className={`min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs ${className}`}
+        >
+          <thead className="bg-zinc-900 text-sm text-gray-500 uppercase tracking-wider">
+            {/* Headers will be populated by DataTables with filter dropdowns */}
+          </thead>
+          <tbody className="bg-zinc-800 divide-y divide-zinc-500 break-words">
+            {/* Body will be populated by DataTables */}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

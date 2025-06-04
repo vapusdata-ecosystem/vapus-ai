@@ -108,13 +108,8 @@ const PluginSettingsClient = () => {
               </div>
             ) : plugins.length === 0 && !isLoading ? (
               <div className="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
-                <table
-                  className="min-w-full divide-y divide-zinc-500 text-xs text-gray-100 border-2 border-zinc-500"
-                  id="pluginSettingsTable"
-                >
-                  <thead className="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase">
-                    <tr></tr>
-                  </thead>
+                <table className="min-w-full divide-y divide-zinc-500 text-xs text-gray-100 border-2 border-zinc-500">
+                  <thead className="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase"></thead>
                   <tbody className="divide-y divide-gray-200 text-sm">
                     <tr>
                       <td
@@ -128,7 +123,7 @@ const PluginSettingsClient = () => {
                 </table>
               </div>
             ) : (
-              <div className="overflow-x-auto scrollbar rounded-lg p-4  text-gray-100">
+              <div className=" p-4 ">
                 <DataTable
                   id="pluginSettingsTable"
                   data={plugins}
@@ -136,6 +131,7 @@ const PluginSettingsClient = () => {
                   loading={isLoading}
                   filteredColumns={filteredColumns}
                   dangerouslySetInnerHTML={true}
+                  loadingText="Loading Plugins..."
                 />
               </div>
             )}

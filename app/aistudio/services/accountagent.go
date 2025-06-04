@@ -133,7 +133,7 @@ func (x *AccountAgent) configureAIAttributes(ctx context.Context) (*models.Accou
 }
 
 func (x *AccountAgent) updateAccount(ctx context.Context) (*models.Account, error) {
-	userRoles := strings.Split(x.CtxClaim[encryption.ClaimRoleKey], ",")
+	userRoles := strings.Split(x.CtxClaim[encryption.ClaimOrganizationRolesKey], ",")
 	if !slices.Contains(userRoles, mpb.PlatformRoles_SERVICE_OWNER.String()) || x.organization.OrganizationType != mpb.OrganizationType_SERVICE_ORGANIZATION.String() {
 		return nil, dmerrors.DMError(apperr.ErrAccountOps403, nil)
 	}

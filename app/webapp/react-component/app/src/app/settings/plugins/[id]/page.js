@@ -8,6 +8,7 @@ import {
   pluginsArchiveApi,
 } from "@/app/utils/settings-endpoint/plugins-api";
 import SectionHeaders from "@/app/components/section-headers";
+import LoadingOverlay from "@/app/components/loading/loading";
 
 export default function PluginDetailsPage({ params }) {
   const unwrappedParams = use(params);
@@ -82,23 +83,7 @@ export default function PluginDetailsPage({ params }) {
     }
   }, [pluginId]);
 
-  if (loading) {
-    return (
-      <div className="bg-zinc-800 flex h-screen">
-        <div className="overflow-y-auto scrollbar h-screen w-full">
-          <Header
-            sectionHeader="Plugin Details"
-            backListingLink="/settings/plugins"
-          />
-          <div className="flex justify-center items-center h-64">
-            <div className="text-xl text-gray-400">Loading...</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !pluginData) {
+  if (error || (!loading && !pluginData)) {
     return (
       <div className="bg-zinc-800 flex h-screen">
         <div className="overflow-y-auto scrollbar h-screen w-full">
@@ -121,7 +106,8 @@ export default function PluginDetailsPage({ params }) {
       delete: pluginsArchiveApi.getPluginsArchive,
     },
   };
-  const headerResourceData = {
+  
+  const headerResourceData = pluginData ? {
     id: pluginData.pluginId,
     name: pluginData.name || "Unnamed Plugin",
     createdAt: pluginData.resourceBase?.createdAt
@@ -135,10 +121,18 @@ export default function PluginDetailsPage({ params }) {
     createActionParams: pluginData.createActionParams || {
       weblink: `/settings/plugins/${pluginData.pluginId}/update`,
     },
-  };
+  } : null;
 
   return (
-    <div className="bg-zinc-800 flex h-screen">
+    <div className="bg-zinc-800 flex h-screen relative">
+      <LoadingOverlay 
+        isLoading={loading} 
+        text="Loading plugin details"
+        size="default"
+        isOverlay={true}
+        className="absolute bg-zinc-800 inset-0 z-10"
+      />
+      
       <div className="overflow-y-auto h-screen w-full">
         <Header
           sectionHeader="Plugin Details"
@@ -147,7 +141,7 @@ export default function PluginDetailsPage({ params }) {
         />
 
         <div className="flex-grow p-2 w-full text-gray-100">
-          {pluginData && pluginData.pluginId && (
+          {pluginData && pluginData.pluginId && headerResourceData && (
             <SectionHeaders
               resourceId={pluginData.pluginId}
               resourceData={headerResourceData}
@@ -184,7 +178,7 @@ export default function PluginDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Display Name:
                   </p>
-                  <p className="p-2">{pluginData.name || "N/A"}</p>
+                  <p className="p-2">{pluginData?.name || "N/A"}</p>
                 </div>
 
                 {/* Plugin id */}
@@ -192,15 +186,15 @@ export default function PluginDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Plugin id:
                   </p>
-                  <p className="p-2">{pluginData.pluginId || "N/A"}</p>
+                  <p className="p-2">{pluginData?.pluginId || "N/A"}</p>
                 </div>
 
-                {/* Domain */}
+                {/* Organization */}
                 <div className="lg:flex items-center">
                   <p className="text-base font-extralight text-[#f4d1c2] block">
-                    Domain:
+                    Organization:
                   </p>
-                  <p className="p-2">{pluginData.domain || "N/A"}</p>
+                  <p className="p-2">{pluginData?.organization || "N/A"}</p>
                 </div>
 
                 {/* Plugin Type */}
@@ -208,7 +202,7 @@ export default function PluginDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Plugin Type:
                   </p>
-                  <p className="p-2">{pluginData.pluginType || "N/A"}</p>
+                  <p className="p-2">{pluginData?.pluginType || "N/A"}</p>
                 </div>
 
                 {/* Plugin Service */}
@@ -216,7 +210,7 @@ export default function PluginDetailsPage({ params }) {
                   <p className="text-base font-extralight text-[#f4d1c2] block">
                     Plugin Service:
                   </p>
-                  <p className="p-2">{pluginData.pluginService || "N/A"}</p>
+                  <p className="p-2">{pluginData?.pluginService || "N/A"}</p>
                 </div>
 
                 {/* Status */}
@@ -227,14 +221,14 @@ export default function PluginDetailsPage({ params }) {
                   <p className="p-2">
                     <span
                       className={`px-3 py-1 text-sm font-medium ${
-                        pluginData.status === "ACTIVE" ||
-                        pluginData.resourceBase?.status === "ACTIVE"
+                        pluginData?.status === "ACTIVE" ||
+                        pluginData?.resourceBase?.status === "ACTIVE"
                           ? "text-green-800 bg-green-100"
                           : "text-red-800 bg-red-100"
                       } rounded-full`}
                     >
-                      {pluginData.status ||
-                        pluginData.resourceBase?.status ||
+                      {pluginData?.status ||
+                        pluginData?.resourceBase?.status ||
                         "N/A"}
                     </span>
                   </p>
@@ -247,7 +241,7 @@ export default function PluginDetailsPage({ params }) {
                   Parameters:
                 </p>
 
-                {Array.isArray(pluginData.dynamicParams) &&
+                {Array.isArray(pluginData?.dynamicParams) &&
                 pluginData.dynamicParams.length > 0 ? (
                   <div className="w-full bg-[#1b1b1b] rounded-lg">
                     <table className="min-w-full divide-y divide-zinc-500 text-gray-100 border-2 border-zinc-500 text-xs">

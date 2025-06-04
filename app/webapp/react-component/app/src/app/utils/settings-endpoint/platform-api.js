@@ -7,3 +7,7 @@ const API_ENDPOINTS = {
 export const platformApi = {
   getPlatform: () => fetchApi(API_ENDPOINTS.PLATFORM, "GET", null),
 };
+
+export const platformUpdateApi= {
+  getplatformUpdate: (payload) => fetchApi(API_ENDPOINTS.PLATFORM, "POST", payload),
+};

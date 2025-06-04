@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import "./globals.css";
 import Sidebar from "./components/platform/main-sidebar";
+import LoadingOverlay from "./components/loading/loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,9 +48,45 @@ export default function RootLayout({ children }) {
     }
   }, [pathname, isLoginPage, router]);
 
-  // Check for not-found page
   useEffect(() => {
-    setIsNotFoundPage(!!document.getElementById("not-found-page"));
+    const checkFor404 = () => {
+      const notFoundElement =
+        document.getElementById("not-found-page") ||
+        document.querySelector('[data-testid="not-found"]') ||
+        document.querySelector(".not-found") ||
+        document.querySelector('[class*="not-found"]') ||
+        document.querySelector('[class*="404"]');
+
+      const titleIndicates404 =
+        document.title.toLowerCase().includes("404") ||
+        document.title.toLowerCase().includes("not found");
+
+      const urlPattern404 = /\/(404|not-found)$/i.test(pathname);
+
+      return !!(notFoundElement || titleIndicates404 || urlPattern404);
+    };
+
+    setIsNotFoundPage(checkFor404());
+
+    const observer = new MutationObserver(() => {
+      setIsNotFoundPage(checkFor404());
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "id", "data-testid"],
+    });
+
+    const timeoutId = setTimeout(() => {
+      setIsNotFoundPage(checkFor404());
+    }, 100);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
   }, [pathname]);
 
   // Show loading while checking authentication
@@ -65,9 +102,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-lg">Loading...</div>
-          </div>
+          <LoadingOverlay isLoading={true}/>
         </body>
       </html>
     );
