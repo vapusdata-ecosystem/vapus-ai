@@ -1207,7 +1207,7 @@ export default function UpdateGuardrail({ params }) {
                                             <option
                                               key={node.modelNodeId}
                                               value={node.modelNodeId}
-                                              className="text-sm text-orange-700 hover:text-pink-900"
+                                              className="text-sm"
                                             >
                                               {node.name}
                                             </option>
@@ -1231,7 +1231,7 @@ export default function UpdateGuardrail({ params }) {
                                             <option
                                               key={model.modelId}
                                               value={model.modelId}
-                                              className="text-sm text-orange-700 hover:text-pink-900"
+                                              className="text-sm "
                                             >
                                               {model.modelName}
                                             </option>

@@ -7,11 +7,22 @@ import Header from "@/app/components/platform/header";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import LoadingOverlay from "@/app/components/loading/loading";
 import { platformApi, platformUpdateApi } from "@/app/utils/settings-endpoint/platform-api";
+import { enumsApi } from "@/app/utils/developers-endpoint/enums";
+import { modelsRegistryApi } from "@/app/utils/ai-studio-endpoint/models-registry-api";
 
 export default function UpdatePlatformForm() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("form");
   const [isLoading, setIsLoading] = useState(true);
+  const [enums, setEnums] = useState();
+  const [aiModelNodes, setAiModelNodes] = useState([]);
+  const [modelMap, setModelMap] = useState({});
+  const [selectedGenerativeModelNodeId, setSelectedGenerativeModelNodeId] = useState("");
+  const [generativeModelOptions, setGenerativeModelOptions] = useState([]);
+  const [selectedGuardrailModelNodeId, setSelectedGuardrailModelNodeId] = useState("");
+  const [guardrailModelOptions, setGuardrailModelOptions] = useState([]);
+  const [selectedEmbeddingModelNodeId, setSelectedEmbeddingModelNodeId] = useState("");
+  const [embeddingModelOptions, setEmbeddingModelOptions] = useState([]);
   const [formData, setFormData] = useState({
     // Profile fields
     logo: "",
@@ -46,6 +57,35 @@ export default function UpdatePlatformForm() {
     moto: "",
     favicon: ""
   });
+  
+  // Fetch enum data for Signing Algorithm
+  useEffect(() => {
+    const fetchEnumsData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await enumsApi.getEnums();
+
+        const enumResponses = response.enumResponse || [];
+        const encryptionAlgoEnum = enumResponses.find(
+          (enumData) => enumData.name === "EncryptionAlgo"
+        );
+
+        const encryptionAlgos = encryptionAlgoEnum?.value || [];
+
+        // Store only EncryptionAlgo data
+        setEnums({ EncryptionAlgo: encryptionAlgos });
+
+        console.log("Encryption algorithms loaded:", encryptionAlgos);
+      } catch (error) {
+        console.error("Failed to fetch EncryptionAlgo data:", error);
+        toast.error("Failed to fetch configuration data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEnumsData();
+  }, []);
 
   // Fetch existing platform data
   useEffect(() => {
@@ -86,6 +126,17 @@ export default function UpdatePlatformForm() {
               guardrailModel: platformData.aiAttributes?.guardrailModel || ""
             }
           });
+
+          // Pre-populate dropdowns if values exist
+          if (platformData.aiAttributes?.generativeModelNode) {
+            populateGenerativeModelDropdown(platformData.aiAttributes.generativeModelNode, false);
+          }
+          if (platformData.aiAttributes?.guardrailModelNode) {
+            populateGuardrailModelDropdown(platformData.aiAttributes.guardrailModelNode, false);
+          }
+          if (platformData.aiAttributes?.embeddingModelNode) {
+            populateEmbeddingModelDropdown(platformData.aiAttributes.embeddingModelNode, false);
+          }
         }
       } catch (error) {
         console.error("Error fetching platform data:", error);
@@ -97,6 +148,116 @@ export default function UpdatePlatformForm() {
 
     fetchPlatformData();
   }, []);
+
+  // Fetch model nodes data
+  useEffect(() => {
+    const fetchModelNodes = async () => {
+      try {
+        const response = await modelsRegistryApi.getModelsRegistry();
+        const nodes = response.output?.aiModelNodes || [];
+        console.log("Model nodes:", nodes);
+        setAiModelNodes(nodes);     
+
+        const map = {};
+        nodes.forEach((item) => {
+          map[item.modelNodeId] = item;
+        });
+        setModelMap(map);     
+
+        return map;
+      } catch (error) {
+        console.error("Failed to fetch model nodes:", error);
+        toast.error(`Failed to load model nodes: ${error.message}`);
+        return {};
+      }
+    };
+
+    fetchModelNodes();
+  }, []);
+
+  // Populate available models based on selected node
+  const populateGenerativeModelDropdown = (nodeId, resetModel = true) => {
+    setSelectedGenerativeModelNodeId(nodeId);
+    const selectedNode = aiModelNodes.find(
+      (node) => node.modelNodeId === nodeId
+    );
+    
+    console.log("Selected generative node:", selectedNode);
+    
+    if (selectedNode?.attributes?.generativeModels) {
+      setGenerativeModelOptions(selectedNode.attributes.generativeModels);
+    } else {
+      setGenerativeModelOptions([]);
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      aiAttributes: {
+        ...prev.aiAttributes,
+        generativeModelNode: nodeId,
+        generativeModel: resetModel ? "" : prev.aiAttributes.generativeModel
+      }
+    }));
+  };
+
+  const populateGuardrailModelDropdown = (nodeId, resetModel = true) => {
+    setSelectedGuardrailModelNodeId(nodeId);
+    const selectedNode = aiModelNodes.find(
+      (node) => node.modelNodeId === nodeId
+    );
+    
+    console.log("Selected guardrail node:", selectedNode);
+    console.log("Node attributes:", selectedNode?.attributes);
+    
+    // Check multiple possible property names for guardrail models
+    let guardrailModels = [];
+    if (selectedNode?.attributes) {
+      // Try different possible property names
+      guardrailModels = selectedNode.attributes.guardrailModels || 
+                       selectedNode.attributes.guardRailModels || 
+                       selectedNode.attributes.generativeModels ||
+                       [];
+    }
+    
+    console.log("Guardrail models found:", guardrailModels);
+    setGuardrailModelOptions(guardrailModels);
+    
+    setFormData(prev => ({
+      ...prev,
+      aiAttributes: {
+        ...prev.aiAttributes,
+        guardrailModelNode: nodeId,
+        guardrailModel: resetModel ? "" : prev.aiAttributes.guardrailModel
+      }
+    }));
+  };
+
+  const populateEmbeddingModelDropdown = (nodeId, resetModel = true) => {
+    setSelectedEmbeddingModelNodeId(nodeId);
+    const selectedNode = aiModelNodes.find(
+      (node) => node.modelNodeId === nodeId
+    );
+    
+    console.log("Selected embedding node:", selectedNode);
+    console.log("Node attributes:", selectedNode?.attributes);
+    
+    if (selectedNode?.attributes?.embeddingModels) {
+      setEmbeddingModelOptions(selectedNode.attributes.embeddingModels);
+    } else {
+      setEmbeddingModelOptions([]);
+    }
+    
+    console.log("Embedding models found:", selectedNode?.attributes?.embeddingModels || []);
+    
+    setFormData(prev => ({
+      ...prev,
+      aiAttributes: {
+        ...prev.aiAttributes,
+        embeddingModelNode: nodeId,
+        embeddingModel: resetModel ? "" : prev.aiAttributes.embeddingModel
+      }
+    }));
+  };
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -208,48 +369,48 @@ export default function UpdatePlatformForm() {
                     onSubmit={submitUpdateForm}
                   >
                     {/* Profile Section */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Logo */}
-                        <div>
-                          <label htmlFor="logo" className="labels block text-sm font-medium mb-2">
-                            Logo URL
-                          </label>
-                          <input
-                            id="logo"
-                            name="logo"
-                            type="text"
-                            placeholder="Enter logo URL"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.logo}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        
-                        {/* Favicon */}
-                        <div>
-                          <label htmlFor="favicon" className="labels block text-sm font-medium mb-2">
-                            Favicon URL
-                          </label>
-                          <input
-                            id="favicon"
-                            name="favicon"
-                            type="text"
-                            placeholder="Enter favicon URL"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.favicon}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Logo */}
+                      <div>
+                        <label htmlFor="logo" className="labels block text-sm font-medium mb-2">
+                          Logo URL
+                        </label>
+                        <input
+                          id="logo"
+                          name="logo"
+                          type="text"
+                          placeholder="Enter logo URL"
+                          className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
+                          value={formData.logo}
+                          onChange={handleInputChange}
+                          suppressHydrationWarning
+                        />
                       </div>
-                    
+                      
+                      {/* Favicon */}
+                      <div>
+                        <label htmlFor="favicon" className="labels block text-sm font-medium mb-2">
+                          Favicon URL
+                        </label>
+                        <input
+                          id="favicon"
+                          name="favicon"
+                          type="text"
+                          placeholder="Enter favicon URL"
+                          className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
+                          value={formData.favicon}
+                          onChange={handleInputChange}
+                          suppressHydrationWarning
+                        />
+                      </div>
+                    </div>
+                  
                     {/* JWT Keys Section */}
-                      <details className="border border-zinc-500 p-4 rounded mb-4">
-                         <summary className="text-lg font-semibold cursor-pointer">
-                         JWT Params
-                        </summary>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <details className="border border-zinc-500 p-4 rounded mb-4">
+                      <summary className="text-lg font-semibold cursor-pointer">
+                        JWT Params
+                      </summary>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* JWT Name */}
                         <div>
                           <label htmlFor="dmAccessJwtKeys.name" className="labels block text-sm font-medium mb-2">
@@ -272,16 +433,21 @@ export default function UpdatePlatformForm() {
                           <label htmlFor="dmAccessJwtKeys.signingAlgorithm" className="labels block text-sm font-medium mb-2">
                             Signing Algorithm
                           </label>
-                          <input
+                          <select
                             id="dmAccessJwtKeys.signingAlgorithm"
                             name="dmAccessJwtKeys.signingAlgorithm"
-                            type="text"
-                            placeholder="Enter signing algorithm"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
+                            className="mt-1 w-full flex justify-between items-center bg-zinc-700 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700 rounded-md shadow-sm outline-none border-none"
                             value={formData.dmAccessJwtKeys.signingAlgorithm}
                             onChange={handleInputChange}
                             suppressHydrationWarning
-                          />
+                          >
+                            <option value="">Select Signing Algorithm</option>
+                            {enums?.EncryptionAlgo?.map((algorithm) => (
+                              <option key={algorithm} value={algorithm}>
+                                {algorithm}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                         
                         {/* Public JWT Key */}
@@ -317,135 +483,219 @@ export default function UpdatePlatformForm() {
                             suppressHydrationWarning
                           />
                         </div>
-
-                         </div>
-                      </details>
-                  
-                                  
-                     {/* Generative AI Params */}
-                     <details className="border border-zinc-500 p-4 rounded mb-4">
-                        <summary className="text-lg font-semibold cursor-pointer">
-                         Generative AI Params
-                        </summary>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         {/* Generative Model Node */}
-                        <div>
-                          <label htmlFor="aiAttributes.generativeModelNode" className="labels block text-sm font-medium mb-2">
-                            Generative Model Node
-                          </label>
-                          <input
-                            id="aiAttributes.generativeModelNode"
-                            name="aiAttributes.generativeModelNode"
-                            type="text"
-                            placeholder="Enter generative model node"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.aiAttributes.generativeModelNode}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        {/* Generative Model */}
-                        <div>
-                          <label htmlFor="aiAttributes.generativeModel" className="labels block text-sm font-medium mb-2">
-                            Generative Model
-                          </label>
-                          <input
-                            id="aiAttributes.generativeModel"
-                            name="aiAttributes.generativeModel"
-                            type="text"
-                            placeholder="Enter generative model"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.aiAttributes.generativeModel}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        </div>
-                      </details>
-
-                     {/* Embedding Generator AI Params */}
-                         <details className="border border-zinc-500 p-4 rounded mb-4">
-                        <summary className="text-lg font-semibold cursor-pointer">
-                          Embedding Generator AI Params
-                        </summary>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         {/* Embedding Model Node */}
-                        <div>
-                          <label htmlFor="aiAttributes.embeddingModelNode" className="labels block text-sm font-medium mb-2">
-                            Embedding Model Node
-                          </label>
-                          <input
-                            id="aiAttributes.embeddingModelNode"
-                            name="aiAttributes.embeddingModelNode"
-                            type="text"
-                            placeholder="Enter embedding model node"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.aiAttributes.embeddingModelNode}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        {/* Embedding Model */}
-                        <div>
-                          <label htmlFor="aiAttributes.embeddingModel" className="labels block text-sm font-medium mb-2">
-                            Embedding Model
-                          </label>
-                          <input
-                            id="aiAttributes.embeddingModel"
-                            name="aiAttributes.embeddingModel"
-                            type="text"
-                            placeholder="Enter embedding model"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.aiAttributes.embeddingModel}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        </div>
-                         </details>
-
-                      {/* Guardrail AI Params */}
-                        <details className="border border-zinc-500 p-4 rounded mb-4">
-                        <summary className="text-lg font-semibold cursor-pointer">
-                         Guardrail AI Params
-                        </summary>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                       {/* Guardrail Model Node */}
-                        <div>
-                          <label htmlFor="aiAttributes.guardrailModelNode" className="labels block text-sm font-medium mb-2">
-                            Guardrail Model Node
-                          </label>
-                          <input
-                            id="aiAttributes.guardrailModelNode"
-                            name="aiAttributes.guardrailModelNode"
-                            type="text"
-                            placeholder="Enter guardrail model node"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.aiAttributes.guardrailModelNode}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        {/* Guardrail Model */}
-                        <div>
-                          <label htmlFor="aiAttributes.guardrailModel" className="labels block text-sm font-medium mb-2">
-                            Guardrail Model
-                          </label>
-                          <input
-                            id="aiAttributes.guardrailModel"
-                            name="aiAttributes.guardrailModel"
-                            type="text"
-                            placeholder="Enter guardrail model"
-                            className="form-input-field w-full p-2 rounded-md bg-zinc-700 placeholder-gray-300 shadow-sm outline-none border-none text-sm"
-                            value={formData.aiAttributes.guardrailModel}
-                            onChange={handleInputChange}
-                            suppressHydrationWarning
-                          />
-                        </div>
-                        </div>
-                      </details>
-
+                      </div>
+                    </details>
                  
+                    {/* Generative AI Params */}
+                    <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                      <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                        Generative AI Params
+                      </summary>
+                      <fieldset className="rounded mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Generative Model Node */}
+                          <div>
+                            <label htmlFor="aiAttributes_generativeModelNode" className="labels">
+                              Generative Model Node
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="aiAttributes_generativeModelNode"
+                                name="aiAttributes.generativeModelNode"
+                                onChange={(e) => populateGenerativeModelDropdown(e.target.value)}
+                                value={formData.aiAttributes.generativeModelNode}
+                                className="mt-1 w-full flex justify-between overflow-y-auto scrollbar items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                suppressHydrationWarning
+                              >
+                                <option value="">Select Model Gateway</option>
+                                {aiModelNodes.map((node) => (
+                                  <option
+                                    key={node.modelNodeId}
+                                    value={node.modelNodeId}
+                                    className="text-sm"
+                                  >
+                                    {node.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                      
+                          {/* Generative Model */}
+                          <div>
+                            <label htmlFor="aiAttributes_generativeModel" className="labels">
+                              Generative Model
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="aiAttributes_generativeModel"
+                                name="aiAttributes.generativeModel"
+                                value={formData.aiAttributes.generativeModel}
+                                onChange={handleInputChange}
+                                className="mt-1 w-full flex justify-between overflow-y-auto scrollbar items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                suppressHydrationWarning
+                              >
+                                <option value="">Select Model</option>
+                                {generativeModelOptions.map((model) => (
+                                  <option
+                                    key={model.modelId}
+                                    value={model.modelId}
+                                    className="text-sm"
+                                  >
+                                    {model.modelName}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </details>
+
+                    {/* Embedding Generator AI Params */}
+                    <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                      <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                        Embedding Generator AI Params
+                      </summary>
+                      <fieldset className="rounded mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Embedding Model Node */}
+                          <div>
+                            <label htmlFor="aiAttributes_embeddingModelNode" className="labels">
+                              Embedding Model Node
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="aiAttributes_embeddingModelNode"
+                                name="aiAttributes.embeddingModelNode"
+                                onChange={(e) => populateEmbeddingModelDropdown(e.target.value)}
+                                value={formData.aiAttributes.embeddingModelNode}
+                                className="mt-1 w-full flex justify-between overflow-y-auto scrollbar items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                suppressHydrationWarning
+                              >
+                                <option value="">Select Model Gateway</option>
+                                {aiModelNodes.map((node) => (
+                                  <option
+                                    key={node.modelNodeId}
+                                    value={node.modelNodeId}
+                                    className="text-sm"
+                                  >
+                                    {node.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                      
+                          {/* Embedding Model */}
+                          <div>
+                            <label htmlFor="aiAttributes_embeddingModel" className="labels">
+                              Embedding Model
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="aiAttributes_embeddingModel"
+                                name="aiAttributes.embeddingModel"
+                                value={formData.aiAttributes.embeddingModel}
+                                onChange={handleInputChange}
+                                className="mt-1 w-full flex justify-between overflow-y-auto scrollbar items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                suppressHydrationWarning
+                              >
+                                <option value="">Select Model</option>
+                                {embeddingModelOptions.length > 0 ? (
+                                  embeddingModelOptions.map((model) => (
+                                    <option
+                                      key={model.modelId}
+                                      value={model.modelId}
+                                      className="text-sm"
+                                    >
+                                      {model.modelName}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option disabled className="text-gray-500">
+                                    {selectedEmbeddingModelNodeId ? "No models available" : "Select a node first"}
+                                  </option>
+                                )}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </details>
+
+                    {/* Guardrail AI Params */}
+                    <details className="shadow-sm border border-zinc-500 rounded-md shadow-sm p-4 mb-4">
+                      <summary className="text-lg font-semibold text-gray-100 cursor-pointer">
+                        Guardrail AI Params
+                      </summary>
+                      <fieldset className="rounded mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Guardrail Model Node */}
+                          <div>
+                            <label htmlFor="aiAttributes_guardrailModelNode" className="labels">
+                              Guardrail Model Node
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="aiAttributes_guardrailModelNode"
+                                name="aiAttributes.guardrailModelNode"
+                                onChange={(e) => populateGuardrailModelDropdown(e.target.value)}
+                                value={formData.aiAttributes.guardrailModelNode}
+                                className="mt-1 w-full flex justify-between overflow-y-auto scrollbar items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                suppressHydrationWarning
+                              >
+                                <option value="">Select Model Gateway</option>
+                                {aiModelNodes.map((node) => (
+                                  <option
+                                    key={node.modelNodeId}
+                                    value={node.modelNodeId}
+                                    className="text-sm"
+                                  >
+                                    {node.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                      
+                          {/* Guardrail Model */}
+                          <div>
+                            <label htmlFor="aiAttributes_guardrailModel" className="labels">
+                              Guardrail Model
+                            </label>
+                            <div className="relative">
+                              <select
+                                id="aiAttributes_guardrailModel"
+                                name="aiAttributes.guardrailModel"
+                                value={formData.aiAttributes.guardrailModel}
+                                onChange={handleInputChange}
+                                className="mt-1 w-full flex justify-between overflow-y-auto scrollbar items-center bg-zinc-800 px-4 py-2 text-sm font-medium focus:ring-1 focus:ring-orange-700"
+                                suppressHydrationWarning
+                              >
+                                <option value="">Select Model</option>
+                                {guardrailModelOptions.length > 0 ? (
+                                  guardrailModelOptions.map((model) => (
+                                    <option
+                                      key={model.modelId}
+                                      value={model.modelId}
+                                      className="text-sm"
+                                    >
+                                      {model.modelName}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option disabled className="text-gray-500">
+                                    {selectedGuardrailModelNodeId ? "No models available" : "Select a node first"}
+                                  </option>
+                                )}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </details>
+
                     {/* Submit Button */}
                     <div className="mt-6 flex justify-end">
                       <button
@@ -458,7 +708,7 @@ export default function UpdatePlatformForm() {
                         }`}
                         suppressHydrationWarning
                       >
-                        {isLoading ? "Updating..." : "Update "}
+                        {isLoading ? "Updating..." : "Update"}
                       </button>
                     </div>
                   </form>
