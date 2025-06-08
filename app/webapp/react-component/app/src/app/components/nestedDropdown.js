@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { modelsRegistryApi } from "../utils/ai-studio-endpoint/models-registry-api";
 
-const NestedDropdown = () => {
+const NestedDropdown = ({ onModelSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedModelDisplay, setSelectedModelDisplay] = useState("");
@@ -21,6 +21,7 @@ const NestedDropdown = () => {
         const data = await modelsRegistryApi.getModelsRegistry();
 
         setAIModelNodes(data.output?.aiModelNodes || []);
+        console.log(data.output?.aiModelNodes )
         setIsLoading(false);
       } catch (err) {
         console.error("Error fetching AI models:", err);
@@ -56,9 +57,17 @@ const NestedDropdown = () => {
   };
 
   const handleSelectModel = (modelNodeId, modelName) => {
+    // console.log("Selected Model Node ID:", modelNodeId);
+    // console.log("Selected Model Name:", modelName);
+
     setSelectedModel(`${modelNodeId}||${modelName}`);
     setSelectedModelDisplay(modelName);
     setIsOpen(false);
+
+    // Call the parent's callback
+    if (onModelSelect) {
+      onModelSelect({ modelNodeId, modelName });
+    }
   };
 
   return (

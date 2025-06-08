@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { PromptsApi } from "../utils/ai-studio-endpoint/prompts-api";
 
-const PromptDropdown = () => {
+const PromptDropdown = ({ onPromptSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState("");
   const [selectedPromptDisplay, setSelectedPromptDisplay] = useState("");
@@ -48,9 +48,15 @@ const PromptDropdown = () => {
   };
 
   const handleSelectPrompt = (promptId, promptName) => {
+    
     setSelectedPrompt(promptId);
     setSelectedPromptDisplay(promptName);
     setIsOpen(false);
+    
+    // Send only promptId to parent component
+    if (onPromptSelect) {
+      onPromptSelect(promptId);
+    }
   };
 
   return (
@@ -98,8 +104,6 @@ const PromptDropdown = () => {
           )}
         </div>
       )}
-
-      <input type="hidden" id="promptId" value={selectedPrompt} />
     </div>
   );
 };
