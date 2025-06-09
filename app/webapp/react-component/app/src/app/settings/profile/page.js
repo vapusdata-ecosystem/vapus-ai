@@ -136,7 +136,7 @@ const UserDetails = () => {
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="Your profile"
-          hideBackListingLink={false}
+          hideBackListingLink={true}
           backListingLink="./"
         />
         <div className="flex-grow p-2 w-full text-gray-100">

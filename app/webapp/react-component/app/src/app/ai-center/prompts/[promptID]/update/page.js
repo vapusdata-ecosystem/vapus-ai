@@ -467,7 +467,7 @@ export default function PromptDetailsUpdate({ params }) {
           hideBackListingLink={false}
           backListingLink="./"
         />
-        <LoadingOverlay isLoading={isLoading} />
+        <LoadingOverlay isLoading={isLoading} isOverlay={true}/>
         <ToastContainerMessage />
 
         <div className="flex-grow p-4 overflow-y-auto w-full">

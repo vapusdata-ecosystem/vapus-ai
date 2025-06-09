@@ -113,27 +113,25 @@ export default function UpdateGuardrail({ params }) {
 
   // Handle guardrail selection
   const handleGuardrailSelection = (guardrail) => {
-    setSelectedGuardrails((prev) => {
-      // All three types now use object format with id and Name
-      const isSelected = prev.some(
-        (item) => typeof item === "object" && item.id === guardrail.id
-      );
-
-      if (isSelected) {
-        return prev.filter(
-          (item) => !(typeof item === "object" && item.id === guardrail.id)
-        );
-      } else {
-        return [...prev, guardrail];
-      }
-    });
-  };
-  // Check if guardrail is selected
+  setSelectedGuardrails((prev) => {
+    const isSelected = prev.some(item => item.id === guardrail.id);
+    if (isSelected) {
+      // Remove the guardrail
+      const filtered = prev.filter(item => item.id !== guardrail.id);
+      return filtered;
+    } else {
+      // Add the guardrail
+      const newSelection = [...prev, guardrail];
+      return newSelection;
+    }
+  });
+};
+  // For Mistral and Pangea in the JSX:
   const isGuardrailSelected = (guardrail) => {
-    return selectedGuardrails.some(
-      (item) => typeof item === "object" && item.id === guardrail.id
-    );
-  };
+  const isSelected = selectedGuardrails.some(item => item.id === guardrail.id);
+  console.log(`Checking if ${guardrail.name || guardrail.id} is selected:`, isSelected);
+  return isSelected;
+};
 
   // Fetch enums data
   useEffect(() => {
@@ -573,7 +571,7 @@ export default function UpdateGuardrail({ params }) {
           backListingLink="./"
         />
         <ToastContainerMessage />
-        <LoadingOverlay isLoading={isLoading} />
+        <LoadingOverlay isLoading={isLoading} isOverlay={true}/>
 
         <div className="flex-grow p-4 overflow-y-auto w-full">
           <section className="space-y-2">
@@ -1281,7 +1279,7 @@ export default function UpdateGuardrail({ params }) {
                                             }
                                           >
                                             <div className="text-sm font-medium">
-                                              {strTitle(guardrail.name)}
+                                            {strTitle(guardrail.name || guardrail.Name || `Guardrail ${guardrail.id}`)}
                                             </div>
                                             {isSelected && (
                                               <div className="text-orange-500">
@@ -1329,7 +1327,7 @@ export default function UpdateGuardrail({ params }) {
                                             }
                                           >
                                             <div className="text-sm font-medium">
-                                              {strTitle(guardrail.name)}
+                                             {strTitle(guardrail.name || guardrail.Name || `Guardrail ${guardrail.id}`)}
                                             </div>
                                             {isSelected && (
                                               <div className="text-orange-500">
@@ -1377,7 +1375,7 @@ export default function UpdateGuardrail({ params }) {
                                             }
                                           >
                                             <div className="text-sm font-medium">
-                                              {strTitle(guardrail.name)}
+                                             {strTitle(guardrail.name || guardrail.Name || `Guardrail ${guardrail.id}`)}
                                             </div>
                                             {isSelected && (
                                               <div className="text-orange-500">
