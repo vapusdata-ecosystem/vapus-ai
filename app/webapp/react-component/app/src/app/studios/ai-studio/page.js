@@ -1377,12 +1377,13 @@ const submitInput = async () => {
                   rows="1"
                 />
                 <div className="flex h-[40px] items-center justify-between mt-2 mb-2 px-3">
+                  {/* toggleContextPopup Button*/}
                   <div className="flex gap-x-2">
                     <button
                       title="View selected dataproduct prompts"
                       aria-label="datafiles"
                       data-testid="datafiles"
-                      className="flex cursor-pointer h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-zinc-900 hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 disabled:dark:bg-token-text-quaternary bg-orange-700 disabled:bg-[#D7D7D7]"
+                      className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black bg-orange-700"
                       onClick={toggleContextPopup}
                       disabled={isLoading}
                     >
