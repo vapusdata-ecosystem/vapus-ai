@@ -96,28 +96,27 @@ export default function CreateGuardrail() {
     GuardRailLevels: [],
   });
 
-  const handleGuardrailSelection = (guardrail) => {
-    setSelectedGuardrails((prev) => {
-      // All three types now use object format with id and Name
-      const isSelected = prev.some(
-        (item) => typeof item === "object" && item.id === guardrail.id
-      );
-
-      if (isSelected) {
-        return prev.filter(
-          (item) => !(typeof item === "object" && item.id === guardrail.id)
-        );
-      } else {
-        return [...prev, guardrail];
-      }
-    });
-  };
+const handleGuardrailSelection = (guardrail) => {
+  setSelectedGuardrails((prev) => {
+    const isSelected = prev.some(item => item.id === guardrail.id);
+    if (isSelected) {
+      // Remove the guardrail
+      const filtered = prev.filter(item => item.id !== guardrail.id);
+      return filtered;
+    } else {
+      // Add the guardrail
+      const newSelection = [...prev, guardrail];
+      return newSelection;
+    }
+  });
+};
   // For Mistral and Pangea in the JSX:
   const isGuardrailSelected = (guardrail) => {
-    return selectedGuardrails.some(
-      (item) => typeof item === "object" && item.id === guardrail.id
-    );
-  };
+  const isSelected = selectedGuardrails.some(item => item.id === guardrail.id);
+  console.log(`Checking if ${guardrail.name || guardrail.id} is selected:`, isSelected);
+  return isSelected;
+};
+
 
   // Fetch enums data
   useEffect(() => {
@@ -525,7 +524,7 @@ export default function CreateGuardrail() {
         />
         <ToastContainerMessage />
 
-        <LoadingOverlay isLoading={isLoading} />
+        <LoadingOverlay isLoading={isLoading} isOverlay={true}/>
         <div className="flex-grow p-4 overflow-y-auto w-full">
           <section className="space-y-2">
             <div className="max-w-6xl mx-auto bg-[#1b1b1b] shadow rounded-lg p-2">
@@ -1149,170 +1148,153 @@ export default function CreateGuardrail() {
                           )}
 
                           {/* Common guardrail selection for Bedrock, Mistral, and Pangea */}
-                          {(guardrailType === "bedrock" ||
-                            guardrailType === "mistral" ||
-                            guardrailType === "pangea") && (
-                            <>
-                              <label className="labels">
-                                Select Guardrails
-                              </label>
-                              <div className="mt-2">
-                                <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
-                                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-                                    {/* Bedrock guardrails */}
-                                    {guardrailType === "bedrock" &&
-                                      bedrockGuardrails.map((guardrail) => {
-                                        const isSelected =
-                                          selectedGuardrails.some(
-                                            (item) =>
-                                              typeof item === "object" &&
-                                              item.id === guardrail.id
-                                          );
-
-                                        return (
-                                          <div
-                                            key={guardrail.id}
-                                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
-                                              isSelected
-                                                ? "border-orange-700 bg-zinc-700"
-                                                : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
-                                            }`}
-                                            onClick={() =>
-                                              handleGuardrailSelection(
-                                                guardrail
-                                              )
-                                            }
-                                          >
-                                            <div className="text-sm font-medium">
-                                              {guardrail.name}
-                                            </div>
-                                            {isSelected && (
-                                              <div className="text-orange-500">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="16"
-                                                  height="16"
-                                                  viewBox="0 0 24 24"
-                                                  fill="none"
-                                                  stroke="currentColor"
-                                                  strokeWidth="2"
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                >
-                                                  <polyline points="20 6 9 17 4 12"></polyline>
-                                                </svg>
-                                              </div>
-                                            )}
+                        {(guardrailType === "bedrock" || guardrailType === "mistral" || guardrailType === "pangea") && (
+                          <>
+                            <label className="labels">Select Guardrails</label>
+                            <div className="mt-2">
+                              <div className="rounded mb-4 max-h-36 scrollbar overflow-y-auto">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                                  {/* Bedrock guardrails */}
+                                  {guardrailType === "bedrock" &&
+                                    bedrockGuardrails.map((guardrail) => {
+                                      const isSelected = isGuardrailSelected(guardrail);
+                                      
+                                      return (
+                                        <div
+                                          key={guardrail.id}
+                                          className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                            isSelected
+                                              ? "border-orange-700 bg-zinc-700"
+                                              : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                          }`}
+                                          onClick={() => handleGuardrailSelection(guardrail)}
+                                        >
+                                          <div className="text-sm font-medium">
+                                            {guardrail.name || guardrail.Name || `Guardrail ${guardrail.id}`}
                                           </div>
-                                        );
-                                      })}
-
-                                    {/* Pangea guardrails */}
-                                    {guardrailType === "pangea" &&
-                                      pangeaGuardrails.map((guardrail) => {
-                                        const isSelected =
-                                          selectedGuardrails.some(
-                                            (item) =>
-                                              typeof item === "object" &&
-                                              item.id === guardrail.id
-                                          );
-
-                                        return (
-                                          <div
-                                            key={guardrail.id}
-                                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
-                                              isSelected
-                                                ? "border-orange-700 bg-zinc-700"
-                                                : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
-                                            }`}
-                                            onClick={() =>
-                                              handleGuardrailSelection(
-                                                guardrail
-                                              )
-                                            }
-                                          >
-                                            <div className="text-sm font-medium">
-                                              {strTitle(guardrail.name)}
+                                          {isSelected && (
+                                            <div className="text-orange-500">
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                              >
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                              </svg>
                                             </div>
-                                            {isSelected && (
-                                              <div className="text-orange-500">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="16"
-                                                  height="16"
-                                                  viewBox="0 0 24 24"
-                                                  fill="none"
-                                                  stroke="currentColor"
-                                                  strokeWidth="2"
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                >
-                                                  <polyline points="20 6 9 17 4 12"></polyline>
-                                                </svg>
-                                              </div>
-                                            )}
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                        
+                                  {/* Pangea guardrails */}
+                                  {guardrailType === "pangea" &&
+                                    pangeaGuardrails.map((guardrail) => {
+                                      const isSelected = isGuardrailSelected(guardrail);
+                                      
+                                      return (
+                                        <div
+                                          key={guardrail.id}
+                                          className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                            isSelected
+                                              ? "border-orange-700 bg-zinc-700"
+                                              : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                          }`}
+                                          onClick={() => handleGuardrailSelection(guardrail)}
+                                        >
+                                          <div className="text-sm font-medium">
+                                            {strTitle(guardrail.name || guardrail.Name || `Guardrail ${guardrail.id}`)}
                                           </div>
-                                        );
-                                      })}
-
-                                    {/* Mistral guardrails */}
-                                    {guardrailType === "mistral" &&
-                                      mistralGuardrails.map((guardrail) => {
-                                        const isSelected =
-                                          selectedGuardrails.some(
-                                            (item) =>
-                                              typeof item === "object" &&
-                                              item.id === guardrail.id
-                                          );
-
-                                        return (
-                                          <div
-                                            key={guardrail.id}
-                                            className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
-                                              isSelected
-                                                ? "border-orange-700 bg-zinc-700"
-                                                : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
-                                            }`}
-                                            onClick={() =>
-                                              handleGuardrailSelection(
-                                                guardrail
-                                              )
-                                            }
-                                          >
-                                            <div className="text-sm font-medium">
-                                              {strTitle(guardrail.name)}
+                                          {isSelected && (
+                                            <div className="text-orange-500">
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                              >
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                              </svg>
                                             </div>
-                                            {isSelected && (
-                                              <div className="text-orange-500">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="16"
-                                                  height="16"
-                                                  viewBox="0 0 24 24"
-                                                  fill="none"
-                                                  stroke="currentColor"
-                                                  strokeWidth="2"
-                                                  strokeLinecap="round"
-                                                  strokeLinejoin="round"
-                                                >
-                                                  <polyline points="20 6 9 17 4 12"></polyline>
-                                                </svg>
-                                              </div>
-                                            )}
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                        
+                                  {/* Mistral guardrails */}
+                                  {guardrailType === "mistral" &&
+                                    mistralGuardrails.map((guardrail) => {
+                                      const isSelected = isGuardrailSelected(guardrail);
+                                      
+                                      return (
+                                        <div
+                                          key={guardrail.id}
+                                          className={`border rounded-md p-3 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                                            isSelected
+                                              ? "border-orange-700 bg-zinc-700"
+                                              : "border-zinc-600 hover:border-orange-700 hover:bg-zinc-700"
+                                          }`}
+                                          onClick={() => handleGuardrailSelection(guardrail)}
+                                        >
+                                          <div className="text-sm font-medium">
+                                            {strTitle(guardrail.name || guardrail.Name || `Guardrail ${guardrail.id}`)}
                                           </div>
-                                        );
-                                      })}
-                                  </div>
+                                          {isSelected && (
+                                            <div className="text-orange-500">
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                              >
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                              </svg>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
                                 </div>
-                                {/* Hidden input to store selected guardrails for form submission */}
-                                <input
-                                  type="hidden"
-                                  name="selectedGuardrails"
-                                  value={JSON.stringify(selectedGuardrails)}
-                                />
                               </div>
-                            </>
-                          )}
+                              {/* Hidden input to store selected guardrails for form submission */}
+                              <input
+                                type="hidden"
+                                name="selectedGuardrails"
+                                value={JSON.stringify(selectedGuardrails)}
+                              />
+                              
+                              {/* Debug section - remove this after testing */}
+                              {selectedGuardrails.length > 0 && (
+                                <div className="mt-4 p-2 bg-gray-800 rounded">
+                                  <p className="text-sm text-gray-300">Selected Guardrails:</p>
+                                  <ul className="text-xs text-gray-400">
+                                    {selectedGuardrails.map((item, index) => (
+                                      <li key={index}>
+                                        ID: {item.id}, Name: {item.name || item.Name || 'N/A'}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        )}
                         </div>
                       )}
                       {/* Submit Button */}
