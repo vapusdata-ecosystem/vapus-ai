@@ -1,19 +1,19 @@
-vapusBESecretStorage: 
+vapusBESecretStorage:
   filePath: "secrets/be-secret-storage.yaml"
   secret: "vapusdata-be-secret"
-vapusBEDbStorage: 
+vapusBEDbStorage:
   filePath:  "secrets/be-db-storages.yaml"
   secret:  11c82-secret
-vapusBECacheStorage: 
+vapusBECacheStorage:
   filePath:  96406-secret
   secret:  ff35a-secret
-vapusFileStorage: 
+vapusFileStorage:
   filePath:  96406-secret
   secret:  de31d-secret
-JWTAuthnSecrets: 
+JWTAuthnSecrets:
   filePath: "secrets/jwt-secrets.yaml"
   secret: d8be6-secret
-authnSecrets: 
+authnSecrets:
   patfilePathh: "secrets/authn-secrets.yaml"
   secret: bc7ee-secret
 networkConfigFile: network/network-config.yaml
@@ -30,22 +30,25 @@ artifactStore:
 platformBaseAccount:
   platformOwners:
       - vikrant@vapusdata.com
-  platformAccount: 
-      name: VapusData Sandbox 
+  platformAccount:
+      name: VapusData Sandbox
       creator: vikrant@vapusdata.com
   platformAccountOrganization:
       name: VapusData Sandbox Service Domain
+  datamesh:
+      name: VapusData DataMesh
+      creator: vikrant@vapusdata.com
 authnMethod: oidc
 baseOs:
-  - artifactType: vdc 
+  - artifactType: vdc
     url: "asia-south1-docker.pkg.dev/vapusdata-beta/vapusdata-ecosystem/vapus-containers"
     digest: "sha256:68fb2f56530f752137cd2bb9b06d20eba05971960e13348f5294dd27f3901eda"
     tag: "local_vikrantsingh"
-    domainMounts: 
+    domainMounts:
       - "/src"
   - artifactType: dataworker
     url: "asia-south1-docker.pkg.dev/vapusdata-beta/vapusdata-ecosystem/dataworker"
     digest: "sha256:9882be5e2e44b48984b793559b2ebc20a3ca64073b2f9a7807cf7b6e354c96ed"
     tag: "local_vikrantsingh"
-    domainMounts: 
+    domainMounts:
       - "/src"

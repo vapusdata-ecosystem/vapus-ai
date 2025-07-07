@@ -285,7 +285,7 @@ const UpdatePluginsForm = ({ params }) => {
         />
 
         <ToastContainerMessage />
-        <LoadingOverlay isLoading={isLoading} />
+        <LoadingOverlay isLoading={isLoading} isOverlay={true}/>
 
         <div className="flex-grow p-4 overflow-y-auto w-full">
           <section className="space-y-2">

@@ -239,8 +239,11 @@ type ThirdParty struct {
 }
 
 func (a *ThirdParty) ConvertToPb() *mpb.ThirdParty {
-	obj := &mpb.ThirdParty{}
-
+	obj := &mpb.ThirdParty{
+		Bedrock: make([]*mpb.BedrockGuardrailModel, len(a.Bedrock)),
+		Mistral: make([]*mpb.ThirdPartyGuardrailModel, len(a.Mistral)),
+		Pangea:  make([]*mpb.ThirdPartyGuardrailModel, len(a.Pangea)),
+	}
 	for i := range a.Bedrock {
 		obj.Bedrock[i] = a.Bedrock[i].ConvertToPb()
 	}
@@ -254,13 +257,16 @@ func (a *ThirdParty) ConvertToPb() *mpb.ThirdParty {
 }
 
 func (a *ThirdParty) ConvertFromPb(obpb *mpb.ThirdParty) *ThirdParty {
+	a.Bedrock = make([]*BedrockGuardrailModel, len(obpb.Bedrock))
+	a.Mistral = make([]*ThirdPartyGuardrailModel, len(obpb.Mistral))
+	a.Pangea = make([]*ThirdPartyGuardrailModel, len(obpb.Pangea))
 	for i := range obpb.Bedrock {
 		a.Bedrock[i] = new(BedrockGuardrailModel).ConvertFromPb(obpb.Bedrock[i])
 	}
 	for i := range obpb.Mistral {
 		a.Mistral[i] = new(ThirdPartyGuardrailModel).ConvertFromPb(obpb.Mistral[i])
 	}
-	for i := range obpb.Bedrock {
+	for i := range obpb.Pangea {
 		a.Pangea[i] = new(ThirdPartyGuardrailModel).ConvertFromPb(obpb.Pangea[i])
 	}
 	return a

@@ -133,7 +133,7 @@ func (x *AccountAgent) configureAIAttributes(ctx context.Context) (*models.Accou
 }
 
 func (x *AccountAgent) updateAccount(ctx context.Context) (*models.Account, error) {
-	userRoles := strings.Split(x.CtxClaim[encryption.ClaimRoleKey], ",")
+	userRoles := strings.Split(x.CtxClaim[encryption.ClaimOrganizationRolesKey], ",")
 	if !slices.Contains(userRoles, mpb.PlatformRoles_SERVICE_OWNER.String()) || x.organization.OrganizationType != mpb.OrganizationType_SERVICE_ORGANIZATION.String() {
 		return nil, dmerrors.DMError(apperr.ErrAccountOps403, nil)
 	}
@@ -143,11 +143,24 @@ func (x *AccountAgent) updateAccount(ctx context.Context) (*models.Account, erro
 	if err != nil {
 		return nil, dmerrors.DMError(apperr.ErrGetAccount, err)
 	}
-	account.Profile = reqObj.Profile
+	if reqObj.Profile != nil {
+		account.Profile = reqObj.Profile
+	}
+
+	if reqObj.DmAccessJwtKeys != nil {
+		account.DmAccessJwtKeys = reqObj.GetDmAccessJwtKeys()
+		if reqObj.GetDmAccessJwtKeys().GetName() != "" {
+			account.DmAccessJwtKeys.Name = reqObj.GetDmAccessJwtKeys().GetName()
+			account.DmAccessJwtKeys.VId = reqObj.GetDmAccessJwtKeys().GetName()
+		}
+		if reqObj.GetDmAccessJwtKeys().SigningAlgorithm != "" {
+			account.DmAccessJwtKeys.SigningAlgorithm = reqObj.GetDmAccessJwtKeys().SigningAlgorithm
+		}
+	}
 	account.AIAttributes = reqObj.GetAiAttributes()
 
 	account.PreSaveUpdate(x.CtxClaim[encryption.ClaimUserIdKey])
-	account.ArtifactStorage = reqObj.GetArtifactStorage()
+	// account.ArtifactStorage = reqObj.GetArtifactStorage()
 
 	err = x.dmStore.PutAccount(ctx, account, x.CtxClaim)
 	if err != nil {

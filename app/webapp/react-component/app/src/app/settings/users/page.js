@@ -17,7 +17,7 @@ const UsersTable = () => {
   const [error, setError] = useState(null);
 
   const [globalData, setGlobalData] = useState({
-    currentDomain: null,
+    currentOrganization: null,
   });
 
   // take data from globleContext
@@ -26,7 +26,10 @@ const UsersTable = () => {
       const data = await getGlobalData();
       setGlobalData(data);
       console.log("Global data loaded:", data);
-      console.log("current DomainType", data.currentDomain.domainType);
+      console.log(
+        "current organizationType",
+        data.currentOrganization.organizationType
+      );
     };
 
     fetchGlobalData();
@@ -48,8 +51,10 @@ const UsersTable = () => {
     try {
       let data;
 
-      // Check domainType and call API endpoint
-      if (globalData.currentDomain?.domainType === "SERVICE_DOMAIN") {
+      // Check organizationType and call API endpoint
+      if (
+        globalData.currentOrganization?.organizationType === "SERVICE_DOMAIN"
+      ) {
         data = await userApi.getuser("LIST_PLATFORM_USERS");
       } else {
         data = await userApi.getuser("LIST_USERS");
@@ -93,7 +98,7 @@ const UsersTable = () => {
   useEffect(() => {
     const loadData = async () => {
       // Only load data if globalData is available
-      if (!globalData.currentDomain) return;
+      if (!globalData.currentOrganization) return;
 
       setIsLoading(true);
       const usersData = await fetchUsersData();
@@ -121,7 +126,7 @@ const UsersTable = () => {
     <div className="bg-zinc-800 flex h-screen">
       <div className="overflow-y-auto h-screen w-full">
         <Header
-          sectionHeader="Domain Users"
+          sectionHeader="Organization Users"
           hideBackListingLink={true}
           backListingLink="./"
         />
@@ -158,6 +163,7 @@ const UsersTable = () => {
                   columns={columns}
                   loading={isLoading}
                   filteredColumns={filteredColumns}
+                  loadingText="Loading Users List..."
                 />
               </div>
             )}

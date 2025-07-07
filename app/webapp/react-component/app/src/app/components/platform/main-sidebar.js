@@ -672,9 +672,9 @@ const Sidebar = () => {
           }`}
         >
           <div className="flex items-center h-[65px]">
-            <Link href="/ui/">
+            <Link href="/dashboard/">
               <Image
-                src="https://i0.wp.com/blog.vapusdata.com/wp-content/uploads/2024/06/Transparent-e1718715526411.png?resize=300%2C88&ssl=1"
+                src="https://storage.googleapis.com/vapusdata-public/website-images/vapus-white.webp"
                 alt="Logo"
                 width={136}
                 height={88}
@@ -959,7 +959,7 @@ const Sidebar = () => {
           }`}
         >
           <div className="items-center my-2">
-            <Link href="/ui/">
+            <Link href="/dashboard/">
               <Image
                 src="https://i0.wp.com/blog.vapusdata.com/wp-content/uploads/2024/07/cropped-Transparent-12.png?fit=32%2C32&ssl=1"
                 alt="Logo"

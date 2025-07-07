@@ -21,10 +21,11 @@ const GuardrailsTableClient = () => {
 
   const fetchGuardrailsData = async () => {
     try {
-      const data = await GuardrailApi.getGuardrail(); // Use your API service
+      const data = await GuardrailApi.getGuardrail(); 
       return data.output || [];
     } catch (error) {
-      console.error("Error fetching model nodes data:", error);
+      console.error("Error fetching  Guardrail data:", error);
+        setError(error.message || "Frror fetching Guardrail data");
       return [];
     }
   };
@@ -132,6 +133,7 @@ const GuardrailsTableClient = () => {
                   columns={columns}
                   loading={isLoading}
                   filteredColumns={filteredColumns}
+                  loadingText="Loading Guardrails..."
                 />
               </div>
             )}

@@ -7,7 +7,7 @@ import Header from "@/app/components/platform/header";
 import YamlEditorClient from "@/app/components/formcomponets/ymal";
 import ToastContainerMessage from "@/app/components/notification/customToast";
 import LoadingOverlay from "@/app/components/loading/loading";
-import { platformDomainCreateApi } from "@/app/utils/settings-endpoint/platform-domain";
+import { platformDomainCreateApi } from "@/app/utils/settings-endpoint/platform-organization";
 
 export default function CreatePlatformDomain() {
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function CreatePlatformDomain() {
         />
         <ToastContainerMessage />
 
-        <LoadingOverlay isLoading={isLoading} />
+        <LoadingOverlay isLoading={isLoading} isOverlay={true}/>
         <div className="flex-grow p-4 overflow-y-auto w-full">
           <section className="space-y-2">
             <div className="max-w-6xl mx-auto bg-[#1b1b1b] shadow rounded-lg p-2">

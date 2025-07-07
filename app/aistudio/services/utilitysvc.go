@@ -205,7 +205,7 @@ func (v *BlobAgent) downloadFile(ctx context.Context) error {
 	}
 	keyPath := strings.Join(key, "/")
 	v.Logger.Info().Msgf("Fetching file with name: %s with key: %s", name, keyPath)
-	fileStoreLog, err := appdrepo.GetFile(ctx, v.dmStore.VapusStore, keyPath, v.CtxClaim)
+	fileStoreLog, err := appdrepo.GetFile(ctx, v.dmStore.VapusStore, v.fetchRequest.GetPath(), v.CtxClaim)
 	if err != nil {
 		v.Logger.Err(err).Msgf("Error while fetching the file path")
 		return err

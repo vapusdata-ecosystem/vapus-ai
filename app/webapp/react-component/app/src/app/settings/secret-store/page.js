@@ -145,7 +145,7 @@ const SecretStoreClient = () => {
                 </table>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-lg p-4 shadow-md text-gray-100">
+              <div className="p-4">
                 <DataTable
                   id="secretStoreTable"
                   data={secrets}
@@ -153,6 +153,7 @@ const SecretStoreClient = () => {
                   loading={isLoading}
                   filteredColumns={filteredColumns}
                   dangerouslySetInnerHTML={true}
+                    loadingText="Loading Secrets..."
                 />
               </div>
             )}

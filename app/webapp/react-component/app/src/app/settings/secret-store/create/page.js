@@ -190,7 +190,7 @@ export default function SecretServiceForm({
           backListingLink="./"
         />
         <ToastContainerMessage />
-        <LoadingOverlay isLoading={isLoading} />
+        <LoadingOverlay isLoading={isLoading} isOverlay={true}/>
         <div className="flex-grow p-4 overflow-y-auto w-full">
           <section id="grids" className="space-y-2">
             <div className="max-w-6xl mx-auto bg-[#1b1b1b] shadow rounded-lg p-2">

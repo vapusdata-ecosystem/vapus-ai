@@ -5,6 +5,7 @@ import Header from "../../components/platform/header";
 import CreateNewButton from "@/app/components/add-new-button";
 import Card from "@/app/components/card";
 import { PromptsApi } from "@/app/utils/ai-studio-endpoint/prompts-api";
+import LoadingOverlay from "@/app/components/loading/loading";
 
 export default function AIPromptsPage({ backListingLink = "./" }) {
   const [aiPrompts, setAiPrompts] = useState([]);
@@ -30,8 +31,14 @@ export default function AIPromptsPage({ backListingLink = "./" }) {
 
   if (loading) {
     return (
-      <div className="bg-zinc-800 flex h-screen justify-center items-center">
-        <div className="text-white text-xl">Loading prompts...</div>
+      <div className="bg-zinc-800 flex h-screen justify-center items-center relative">
+          <LoadingOverlay 
+                isLoading={loading} 
+                text="Loading plugin details"
+                size="default"
+                isOverlay={true}
+                className="absolute inset-0 z-10 bg-zinc-800"
+              />
       </div>
     );
   }

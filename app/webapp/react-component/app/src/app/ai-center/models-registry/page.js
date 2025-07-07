@@ -16,7 +16,6 @@ const ModelNodesTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Function to fetch the data
-
   const fetchModelNodesData = async () => {
     try {
       const data = await modelsRegistryApi.getModelsRegistry();
@@ -79,6 +78,8 @@ const ModelNodesTable = () => {
 
   return (
     <div className="bg-zinc-800 flex h-screen">
+
+      
       <div className="overflow-y-auto scrollbar h-screen w-full">
         <Header
           sectionHeader="AI Models"
@@ -117,8 +118,8 @@ const ModelNodesTable = () => {
                 data={modelNodes}
                 columns={columns}
                 loading={isLoading}
+                loadingText="Loading AI Models..."
                 filteredColumns={filteredColumns}
-                showCsvExport={true}
               />
             </div>
           </section>
