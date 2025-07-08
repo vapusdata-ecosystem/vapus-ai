@@ -1,0 +1,286 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "dynamicRoutes": [
+    {
+      "page": "/ai-center/guardrails/[guardrailId]",
+      "regex": "^/ai\\-center/guardrails/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPguardrailId": "nxtPguardrailId"
+      },
+      "namedRegex": "^/ai\\-center/guardrails/(?<nxtPguardrailId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/ai-center/guardrails/[guardrailId]/update",
+      "regex": "^/ai\\-center/guardrails/([^/]+?)/update(?:/)?$",
+      "routeKeys": {
+        "nxtPguardrailId": "nxtPguardrailId"
+      },
+      "namedRegex": "^/ai\\-center/guardrails/(?<nxtPguardrailId>[^/]+?)/update(?:/)?$"
+    },
+    {
+      "page": "/ai-center/models-registry/[modelNodeId]",
+      "regex": "^/ai\\-center/models\\-registry/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPmodelNodeId": "nxtPmodelNodeId"
+      },
+      "namedRegex": "^/ai\\-center/models\\-registry/(?<nxtPmodelNodeId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/ai-center/models-registry/[modelNodeId]/update",
+      "regex": "^/ai\\-center/models\\-registry/([^/]+?)/update(?:/)?$",
+      "routeKeys": {
+        "nxtPmodelNodeId": "nxtPmodelNodeId"
+      },
+      "namedRegex": "^/ai\\-center/models\\-registry/(?<nxtPmodelNodeId>[^/]+?)/update(?:/)?$"
+    },
+    {
+      "page": "/ai-center/prompts/[promptID]",
+      "regex": "^/ai\\-center/prompts/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPpromptID": "nxtPpromptID"
+      },
+      "namedRegex": "^/ai\\-center/prompts/(?<nxtPpromptID>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/ai-center/prompts/[promptID]/update",
+      "regex": "^/ai\\-center/prompts/([^/]+?)/update(?:/)?$",
+      "routeKeys": {
+        "nxtPpromptID": "nxtPpromptID"
+      },
+      "namedRegex": "^/ai\\-center/prompts/(?<nxtPpromptID>[^/]+?)/update(?:/)?$"
+    },
+    {
+      "page": "/settings/plugins/[id]",
+      "regex": "^/settings/plugins/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/settings/plugins/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/settings/plugins/[id]/update",
+      "regex": "^/settings/plugins/([^/]+?)/update(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/settings/plugins/(?<nxtPid>[^/]+?)/update(?:/)?$"
+    },
+    {
+      "page": "/settings/secret-store/[name]",
+      "regex": "^/settings/secret\\-store/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPname": "nxtPname"
+      },
+      "namedRegex": "^/settings/secret\\-store/(?<nxtPname>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/settings/users/[userId]",
+      "regex": "^/settings/users/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPuserId": "nxtPuserId"
+      },
+      "namedRegex": "^/settings/users/(?<nxtPuserId>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/ai-center/guardrails",
+      "regex": "^/ai\\-center/guardrails(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-center/guardrails(?:/)?$"
+    },
+    {
+      "page": "/ai-center/guardrails/create",
+      "regex": "^/ai\\-center/guardrails/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-center/guardrails/create(?:/)?$"
+    },
+    {
+      "page": "/ai-center/models-registry",
+      "regex": "^/ai\\-center/models\\-registry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-center/models\\-registry(?:/)?$"
+    },
+    {
+      "page": "/ai-center/models-registry/create",
+      "regex": "^/ai\\-center/models\\-registry/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-center/models\\-registry/create(?:/)?$"
+    },
+    {
+      "page": "/ai-center/prompts",
+      "regex": "^/ai\\-center/prompts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-center/prompts(?:/)?$"
+    },
+    {
+      "page": "/ai-center/prompts/create",
+      "regex": "^/ai\\-center/prompts/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-center/prompts/create(?:/)?$"
+    },
+    {
+      "page": "/auth/callback",
+      "regex": "^/auth/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/callback(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/developers/enums",
+      "regex": "^/developers/enums(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/developers/enums(?:/)?$"
+    },
+    {
+      "page": "/developers/resources",
+      "regex": "^/developers/resources(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/developers/resources(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/insights/llms",
+      "regex": "^/insights/llms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/insights/llms(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/settings/organization",
+      "regex": "^/settings/organization(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/organization(?:/)?$"
+    },
+    {
+      "page": "/settings/platform",
+      "regex": "^/settings/platform(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/platform(?:/)?$"
+    },
+    {
+      "page": "/settings/platform/update",
+      "regex": "^/settings/platform/update(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/platform/update(?:/)?$"
+    },
+    {
+      "page": "/settings/platform-organizations",
+      "regex": "^/settings/platform\\-organizations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/platform\\-organizations(?:/)?$"
+    },
+    {
+      "page": "/settings/platform-organizations/create",
+      "regex": "^/settings/platform\\-organizations/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/platform\\-organizations/create(?:/)?$"
+    },
+    {
+      "page": "/settings/plugins",
+      "regex": "^/settings/plugins(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/plugins(?:/)?$"
+    },
+    {
+      "page": "/settings/plugins/create",
+      "regex": "^/settings/plugins/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/plugins/create(?:/)?$"
+    },
+    {
+      "page": "/settings/profile",
+      "regex": "^/settings/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/profile(?:/)?$"
+    },
+    {
+      "page": "/settings/profile/update",
+      "regex": "^/settings/profile/update(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/profile/update(?:/)?$"
+    },
+    {
+      "page": "/settings/secret-store",
+      "regex": "^/settings/secret\\-store(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/secret\\-store(?:/)?$"
+    },
+    {
+      "page": "/settings/secret-store/create",
+      "regex": "^/settings/secret\\-store/create(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/secret\\-store/create(?:/)?$"
+    },
+    {
+      "page": "/settings/users",
+      "regex": "^/settings/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings/users(?:/)?$"
+    },
+    {
+      "page": "/studios/ai-studio",
+      "regex": "^/studios/ai\\-studio(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/studios/ai\\-studio(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "RSC",
+    "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+    "prefetchHeader": "Next-Router-Prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "Next-Router-Segment-Prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  },
+  "rewrites": []
+}
