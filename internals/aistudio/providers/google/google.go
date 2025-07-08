@@ -2,25 +2,29 @@ package googlegenai
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"iter"
 	"log"
 
-	"github.com/google/generative-ai-go/genai"
+	"cloud.google.com/go/auth"
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
+
 	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
 	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
 	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
+
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
+	"google.golang.org/genai"
 )
 
-var defaultModel = "gemini-2.0-flash"
-var defaultEmbeddingModel = "gpt-3.5-turbo"
+var defaultModel = "gemini-2.5-flash"
+var defaultEmbeddingModel = "gemini-embedding-exp-03-07"
 
 type GoogleGenAIInterface interface {
 	GenerateEmbeddings(ctx context.Context, request *prompts.AIEmbeddingPayload) error
@@ -30,14 +34,24 @@ type GoogleGenAIInterface interface {
 }
 
 type GoogleGenAI struct {
-	client     *genai.Client
-	log        zerolog.Logger
-	modelNode  *models.AIModelNode
-	maxRetries int
-	params     map[string]any
+	client         *genai.Client
+	log            zerolog.Logger
+	modelNode      *models.AIModelNode
+	maxRetries     int
+	params         map[string]any
+	IsVertexClient bool
 }
 
-func New(ctx context.Context, node *models.AIModelNode, retries int, logger zerolog.Logger) (GoogleGenAIInterface, error) {
+type GoogleGenAIRequest struct {
+	Model   string                       `json:"model"`
+	Content []*genai.Content             `json:"parts"`
+	Tools   []*genai.Tool                `json:"tools,omitempty"`
+	Params  map[string]any               `json:"params,omitempty"`
+	Config  *genai.GenerateContentConfig `json:"config,omitempty"`
+}
+
+func New(ctx context.Context, node *models.AIModelNode, retries int, isVertex bool, logger zerolog.Logger) (GoogleGenAIInterface, error) {
+	fmt.Println("I am in the Gemini ===============")
 	if node.NetworkParams.Url == "" {
 		node.NetworkParams.Url = "https://generativelanguage.googleapis.com"
 	}
@@ -45,8 +59,30 @@ func New(ctx context.Context, node *models.AIModelNode, retries int, logger zero
 	if node.GetCredentials("default") != nil {
 		token = node.GetCredentials("default").ApiToken
 	}
-	genAiCl, err := genai.NewClient(ctx, option.WithAPIKey(token))
-	if err != nil {
+	var genAiCl *genai.Client
+	var err error
+	if !isVertex {
+		genAiCl, err = genai.NewClient(ctx, &genai.ClientConfig{
+			APIKey:  token,
+			Backend: genai.BackendGeminiAPI,
+		})
+	} else {
+		decodeData, err := base64.StdEncoding.DecodeString(node.NetworkParams.Credentials.GcpCreds.ServiceAccountKey)
+		if err != nil {
+			logger.Err(err).Msg("Error decoding gcp service account key")
+			return nil, err
+		}
+		log.Println("Decoded GCP Service Account Key: ", string(decodeData))
+		genAiCl, err = genai.NewClient(ctx, &genai.ClientConfig{
+			Project:  node.NetworkParams.Credentials.GcpCreds.ProjectId,
+			Location: node.NetworkParams.Credentials.GcpCreds.Region,
+			Backend:  genai.BackendGeminiAPI,
+			Credentials: auth.NewCredentials(&auth.CredentialsOptions{
+				JSON: decodeData,
+			}),
+		})
+	}
+	if err != nil || genAiCl == nil {
 		logger.Error().Err(err).Msg("Error creating google gen ai client")
 		return nil, err
 	}
@@ -57,37 +93,59 @@ func New(ctx context.Context, node *models.AIModelNode, retries int, logger zero
 	}, nil
 }
 
-func (x *GoogleGenAI) buildRequest(ctx context.Context, payload *prompts.GenerativePrompterPayload, stream bool) (*genai.GenerativeModel, []genai.Part) {
-	if payload.Params.Model == "" {
+func (x *GoogleGenAI) buildRequest(ctx context.Context, payload *prompts.GenerativePrompterPayload, stream bool) *GoogleGenAIRequest {
+	request := &GoogleGenAIRequest{
+		Config: &genai.GenerateContentConfig{
+			Tools: []*genai.Tool{},
+		},
+	}
+	if request.Model == "" {
 		x.log.Warn().Msg("Model name is empty, using default model")
-		payload.Params.Model = defaultModel
+		request.Model = defaultModel
 	}
 	// if payload.Params.MaxCompletionTokens == 0 {
 	// 	payload.Params.MaxCompletionTokens = prompts.DefaultMaxOPTokenLength
 	// }
-	modelCl := x.client.GenerativeModel(payload.Params.Model)
 	if payload.Params.Temperature > 0 {
-		modelCl.SetTemperature(payload.Params.Temperature)
+		request.Config.Temperature = dmutils.ToPtr(float32(payload.Params.Temperature))
 	}
 	if payload.Params.TopP > 0 {
-		modelCl.SetTopP(float32(payload.Params.TopP))
+		request.Config.TopP = dmutils.ToPtr(float32(payload.Params.TopP))
 	}
 	if payload.Params.MaxCompletionTokens > 0 {
-		modelCl.SetMaxOutputTokens(payload.Params.MaxCompletionTokens)
+		request.Config.MaxOutputTokens = int32(payload.Params.MaxCompletionTokens)
 	}
 	tools := x.buildToolRequest(payload, false)
 	if len(tools) > 0 {
-		modelCl.Tools = tools
+		request.Config.Tools = append(request.Config.Tools, tools...)
 	}
-	req := []genai.Part{}
+	req := []*genai.Part{}
 	for _, msg := range payload.Params.Messages {
 		switch msg.Role {
 		case aicore.USER:
 			req = append(req, BuildInputContent(ctx, x.client, msg)...)
 		}
 	}
-	log.Println("Request to Google Gen AI ==================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", req)
-	return modelCl, req
+	if len(req) > 0 {
+		request.Content = []*genai.Content{
+			{
+				Parts: req,
+			},
+		}
+	} else {
+		x.log.Warn().Msg("No user messages found in the payload, using default message")
+		defaultMsg := &pb.ChatMessageObject{
+			Role:    aicore.USER,
+			Content: "Hello, how can I assist you today?",
+		}
+		req = append(req, BuildInputContent(ctx, x.client, defaultMsg)...)
+		request.Content = []*genai.Content{
+			{
+				Parts: req,
+			},
+		}
+	}
+	return request
 }
 
 func (x *GoogleGenAI) getSystemMessage(payload *prompts.GenerativePrompterPayload, stream bool) string {
@@ -156,23 +214,26 @@ func (x *GoogleGenAI) buildResponse(resp *genai.GenerateContentResponse, payload
 			}
 			// payload.ParseToolCallResponse()
 		}
-		if cand.FunctionCalls() != nil {
+		if cand.Content.Parts != nil {
 		funcLoop:
-			for _, funcCall := range cand.FunctionCalls() {
-				log.Println("Function Call", funcCall.Name)
-				log.Println("Function Call Args", funcCall.Args)
-				bbytes, err := json.Marshal(funcCall.Args)
+			for _, part := range cand.Content.Parts {
+				if part.FunctionCall == nil {
+					continue funcLoop
+				}
+				log.Println("Function Call", part.FunctionResponse.Name)
+				log.Println("Function Call Args", part.FunctionResponse.Response)
+				bbytes, err := json.Marshal(part.FunctionResponse.Response)
 				if err != nil {
 					x.log.Err(err).Msg("Error marshalling function call args")
 					continue funcLoop
 				}
 
-				toolCallMap[funcCall.Name] = string(bbytes)
+				toolCallMap[part.FunctionResponse.Name] = string(bbytes)
 				payload.ToolCallResponse = append(payload.ToolCallResponse, &mpb.ToolCall{
 					Id:   dmutils.GetUUID(),
 					Type: aicore.FUNCTION,
 					FunctionSchema: &mpb.FunctionCall{
-						Name:       funcCall.Name,
+						Name:       part.FunctionResponse.Name,
 						Parameters: string(bbytes),
 					},
 				})
@@ -180,7 +241,7 @@ func (x *GoogleGenAI) buildResponse(resp *genai.GenerateContentResponse, payload
 		}
 		if parseOP {
 			payload.ParseOutput(&prompts.PayloadgenericResponse{
-				FinishReason: cand.FinishReason.String(),
+				FinishReason: string(cand.FinishReason),
 				Data:         result,
 				Role:         aicore.ASSISTANT,
 			})
@@ -191,13 +252,25 @@ func (x *GoogleGenAI) buildResponse(resp *genai.GenerateContentResponse, payload
 	return result, toolCallMap
 }
 
-func (x *GoogleGenAI) buildStreamResponse(resp *genai.GenerateContentResponseIterator, payload *prompts.GenerativePrompterPayload) (string, map[string]string) {
+func (x *GoogleGenAI) buildStreamResponse(response iter.Seq2[*genai.GenerateContentResponse, error], payload *prompts.GenerativePrompterPayload) (string, map[string]string, *prompts.UsageMetrics) {
 	content := ""
 	toolCallParams := make(map[string]string)
+	usageMetrics := &prompts.UsageMetrics{
+		TotalTokens:              0,
+		InputTokens:              0,
+		OutputTokens:             0,
+		OutputCachedTokens:       0,
+		InputCachedTokens:        0,
+		InputAudioTokens:         0,
+		ReasoningTokens:          0,
+		OutputAudioTokens:        0,
+		InputModalityMetrics:     make(map[string]*prompts.UsageModalityMetrics),
+		OutputModalityMetrics:    make(map[string]*prompts.UsageModalityMetrics),
+		ReasoningModalityMetrics: make(map[string]*prompts.UsageModalityMetrics),
+	}
 	func() {
 		errCounter := 0
-		for {
-			resp, err := resp.Next()
+		for resp, err := range response {
 			if err == iterator.Done {
 				x.log.Info().Msg("Stream response done")
 				_ = payload.SendChatCompletionStreamData(&prompts.PayloadgenericResponse{
@@ -243,6 +316,15 @@ func (x *GoogleGenAI) buildStreamResponse(resp *genai.GenerateContentResponseIte
 				}
 			}
 			content = content + result
+			//TODO: , in future we can add more usage metrics based on the modality and other aspects as well
+			usageMetrics.TotalTokens += int64(resp.UsageMetadata.TotalTokenCount)
+			usageMetrics.InputTokens += int64(resp.UsageMetadata.PromptTokenCount)
+			usageMetrics.OutputTokens += int64(resp.UsageMetadata.CandidatesTokenCount)
+			usageMetrics.OutputCachedTokens += int64(resp.UsageMetadata.CachedContentTokenCount)
+			usageMetrics.ReasoningTokens += int64(resp.UsageMetadata.ThoughtsTokenCount)
+			CountTokenDetails(resp.UsageMetadata.PromptTokensDetails, usageMetrics.InputModalityMetrics)
+			CountTokenDetails(resp.UsageMetadata.CandidatesTokensDetails, usageMetrics.OutputModalityMetrics)
+			CountTokenDetails(resp.UsageMetadata.ToolUsePromptTokensDetails, usageMetrics.ReasoningModalityMetrics)
 			err = payload.SendChatCompletionStreamData(&prompts.PayloadgenericResponse{
 				Data:    result,
 				IsEnd:   false,
@@ -263,7 +345,7 @@ func (x *GoogleGenAI) buildStreamResponse(resp *genai.GenerateContentResponseIte
 			}
 		}
 	}()
-	return content, toolCallParams
+	return content, toolCallParams, usageMetrics
 }
 
 func (x *GoogleGenAI) GenerateEmbeddings(ctx context.Context, payload *prompts.AIEmbeddingPayload) error {
@@ -271,16 +353,16 @@ func (x *GoogleGenAI) GenerateEmbeddings(ctx context.Context, payload *prompts.A
 }
 
 func (x *GoogleGenAI) GenerateContent(ctx context.Context, payload *prompts.GenerativePrompterPayload) error {
-	modelCl, parts := x.buildRequest(ctx, payload, false)
+	requestObj := x.buildRequest(ctx, payload, false)
 	switch payload.Mode {
 	case pb.AIInterfaceMode_CHAT_MODE:
-		return x.Chat(ctx, modelCl, payload, parts)
+		return x.Chat(ctx, payload, requestObj)
 	case pb.AIInterfaceMode_P2P:
 		if payload.StudioLog != nil {
 			payload.StudioLog.StartedAt = dmutils.GetMilliEpochTime()
 		}
-		modelCl.SystemInstruction = genai.NewUserContent(genai.Text(x.getSystemMessage(payload, false)))
-		response, err := modelCl.GenerateContent(ctx, parts...)
+		requestObj.Config.SystemInstruction = genai.Text(x.getSystemMessage(payload, false))[0]
+		response, err := x.client.Models.GenerateContent(ctx, requestObj.Model, requestObj.Content, requestObj.Config)
 		if payload.StudioLog != nil {
 			payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
 		}
@@ -290,32 +372,38 @@ func (x *GoogleGenAI) GenerateContent(ctx context.Context, payload *prompts.Gene
 		}
 		x.buildResponse(response, payload, true)
 		if response.UsageMetadata != nil {
-			payload.LogUsage(&prompts.UsageMetrics{
+			usageMetrics := &prompts.UsageMetrics{
 				TotalTokens:        int64(response.UsageMetadata.TotalTokenCount),
 				InputTokens:        int64(response.UsageMetadata.PromptTokenCount),
 				OutputTokens:       int64(response.UsageMetadata.CandidatesTokenCount),
 				OutputCachedTokens: int64(response.UsageMetadata.CachedContentTokenCount),
-			}, nil)
+				ReasoningTokens:    int64(response.UsageMetadata.ThoughtsTokenCount),
+			}
+			CountTokenDetails(response.UsageMetadata.PromptTokensDetails, usageMetrics.InputModalityMetrics)
+			CountTokenDetails(response.UsageMetadata.CandidatesTokensDetails, usageMetrics.OutputModalityMetrics)
+			CountTokenDetails(response.UsageMetadata.ToolUsePromptTokensDetails, usageMetrics.ReasoningModalityMetrics)
+
+			payload.LogUsage(usageMetrics)
 		}
 	}
 	return nil
 }
 
 func (x *GoogleGenAI) GenerateContentStream(ctx context.Context, payload *prompts.GenerativePrompterPayload) error {
-	modelCl, parts := x.buildRequest(ctx, payload, true)
+	requestObj := x.buildRequest(ctx, payload, true)
 	switch payload.Mode {
 	case pb.AIInterfaceMode_CHAT_MODE:
-		return x.ChatStream(ctx, modelCl, payload, parts)
+		return x.ChatStream(ctx, payload, requestObj)
 	case pb.AIInterfaceMode_P2P:
 		if payload.StudioLog != nil {
 			payload.StudioLog.StartedAt = dmutils.GetMilliEpochTime()
 		}
-		modelCl.SystemInstruction = genai.NewUserContent(genai.Text(x.getSystemMessage(payload, false)))
-		response := modelCl.GenerateContentStream(ctx, parts...)
+		requestObj.Config.SystemInstruction = genai.Text(x.getSystemMessage(payload, false))[0]
+		response := x.client.Models.GenerateContentStream(ctx, requestObj.Model, requestObj.Content, requestObj.Config)
 		if payload.StudioLog != nil {
 			payload.StudioLog.TTFBAt = dmutils.GetMilliEpochTime()
 		}
-		op, toolCallsParams := x.buildStreamResponse(response, payload)
+		op, toolCallsParams, usageMetrics := x.buildStreamResponse(response, payload)
 		payload.ParsedOutput = op
 		if payload.StudioLog != nil {
 			payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
@@ -335,71 +423,103 @@ func (x *GoogleGenAI) GenerateContentStream(ctx context.Context, payload *prompt
 				})
 			}
 		}
-		if response.MergedResponse != nil && response.MergedResponse().UsageMetadata != nil {
-			payload.LogUsage(&prompts.UsageMetrics{
-				TotalTokens:        int64(response.MergedResponse().UsageMetadata.TotalTokenCount),
-				InputTokens:        int64(response.MergedResponse().UsageMetadata.PromptTokenCount),
-				OutputTokens:       int64(response.MergedResponse().UsageMetadata.CandidatesTokenCount),
-				OutputCachedTokens: int64(response.MergedResponse().UsageMetadata.CachedContentTokenCount),
-			}, nil)
-		}
+
+		payload.LogUsage(usageMetrics)
 	}
 	return nil
 }
 
-func (x *GoogleGenAI) Chat(ctx context.Context, modelCl *genai.GenerativeModel, payload *prompts.GenerativePrompterPayload, parts []genai.Part) error {
-	modelCl.ResponseMIMEType = "text/plain"
-	modelCl.SystemInstruction = genai.NewUserContent(genai.Text(x.getSystemMessage(payload, false)))
+func (x *GoogleGenAI) Chat(ctx context.Context, payload *prompts.GenerativePrompterPayload, request *GoogleGenAIRequest) error {
+	request.Config.SystemInstruction = genai.Text(x.getSystemMessage(payload, false))[0]
 	if payload.StudioLog != nil {
 		payload.StudioLog.StartedAt = dmutils.GetMilliEpochTime()
 	}
-	session := modelCl.StartChat()
-	if payload.StudioLog != nil {
-		payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
-	}
+	sessionContent := []*genai.Content{}
 	for _, msg := range payload.SessionContext {
-		parts := BuildInputContent(ctx, x.client, msg)
-		session.History = append(session.History, &genai.Content{
-			Parts: parts,
+		sessionParts := BuildInputContent(ctx, x.client, msg)
+		sessionContent = append(sessionContent, &genai.Content{
+			Parts: sessionParts,
 			Role:  msg.Role,
 		})
 	}
-	response, err := session.SendMessage(ctx, parts...)
+	session, err := x.client.Chats.Create(ctx, request.Model, request.Config, sessionContent)
+	if payload.StudioLog != nil {
+		payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
+	}
+	if err != nil {
+		x.log.Error().Err(err).Msg("Error creating chat session in google gen ai")
+		return err
+	}
+	reqParts := []genai.Part{}
+	for _, msg := range request.Content {
+		for _, part := range msg.Parts {
+			reqParts = append(reqParts, *part)
+		}
+	}
+	if len(request.Content) < 1 {
+		x.log.Warn().Msg("No content provided for chat session, using default message")
+		reqParts = append(reqParts, genai.Part{
+			Text: "Hello, how can I assist you today?",
+		})
+	}
+	response, err := session.SendMessage(ctx, reqParts...)
 	if err != nil {
 		x.log.Error().Err(err).Msg("Error generating content from google gen ai")
 		return err
 	}
 	x.buildResponse(response, payload, true)
 	if response.UsageMetadata != nil {
-		payload.LogUsage(&prompts.UsageMetrics{
+		usageMetrics := &prompts.UsageMetrics{
 			TotalTokens:        int64(response.UsageMetadata.TotalTokenCount),
 			InputTokens:        int64(response.UsageMetadata.PromptTokenCount),
 			OutputTokens:       int64(response.UsageMetadata.CandidatesTokenCount),
 			OutputCachedTokens: int64(response.UsageMetadata.CachedContentTokenCount),
-		}, nil)
+			ReasoningTokens:    int64(response.UsageMetadata.ThoughtsTokenCount),
+		}
+		CountTokenDetails(response.UsageMetadata.PromptTokensDetails, usageMetrics.InputModalityMetrics)
+		CountTokenDetails(response.UsageMetadata.CandidatesTokensDetails, usageMetrics.OutputModalityMetrics)
+		CountTokenDetails(response.UsageMetadata.ToolUsePromptTokensDetails, usageMetrics.ReasoningModalityMetrics)
+
+		payload.LogUsage(usageMetrics)
 	}
 	return nil
 }
 
-func (x *GoogleGenAI) ChatStream(ctx context.Context, modelCl *genai.GenerativeModel, payload *prompts.GenerativePrompterPayload, parts []genai.Part) error {
-	modelCl.ResponseMIMEType = "text/plain"
-	modelCl.SystemInstruction = genai.NewUserContent(genai.Text(x.getSystemMessage(payload, false)))
+func (x *GoogleGenAI) ChatStream(ctx context.Context, payload *prompts.GenerativePrompterPayload, request *GoogleGenAIRequest) error {
+	request.Config.SystemInstruction = genai.Text(x.getSystemMessage(payload, false))[0]
 	if payload.StudioLog != nil {
 		payload.StudioLog.StartedAt = dmutils.GetMilliEpochTime()
 	}
-	session := modelCl.StartChat()
-	if payload.StudioLog != nil {
-		payload.StudioLog.TTFBAt = dmutils.GetMilliEpochTime()
-	}
+	sessionContent := []*genai.Content{}
 	for _, msg := range payload.SessionContext {
-		parts := BuildInputContent(ctx, x.client, msg)
-		session.History = append(session.History, &genai.Content{
-			Parts: parts,
+		sessionParts := BuildInputContent(ctx, x.client, msg)
+		sessionContent = append(sessionContent, &genai.Content{
+			Parts: sessionParts,
 			Role:  msg.Role,
 		})
 	}
-	response := session.SendMessageStream(ctx, parts...)
-	op, toolCallsParams := x.buildStreamResponse(response, payload)
+	session, err := x.client.Chats.Create(ctx, request.Model, request.Config, sessionContent)
+	if payload.StudioLog != nil {
+		payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
+	}
+	if err != nil {
+		x.log.Error().Err(err).Msg("Error creating chat session in google gen ai")
+		return err
+	}
+	reqParts := []genai.Part{}
+	for _, msg := range request.Content {
+		for _, part := range msg.Parts {
+			reqParts = append(reqParts, *part)
+		}
+	}
+	if len(request.Content) < 1 {
+		x.log.Warn().Msg("No content provided for chat session, using default message")
+		reqParts = append(reqParts, genai.Part{
+			Text: "Hello, how can I assist you today?",
+		})
+	}
+	response := session.SendMessageStream(ctx, reqParts...)
+	op, toolCallsParams, usageMetrics := x.buildStreamResponse(response, payload)
 	payload.ParsedOutput = op
 	if payload.StudioLog != nil {
 		payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
@@ -420,15 +540,7 @@ func (x *GoogleGenAI) ChatStream(ctx context.Context, modelCl *genai.GenerativeM
 		}
 	}
 	fmt.Println("I am in Gemini beforeee UsageMetadata ===================>>>>")
-	if response.MergedResponse() != nil && response.MergedResponse().UsageMetadata != nil {
-		fmt.Println("I am in Gemini after UsageMetadata")
-		fmt.Println(response.MergedResponse().UsageMetadata.CandidatesTokenCount) // why I am getting zero here????
-		payload.LogUsage(&prompts.UsageMetrics{
-			TotalTokens:        int64(response.MergedResponse().UsageMetadata.TotalTokenCount),
-			InputTokens:        int64(response.MergedResponse().UsageMetadata.PromptTokenCount),
-			OutputTokens:       int64(response.MergedResponse().UsageMetadata.CandidatesTokenCount),
-			OutputCachedTokens: int64(response.MergedResponse().UsageMetadata.CachedContentTokenCount),
-		}, nil)
-	}
+
+	payload.LogUsage(usageMetrics)
 	return nil
 }

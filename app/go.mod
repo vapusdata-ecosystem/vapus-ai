@@ -1,6 +1,6 @@
 module github.com/vapusdata-ecosystem/vapusai
 
-go 1.24.1
+go 1.24.4
 
 replace github.com/vapusdata-ecosystem/vapusai/core => ../internals
 
@@ -41,7 +41,6 @@ require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1 // indirect
 	cel.dev/expr v0.20.0 // indirect
 	cloud.google.com/go v0.118.3 // indirect
-	cloud.google.com/go/ai v0.8.0 // indirect
 	cloud.google.com/go/artifactregistry v1.16.1 // indirect
 	cloud.google.com/go/auth v0.16.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
@@ -181,7 +180,6 @@ require (
 	github.com/google/btree v1.0.1 // indirect
 	github.com/google/cel-go v0.22.1 // indirect
 	github.com/google/flatbuffers v24.3.25+incompatible // indirect
-	github.com/google/generative-ai-go v0.19.0 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-github/v55 v55.0.0 // indirect
@@ -355,6 +353,7 @@ require (
 	golang.org/x/tools v0.25.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	google.golang.org/api v0.231.0 // indirect
+	google.golang.org/genai v1.14.0 // indirect
 	google.golang.org/genproto v0.0.0-20250303144028-a0af3efb3deb // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250313205543-e70fdf4c4cb4 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250425173222-7b384671a197 // indirect

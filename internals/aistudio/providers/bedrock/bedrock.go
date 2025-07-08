@@ -323,7 +323,7 @@ func (x *Bedrock) buildStreamResponse(eventStream *bedrockRuntime.ConverseStream
 				TotalTokens:  int64(*v.Value.Usage.InputTokens) + int64(*v.Value.Usage.OutputTokens),
 				InputTokens:  int64(*v.Value.Usage.InputTokens),
 				OutputTokens: int64(*v.Value.Usage.OutputTokens),
-			}, nil)
+			})
 
 		default:
 			x.log.Warn().Msg("Received unknown event type in Amazon Bedrock stream")
@@ -364,7 +364,7 @@ func (x *Bedrock) GenerateContent(ctx context.Context, payload *prompts.Generati
 			TotalTokens:  int64(*response.Usage.TotalTokens),
 			InputTokens:  int64(*response.Usage.InputTokens),
 			OutputTokens: int64(*response.Usage.OutputTokens),
-		}, nil)
+		})
 	}
 
 	return nil

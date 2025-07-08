@@ -68,7 +68,9 @@ func NewAIModelNode(opts ...AiModelOpts) (AIModelNodeInterface, error) {
 	case mpb.ServiceProvider_MISTRAL.String():
 		return mistral.New(configurator.node, defaultRetries, AILogger)
 	case mpb.ServiceProvider_GEMINI.String():
-		return google.New(context.TODO(), configurator.node, defaultRetries, AILogger)
+		return google.New(context.TODO(), configurator.node, defaultRetries, false, AILogger)
+	case mpb.ServiceProvider_VERTEX.String():
+		return google.New(context.TODO(), configurator.node, defaultRetries, true, AILogger)
 	case mpb.ServiceProvider_TOGETHER.String():
 		return together.New(context.TODO(), configurator.node, defaultRetries, AILogger)
 	case mpb.ServiceProvider_GROQ.String():

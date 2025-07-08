@@ -319,7 +319,7 @@ func (o *OpenAI) GenerateContent(ctx context.Context, payload *prompts.Generativ
 		ReasoningTokens:          int64(resp.Usage.CompletionTokensDetails.ReasoningTokens),
 		RejectedPredictionTokens: int64(resp.Usage.CompletionTokensDetails.RejectedPredictionTokens),
 		AcceptedPredictionTokens: int64(resp.Usage.CompletionTokensDetails.AcceptedPredictionTokens),
-	}, nil)
+	})
 	return nil
 }
 
@@ -415,7 +415,7 @@ func (o *OpenAI) GenerateContentStream(ctx context.Context, payload *prompts.Gen
 		ReasoningTokens:          int64(resp.Usage.CompletionTokensDetails.ReasoningTokens),
 		RejectedPredictionTokens: int64(resp.Usage.CompletionTokensDetails.RejectedPredictionTokens),
 		AcceptedPredictionTokens: int64(resp.Usage.CompletionTokensDetails.AcceptedPredictionTokens),
-	}, nil)
+	})
 
 	if payload.StudioLog != nil {
 		payload.StudioLog.EndedAt = dmutils.GetMilliEpochTime()
