@@ -1,33 +1,35 @@
-FROM golang:1.24.1
+FROM node:24.2.0-slim
 
 # Install dependencies and create a user with user group
 USER root
 
-RUN groupadd --gid 1042 vapusdata
+RUN addgroup --gid 1042 vapusdata
 
-RUN useradd -m -u 503 -g vapusdata vapusdata-webapp-app
+RUN adduser -D -u 503 -G vapusdata vapusdata-webapp-app
 
 RUN mkdir -p /src
 
-COPY ./webapp /src
+WORKDIR /src
 
-RUN ls
+# Copy package files first for better caching
+COPY package*.json ./
 
-RUN chown -R vapusdata-webapp-app:vapusdata .
+RUN npm install style-loader css-loader --save-dev
 
-# RUN GRPC_HEALTH_PROBE_VERSION=v0.4.28 && \
-#     curl -Lo /bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
-#     chmod +x /bin/grpc_health_probe
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy source code
+COPY . .
+
+RUN chown -R vapusdata-webapp-app:vapusdata /src
 
 USER vapusdata-webapp-app
 
-WORKDIR /src
+RUN npm run build
 
-COPY templates ./templates
-COPY static ./static
-
-EXPOSE 9014
+EXPOSE 9017
 
 RUN date -u
 
-CMD ["./webapp","--conf","/data/vapusdata"]
+CMD ["npm", "start", "--", "-p", "9017"]

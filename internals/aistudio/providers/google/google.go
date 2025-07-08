@@ -12,13 +12,11 @@ import (
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
-
 	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
 	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
 	dmlogger "github.com/vapusdata-ecosystem/vapusai/core/pkgs/logger"
 	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
-
 	"google.golang.org/api/iterator"
 	"google.golang.org/genai"
 )
@@ -51,7 +49,6 @@ type GoogleGenAIRequest struct {
 }
 
 func New(ctx context.Context, node *models.AIModelNode, retries int, isVertex bool, logger zerolog.Logger) (GoogleGenAIInterface, error) {
-	fmt.Println("I am in the Gemini ===============")
 	if node.NetworkParams.Url == "" {
 		node.NetworkParams.Url = "https://generativelanguage.googleapis.com"
 	}
@@ -99,6 +96,7 @@ func (x *GoogleGenAI) buildRequest(ctx context.Context, payload *prompts.Generat
 			Tools: []*genai.Tool{},
 		},
 	}
+	log.Println("PAYLOAD for buildREQ -------------------------->>>>>>>>>>>>>>>>", payload.Context)
 	if request.Model == "" {
 		x.log.Warn().Msg("Model name is empty, using default model")
 		request.Model = defaultModel
@@ -155,7 +153,6 @@ func (x *GoogleGenAI) getSystemMessage(payload *prompts.GenerativePrompterPayloa
 			req = req + msg.Content + " "
 		}
 	}
-	log.Println("Request to Google Gen AI ==================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", req)
 	return req
 }
 
@@ -207,7 +204,7 @@ func (x *GoogleGenAI) buildResponse(resp *genai.GenerateContentResponse, payload
 	var result string = ""
 	toolCallMap := make(map[string]string)
 	for _, cand := range resp.Candidates {
-		log.Println("Response from Google Gen AI", cand)
+		log.Println("Response from Google Gen AI", cand.Content.Parts)
 		if cand.Content != nil {
 			for _, part := range cand.Content.Parts {
 				result = result + " " + fmt.Sprintf("%v", part)
@@ -217,7 +214,7 @@ func (x *GoogleGenAI) buildResponse(resp *genai.GenerateContentResponse, payload
 		if cand.Content.Parts != nil {
 		funcLoop:
 			for _, part := range cand.Content.Parts {
-				if part.FunctionCall == nil {
+				if part.FunctionResponse == nil {
 					continue funcLoop
 				}
 				log.Println("Function Call", part.FunctionResponse.Name)
@@ -249,6 +246,7 @@ func (x *GoogleGenAI) buildResponse(resp *genai.GenerateContentResponse, payload
 	}
 	payload.ParseToolCallResponse()
 	log.Println("payload.ToolCallResponse--------------------->>>>>>>>>>>++++++++++++++++++++++++", payload.ToolCallResponse)
+	log.Println("Tool Call Map--------------------->>>>>>>>>>>++++++++++++++++++++++++", toolCallMap, "Result: ", result)
 	return result, toolCallMap
 }
 
@@ -316,7 +314,7 @@ func (x *GoogleGenAI) buildStreamResponse(response iter.Seq2[*genai.GenerateCont
 				}
 			}
 			content = content + result
-			//TODO: , in future we can add more usage metrics based on the modality and other aspects as well
+			//TO:DO , in future we can add more usage metrics based on the modality and other aspects as well
 			usageMetrics.TotalTokens += int64(resp.UsageMetadata.TotalTokenCount)
 			usageMetrics.InputTokens += int64(resp.UsageMetadata.PromptTokenCount)
 			usageMetrics.OutputTokens += int64(resp.UsageMetadata.CandidatesTokenCount)
@@ -354,6 +352,7 @@ func (x *GoogleGenAI) GenerateEmbeddings(ctx context.Context, payload *prompts.A
 
 func (x *GoogleGenAI) GenerateContent(ctx context.Context, payload *prompts.GenerativePrompterPayload) error {
 	requestObj := x.buildRequest(ctx, payload, false)
+	log.Println("requestObj-----------------=========------------------->>>", requestObj.Content[0].Parts[0])
 	switch payload.Mode {
 	case pb.AIInterfaceMode_CHAT_MODE:
 		return x.Chat(ctx, payload, requestObj)
@@ -373,11 +372,14 @@ func (x *GoogleGenAI) GenerateContent(ctx context.Context, payload *prompts.Gene
 		x.buildResponse(response, payload, true)
 		if response.UsageMetadata != nil {
 			usageMetrics := &prompts.UsageMetrics{
-				TotalTokens:        int64(response.UsageMetadata.TotalTokenCount),
-				InputTokens:        int64(response.UsageMetadata.PromptTokenCount),
-				OutputTokens:       int64(response.UsageMetadata.CandidatesTokenCount),
-				OutputCachedTokens: int64(response.UsageMetadata.CachedContentTokenCount),
-				ReasoningTokens:    int64(response.UsageMetadata.ThoughtsTokenCount),
+				TotalTokens:              int64(response.UsageMetadata.TotalTokenCount),
+				InputTokens:              int64(response.UsageMetadata.PromptTokenCount),
+				OutputTokens:             int64(response.UsageMetadata.CandidatesTokenCount),
+				OutputCachedTokens:       int64(response.UsageMetadata.CachedContentTokenCount),
+				ReasoningTokens:          int64(response.UsageMetadata.ThoughtsTokenCount),
+				InputModalityMetrics:     make(map[string]*prompts.UsageModalityMetrics),
+				OutputModalityMetrics:    make(map[string]*prompts.UsageModalityMetrics),
+				ReasoningModalityMetrics: make(map[string]*prompts.UsageModalityMetrics),
 			}
 			CountTokenDetails(response.UsageMetadata.PromptTokensDetails, usageMetrics.InputModalityMetrics)
 			CountTokenDetails(response.UsageMetadata.CandidatesTokensDetails, usageMetrics.OutputModalityMetrics)
@@ -470,11 +472,14 @@ func (x *GoogleGenAI) Chat(ctx context.Context, payload *prompts.GenerativePromp
 	x.buildResponse(response, payload, true)
 	if response.UsageMetadata != nil {
 		usageMetrics := &prompts.UsageMetrics{
-			TotalTokens:        int64(response.UsageMetadata.TotalTokenCount),
-			InputTokens:        int64(response.UsageMetadata.PromptTokenCount),
-			OutputTokens:       int64(response.UsageMetadata.CandidatesTokenCount),
-			OutputCachedTokens: int64(response.UsageMetadata.CachedContentTokenCount),
-			ReasoningTokens:    int64(response.UsageMetadata.ThoughtsTokenCount),
+			TotalTokens:              int64(response.UsageMetadata.TotalTokenCount),
+			InputTokens:              int64(response.UsageMetadata.PromptTokenCount),
+			OutputTokens:             int64(response.UsageMetadata.CandidatesTokenCount),
+			OutputCachedTokens:       int64(response.UsageMetadata.CachedContentTokenCount),
+			ReasoningTokens:          int64(response.UsageMetadata.ThoughtsTokenCount),
+			InputModalityMetrics:     make(map[string]*prompts.UsageModalityMetrics),
+			OutputModalityMetrics:    make(map[string]*prompts.UsageModalityMetrics),
+			ReasoningModalityMetrics: make(map[string]*prompts.UsageModalityMetrics),
 		}
 		CountTokenDetails(response.UsageMetadata.PromptTokensDetails, usageMetrics.InputModalityMetrics)
 		CountTokenDetails(response.UsageMetadata.CandidatesTokensDetails, usageMetrics.OutputModalityMetrics)

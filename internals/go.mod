@@ -109,7 +109,6 @@ require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1 // indirect
 	cel.dev/expr v0.20.0 // indirect
 	cloud.google.com/go v0.118.3 // indirect
-	cloud.google.com/go/ai v0.8.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/iam v1.4.2 // indirect
@@ -231,7 +230,6 @@ require (
 	github.com/google/btree v1.0.1 // indirect
 	github.com/google/cel-go v0.22.1 // indirect
 	github.com/google/flatbuffers v24.3.25+incompatible // indirect
-	github.com/google/generative-ai-go v0.20.1 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
