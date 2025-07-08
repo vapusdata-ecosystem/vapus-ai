@@ -303,7 +303,7 @@ func (x *Mistral) buildFimRequest(model string, payload *prompts.GenerativePromp
 // 				TotalTokens:  int64(streamResponse.Usage.TotalTokens),
 // 				InputTokens:  int64(streamResponse.Usage.PromptTokens),
 // 				OutputTokens: int64(streamResponse.Usage.CompletionTokens),
-// 			}, nil)
+// 			})
 // 			content = content + lcContent
 // 			err = payload.SendChatCompletionStreamData(&prompts.PayloadgenericResponse{
 // 				Data:    lcContent,
@@ -390,7 +390,7 @@ func (x *Mistral) buildFimRequest(model string, payload *prompts.GenerativePromp
 // 		TotalTokens:  int64(resp.Usage.TotalTokens),
 // 		InputTokens:  int64(resp.Usage.PromptTokens),
 // 		OutputTokens: int64(resp.Usage.CompletionTokens),
-// 	}, nil)
+// 	})
 // 	return nil
 // }
 

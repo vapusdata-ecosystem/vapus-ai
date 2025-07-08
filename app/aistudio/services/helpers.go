@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/rs/zerolog"
@@ -17,11 +18,13 @@ import (
 )
 
 func crawlAIModels(ctx context.Context, modelNode *models.AIModelNode, logger zerolog.Logger) error {
+	fmt.Println("I am in the crawl model  ================")
 	aiConfig, err := aimodels.NewAIModelNode(aimodels.WithAIModelNode(modelNode), aimodels.WithLogger(logger))
 	if err != nil {
 		logger.Err(err).Msgf("error while creating AI model node for model - %v", modelNode.Name)
 		return err
 	}
+	fmt.Println("AIConfig: ", aiConfig)
 	// TO merge the upcoming model and previous model
 	resultGenerativeModels := make([]*models.AIModelBase, 0)
 	resultEmbeddingModels := make([]*models.AIModelBase, 0)

@@ -298,7 +298,7 @@ func (o *Grok) GenerateContent(ctx context.Context, payload *prompts.GenerativeP
 		TotalTokens:  int64(resp.Usage.TotalTokens),
 		InputTokens:  int64(resp.Usage.PromptTokens),
 		OutputTokens: int64(resp.Usage.CompletionTokens),
-	}, nil)
+	})
 	return nil
 }
 

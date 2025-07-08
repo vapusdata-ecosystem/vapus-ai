@@ -86,16 +86,25 @@ type GenerativePrompterPayload struct {
 }
 
 type UsageMetrics struct {
-	InputTokens              int64 `json:"inputTokens,omitempty" yaml:"inputTokens,omitempty"`
-	InputCachedTokens        int64 `json:"inputCachedTokens,omitempty" yaml:"inputCachedTokens,omitempty"`
-	OutputTokens             int64 `json:"outputTokens,omitempty" yaml:"outputTokens,omitempty"`
-	OutputCachedTokens       int64 `json:"outputCachedTokens,omitempty" yaml:"outputCachedTokens,omitempty"`
-	InputAudioTokens         int64 `json:"inputAudioTokens,omitempty" yaml:"inputAudioTokens,omitempty"`
-	OutputAudioTokens        int64 `json:"outputAudioTokens,omitempty" yaml:"outputAudioTokens,omitempty"`
-	TotalTokens              int64 `json:"totalTokens,omitempty" yaml:"totalTokens,omitempty"`
-	ReasoningTokens          int64 `json:"reasoningTokens,omitempty" yaml:"reasoningTokens,omitempty"`
-	RejectedPredictionTokens int64 `json:"rejectedPredictionTokens,omitempty" yaml:"rejectedPredictionTokens,omitempty"`
-	AcceptedPredictionTokens int64 `json:"acceptedPredictionTokens,omitempty" yaml:"acceptedPredictionTokens,omitempty"`
+	InputTokens                int64                            `json:"inputTokens,omitempty" yaml:"inputTokens,omitempty"`
+	InputCachedTokens          int64                            `json:"inputCachedTokens,omitempty" yaml:"inputCachedTokens,omitempty"`
+	OutputTokens               int64                            `json:"outputTokens,omitempty" yaml:"outputTokens,omitempty"`
+	OutputCachedTokens         int64                            `json:"outputCachedTokens,omitempty" yaml:"outputCachedTokens,omitempty"`
+	InputAudioTokens           int64                            `json:"inputAudioTokens,omitempty" yaml:"inputAudioTokens,omitempty"`
+	OutputAudioTokens          int64                            `json:"outputAudioTokens,omitempty" yaml:"outputAudioTokens,omitempty"`
+	TotalTokens                int64                            `json:"totalTokens,omitempty" yaml:"totalTokens,omitempty"`
+	ReasoningTokens            int64                            `json:"reasoningTokens,omitempty" yaml:"reasoningTokens,omitempty"`
+	RejectedPredictionTokens   int64                            `json:"rejectedPredictionTokens,omitempty" yaml:"rejectedPredictionTokens,omitempty"`
+	AcceptedPredictionTokens   int64                            `json:"acceptedPredictionTokens,omitempty" yaml:"acceptedPredictionTokens,omitempty"`
+	InputModalityMetrics       map[string]*UsageModalityMetrics `json:"inputModalityMetrics,omitempty" yaml:"inputModalityMetrics,omitempty"`
+	OutputModalityMetrics      map[string]*UsageModalityMetrics `json:"outputModalityMetrics,omitempty" yaml:"outputModalityMetrics,omitempty"`
+	ReasoningModalityMetrics   map[string]*UsageModalityMetrics `json:"reasoningModalityMetrics,omitempty" yaml:"reasoningModalityMetrics,omitempty"`
+	CachedModalModalityMetrics map[string]*UsageModalityMetrics `json:"cachedModalityMetrics,omitempty" yaml:"cachedModalityMetrics,omitempty"`
+}
+
+type UsageModalityMetrics struct {
+	Modality   string `json:"modality,omitempty" yaml:"modality,omitempty"`
+	TokenCount int64  `json:"tokenCount,omitempty" yaml:"tokenCount,omitempty"`
 }
 
 type PayloadgenericResponse struct {
@@ -134,7 +143,7 @@ func NewPrompter(params *pb.ChatRequest, prompt *models.AIPrompt, stream pb.AISt
 	}
 }
 
-func (p *GenerativePrompterPayload) LogUsage(opts *UsageMetrics, err error) {
+func (p *GenerativePrompterPayload) LogUsage(opts *UsageMetrics) {
 	if p.Usage == nil {
 		p.Usage = &models.AIStudioUsages{}
 	}

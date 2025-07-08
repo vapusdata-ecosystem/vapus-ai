@@ -67,8 +67,7 @@ func (s *AIStudioServices) NewAIModelIntAgent(ctx context.Context, opts ...AIMod
 		dmStore: s.DMStore,
 		VapusInterfaceBase: &processes.VapusInterfaceBase{
 			CtxClaim: vapusPlatformClaim,
-			// Ctx:      ctx,
-			InitAt: dmutils.GetEpochTime(),
+			InitAt:   dmutils.GetEpochTime(),
 		},
 		insightResult: &pb.AIModelNodeInsightsResponse{},
 	}
@@ -77,6 +76,7 @@ func (s *AIStudioServices) NewAIModelIntAgent(ctx context.Context, opts ...AIMod
 		opt(nodeAgent)
 	}
 	nodeAgent.Logger = pkgs.GetSubDMLogger(types.AISTUDIONODE.String(), nodeAgent.AgentId)
+	logger.Debug().Msg("AiStudioAgent has been created successfully.")
 	return nodeAgent, nil
 }
 
@@ -178,7 +178,6 @@ func (v *AIModelIntAgent) configureAIModelNode(ctx context.Context) error {
 
 		node.NetworkParams.Credentials = secrets
 	}
-
 	if node.DiscoverModels {
 		err = crawlAIModels(newCtx, node, v.Logger) // nolint:errcheck,gosec //
 		if err != nil {

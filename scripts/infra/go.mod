@@ -1,6 +1,6 @@
 module github.com/vapusdata-ecosystem/vapusai/scripts/goscripts
 
-go 1.24.1
+go 1.24.4
 
 replace github.com/vapusdata-ecosystem/vapusai/core => ../../internals
 
@@ -11,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/rds v1.93.14
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.77.1
 	github.com/blang/semver/v4 v4.0.0
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/vapusdata-ecosystem/vapusai/core v0.0.0-00010101000000-000000000000
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.16.2
@@ -28,6 +28,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.34 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.3 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.33 // indirect
+	github.com/aws/aws-sdk-go-v2/service/bedrock v1.30.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/bedrockruntime v1.26.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.28.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.6.1 // indirect

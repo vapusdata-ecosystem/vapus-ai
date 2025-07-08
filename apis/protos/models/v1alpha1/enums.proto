@@ -420,6 +420,7 @@ enum ServiceProvider {
     GROK = 27;
     PANGEA = 28; 
     NEMO = 29;
+    VERTEX = 30;
 }
 
 enum LLMQueryType {
