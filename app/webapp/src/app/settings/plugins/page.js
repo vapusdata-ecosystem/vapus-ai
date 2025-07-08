@@ -97,30 +97,14 @@ const PluginSettingsClient = () => {
           backListingLink="./"
         />
 
-        <div className="flex-grow p-2 w-full">
-          <div className="flex justify-between mb-2 items-center p-2">
+        <div className="flex-grow w-full">
+          
             <CreateNewButton href="./plugins/create" label="Add New" />
-          </div>
+         
           <section id="tables" className="space-y-6">
             {error ? (
               <div className="flex justify-center items-center h-64 text-red-400">
                 <div className="text-xl">Error: {error}</div>
-              </div>
-            ) : plugins.length === 0 && !isLoading ? (
-              <div className="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
-                <table className="min-w-full divide-y divide-zinc-500 text-xs text-gray-100 border-2 border-zinc-500">
-                  <thead className="bg-zinc-900 divide-y divide-zinc-500 break-words text-sm font-medium text-gray-500 uppercase"></thead>
-                  <tbody className="divide-y divide-gray-200 text-sm">
-                    <tr>
-                      <td
-                        colSpan="6"
-                        className="px-3 py-3 whitespace-nowrap text-center"
-                      >
-                        No Plugins found
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             ) : (
               <div className=" p-4 ">
