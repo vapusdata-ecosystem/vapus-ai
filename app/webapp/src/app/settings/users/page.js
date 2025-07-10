@@ -131,29 +131,12 @@ const UsersTable = () => {
           backListingLink="./"
         />
 
-        <div className="flex-grow p-2 w-full">
+        <div className="flex-grow  w-full">
           <section id="tables" className="space-y-6">
-            <div className="flex justify-between mb-2 items-center p-2"></div>
 
             {error ? (
               <div className="flex justify-center items-center h-64 text-red-400">
                 <div className="text-xl">Error: {error}</div>
-              </div>
-            ) : users.length === 0 && !isLoading ? (
-              <div className="overflow-x-auto scrollbar rounded-lg p-4 shadow-md text-gray-100">
-                <table className="min-w-full divide-y divide-zinc-500 text-sm text-gray-100 border-2 border-zinc-500">
-                  <thead className="bg-zinc-900 text-sm font-medium text-gray-500 uppercase tracking-wider"></thead>
-                  <tbody className="bg-zinc-800 divide-y divide-zinc-500 break-words text-sm">
-                    <tr>
-                      <td
-                        colSpan="5"
-                        className="px-3 py-3 whitespace-nowrap text-center"
-                      >
-                        No Users found
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             ) : (
               <div className="p-4">

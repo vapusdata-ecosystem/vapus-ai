@@ -20,6 +20,10 @@ const PlatformDomains = () => {
   const [createTemplate, setCreateTemplate] = useState("");
   const [organizationMapData, setOrganizationMapData] = useState({});
   const [dataVersion, setDataVersion] = useState(0);
+  
+  // Add new state to track if user profile is loaded
+  const [isUserProfileLoaded, setIsUserProfileLoaded] = useState(false);
+  const [isOrganizationDataLoaded, setIsOrganizationDataLoaded] = useState(false);
 
   // Fetch user profile data
   useEffect(() => {
@@ -49,6 +53,7 @@ const PlatformDomains = () => {
             if (data.organizationMap) {
               setOrganizationMapData(data.organizationMap);
             }
+            setIsUserProfileLoaded(true);
           } else {
             console.error("No users found in API response");
             setError("No users found in API response");
@@ -61,10 +66,6 @@ const PlatformDomains = () => {
         console.error("Error fetching user data:", error);
         if (isMounted) {
           setError(error.message || "Failed to fetch user data");
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
         }
       }
     };
@@ -142,11 +143,11 @@ const PlatformDomains = () => {
     let isMounted = true;
 
     const loadData = async () => {
-      // Only proceed if we have organizationMapData
-      if (typeof organizationMapData === "object") {
+      // Only proceed if user profile is loaded and we have organizationMapData
+      if (isUserProfileLoaded && typeof organizationMapData === "object") {
         try {
-          setIsLoading(true);
           setError(null);
+          setIsOrganizationDataLoaded(false);
 
           const organizationData = await fetchOrganizationData();
 
@@ -155,6 +156,7 @@ const PlatformDomains = () => {
           const transformedData = transformOrganizationData(organizationData);
           setOrganization(transformedData);
           setDataVersion((prev) => prev + 1);
+          setIsOrganizationDataLoaded(true);
         } catch (error) {
           console.error("Error loading organization data:", error);
           if (isMounted) {
@@ -173,7 +175,7 @@ const PlatformDomains = () => {
     return () => {
       isMounted = false;
     };
-  }, [organizationMapData, fetchOrganizationData, transformOrganizationData]);
+  }, [isUserProfileLoaded, organizationMapData, fetchOrganizationData, transformOrganizationData]);
 
   // Define columns for the DataTable
   const columns = useMemo(
@@ -185,6 +187,9 @@ const PlatformDomains = () => {
     () => ["Display Name", "Status", "Organization Type"],
     []
   );
+
+  // Check if all data is loaded
+  const isAllDataLoaded = isUserProfileLoaded && isOrganizationDataLoaded;
 
   // Empty state component
   const EmptyState = () => (
@@ -232,18 +237,31 @@ const PlatformDomains = () => {
           backListingLink="./"
         />
 
-        <div className="flex-grow p-2 w-full">
-          <div className="flex justify-end mb-2 items-center p-2">
+        <div className="flex-grow  w-full">
+         
             <CreateNewButton
               href="./platform-organizations/create"
               label="Add New"
             />
-          </div>
+        
 
           <section id="tables" className="space-y-6">
             {error ? (
               <ErrorState />
-            ) : Organization.length === 0 && !isLoading ? (
+            ) : !isAllDataLoaded || isLoading ? (
+              <div className="p-4">
+                <DataTable
+                  key={`platform-Organization-${dataVersion}`}
+                  id="platformDomainsTable"
+                  data={[]}
+                  columns={columns}
+                  loading={true}
+                  filteredColumns={filteredColumns}
+                  dangerouslySetInnerHTML={true}
+                  loadingText="Loading Organization..."
+                />
+              </div>
+            ) : Organization.length === 0 ? (
               <EmptyState />
             ) : (
               <div className="p-4">
@@ -252,7 +270,7 @@ const PlatformDomains = () => {
                   id="platformDomainsTable"
                   data={Organization}
                   columns={columns}
-                  loading={isLoading}
+                  loading={false}
                   filteredColumns={filteredColumns}
                   dangerouslySetInnerHTML={true}
                   loadingText="Loading Organization..."

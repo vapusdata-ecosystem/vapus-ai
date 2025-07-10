@@ -103,14 +103,14 @@ const ModelNodesTable = () => {
           </div>
         )}
 
-        <div className="flex-grow p-2 w-full">
+        <div className="flex-grow  w-full">
           <section id="tables" className="space-y-6">
-            <div className="flex justify-between mb-2 items-center p-2">
+   
               <CreateNewButton
                 href="./models-registry/create"
                 label="Add New"
               />
-            </div>
+     
 
             <div className="p-4">
               <DataTable
