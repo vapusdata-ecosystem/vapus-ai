@@ -4,71 +4,48 @@
 OCI_IMAGE_PATH = asia-south1-docker.pkg.dev/vapusdata-beta/vapusdata-ecosystem/webapp
 TAG = local_$(shell whoami)
 
-# Go parameters
-GOCMD = go
-GOBUILD = $(GOCMD) build
-GOCLEAN = $(GOCMD) clean
-GOTEST = $(GOCMD) test
-GOGET = $(GOCMD) get
-GOLINT = golangci-lint
-GOSEC = gosec
-BUFCMD = buf
+# Node.js parameters
+NPMCMD = npm
+NPMBUILD = $(NPMCMD) run build
+NPMTEST = $(NPMCMD) test
+NPMINSTALL = $(NPMCMD) install
+NPMLINT = $(NPMCMD) run lint
+NPMDEV = $(NPMCMD) run dev
 
 # Build target
 BINARY_NAME = webapp
 
-all: test build
+all: install build
 
-protogen:
-	cd ../../apis && make sync
+install:
+	$(NPMINSTALL)
 
-build-binary: protogen govendor build-tailwind
-	cd cmd && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) -a -installsuffix -ldflags="-w -s" -o  ../$(BINARY_NAME) 
+build: install
+	$(NPMBUILD)
 
-build-tailwind:
-	npx --yes tailwindcss -i static/css/input.css -o static/css/vapus.css --minify 
-
-build: build-binary
+build-docker: build
 	docker build --no-cache -t $(OCI_IMAGE_PATH):$(TAG) .
-	rm -f $(BINARY_NAME)
 
-release: build
-	docker push $(OCI_IMAGE_PATH):$(TAG) 
+release: build-docker
+	docker push $(OCI_IMAGE_PATH):$(TAG)
 
-test:
-	$(GOTEST) -v ./...
+test: install
+	$(NPMTEST)
+
+lint: install
+	$(NPMLINT)
+
+dev: install
+	$(NPMDEV)
 
 clean:
-	$(GOCLEAN)
-	rm -f $(BINARY_NAME)
+	rm -rf .next
+	rm -rf node_modules
+	rm -rf out
 
-run:
-	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	./$(BINARY_NAME)
+run: build
+	$(NPMCMD) start
 
-runmain: build-tailwind
-	$(GOCMD) run cmd/main.go --conf=$(CONF)
+.PHONY: all build test clean run dev install build-docker release lint
 
-lint:
-	$(GOLINT) run
-
-sec:
-	$(GOSEC) ./...
-
-.PHONY: all build test clean run
-
-prehook: lint sec test
-
-sync: 
-	cd ../ && make sync
-
-govendor:
-	cd ../ && make govendor
-goget:
-	echo argument is $(lib)
-	$(GOGET) $(lib)
-	make sync
-
-goinstall:
-	$(GOCMD) install $(lib)
-
+prehook: lint test
