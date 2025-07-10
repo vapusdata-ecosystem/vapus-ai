@@ -316,7 +316,7 @@ func (x *Perplexity) buildStreamResponse(resp *http.Response, payload *prompts.G
 				TotalTokens:  int64(streamResponse.Usage.TotalTokens),
 				InputTokens:  int64(streamResponse.Usage.PromptTokens),
 				OutputTokens: int64(streamResponse.Usage.CompletionTokens),
-			}, nil)
+			})
 			content = content + lcContent
 			err = payload.SendChatCompletionStreamData(&prompts.PayloadgenericResponse{
 				Data:    lcContent,
@@ -376,7 +376,7 @@ func (x *Perplexity) GenerateContent(ctx context.Context, payload *prompts.Gener
 		TotalTokens:  int64(resp.Usage.TotalTokens),
 		InputTokens:  int64(resp.Usage.PromptTokens),
 		OutputTokens: int64(resp.Usage.CompletionTokens),
-	}, nil)
+	})
 	return nil
 }
 

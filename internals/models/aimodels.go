@@ -279,16 +279,23 @@ func (m *AIModelNodeNetworkParams) ConvertFromPb(pb *mpb.AIModelNodeNetworkParam
 }
 
 type AIModelBase struct {
-	ModelName        string   `json:"modelName,omitempty" yaml:"modelName,omitempty"`
-	ModelId          string   `json:"modelId,omitempty" yaml:"modelId,omitempty"`
-	ModelType        string   `json:"modelType,omitempty" yaml:"modelType,omitempty"`
-	OwnedBy          string   `json:"ownedBy,omitempty" yaml:"ownedBy,omitempty"`
-	InputTokenLimit  int32    `json:"inputTokenLimit,omitempty" yaml:"inputTokenLimit,omitempty"`
-	OutputTokenLimit int32    `json:"outputTokenLimit,omitempty" yaml:"outputTokenLimit,omitempty"`
-	SupprtedOps      []string `json:"supportedOps,omitempty" yaml:"supportedOps,omitempty"`
-	Version          string   `json:"version,omitempty" yaml:"version,omitempty"`
-	ModelNature      []string `json:"modelNature,omitempty" yaml:"modelNature,omitempty"`
-	ModelArn         string   `json:"modelArn,omitempty" yaml:"modelArn,omitempty"`
+	ModelName        string                      `json:"modelName,omitempty" yaml:"modelName,omitempty"`
+	ModelId          string                      `json:"modelId,omitempty" yaml:"modelId,omitempty"`
+	ModelType        string                      `json:"modelType,omitempty" yaml:"modelType,omitempty"`
+	OwnedBy          string                      `json:"ownedBy,omitempty" yaml:"ownedBy,omitempty"`
+	InputTokenLimit  int32                       `json:"inputTokenLimit,omitempty" yaml:"inputTokenLimit,omitempty"`
+	OutputTokenLimit int32                       `json:"outputTokenLimit,omitempty" yaml:"outputTokenLimit,omitempty"`
+	SupprtedOps      []string                    `json:"supportedOps,omitempty" yaml:"supportedOps,omitempty"`
+	Version          string                      `json:"version,omitempty" yaml:"version,omitempty"`
+	ModelNature      []string                    `json:"modelNature,omitempty" yaml:"modelNature,omitempty"`
+	ModelArn         string                      `json:"modelArn,omitempty" yaml:"modelArn,omitempty"`
+	Endpoints        []*ModelDeploymentEndpoints `json:"endpoints,omitempty" yaml:"endpoints,omitempty"`
+}
+
+type ModelDeploymentEndpoints struct {
+	Name         string `json:"name,omitempty" yaml:"name,omitempty"`
+	DeploymentID string `json:"deploymentId,omitempty" yaml:"deploymentId,omitempty"`
+	Endpoint     string `json:"endpoint,omitempty" yaml:"endpoint,omitempty"`
 }
 
 func (m *AIModelBase) ConvertToPb() *mpb.AIModelBase {

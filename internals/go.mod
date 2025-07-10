@@ -1,15 +1,15 @@
 module github.com/vapusdata-ecosystem/vapusai/core
 
-go 1.24.1
+go 1.24.4
 
 replace github.com/vapusdata-ecosystem/apis => ../apis/gen-go
 
 require (
 	buf.build/go/protoyaml v0.3.1
 	cloud.google.com/go/artifactregistry v1.16.1
+	cloud.google.com/go/auth v0.16.1
 	cloud.google.com/go/secretmanager v1.14.5
 	cloud.google.com/go/storage v1.50.0
-	cloud.google.com/go/vertexai v0.13.3
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.8.2
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azsecrets v1.3.1
 	github.com/ClickHouse/clickhouse-go/v2 v2.30.3
@@ -45,7 +45,6 @@ require (
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/google/generative-ai-go v0.19.0
 	github.com/google/go-containerregistry v0.19.1
 	github.com/google/go-github/v55 v55.0.0
 	github.com/google/uuid v1.6.0
@@ -90,6 +89,7 @@ require (
 	golang.org/x/oauth2 v0.29.0
 	gonum.org/v1/plot v0.10.1
 	google.golang.org/api v0.231.0
+	google.golang.org/genai v1.14.0
 	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v2 v2.4.0
@@ -109,9 +109,6 @@ require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1 // indirect
 	cel.dev/expr v0.20.0 // indirect
 	cloud.google.com/go v0.118.3 // indirect
-	cloud.google.com/go/ai v0.8.0 // indirect
-	cloud.google.com/go/aiplatform v1.80.0 // indirect
-	cloud.google.com/go/auth v0.16.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/iam v1.4.2 // indirect
@@ -242,7 +239,7 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.3.6 // indirect
 	github.com/googleapis/gax-go/v2 v2.14.1 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/gosuri/uitable v0.0.4 // indirect
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect

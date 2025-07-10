@@ -73,3 +73,6 @@ apis/gen-go/apidocs.swagger.json
 /app/webapp/static/css/vapus.css
 
 /examples/test
+
+
+.next/

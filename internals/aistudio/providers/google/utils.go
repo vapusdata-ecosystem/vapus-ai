@@ -8,48 +8,69 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/google/generative-ai-go/genai"
 	"github.com/rs/zerolog"
 	mpb "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
 	pb "github.com/vapusdata-ecosystem/apis/protos/vapusai-studio/v1alpha1"
 	aicore "github.com/vapusdata-ecosystem/vapusai/core/aistudio/core"
 	"github.com/vapusdata-ecosystem/vapusai/core/aistudio/prompts"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 	filetools "github.com/vapusdata-ecosystem/vapusai/core/tools/files"
 	"google.golang.org/api/iterator"
+	"google.golang.org/genai"
 )
 
 func (o *GoogleGenAI) CrawlModels(ctx context.Context) (result []*models.AIModelBase, err error) {
-	modelsIter := o.client.ListModels(ctx)
+	modelsIter, err := o.client.Models.List(ctx, &genai.ListModelsConfig{})
+	if err != nil {
+		o.log.Err(err).Msg("Failed to list models")
+		return nil, fmt.Errorf("failed to list models: %w", err)
+	}
 
 	for {
-		model, err := modelsIter.Next()
+		modelList, err := modelsIter.Next(ctx)
 		if err == iterator.Done {
 			break
 		}
 		if err != nil {
 			continue
 		}
-		obj := &models.AIModelBase{ // Use the imported type
-			ModelId:          model.Name,
-			OwnedBy:          "google",
-			ModelName:        strings.ReplaceAll(model.Name, "models/", ""),
-			Version:          model.Version,
-			SupprtedOps:      model.SupportedGenerationMethods,
-			InputTokenLimit:  model.InputTokenLimit,
-			OutputTokenLimit: model.OutputTokenLimit,
-			ModelNature:      []string{},
-		}
-		if slices.Contains(model.SupportedGenerationMethods, "embedContent") {
-			obj.ModelType = mpb.AIModelType_EMBEDDING.String()
-			obj.ModelNature = append(obj.ModelNature, mpb.AIModelType_EMBEDDING.String())
+		for _, model := range modelList.Items {
+			obj := &models.AIModelBase{
+				ModelId:          model.Name,
+				OwnedBy:          "google",
+				ModelName:        strings.ReplaceAll(model.Name, "models/", ""),
+				Version:          model.Version,
+				SupprtedOps:      model.SupportedActions,
+				InputTokenLimit:  model.InputTokenLimit,
+				OutputTokenLimit: model.OutputTokenLimit,
+				ModelNature:      []string{},
+				Endpoints: func() []*models.ModelDeploymentEndpoints {
+					var result []*models.ModelDeploymentEndpoints
+					if model.Endpoints != nil {
+						for _, endpoint := range model.Endpoints {
+							result = append(result, &models.ModelDeploymentEndpoints{
+								Name:         endpoint.Name,
+								DeploymentID: endpoint.DeployedModelID,
+							})
+						}
+					}
+					return result
+				}(),
+			}
 
-		} else {
-			obj.ModelType = mpb.AIModelType_LLM.String()
-			obj.ModelNature = append(obj.ModelNature, mpb.AIModelType_LLM.String())
+			if slices.Contains(model.SupportedActions, "embedContent") {
+				obj.ModelType = mpb.AIModelType_EMBEDDING.String()
+				obj.ModelNature = append(obj.ModelNature, mpb.AIModelType_EMBEDDING.String())
 
+			} else {
+				obj.ModelType = mpb.AIModelType_LLM.String()
+				obj.ModelNature = append(obj.ModelNature, mpb.AIModelType_LLM.String())
+
+			}
+
+			result = append(result, obj)
 		}
-		result = append(result, obj)
 	}
 	return result, nil
 }
@@ -150,7 +171,8 @@ func ConvertMapToSchema(data map[string]any, logg zerolog.Logger) (*genai.Schema
 	// 2. Process Optional fields
 	schema.Format, _ = getStringFromMap(data, "format")           // Ignore !ok, defaults to ""
 	schema.Description, _ = getStringFromMap(data, "description") // Ignore !ok, defaults to ""
-	schema.Nullable, _ = getBoolFromMap(data, "nullable")         // Ignore !ok, defaults to false
+	val, _ := getBoolFromMap(data, "nullable")                    // Ignore !ok, defaults to false
+	schema.Nullable = dmutils.ToPtr(val)                          // Convert to pointer
 
 	// 3. Process 'enum'
 	enumVal, present, err := getStringArrayFromMap(data, "enum")
@@ -257,8 +279,8 @@ func logToolCallSchema(toolCallSchema *genai.Schema) {
 }
 
 // TODO:  https://ai.google.dev/gemini-api/docs/document-processing?lang=go#technical-details (use inline params as well)
-func BuildInputContent[T *prompts.SessionMessage | *pb.ChatMessageObject](ctx context.Context, client *genai.Client, obj T) []genai.Part {
-	response := make([]genai.Part, 0)
+func BuildInputContent[T *prompts.SessionMessage | *pb.ChatMessageObject](ctx context.Context, client *genai.Client, obj T) []*genai.Part {
+	response := make([]*genai.Part, 0)
 	if obj == nil {
 		return response
 	}
@@ -276,120 +298,203 @@ func BuildInputContent[T *prompts.SessionMessage | *pb.ChatMessageObject](ctx co
 		return response
 	}
 	if content != "" {
-		response = append(response, genai.Text(content))
+		response = append(response, []*genai.Part{
+			{Text: content},
+		}...)
 		return response
 	}
-	if structuredContent != nil {
-		for _, value := range structuredContent {
-			switch value.Type {
-			case aicore.AIResponseFormatText.String():
-				response = append(response, genai.Text(value.Text))
-			case aicore.AIResponseFormatImageUrl.String():
-				if value.ImageUrl != nil {
-					name := filepath.Base(value.ImageUrl.GetUrl())
-					if value.ImageUrl.GetData() != "" {
-						mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
-						if !ok {
-							log.Printf("Failed to get format for %s: ", name)
-							continue
+	for _, value := range structuredContent {
+		switch value.Type {
+		case aicore.AIResponseFormatText.String():
+			response = append(response, []*genai.Part{
+				{Text: value.Text},
+			}...)
+		case aicore.AIResponseFormatImageUrl.String():
+			if value.ImageUrl != nil {
+				name := filepath.Base(value.ImageUrl.GetUrl())
+				fname := strings.Split(name, ".")
+				if len(fname) < 2 {
+					log.Printf("Invalid file name %s: ", name)
+					continue
+				}
+				if value.ImageUrl.GetUrl() != "" && value.ImageUrl.GetData() == "" {
+					fileData, err := filetools.ReadFile(value.InputAudio.GetUrl())
+					if err != nil {
+						log.Printf("Failed to read InputAudio file %s: %v", name, err)
+						continue
+					}
+					value.ImageUrl.Data = string(fileData)
+				}
+				if value.Upload {
+					mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
+					if !ok {
+						log.Printf("Failed to get format for %s: ", name)
+						continue
+					}
+					file, err := client.Files.Upload(ctx, strings.NewReader(value.ImageUrl.Data), &genai.UploadFileConfig{
+						DisplayName: name,
+						MIMEType:    mimeType[0],
+						Name:        fname[0],
+						// HTTPOptions: &genai.HTTPOptions{},
+					})
+					if err != nil {
+						log.Printf("Failed to Image file %s: %v", name, err)
+						continue
+					}
+					response = append(response, &genai.Part{
+						FileData: &genai.FileData{
+							FileURI:     file.URI,
+							MIMEType:    file.MIMEType,
+							DisplayName: file.DisplayName,
+						},
+					})
+				} else {
+					if value.ImageUrl != nil {
+						name := filepath.Base(value.ImageUrl.GetUrl())
+						if value.ImageUrl.GetData() != "" {
+							mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
+							if !ok {
+								log.Printf("Failed to get format for %s: ", name)
+								continue
+							}
+							response = append(response, []*genai.Part{
+								{Text: "What's this image about?"},
+								{InlineData: &genai.Blob{
+									Data:        []byte(value.ImageUrl.GetData()),
+									DisplayName: name,
+									MIMEType:    mimeType[0],
+								}},
+							}...)
 						}
-						response = append(response, genai.ImageData(mimeType[0], []byte(value.ImageUrl.GetData())))
-					} else if value.ImageUrl.GetUrl() != "" {
-						mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
-						if !ok {
-							log.Printf("Failed to get format for %s: ", name)
-							continue
-						}
-						file, err := client.UploadFile(ctx, name, strings.NewReader(value.ImageUrl.Data), &genai.UploadFileOptions{
-							DisplayName: name,
-							MIMEType:    mimeType[0],
-						})
-						if err != nil {
-							log.Printf("Failed to Image file %s: %v", name, err)
-							continue
-						}
-						response = append(response, genai.FileData{
-							URI:      file.URI,
-							MIMEType: file.MIMEType,
-						})
 					}
 				}
-			case aicore.AIResponseFormatInputAudio.String():
-				if value.InputAudio != nil {
-					name := filepath.Base(value.InputAudio.GetUrl())
-					if value.InputAudio.GetData() != "" {
-						if value.Upload {
-							mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
-							if !ok {
-								log.Printf("Failed to get format for %s: ", name)
-								continue
-							}
-							file, err := client.UploadFile(ctx, name, strings.NewReader(value.InputAudio.Data), &genai.UploadFileOptions{
-								DisplayName: name,
-								MIMEType:    mimeType[0],
-							})
-							if err != nil {
-								log.Printf("Failed to InputAudio file %s: %v", name, err)
-								continue
-							}
-							response = append(response, genai.FileData{
-								URI:      file.URI,
-								MIMEType: file.MIMEType,
-							})
-						} else {
-							mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
-							if !ok {
-								log.Printf("Failed to get format for %s: ", name)
-								continue
-							}
-							response = append(response, genai.Blob{
-								MIMEType: mimeType[0],
-								Data:     []byte(value.InputAudio.Data),
-							})
-						}
-
-					}
-				}
-			case aicore.AIResponseFormatInputFile.String():
-				if value.File != nil {
-					name := filepath.Base(value.File.GetUrl())
-					if value.File.GetFileData() != "" {
-						if value.Upload {
-							mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
-							if !ok {
-								log.Printf("Failed to get format for %s: ", name)
-								continue
-							}
-							file, err := client.UploadFile(ctx, name, strings.NewReader(value.File.FileData), &genai.UploadFileOptions{
-								DisplayName: name,
-								MIMEType:    mimeType[0],
-							})
-							if err != nil {
-								log.Printf("Failed to InputAudio file %s: %v", name, err)
-								continue
-							}
-							response = append(response, genai.FileData{
-								URI:      file.URI,
-								MIMEType: file.MIMEType,
-							})
-						} else {
-							mimeType, ok := filetools.FileMimeMap[value.ImageUrl.Format]
-							if !ok {
-								log.Printf("Failed to get format for %s: ", name)
-								continue
-							}
-							response = append(response, genai.Blob{
-								MIMEType: mimeType[0],
-								Data:     []byte(value.File.FileData),
-							})
-						}
-
-					}
-				}
-			default:
-				response = append(response, genai.Text(value.Text))
 			}
+		case aicore.AIResponseFormatInputAudio.String():
+			if value.InputAudio != nil {
+				name := filepath.Base(value.InputAudio.GetUrl())
+				fname := strings.Split(name, ".")
+				if len(fname) < 2 {
+					log.Printf("Invalid file name %s: ", name)
+					continue
+				}
+				if value.InputAudio.GetUrl() != "" && value.InputAudio.GetData() == "" {
+					fileData, err := filetools.ReadFile(value.InputAudio.GetUrl())
+					if err != nil {
+						log.Printf("Failed to read InputAudio file %s: %v", name, err)
+						continue
+					}
+					value.InputAudio.Data = string(fileData)
+				}
+				if value.Upload {
+					mimeType, ok := filetools.FileMimeMap[value.InputAudio.Format]
+					if !ok {
+						log.Printf("Failed to get format for %s: ", name)
+						continue
+					}
+					file, err := client.Files.Upload(ctx, strings.NewReader(value.InputAudio.Data), &genai.UploadFileConfig{
+						MIMEType: mimeType[0],
+						Name:     fname[0],
+						// HTTPOptions: &genai.HTTPOptions{},
+					})
+					if err != nil {
+						log.Printf("Failed to InputAudio file %s: %v", name, err)
+						continue
+					}
+					response = append(response, &genai.Part{
+						FileData: &genai.FileData{
+							FileURI:     file.URI,
+							MIMEType:    file.MIMEType,
+							DisplayName: file.DisplayName,
+						},
+					})
+				} else {
+					mimeType, ok := filetools.FileMimeMap[value.InputAudio.Format]
+					if !ok {
+						log.Printf("Failed to get format for %s: ", name)
+						continue
+					}
+					response = append(response, &genai.Part{
+						InlineData: &genai.Blob{
+							MIMEType:    mimeType[0],
+							Data:        []byte(value.InputAudio.Data),
+							DisplayName: name,
+						}})
+				}
+			}
+		case aicore.AIResponseFormatInputFile.String():
+			if value.File != nil {
+				name := filepath.Base(value.File.GetUrl())
+				fname := strings.Split(name, ".")
+				if len(fname) < 2 {
+					log.Printf("Invalid file name %s: ", name)
+					continue
+				}
+				if value.File.GetUrl() != "" && value.File.GetFileData() == "" {
+					fileData, err := filetools.ReadFile(value.File.GetUrl())
+					if err != nil {
+						log.Printf("Failed to read File file %s: %v", name, err)
+						continue
+					}
+					value.File.FileData = string(fileData)
+				}
+				if value.Upload {
+					mimeType, ok := filetools.FileMimeMap[value.File.Format]
+					if !ok {
+						log.Printf("Failed to get format for %s: ", name)
+						continue
+					}
+					file, err := client.Files.Upload(ctx, strings.NewReader(value.File.FileData), &genai.UploadFileConfig{
+						DisplayName: fname[0],
+						MIMEType:    mimeType[0],
+					})
+					if err != nil {
+						log.Printf("Failed to InputAudio file %s: %v", name, err)
+						continue
+					}
+					response = append(response, &genai.Part{
+						FileData: &genai.FileData{
+							FileURI:     file.URI,
+							MIMEType:    file.MIMEType,
+							DisplayName: file.DisplayName,
+						},
+					})
+				} else {
+					mimeType, ok := filetools.FileMimeMap[value.File.Format]
+					if !ok {
+						log.Printf("Failed to get format for %s: ", name)
+						continue
+					}
+					response = append(response, &genai.Part{
+						InlineData: &genai.Blob{
+							MIMEType:    mimeType[0],
+							Data:        []byte(value.File.FileData),
+							DisplayName: name,
+						}})
+				}
+
+			}
+		default:
+			response = append(response, []*genai.Part{
+				{Text: value.Text},
+			}...)
 		}
 	}
 	return response
+}
+
+func CountTokenDetails(input []*genai.ModalityTokenCount, response map[string]*prompts.UsageModalityMetrics) {
+	for _, modality := range input {
+		if modality == nil {
+			continue
+		}
+		if modality.Modality == "" {
+			continue
+		}
+		if _, ok := response[string(modality.Modality)]; !ok {
+			response[string(modality.Modality)] = &prompts.UsageModalityMetrics{
+				Modality: string(modality.Modality),
+			}
+		}
+		response[string(modality.Modality)].TokenCount += int64(modality.TokenCount)
+	}
 }

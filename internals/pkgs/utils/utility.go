@@ -97,6 +97,10 @@ func Bool2Ptr(x bool) *bool { return &x }
 
 func Str2Ptr(x string) *string { return &x }
 
+func ToPtr[T any](x T) *T {
+	return &x
+}
+
 func GetObjectTypeName(obj any) string {
 	return reflect.TypeOf(obj).Name()
 }

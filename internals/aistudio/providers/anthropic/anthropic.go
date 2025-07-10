@@ -224,7 +224,7 @@ func (o *AnthropicAI) GenerateContent(ctx context.Context, payload *prompts.Gene
 		OutputTokens:       int64(resp.Usage.OutputTokens),
 		InputCachedTokens:  int64(resp.Usage.CacheCreationInputTokens),
 		OutputCachedTokens: int64(resp.Usage.CacheReadInputTokens),
-	}, nil)
+	})
 	return nil
 }
 
@@ -298,7 +298,7 @@ func (o *AnthropicAI) GenerateContentStream(ctx context.Context, payload *prompt
 				usageMetrics := &prompts.UsageMetrics{
 					OutputTokens: int64(resp.Usage.OutputTokens),
 				}
-				payload.LogUsage(usageMetrics, nil)
+				payload.LogUsage(usageMetrics)
 			}
 		}
 	}()
