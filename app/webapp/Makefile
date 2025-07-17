@@ -10,7 +10,7 @@ NPMBUILD = $(NPMCMD) run build
 NPMTEST = $(NPMCMD) test
 NPMINSTALL = $(NPMCMD) install
 NPMLINT = $(NPMCMD) run lint
-NPMDEV = $(NPMCMD) run dev
+NPMDEV = $(NPMCMD) run dev -- -p 9014
 
 # Build target
 BINARY_NAME = webapp
