@@ -125,10 +125,9 @@ func (x *AccountAgent) configureAIAttributes(ctx context.Context) (*models.Accou
 	if res == nil {
 		x.Logger.Fatal().Msg("error while booting account cache")
 	}
-	for _, acc := range res {
-		account = acc
-		break
-	}
+
+	account = res
+
 	return account, nil
 }
 
@@ -170,10 +169,7 @@ func (x *AccountAgent) updateAccount(ctx context.Context) (*models.Account, erro
 	if res == nil {
 		x.Logger.Fatal().Msg("error while booting account cache")
 	}
-	for _, acc := range res {
-		account = acc
-		break
-	}
+	account = res
 	return account, nil
 }
 

@@ -54,8 +54,5 @@ func BootChache(dmStore *AIStudioDMStore, logger zerolog.Logger) {
 	if res == nil {
 		logger.Fatal().Msg("error while booting account cache")
 	}
-	for _, acc := range res {
-		dmStore.Account = acc
-		break
-	}
+	dmStore.Account = res
 }

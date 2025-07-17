@@ -11,6 +11,7 @@ import (
 	apppkgs "github.com/vapusdata-ecosystem/vapusai/core/app/pkgs"
 	"github.com/vapusdata-ecosystem/vapusai/core/models"
 	dmerrors "github.com/vapusdata-ecosystem/vapusai/core/pkgs/errors"
+	dmutils "github.com/vapusdata-ecosystem/vapusai/core/pkgs/utils"
 )
 
 type AIModelNodeConnectionPool struct {
@@ -59,7 +60,6 @@ func InitAIModelNodeConnectionPool(obj *AIModelNodeConnectionPool, opts ...aiPoo
 
 func (a *AIModelNodeConnectionPool) AddConnection(model *models.AIModelNode, connection aimodels.AIModelNodeInterface) {
 	a.connectionPool.Store(model.VapusID, connection)
-	// a.connectionPool[model.VapusID] = connection
 }
 
 func (a *AIModelNodeConnectionPool) GetConnectionById(nodeId string) aimodels.AIModelNodeInterface {
@@ -79,31 +79,73 @@ func (a *AIModelNodeConnectionPool) GetConnectionById(nodeId string) aimodels.AI
 
 func (a *AIModelNodeConnectionPool) GetorSetNodeObject(nodeId string, nodeObject *models.AIModelNode, add bool) (*models.AIModelNode, error) {
 	fmt.Println("I am in get or set node: ", nodeId)
-	val, ok := a.objectPool.Load(nodeId)
 	// fmt.Println("value is: ", val)
-	if !ok && add {
-		a.logger.Info().Msgf("Connection not found in pool for %s , creating new connection", nodeId)
-		if !add {
-			return nil, dmerrors.DMError(apperr.ErrAIModelNode404, nil)
-		} else {
-			if nodeObject != nil {
-				a.objectPool.Store(nodeId, nodeObject)
-			}
-			return nodeObject, nil
-		}
-	}
 	if add {
 		a.logger.Info().Msgf("Force update for %s", nodeId)
 		if nodeObject != nil {
 			a.objectPool.Store(nodeId, nodeObject)
+			return nodeObject, nil
+		} else {
+			a.logger.Error().Msgf("Node object is nil for %s", nodeId)
+			return nil, dmerrors.DMError(apperr.ErrAIModelNode404, nil)
 		}
 	}
-	modelNode, valid := val.(*models.AIModelNode)
-	// fmt.Println("ModelNode: ", modelNode.Name)
-	if !valid {
-		return nil, dmerrors.DMError(apperr.ErrAIModelNode404, nil)
+	val, ok := a.objectPool.Load(nodeId)
+	if !ok {
+		if nodeObject == nil {
+			a.logger.Info().Msgf("Connection not found in local pool for %s , getting it from cache", nodeId)
+			nodeObject = a.getObjectCache(nodeId)
+			if nodeObject != nil {
+				return nodeObject, nil
+			}
+		} else {
+			a.addObjectCache(nodeObject)
+			a.objectPool.Store(nodeId, nodeObject)
+			return nodeObject, nil
+		}
+	} else {
+		modelNode, valid := val.(*models.AIModelNode)
+		// fmt.Println("ModelNode: ", modelNode.Name)
+		if !valid {
+			return nil, dmerrors.DMError(apperr.ErrAIModelNode404, nil)
+		}
+		return modelNode, nil
 	}
-	return modelNode, nil
+	return nil, dmerrors.DMError(apperr.ErrAIModelNode404, nil)
+}
+
+func (a *AIModelNodeConnectionPool) addObjectCache(model *models.AIModelNode) {
+	mBytes, err := dmutils.Marshall(model)
+	if err != nil {
+		a.logger.Err(err).Msg("error while marshalling model")
+		a.errPool[model.VapusID] = dmerrors.DMError(apperr.ErrAIModelNode404, err)
+		return
+	}
+	_, err = a.dmStore.Cacher.RedisClient.WriteKV(context.TODO(), model.VapusID, string(mBytes))
+	if err != nil {
+		a.logger.Err(err).Msg("error while writing model to cache")
+		a.errPool[model.VapusID] = dmerrors.DMError(apperr.ErrAIModelNode404, err)
+		return
+	}
+}
+
+func (a *AIModelNodeConnectionPool) getObjectCache(nodeId string) *models.AIModelNode {
+	mBytes, err := a.dmStore.Cacher.RedisClient.ReadKV(context.TODO(), nodeId)
+	if err != nil {
+		a.logger.Err(err).Msg("error while writing model to cache")
+		return nil
+	}
+	model := &models.AIModelNode{}
+	err = dmutils.Unmarshall([]byte(mBytes.(string)), model)
+	if err != nil {
+		a.logger.Err(err).Msg("error while unmarshalling model from cache")
+		return nil
+	}
+	if model.VapusID == "" {
+		a.logger.Error().Msg("model VapusID is empty")
+		return nil
+	}
+	return model
 }
 
 func (a *AIModelNodeConnectionPool) GetorSetConnection(model *models.AIModelNode, addIfNotPresent, forceupdate bool) (aimodels.AIModelNodeInterface, error) {
